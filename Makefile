@@ -8,7 +8,13 @@ include $(abspath $(PROJECT_DIR)/build/automation/init.mk)
 # Project targets: Ops workflow
 
 build: project-config # Build project
-	#make docker-build NAME=NAME_TEMPLATE_TO_REPLACE
+	make docker-run-mvn \
+		DIR="application/app" \
+		CMD="-Dmaven.test.skip=true clean install"
+	mv \
+		$(PROJECT_DIR)/application/app/target/dos-service-fuzzy-search-api-*.jar \
+		$(PROJECT_DIR)/build/docker/dos-service-fuzzy-search-api/assets/application/dos-service-fuzzy-search-api.jar
+	make docker-build NAME=dos-service-fuzzy-search-api
 
 start: project-start # Start project
 
