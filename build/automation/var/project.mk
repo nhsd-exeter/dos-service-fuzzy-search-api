@@ -1,8 +1,8 @@
 PROGRAMME = uec
 PROJECT_GROUP = uec/dos-api
 PROJECT_GROUP_SHORT = uec-dos-api
-PROJECT_NAME = gp-fuzzy-search
-PROJECT_NAME_SHORT = gfs
+PROJECT_NAME = service-fuzzy-search
+PROJECT_NAME_SHORT = sfs
 
 ROLE_PREFIX = UECAPICS
 SERVICE_TAG = $(PROJECT_GROUP_SHORT)
