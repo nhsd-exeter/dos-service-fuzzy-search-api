@@ -10,4 +10,4 @@ PROJECT_TAG = $(PROJECT_NAME)
 
 # Java version for the API is 11 because this is the current version of Java that the AWS
 # Lambda function supports.
-JAVA_VERSION = 11
+JAVA_VERSION = 14
