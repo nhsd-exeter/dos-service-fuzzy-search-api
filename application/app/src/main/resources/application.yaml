@@ -1,0 +1,7 @@
+server:
+  port: 9095
+
+param:
+  version: "0.0.1"
+  validation:
+    min_search_string_length: 3

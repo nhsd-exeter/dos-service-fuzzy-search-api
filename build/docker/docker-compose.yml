@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  fuzzysearchapi:
+    image: 461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/sfs/dos-service-fuzzy-search-api:latest
+    container_name: dos-service-fuzzy-search-api
+    environment:
+      SPRING_PROFILES_ACTIVE: mock
+      PARAM.VERSION: v0.0.1
+      PARAM.MIN_SEARCH_STRING_LENGTH: 3
+    ports:
+      - 9095:9095
+    command: ["java", "-jar", "/application/dos-service-fuzzy-search-api.jar"]
+    networks:
+      default:
+        aliases:
+          - dos-service-fuzzy-search-api.sf.test
+
+networks:
+  default:
+    external:
+      name: $DOCKER_NETWORK
