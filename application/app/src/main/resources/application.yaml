@@ -5,3 +5,6 @@ param:
   version: "0.0.1"
   validation:
     min_search_string_length: 3
+    max_search_criteria: 10
+  business:
+    search_criteria_delimiter: ","
