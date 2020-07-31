@@ -6,9 +6,10 @@ import lombok.Getter;
 public class ValidationException extends Exception {
 
   private static final long serialVersionUID = -5305538934171625716L;
-  private final String validationCode = "VAL-001";
+  private String validationCode;
 
-  public ValidationException(String message) {
+  public ValidationException(String message, String validationCode) {
     super(message);
+    this.validationCode = validationCode;
   }
 }

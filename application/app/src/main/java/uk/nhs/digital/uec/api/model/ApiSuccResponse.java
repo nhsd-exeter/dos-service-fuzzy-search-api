@@ -18,7 +18,7 @@ import lombok.Setter;
 public class ApiSuccResponse implements ApiResponse {
 
   @JsonProperty("search_criteria")
-  private String searchCriteria;
+  private List<String> searchCriteria;
 
   @JsonProperty("number_of_services")
   private int numberOfServices;

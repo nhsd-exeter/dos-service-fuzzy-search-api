@@ -6,12 +6,11 @@ import java.util.List;
 public interface ApiUtilsServiceInterface {
 
   /**
-   * Takes a String, splits the String by the defined delimiter adding each split into a List of
-   * Strings which is returned.
+   * Takes the list of search criteria and sanitises each search term by removing trailing and
+   * leading spaces.
    *
-   * @param sourceString the String to split and turn into a List of Strings.
-   * @param delimiter the delimiter to split the string.
+   * @param searchCriteria the search criteria to sanitise.
    * @return List of Strings
    */
-  public List<String> createListFromString(final String sourceString, final String delimiter);
+  public List<String> sanitiseSearchTerms(final List<String> searchCriteria);
 }

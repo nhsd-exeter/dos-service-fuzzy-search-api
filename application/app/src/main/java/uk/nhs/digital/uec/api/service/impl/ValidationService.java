@@ -1,7 +1,6 @@
 package uk.nhs.digital.uec.api.service.impl;
 
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.nhs.digital.uec.api.exception.ValidationException;
@@ -16,18 +15,22 @@ public class ValidationService implements ValidationServiceInterface {
   @Value("${param.validation.max_search_criteria}")
   private int maxSearchCriteria;
 
-  @Value("${param.business.search_criteria_delimiter}")
-  private String searchCriteriaDelimiter;
-
-  public void validateSearchCriteria(final String searchCriteria) throws ValidationException {
+  public void validateSearchCriteria(final List<String> searchCriteria) throws ValidationException {
 
     if (searchCriteria == null || searchCriteria.isEmpty()) {
-      throw new ValidationException("No search criteria, or blank search criteria given.");
+      throw new ValidationException(
+          "No search criteria has been given. Please pass through at least one search term.",
+          "VAL-001");
     }
 
-    int numberOfCriteria = (StringUtils.countMatches(searchCriteria, searchCriteriaDelimiter) + 1);
-    if (numberOfCriteria > maxSearchCriteria) {
-      throw new ValidationException("Too many search criteria (" + numberOfCriteria + ") given.");
+    if (searchCriteria.size() > maxSearchCriteria) {
+      throw new ValidationException(
+          "The number of search terms given ("
+              + searchCriteria.size()
+              + ") given exceeds the maximum number of terms that can be applied. The maximum"
+              + " number of terms that can be applied is "
+              + maxSearchCriteria,
+          "VAL-002");
     }
   }
 
@@ -48,7 +51,8 @@ public class ValidationService implements ValidationServiceInterface {
 
     if (!minSearchCriteriaLthMet) {
       throw new ValidationException(
-          "None of the search criteria given meets the minimum required search criteria length.");
+          "None of the search criteria given meets the minimum required search criteria length.",
+          "VAL-003");
     }
   }
 }

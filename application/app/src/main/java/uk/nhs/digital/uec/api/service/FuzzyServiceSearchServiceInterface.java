@@ -13,5 +13,5 @@ public interface FuzzyServiceSearchServiceInterface {
    *     by: name public name address postcode
    * @return {@link DosService}
    */
-  public List<DosService> retrieveServicesByFuzzySearch(final String searchString);
+  public List<DosService> retrieveServicesByFuzzySearch(final List<String> searchString);
 }

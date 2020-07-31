@@ -37,7 +37,10 @@ public class FuzzySearchControllerTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-    String searchCriteria = "term1, term2";
+    List<String> searchCriteria = new ArrayList<>();
+    searchCriteria.add("term1");
+    searchCriteria.add("term2");
+
     when(mockFuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria))
         .thenReturn(getDosServices());
 

@@ -3,8 +3,8 @@ package uk.nhs.digital.uec.api.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.nhs.digital.uec.api.exception.ValidationException;
 import uk.nhs.digital.uec.api.model.ApiResponse;
@@ -26,12 +26,12 @@ public class FuzzyServiceSearchController {
   /**
    * Endpoint for retrieving services with attributes that match the search criteria provided.
    *
-   * @param searchString the search criteria terms.
+   * @param searchCriteria the search criteria containing the list of search criteria terms.
    * @return {@link ApiResponse}
    */
-  @RequestMapping("/byfuzzysearch/{searchCriteria}")
+  @RequestMapping("services/byfuzzysearch")
   public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
-      @PathVariable("searchCriteria") String searchCriteria) {
+      @RequestParam(name = "search_criteria", required = false) List<String> searchCriteria) {
     final ApiSuccResponse response = new ApiSuccResponse();
     response.setSearchCriteria(searchCriteria);
 

@@ -11,7 +11,7 @@ import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
 @Service
 public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInterface {
 
-  public List<DosService> retrieveServicesByFuzzySearch(final String searchString) {
+  public List<DosService> retrieveServicesByFuzzySearch(final List<String> searchCriteria) {
 
     List<DosService> dosServices = new ArrayList<>();
 

@@ -11,7 +11,7 @@ public class WelcomeController {
   @Value("${param.version}")
   private String apiVersion;
 
-  @RequestMapping(value = "/dosapi/dosservices/v0.0.1")
+  @RequestMapping(value = "/dosapi/dosservices/v0.0.1/home")
   public String home() {
     return "This is the DoS Service Fuzzy Search API. Version: " + apiVersion;
   }
