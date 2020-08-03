@@ -36,7 +36,7 @@
     "python.linting.mypyEnabled": true,
     "python.linting.pylintArgs": [],
     "python.linting.pylintEnabled": true,
-    "python.pythonPath": "~/.pyenv/versions/default/",
+    "python.pythonPath": "~/.pyenv/versions/uec-dos-api-service-fuzzy-search/",
     "telemetry.enableCrashReporter": false,
     "telemetry.enableTelemetry": false,
     "terminal.integrated.fontFamily": "Hack Nerd Font",
