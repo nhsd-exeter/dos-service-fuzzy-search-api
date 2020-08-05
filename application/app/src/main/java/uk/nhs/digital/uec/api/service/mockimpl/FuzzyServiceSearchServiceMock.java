@@ -22,6 +22,7 @@ public class FuzzyServiceSearchServiceMock implements FuzzyServiceSearchServiceI
     dosService.setPublicName("Public Service Name 1");
     dosService.setType("Type 1");
     dosService.setTypeId(1);
+    dosService.setOdsCode("odscode1");
     dosService.setCapacityStatus("GREEN");
 
     List<String> address = new ArrayList<>();
@@ -45,6 +46,7 @@ public class FuzzyServiceSearchServiceMock implements FuzzyServiceSearchServiceI
     dosService2.setPublicName("Public Service Name 2");
     dosService2.setType("Type 2");
     dosService2.setTypeId(2);
+    dosService2.setOdsCode("odscode2");
     dosService2.setCapacityStatus("AMBER");
 
     List<String> address2 = new ArrayList<>();

@@ -19,6 +19,7 @@ import lombok.Setter;
   "capacity_status",
   "type_id",
   "type",
+  "ods_code",
   "address",
   "postcode",
   "referral_roles"
@@ -45,6 +46,9 @@ public class DosService {
 
   @JsonProperty("type")
   private String type;
+
+  @JsonProperty("ods_code")
+  private String odsCode;
 
   @JsonProperty("address")
   private List<String> address;

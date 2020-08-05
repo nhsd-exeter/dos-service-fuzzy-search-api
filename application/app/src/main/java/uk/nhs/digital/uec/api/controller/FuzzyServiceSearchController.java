@@ -31,12 +31,15 @@ public class FuzzyServiceSearchController {
    */
   @RequestMapping("services/byfuzzysearch")
   public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
-      @RequestParam(name = "search_criteria", required = false) List<String> searchCriteria) {
+      @RequestParam(name = "search_criteria", required = false) List<String> searchCriteria,
+      @RequestParam(name = "filter_referral_role", required = false) String filterReferralRole) {
+
     final ApiSuccResponse response = new ApiSuccResponse();
     response.setSearchCriteria(searchCriteria);
 
     try {
       validationService.validateSearchCriteria(searchCriteria);
+      validationService.validateMinSearchCriteriaLength(searchCriteria);
 
       final List<DosService> dosServices =
           fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);

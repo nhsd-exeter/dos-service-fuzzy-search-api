@@ -37,13 +37,19 @@ public class ValidationService implements ValidationServiceInterface {
   public void validateMinSearchCriteriaLength(final List<String> searchCriteria)
       throws ValidationException {
 
+    if (searchCriteria == null || searchCriteria.isEmpty()) {
+      throw new ValidationException(
+          "No search criteria has been given. Please pass through at least one search term.",
+          "VAL-001");
+    }
+
     // Check that at least one of the search criteria provided meets the min search criteria length
     // requirement.
 
     boolean minSearchCriteriaLthMet = false;
 
     for (final String searchCriteriaStr : searchCriteria) {
-      if (searchCriteriaStr.length() > minSearchStringLength) {
+      if (searchCriteriaStr.length() >= minSearchStringLength) {
         minSearchCriteriaLthMet = true;
         break;
       }
