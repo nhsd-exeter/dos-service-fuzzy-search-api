@@ -9,6 +9,8 @@ import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 @Service
 public class ApiUtilsService implements ApiUtilsServiceInterface {
 
+  /** {@inheritDoc} */
+  @Override
   public List<String> sanitiseSearchTerms(final List<String> searchCriteria) {
 
     List<String> listFromString = new ArrayList<>();

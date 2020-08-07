@@ -6,16 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.model.DosService;
+import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
 public class FuzzyServiceSearchServiceTest {
 
-  @Autowired private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
+  @InjectMocks private FuzzyServiceSearchService fuzzyServiceSearchService;
 
   @Test
   public void retrieveServicesByFuzzySearchTest() {

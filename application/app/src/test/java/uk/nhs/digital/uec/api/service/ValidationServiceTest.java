@@ -5,27 +5,29 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.mockito.InjectMocks;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import uk.nhs.digital.uec.api.exception.ValidationException;
+import uk.nhs.digital.uec.api.service.impl.ValidationService;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
-@ActiveProfiles("prod")
 public class ValidationServiceTest {
 
-  @Autowired private ValidationServiceInterface validationService;
+  @InjectMocks private ValidationService validationService;
 
-  @Value("${param.validation.min_search_string_length}")
-  private int minSearchStringLength;
+  private int minSearchStringLength = 3;
 
-  @Value("${param.validation.max_search_criteria}")
-  private int maxSearchCriteria;
+  private int maxSearchCriteria = 10;
+
+  @BeforeEach
+  public void setup() {
+    ReflectionTestUtils.setField(validationService, "minSearchStringLength", minSearchStringLength);
+    ReflectionTestUtils.setField(validationService, "maxSearchCriteria", maxSearchCriteria);
+  }
 
   @Test
   public void validateSearchCriteriaMinSuccess() {

@@ -1,29 +1,31 @@
 package uk.nhs.digital.uec.api.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.glassfish.hk2.api.ValidationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import uk.nhs.digital.uec.api.exception.ValidationException;
 import uk.nhs.digital.uec.api.model.ApiResponse;
+import uk.nhs.digital.uec.api.model.ApiSuccResponse;
+import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
+import uk.nhs.digital.uec.api.service.impl.ValidationService;
 
 @ExtendWith(SpringExtension.class)
-@ActiveProfiles("mock")
-@SpringBootTest
 public class FuzzySearchControllerTest {
 
   @InjectMocks FuzzyServiceSearchController fuzzyServiceSearchController;
@@ -31,12 +33,12 @@ public class FuzzySearchControllerTest {
   @Mock ValidationService mockValidationService;
   @Mock FuzzyServiceSearchService mockFuzzyServiceSearchService;
 
+  private static final String VALIDATION_ERROR_MSG = "A validation error has occurred";
+
+  private static final String VALIDATION_ERROR_CODE = "VAL-001";
+
   @Test
-  public void getServicesByFuzzySearchTest() {
-
-    MockHttpServletRequest request = new MockHttpServletRequest();
-    RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-
+  public void getServicesByFuzzySearchTestSucc() throws ValidationException {
     List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("term1");
     searchCriteria.add("term2");
@@ -45,9 +47,57 @@ public class FuzzySearchControllerTest {
         .thenReturn(getDosServices());
 
     ResponseEntity<ApiResponse> responseEntity =
-        fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria);
+        fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null);
 
-    assertEquals(responseEntity.getBody(), "test");
+    final ApiSuccResponse response = (ApiSuccResponse) responseEntity.getBody();
+    final List<DosService> returnedServices = response.getServices();
+
+    verify(mockValidationService, times(1)).validateSearchCriteria(searchCriteria);
+    verify(mockValidationService, times(1)).validateMinSearchCriteriaLength(searchCriteria);
+    verify(mockFuzzyServiceSearchService, times(1)).retrieveServicesByFuzzySearch(searchCriteria);
+
+    assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
+
+    assertEquals(response.getNumberOfServices(), 2);
+    assertTrue(isExpectedServiceReturned("service1", returnedServices));
+    assertTrue(isExpectedServiceReturned("service2", returnedServices));
+  }
+
+  @Test
+  public void getServicesByFuzzySearchTestValidationError() throws ValidationException {
+    List<String> searchCriteria = new ArrayList<>();
+    searchCriteria.add("term1");
+    searchCriteria.add("term2");
+
+    doThrow(new ValidationException(VALIDATION_ERROR_MSG, VALIDATION_ERROR_CODE))
+        .when(mockValidationService)
+        .validateSearchCriteria(searchCriteria);
+
+    ResponseEntity<ApiResponse> responseEntity =
+        fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null);
+
+    final ApiValidationErrorResponse response =
+        (ApiValidationErrorResponse) responseEntity.getBody();
+
+    verify(mockValidationService, times(1)).validateSearchCriteria(searchCriteria);
+    verify(mockFuzzyServiceSearchService, never()).retrieveServicesByFuzzySearch(searchCriteria);
+
+    assertEquals(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST);
+    assertEquals(response.getValidationCode(), VALIDATION_ERROR_CODE);
+    assertEquals(response.getValidationError(), VALIDATION_ERROR_MSG);
+  }
+
+  private boolean isExpectedServiceReturned(
+      String expectedServiceName, List<DosService> returnedServices) {
+    boolean servicePresent = false;
+    for (DosService returnedService : returnedServices) {
+      if (returnedService.getName().equals(expectedServiceName)) {
+        servicePresent = true;
+        break;
+      }
+    }
+
+    return servicePresent;
   }
 
   private List<DosService> getDosServices() {

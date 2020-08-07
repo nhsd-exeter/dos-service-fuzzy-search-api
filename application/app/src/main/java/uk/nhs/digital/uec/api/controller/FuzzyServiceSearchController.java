@@ -27,6 +27,8 @@ public class FuzzyServiceSearchController {
    * Endpoint for retrieving services with attributes that match the search criteria provided.
    *
    * @param searchCriteria the search criteria containing the list of search criteria terms.
+   * @param filterReferralRole if passed through, results will be filtered by the referral role
+   *     provided.
    * @return {@link ApiResponse}
    */
   @RequestMapping("services/byfuzzysearch")

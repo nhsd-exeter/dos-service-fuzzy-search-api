@@ -11,6 +11,8 @@ import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
 @Service
 public class FuzzyServiceSearchServiceMock implements FuzzyServiceSearchServiceInterface {
 
+  /** {@inheritDoc} */
+  @Override
   public List<DosService> retrieveServicesByFuzzySearch(final List<String> searchCriteria) {
 
     List<DosService> dosServices = new ArrayList<>();

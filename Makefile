@@ -23,8 +23,9 @@ stop: project-stop # Stop project
 log: project-log # Show project logs
 
 test: # Test project
-	make start
-	make stop
+	make docker-run-mvn \
+		DIR="application/app" \
+		CMD="clean test"
 
 push: # Push project artefacts to the registry
 	#make docker-push NAME=NAME_TEMPLATE_TO_REPLACE

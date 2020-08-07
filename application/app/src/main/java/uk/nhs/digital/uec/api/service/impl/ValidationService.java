@@ -15,6 +15,8 @@ public class ValidationService implements ValidationServiceInterface {
   @Value("${param.validation.max_search_criteria}")
   private int maxSearchCriteria;
 
+  /** {@inheritDoc} */
+  @Override
   public void validateSearchCriteria(final List<String> searchCriteria) throws ValidationException {
 
     if (searchCriteria == null || searchCriteria.isEmpty()) {
@@ -34,6 +36,8 @@ public class ValidationService implements ValidationServiceInterface {
     }
   }
 
+  /** {@inheritDoc} */
+  @Override
   public void validateMinSearchCriteriaLength(final List<String> searchCriteria)
       throws ValidationException {
 
