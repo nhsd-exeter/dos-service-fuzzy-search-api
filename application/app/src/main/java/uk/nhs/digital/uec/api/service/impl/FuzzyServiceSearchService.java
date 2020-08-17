@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
-import uk.nhs.digital.uec.api.utils.TestDosServicesUtil;
+import uk.nhs.digital.uec.api.utils.MockDosServicesUtil;
 
 @Profile("prod")
 @Service
@@ -22,8 +22,8 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     // set.
     if (!searchCriteria.contains("Term0")) {
       // Add the mock services we want to return:
-      dosServices.add(TestDosServicesUtil.mockDosServices.get(1));
-      dosServices.add(TestDosServicesUtil.mockDosServices.get(2));
+      dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
+      dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
     }
 
     return dosServices;

@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.nhs.digital.uec.api.model.ApiSuccResponse;
 import uk.nhs.digital.uec.api.model.DosService;
-import uk.nhs.digital.uec.api.utils.TestDosServicesUtil;
+import uk.nhs.digital.uec.api.utils.MockDosServicesUtil;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles({"prod"})
@@ -126,7 +126,7 @@ public class FuzzySearchSuccessTest {
     for (Integer serviceIdToVerify : serviceIdsToVerify) {
 
       DosService dosServiceToCheckAgainst =
-          TestDosServicesUtil.mockDosServices.get(serviceIdToVerify);
+          MockDosServicesUtil.mockDosServices.get(serviceIdToVerify);
 
       for (DosService dosServiceToVerify : apiSuccResponse.getServices()) {
         if (dosServiceToVerify.getId() == serviceIdToVerify) {

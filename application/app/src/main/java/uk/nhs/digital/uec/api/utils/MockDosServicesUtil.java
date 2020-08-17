@@ -7,7 +7,7 @@ import java.util.Map;
 import uk.nhs.digital.uec.api.model.DosService;
 
 /** Class to encapsulate testing service data. */
-public class TestDosServicesUtil {
+public class MockDosServicesUtil {
 
   public static Map<Integer, DosService> mockDosServices = new HashMap<>();
 
