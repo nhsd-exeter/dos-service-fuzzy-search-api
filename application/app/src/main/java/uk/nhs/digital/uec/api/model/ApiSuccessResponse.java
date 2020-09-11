@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"search_criteria", "number_of_services", "services"})
-public class ApiSuccResponse implements ApiResponse {
+public class ApiSuccessResponse implements ApiResponse {
 
   @JsonProperty("search_criteria")
   private List<String> searchCriteria;

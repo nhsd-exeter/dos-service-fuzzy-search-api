@@ -2,7 +2,9 @@ package uk.nhs.digital.uec.api.integration.fuzzysearch;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
@@ -10,21 +12,26 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
+import uk.nhs.digital.uec.api.util.PropertySourceResolver;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@ActiveProfiles({"prod"})
 /**
  * Test class which passes requests through the Fuzzy Search endpoint and asserts desired API
  * behavior. Only the model layer will be mocked here.
  */
 public class FuzzySearchGeneralErrorsTest {
 
-  private static String endpointUrl =
-      "http://localhost:9095/dosapi/dosservices/v0.0.1/services/byfuzzysearch";
+  @Autowired private PropertySourceResolver propertySourceResolver;
+
+  private static String endpointUrl;
 
   TestRestTemplate restTemplate = new TestRestTemplate();
   HttpHeaders headers = new HttpHeaders();
+
+  @BeforeEach
+  public void configureProperties() {
+    endpointUrl = propertySourceResolver.endpointUrl;
+  }
 
   /** Given a Post call on the endpoint, ensure a 405 error is returned. */
   @Test

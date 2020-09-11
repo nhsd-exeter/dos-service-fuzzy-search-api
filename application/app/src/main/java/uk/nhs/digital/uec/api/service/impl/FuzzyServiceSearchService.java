@@ -2,13 +2,11 @@ package uk.nhs.digital.uec.api.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
 import uk.nhs.digital.uec.api.utils.MockDosServicesUtil;
 
-@Profile("prod")
 @Service
 public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInterface {
 

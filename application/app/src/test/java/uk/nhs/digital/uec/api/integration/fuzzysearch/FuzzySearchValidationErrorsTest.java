@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,12 +14,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
+import uk.nhs.digital.uec.api.util.PropertySourceResolver;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@ActiveProfiles({"prod"})
 /**
  * Test class which passes requests through the Fuzzy Search endpoint and asserts desired API
  * behavior. Only the model layer will be mocked here.
@@ -27,11 +27,17 @@ public class FuzzySearchValidationErrorsTest {
 
   @Autowired private ObjectMapper mapper;
 
-  private static String endpointUrl =
-      "http://localhost:9095/dosapi/dosservices/v0.0.1/services/byfuzzysearch";
+  @Autowired private PropertySourceResolver propertySourceResolver;
+
+  private static String endpointUrl;
 
   TestRestTemplate restTemplate = new TestRestTemplate();
   HttpHeaders headers = new HttpHeaders();
+
+  @BeforeEach
+  public void configureProperties() {
+    endpointUrl = propertySourceResolver.endpointUrl;
+  }
 
   /**
    * VAL-001 Given no search criteria terms, ensure that the API returns a 400 error with the
@@ -40,15 +46,15 @@ public class FuzzySearchValidationErrorsTest {
   @Test
   public void noSearchCriteriaGiven() throws Exception {
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
-    ResponseEntity<String> response =
+    ResponseEntity<String> responseEntity =
         restTemplate.exchange(endpointUrl, HttpMethod.GET, request, String.class);
 
-    assertTrue(response.getStatusCode() == HttpStatus.BAD_REQUEST);
+    assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
 
-    ApiValidationErrorResponse apiValidationErrorResponse =
-        mapper.readValue(response.getBody(), ApiValidationErrorResponse.class);
+    ApiValidationErrorResponse response =
+        mapper.readValue(responseEntity.getBody(), ApiValidationErrorResponse.class);
 
-    assertEquals(apiValidationErrorResponse.getValidationCode(), "VAL-001");
+    assertEquals(response.getValidationCode(), "VAL-001");
   }
 
   /**
@@ -66,15 +72,15 @@ public class FuzzySearchValidationErrorsTest {
             .queryParam("search_criteria", "Term4")
             .queryParam("search_criteria", "Term5")
             .queryParam("search_criteria", "Term6");
-    ResponseEntity<String> response =
+    ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
-    assertTrue(response.getStatusCode() == HttpStatus.BAD_REQUEST);
+    assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
 
-    ApiValidationErrorResponse apiValidationErrorResponse =
-        mapper.readValue(response.getBody(), ApiValidationErrorResponse.class);
+    ApiValidationErrorResponse response =
+        mapper.readValue(responseEntity.getBody(), ApiValidationErrorResponse.class);
 
-    assertEquals(apiValidationErrorResponse.getValidationCode(), "VAL-002");
+    assertEquals(response.getValidationCode(), "VAL-002");
   }
 
   /**
@@ -89,14 +95,14 @@ public class FuzzySearchValidationErrorsTest {
             .queryParam("search_criteria", "1")
             .queryParam("search_criteria", "ab")
             .queryParam("search_criteria", "z");
-    ResponseEntity<String> response =
+    ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
-    assertTrue(response.getStatusCode() == HttpStatus.BAD_REQUEST);
+    assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
 
-    ApiValidationErrorResponse apiValidationErrorResponse =
-        mapper.readValue(response.getBody(), ApiValidationErrorResponse.class);
+    ApiValidationErrorResponse response =
+        mapper.readValue(responseEntity.getBody(), ApiValidationErrorResponse.class);
 
-    assertEquals(apiValidationErrorResponse.getValidationCode(), "VAL-003");
+    assertEquals(response.getValidationCode(), "VAL-003");
   }
 }
