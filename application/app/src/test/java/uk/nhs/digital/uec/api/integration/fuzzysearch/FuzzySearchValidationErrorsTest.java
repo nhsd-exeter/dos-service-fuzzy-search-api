@@ -14,10 +14,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.util.PropertySourceResolver;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 /**
  * Test class which passes requests through the Fuzzy Search endpoint and asserts desired API

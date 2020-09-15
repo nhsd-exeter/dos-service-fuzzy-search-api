@@ -9,3 +9,5 @@ param:
   validation:
     min_search_string_length: 3
     max_search_criteria: 4
+  services:
+    max_num_services_to_return: 20

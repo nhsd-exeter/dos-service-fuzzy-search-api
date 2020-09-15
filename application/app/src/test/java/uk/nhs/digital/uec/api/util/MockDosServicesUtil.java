@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.utils;
+package uk.nhs.digital.uec.api.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,14 +12,21 @@ public class MockDosServicesUtil {
   public static Map<Integer, DosService> mockDosServices = new HashMap<>();
 
   static {
-    mockDosServices.put(1, buildMockService1());
+    mockDosServices.put(1, buildMockService1(1));
     mockDosServices.put(2, buildMockService2());
+    addMockServices(20);
   }
 
-  private static DosService buildMockService1() {
+  public static void addMockServices(int numberToAdd) {
+    for (int i = mockDosServices.size() + 1; i <= numberToAdd; i++) {
+      mockDosServices.put(i, buildMockService1(i));
+    }
+  }
+
+  private static DosService buildMockService1(int identifier) {
 
     List<String> address = new ArrayList<>();
-    address.add("1 Service Street");
+    address.add(identifier + " Service Street");
     address.add("Service town");
     address.add("Exmouth");
 
@@ -28,13 +35,13 @@ public class MockDosServicesUtil {
     referralRoles.add("Role 2");
 
     return new DosService.DosServiceBuilder()
-        .id(1)
-        .uIdentifier(1)
-        .name("service1")
-        .publicName("Public Service Name 1")
+        .id(identifier)
+        .uIdentifier(identifier)
+        .name("service" + identifier)
+        .publicName("Public Service Name " + identifier)
         .type("Type 1")
         .typeId(1)
-        .odsCode("odscode1")
+        .odsCode("odscode" + identifier)
         .capacityStatus("GREEN")
         .address(address)
         .postcode("EX7 8PR")

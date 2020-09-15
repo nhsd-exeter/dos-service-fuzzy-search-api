@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.service.mockimpl;
+package uk.nhs.digital.uec.api.service.mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
-import uk.nhs.digital.uec.api.utils.MockDosServicesUtil;
+import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 
-@Profile("mock")
+@Profile("test")
 @Service
 public class FuzzyServiceSearchServiceMock implements FuzzyServiceSearchServiceInterface {
 
