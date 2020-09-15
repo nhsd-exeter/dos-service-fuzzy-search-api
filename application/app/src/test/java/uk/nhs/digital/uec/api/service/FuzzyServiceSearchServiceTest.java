@@ -119,14 +119,9 @@ public class FuzzyServiceSearchServiceTest {
   public void retrieveServicesByFuzzySearchNullReturn() {
     // Arrange
     List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("Null");
-
-    when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(null);
-
     // Act
     List<DosService> services =
         fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
-
     // Assert
     assertEquals(0, services.size());
   }
