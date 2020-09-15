@@ -3,7 +3,7 @@ TERRAFORM_DIR_REL = $(shell echo $(TERRAFORM_DIR) | sed "s;$(PROJECT_DIR);;g")
 TERRAFORM_STATE_KEY = $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)/$(PROFILE)
 TERRAFORM_STATE_LOCK = $(or $(TEXAS_TERRAFORM_STATE_LOCK), terraform-service-state-lock-$(PROFILE))
 TERRAFORM_STATE_STORE = $(or $(TEXAS_TERRAFORM_STATE_STORE), terraform-service-state-store-$(PROFILE))
-TERRAFORM_VERSION = 0.12.27
+TERRAFORM_VERSION = 0.13.1
 
 # ==============================================================================
 
@@ -73,7 +73,7 @@ terraform-unlock: ### Remove state lock - mandatory: STACK|STACKS|INFRASTRUCTURE
 		STACKS="$(or $(STACK), $(or $(STACKS), $(INFRASTRUCTURE_STACKS)))" \
 		CMD="force-unlock $(ID) $(OPTS)"
 
-terraform-fmt: ### Format Terraform code - optional: DIR,OPTS=[Terraform options]
+terraform-fmt: docker-config ### Format Terraform code - optional: DIR,OPTS=[Terraform options]
 	make docker-run-terraform \
 		CMD="fmt -recursive $(OPTS)"
 
