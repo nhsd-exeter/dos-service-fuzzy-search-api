@@ -9,7 +9,6 @@ macos-setup devops-setup: ## Provision your MacBook (and become a DevOps ninja) 
 		macos-install-essential \
 		macos-install-additional \
 		macos-install-corporate \
-		macos-check \
 		macos-config \
 		macos-fix
 	make macos-enable-gatekeeper
@@ -19,11 +18,11 @@ macos-prepare:: ## Prepare for installation and configuration of the development
 	networksetup -setdnsservers Wi-Fi 8.8.8.8
 	sudo chown -R $$(id -u) $$(brew --prefix)/*
 
-macos-update:: ## Update all currently installed development dependencies
+macos-update:: ## Update/upgrade all currently installed development dependencies
 	which mas > /dev/null 2>&1 || brew install mas
 	mas upgrade $(mas list | grep -i xcode | awk '{ print $1 }')
 	brew update
-	brew upgrade
+	brew upgrade ||:
 	brew tap buo/cask-upgrade
 	brew cu --all --yes
 
@@ -32,7 +31,6 @@ macos-install-essential:: ## Install essential development dependencies - option
 	if [[ "$$REINSTALL" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]]; then
 		install="reinstall --force"
 	fi
-	brew update
 	brew tap adoptopenjdk/openjdk ||:
 	brew tap blendle/blendle ||:
 	brew tap buo/cask-upgrade ||:
@@ -59,6 +57,7 @@ macos-install-essential:: ## Install essential development dependencies - option
 	brew $$install google-java-format ||:
 	brew $$install gpg ||:
 	brew $$install gradle ||:
+	brew $$install graphviz ||:
 	brew $$install grep ||:
 	brew $$install helm ||:
 	brew $$install httpie ||:
@@ -74,11 +73,11 @@ macos-install-essential:: ## Install essential development dependencies - option
 	brew $$install pyenv ||:
 	brew $$install pyenv-virtualenv ||:
 	brew $$install pyenv-which-ext ||:
-	brew $$install python@3.8 ||:
+	brew $$install python@$(PYTHON_VERSION_MAJOR).$(PYTHON_VERSION_MINOR) ||:
 	brew $$install shellcheck ||:
-	brew $$install terraform ||:
 	brew $$install tmux ||:
 	brew $$install tree ||:
+	brew $$install warrensbox/tap/tfswitch || brew uninstall --force terrafrom && brew reinstall --force warrensbox/tap/tfswitch ||:
 	brew $$install yq ||:
 	brew $$install zsh ||:
 	brew $$install zsh-autosuggestions ||:
@@ -88,7 +87,7 @@ macos-install-essential:: ## Install essential development dependencies - option
 	brew cask $$install docker ||:
 	brew cask $$install font-hack-nerd-font ||:
 	brew cask $$install iterm2 ||:
-	brew cask $$install visual-studio-code ||:
+	brew cask $$install visual-studio-code && which code > /dev/null 2>&1 || brew cask reinstall --force visual-studio-code ||:
 	# maven depends on java
 	brew $$install maven ||:
 
@@ -97,14 +96,11 @@ macos-install-additional:: ## Install additional development dependencies - opti
 	if [[ "$$REINSTALL" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]]; then
 		install="reinstall --force"
 	fi
-	brew update
-	#brew tap weaveworks/tap ||:
+	brew tap weaveworks/tap ||:
 	brew $$install github/gh/gh ||:
-	#brew $$install weaveworks/tap/eksctl ||:
+	brew $$install weaveworks/tap/eksctl ||:
 	brew cask $$install appcleaner ||:
 	brew cask $$install atom ||:
-	brew cask $$install bettertouchtool ||:
-	brew cask $$install cheatsheet ||:
 	brew cask $$install dbeaver-community ||:
 	brew cask $$install dcommander ||:
 	brew cask $$install drawio
@@ -113,13 +109,11 @@ macos-install-additional:: ## Install additional development dependencies - opti
 	brew cask $$install gitkraken ||:
 	brew cask $$install google-chrome ||:
 	brew cask $$install hammerspoon ||:
-	brew cask $$install intellij-idea-ce ||:
 	brew cask $$install istat-menus ||:
 	brew cask $$install karabiner-elements ||:
 	brew cask $$install keepingyouawake ||:
-	brew cask $$install microsoft-remote-desktop-beta ||:
+	#brew cask $$install microsoft-remote-desktop-beta ||:
 	brew cask $$install postman ||:
-	brew cask $$install pycharm ||:
 	brew cask $$install sourcetree ||:
 	brew cask $$install spectacle ||:
 	brew cask $$install tripmode ||:
@@ -175,6 +169,7 @@ macos-check:: ## Check if the development dependencies are installed
 	brew list google-java-format ||:
 	brew list gpg ||:
 	brew list gradle ||:
+	brew list graphviz ||:
 	brew list grep ||:
 	brew list helm ||:
 	brew list httpie ||:
@@ -191,11 +186,11 @@ macos-check:: ## Check if the development dependencies are installed
 	brew list pyenv ||:
 	brew list pyenv-virtualenv ||:
 	brew list pyenv-which-ext ||:
-	brew list python@3.8 ||:
+	brew list python@$(PYTHON_VERSION_MAJOR).$(PYTHON_VERSION_MINOR) ||:
 	brew list shellcheck ||:
-	brew list terraform ||:
 	brew list tmux ||:
 	brew list tree ||:
+	brew list warrensbox/tap/tfswitch ||:
 	brew list yq ||:
 	brew list zsh ||:
 	brew list zsh-autosuggestions ||:
@@ -208,21 +203,32 @@ macos-check:: ## Check if the development dependencies are installed
 	brew cask list visual-studio-code ||:
 	# Additional dependencies
 	brew list github/gh/gh ||:
-	#brew list weaveworks/tap/eksctl ||:
+	brew list weaveworks/tap/eksctl ||:
+	brew cask list appcleaner ||:
 	brew cask list atom ||:
-	brew cask list cheatsheet ||:
 	brew cask list dbeaver-community ||:
-	brew cask list drawio ||:
+	brew cask list dcommander ||:
+	brew cask list drawio
+	brew cask list firefox-developer-edition ||:
+	brew cask list gimp ||:
 	brew cask list gitkraken ||:
 	brew cask list google-chrome ||:
-	brew cask list intellij-idea-ce ||:
+	brew cask list hammerspoon ||:
+	brew cask list istat-menus ||:
+	brew cask list karabiner-elements ||:
 	brew cask list keepingyouawake ||:
-	brew cask list microsoft-remote-desktop-beta ||:
+	#brew cask list microsoft-remote-desktop-beta ||:
 	brew cask list postman ||:
-	brew cask list pycharm ||:
 	brew cask list sourcetree ||:
 	brew cask list spectacle ||:
+	brew cask list tripmode ||:
 	brew cask list tunnelblick ||:
+	brew cask list vanilla ||:
+	brew cask list vlc ||:
+	brew cask list wifi-explorer ||:
+	brew cask list vagrant ||:
+	brew cask list virtualbox ||:
+	brew cask list virtualbox-extension-pack ||:
 
 macos-config:: ## Configure development dependencies
 	make \
@@ -281,9 +287,12 @@ _macos-config-oh-my-zsh:
 	echo -e "\n# BEGIN: Custom configuration" >> ~/.zshrc
 	echo "plugins=(" >> ~/.zshrc
 	echo "    git" >> ~/.zshrc
+	echo "    git-extras" >> ~/.zshrc
+	echo "    git-auto-fetch" >> ~/.zshrc
 	echo "    docker" >> ~/.zshrc
 	echo "    docker-compose" >> ~/.zshrc
-	echo "    virtualenv" >> ~/.zshrc
+	echo "    pyenv" >> ~/.zshrc
+	echo "    jenv" >> ~/.zshrc
 	echo "    terraform" >> ~/.zshrc
 	echo "    kubectl" >> ~/.zshrc
 	echo "    aws" >> ~/.zshrc
@@ -296,6 +305,7 @@ _macos-config-oh-my-zsh:
 	echo "    gpg-agent" >> ~/.zshrc
 	echo "    common-aliases" >> ~/.zshrc
 	echo "    colorize" >> ~/.zshrc
+	echo "    copybuffer" >> ~/.zshrc
 	echo "    $(DEVOPS_PROJECT_NAME)" >> ~/.zshrc
 	echo ")" >> ~/.zshrc
 	echo 'function tx-status { [ -n "$$TEXAS_SESSION_EXPIRY_TIME" ] && [ "$$TEXAS_SESSION_EXPIRY_TIME" -gt $$(date -u +"%Y%m%d%H%M%S") ] && echo $$TEXAS_PROFILE ||: }' >> ~/.zshrc
@@ -305,7 +315,7 @@ _macos-config-oh-my-zsh:
 	echo "POWERLEVEL9K_MODE=nerdfont-complete" >> ~/.zshrc
 	echo "POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)" >> ~/.zshrc
 	echo "POWERLEVEL9K_SHORTEN_DIR_LENGTH=3" >> ~/.zshrc
-	echo "POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status custom_texas virtualenv root_indicator background_jobs time)" >> ~/.zshrc
+	echo "POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status pyenv jenv custom_texas root_indicator background_jobs time)" >> ~/.zshrc
 	echo "POWERLEVEL9K_PROMPT_ON_NEWLINE=true" >> ~/.zshrc
 	echo "POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true" >> ~/.zshrc
 	echo "ZSH_THEME=powerlevel10k/powerlevel10k" >> ~/.zshrc
@@ -315,11 +325,13 @@ _macos-config-oh-my-zsh:
 _macos-config-command-line:
 	sudo chown -R $$(id -u) $$(brew --prefix)/*
 	# configure Python
-	brew link --overwrite --force python@3.8
+	brew link --overwrite --force python@$(PYTHON_VERSION_MAJOR).$(PYTHON_VERSION_MINOR)
 	rm -f $$(brew --prefix)/bin/python
 	ln $$(brew --prefix)/bin/python3 $$(brew --prefix)/bin/python
 	curl -s https://bootstrap.pypa.io/get-pip.py | $$(brew --prefix)/bin/python3
 	$$(brew --prefix)/bin/pip3 install $(PYTHON_BASE_PACKAGES)
+	pyenv install --skip-existing $(PYTHON_VERSION)
+	pyenv global system
 	# configure Go
 	curl -sSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | bash ||:
 	# configure Java
@@ -327,7 +339,9 @@ _macos-config-command-line:
 	jenv enable-plugin export
 	jenv add $$(/usr/libexec/java_home -v$(JAVA_VERSION))
 	jenv versions # ls -1 /Library/Java/JavaVirtualMachines
-	jenv global $(JAVA_VERSION).0
+	jenv global $(JAVA_VERSION)
+	# configure Terraform
+	tfswitch $(TERRAFORM_VERSION)
 	# configure Git
 	make git-config
 	# configure shell
@@ -385,9 +399,6 @@ _macos-config-command-line:
 			echo
 		) > $(DEV_OHMYZSH_DIR)/plugins/$(DEVOPS_PROJECT_NAME)/aws-platform.zsh
 	fi
-	if [ -f $(PROJECT_DIR)/*.code-workspace.template ] && [ ! -f $(PROJECT_DIR)/$(PROJECT_NAME).code-workspace ]; then
-		cp $(PROJECT_DIR)/*.code-workspace.template $(PROJECT_DIR)/$(PROJECT_NAME).code-workspace
-	fi
 
 _macos-config-iterm2:
 	curl -fsSL https://raw.githubusercontent.com/stefaniuk/dotfiles/master/lib/resources/iterm/com.googlecode.iterm2.plist -o /tmp/com.googlecode.iterm2.plist
@@ -397,7 +408,9 @@ _macos-config-iterm2:
 _macos-config-visual-studio-code:
 	# Install extensions
 	code --force --install-extension alefragnani.bookmarks
+	code --force --install-extension alefragnani.project-manager
 	code --force --install-extension alexkrechik.cucumberautocomplete
+	code --force --install-extension amazonwebservices.aws-toolkit-vscode
 	code --force --install-extension ban.spellright
 	code --force --install-extension christian-kohler.npm-intellisense
 	code --force --install-extension christian-kohler.path-intellisense
@@ -414,6 +427,7 @@ _macos-config-visual-studio-code:
 	code --force --install-extension felixfbecker.php-debug
 	code --force --install-extension felixfbecker.php-intellisense
 	code --force --install-extension gabrielbb.vscode-lombok
+	code --force --install-extension gruntfuggly.todo-tree
 	code --force --install-extension hashicorp.terraform
 	code --force --install-extension humao.rest-client
 	code --force --install-extension johnpapa.vscode-peacock
@@ -424,6 +438,7 @@ _macos-config-visual-studio-code:
 	code --force --install-extension ms-vsliveshare.vsliveshare-pack
 	code --force --install-extension msjsdiag.debugger-for-chrome
 	code --force --install-extension msjsdiag.vscode-react-native
+	code --force --install-extension nicolasvuillamy.vscode-groovy-lint
 	code --force --install-extension oderwat.indent-rainbow
 	code --force --install-extension pivotal.vscode-spring-boot
 	code --force --install-extension redhat.java
@@ -436,6 +451,8 @@ _macos-config-visual-studio-code:
 	code --force --install-extension vscjava.vscode-spring-boot-dashboard
 	code --force --install-extension vscjava.vscode-spring-initializr
 	code --force --install-extension vscode-icons-team.vscode-icons
+	code --force --install-extension vsls-contrib.codetour
+	code --force --install-extension vsls-contrib.gistfs
 	code --force --install-extension wayou.vscode-todo-highlight
 	code --force --install-extension xabikos.javascriptsnippets
 	code --force --install-extension yzhang.markdown-all-in-one

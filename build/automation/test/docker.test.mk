@@ -6,15 +6,15 @@ test-docker:
 		test-docker-create-from-template \
 		test-docker-config \
 		test-docker-build \
-		test-docker-image-name-as \
 		test-docker-image-pull-or-build \
 		test-docker-image-keep-latest-only \
 		test-docker-login \
 		test-docker-create-repository \
 		test-docker-push \
 		test-docker-pull \
+		test-docker-rename \
 		test-docker-create-dockerfile \
-		test-docker-set-get-image-version \
+		test-docker-image-set-get-version \
 		test-docker-image-start \
 		test-docker-image-stop \
 		test-docker-image-log \
@@ -22,7 +22,10 @@ test-docker:
 		test-docker-image-clean \
 		test-docker-image-save \
 		test-docker-image-load \
+		test-docker-image-get-digest \
 		test-docker-tag \
+		test-docker-tag-as-release-candidate \
+		test-docker-tag-as-environment-deployment \
 		test-docker-get-variables-from-file \
 		test-docker-run \
 		test-docker-run-composer \
@@ -84,12 +87,6 @@ test-docker-build:
 	# assert
 	mk_test "1 -eq $$(docker images --filter=reference=$(DOCKER_LIBRARY_REGISTRY)/$(TEST_DOCKER_IMAGE):latest -q | wc -l)"
 
-test-docker-image-name-as:
-	# act
-	make docker-build NAME=$(TEST_DOCKER_IMAGE) NAME_AS=$(TEST_DOCKER_IMAGE)-copy FROM_CACHE=true
-	# assert
-	mk_test "2 -eq $$(docker images --filter=reference=$(DOCKER_LIBRARY_REGISTRY)/$(TEST_DOCKER_IMAGE)-copy:* --quiet | wc -l)"
-
 test-docker-image-pull-or-build:
 	# arrange
 	docker rmi --force $$(docker images --filter=reference=$(DOCKER_LIBRARY_REGISTRY)/tools:* --quiet) 2> /dev/null ||:
@@ -118,6 +115,14 @@ test-docker-push:
 test-docker-pull:
 	mk_test_skip
 
+test-docker-rename:
+	# arrange
+	make docker-build NAME=$(TEST_DOCKER_IMAGE) FROM_CACHE=true
+	# act
+	make docker-rename NAME=$(TEST_DOCKER_IMAGE) AS=$(TEST_DOCKER_IMAGE)-copy
+	# assert
+	mk_test "2 -eq $$(docker images --filter=reference=$(DOCKER_LIBRARY_REGISTRY)/$(TEST_DOCKER_IMAGE)-copy:* --quiet | wc -l)"
+
 test-docker-clean:
 	# act
 	make docker-clean
@@ -138,19 +143,19 @@ test-docker-create-dockerfile:
 	# assert
 	mk_test "-n \"$$(cat $(DOCKER_LIB_IMAGE_DIR)/$(TEST_DOCKER_IMAGE)/Dockerfile.effective | grep -Eo METADATA | wc -l)\""
 
-test-docker-set-get-image-version:
+test-docker-image-set-get-version:
 	# arrange
 	cp -rf $(DOCKER_LIB_IMAGE_DIR)/$(TEST_DOCKER_IMAGE) $(TMP_DIR)
 	echo "YYYYmmddHHMM-hash" > $(TMP_DIR)/$(TEST_DOCKER_IMAGE)/VERSION
 	# act
-	make docker-set-image-version NAME=$(TEST_DOCKER_IMAGE) DOCKER_CUSTOM_DIR=$(TMP_DIR)
-	version=$$(make docker-get-image-version NAME=$(TEST_DOCKER_IMAGE) DOCKER_CUSTOM_DIR=$(TMP_DIR))
+	make docker-image-set-version NAME=$(TEST_DOCKER_IMAGE) DOCKER_CUSTOM_DIR=$(TMP_DIR)
+	version=$$(make docker-image-get-version NAME=$(TEST_DOCKER_IMAGE) DOCKER_CUSTOM_DIR=$(TMP_DIR))
 	# assert
 	mk_test "$$version = $$(date --date=$(BUILD_DATE) -u +%Y%m%d%H%M)-$$(git rev-parse --short HEAD)"
 
 test-docker-image-start:
 	# arrange
-	docker rm --force postgres-$(BUILD_HASH)-$(BUILD_ID) 2> /dev/null ||:
+	docker rm --force postgres-$(BUILD_COMMIT_HASH)-$(BUILD_ID) 2> /dev/null ||:
 	make docker-build NAME=postgres FROM_CACHE=true
 	# act
 	make docker-image-start NAME=postgres \
@@ -158,11 +163,11 @@ test-docker-image-start:
 		CMD="postgres"
 	sleep 1
 	# assert
-	mk_test "1 -eq $$(docker ps | grep postgres-$(BUILD_HASH)-$(BUILD_ID) | wc -l)"
+	mk_test "1 -eq $$(docker ps | grep postgres-$(BUILD_COMMIT_HASH)-$(BUILD_ID) | wc -l)"
 
 test-docker-image-stop:
 	# arrange
-	docker rm --force postgres-$(BUILD_HASH)-$(BUILD_ID) 2> /dev/null ||:
+	docker rm --force postgres-$(BUILD_COMMIT_HASH)-$(BUILD_ID) 2> /dev/null ||:
 	make docker-build NAME=postgres FROM_CACHE=true
 	make docker-image-start NAME=postgres \
 		ARGS="--env POSTGRES_PASSWORD=postgres" \
@@ -171,7 +176,7 @@ test-docker-image-stop:
 	# act
 	make docker-image-stop NAME=postgres
 	# assert
-	mk_test "0 -eq $$(docker ps | grep postgres-$(BUILD_HASH)-$(BUILD_ID) | wc -l)"
+	mk_test "0 -eq $$(docker ps | grep postgres-$(BUILD_COMMIT_HASH)-$(BUILD_ID) | wc -l)"
 
 test-docker-image-log:
 	mk_test_skip
@@ -207,6 +212,9 @@ test-docker-image-load:
 	# assert
 	mk_test "1 -eq $$(docker images --filter=reference=$(DOCKER_LIBRARY_REGISTRY)/postgres:* --quiet | wc -l)"
 
+test-docker-image-get-digest:
+	mk_test_skip
+
 test-docker-tag:
 	# arrange
 	make docker-image-clean NAME=postgres
@@ -215,6 +223,12 @@ test-docker-tag:
 	make docker-tag NAME=postgres VERSION=version
 	# assert
 	mk_test "1 -eq $$(docker images --filter=reference=$(DOCKER_LIBRARY_REGISTRY)/postgres:version --quiet | wc -l)"
+
+test-docker-tag-as-release-candidate:
+	mk_test_skip
+
+test-docker-tag-as-environment-deployment:
+	mk_test_skip
 
 test-docker-get-variables-from-file:
 	# act
