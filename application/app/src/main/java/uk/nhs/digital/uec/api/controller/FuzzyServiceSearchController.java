@@ -3,12 +3,13 @@ package uk.nhs.digital.uec.api.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.nhs.digital.uec.api.exception.ValidationException;
 import uk.nhs.digital.uec.api.model.ApiResponse;
-import uk.nhs.digital.uec.api.model.ApiSuccResponse;
+import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
@@ -31,12 +32,12 @@ public class FuzzyServiceSearchController {
    *     provided.
    * @return {@link ApiResponse}
    */
-  @RequestMapping("services/byfuzzysearch")
+  @GetMapping("services/byfuzzysearch")
   public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
       @RequestParam(name = "search_criteria", required = false) List<String> searchCriteria,
       @RequestParam(name = "filter_referral_role", required = false) String filterReferralRole) {
 
-    final ApiSuccResponse response = new ApiSuccResponse();
+    final ApiSuccessResponse response = new ApiSuccessResponse();
     response.setSearchCriteria(searchCriteria);
 
     try {

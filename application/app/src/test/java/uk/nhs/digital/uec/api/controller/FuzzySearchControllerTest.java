@@ -19,11 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.exception.ValidationException;
 import uk.nhs.digital.uec.api.model.ApiResponse;
-import uk.nhs.digital.uec.api.model.ApiSuccResponse;
+import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
 import uk.nhs.digital.uec.api.service.impl.ValidationService;
+import uk.nhs.digital.uec.api.utils.MockDosServicesUtil;
 
 @ExtendWith(SpringExtension.class)
 public class FuzzySearchControllerTest {
@@ -49,7 +50,7 @@ public class FuzzySearchControllerTest {
     ResponseEntity<ApiResponse> responseEntity =
         fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null);
 
-    final ApiSuccResponse response = (ApiSuccResponse) responseEntity.getBody();
+    final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.getBody();
     final List<DosService> returnedServices = response.getServices();
 
     verify(mockValidationService, times(1)).validateSearchCriteria(searchCriteria);
@@ -104,51 +105,8 @@ public class FuzzySearchControllerTest {
 
     List<DosService> dosServices = new ArrayList<>();
 
-    DosService dosService = new DosService();
-    dosService.setId(1);
-    dosService.setUIdentifier(1);
-    dosService.setName("service1");
-    dosService.setPublicName("Public Service Name 1");
-    dosService.setType("Type 1");
-    dosService.setTypeId(1);
-    dosService.setCapacityStatus("GREEN");
-
-    List<String> address = new ArrayList<>();
-    address.add("1 Service Street");
-    address.add("Service town");
-    address.add("Exmouth");
-    dosService.setAddress(address);
-    dosService.setPostcode("EX7 8PR");
-
-    List<String> referralRoles = new ArrayList<>();
-    referralRoles.add("Role 1");
-    referralRoles.add("Role 2");
-    dosService.setReferralRoles(referralRoles);
-
-    dosServices.add(dosService);
-
-    DosService dosService2 = new DosService();
-    dosService2.setId(2);
-    dosService2.setUIdentifier(23);
-    dosService2.setName("service2");
-    dosService2.setPublicName("Public Service Name 2");
-    dosService2.setType("Type 2");
-    dosService2.setTypeId(2);
-    dosService2.setCapacityStatus("AMBER");
-
-    List<String> address2 = new ArrayList<>();
-    address2.add("2 Service Street");
-    address2.add("Service town");
-    address2.add("Exmouth");
-    dosService2.setAddress(address2);
-    dosService2.setPostcode("EX7 8PR");
-
-    List<String> referralRoles2 = new ArrayList<>();
-    referralRoles2.add("Role 1");
-    referralRoles2.add("Role 4");
-    dosService2.setReferralRoles(referralRoles2);
-
-    dosServices.add(dosService2);
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
 
     return dosServices;
   }

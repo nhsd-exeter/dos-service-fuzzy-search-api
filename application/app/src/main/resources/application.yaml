@@ -1,6 +1,9 @@
 server:
   port: 9095
 
+api:
+  endpoint: "http://localhost:9095/dosapi/dosservices/v0.0.1/services/byfuzzysearch"
+
 param:
   version: "0.0.1"
   validation:
