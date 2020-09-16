@@ -5,14 +5,37 @@ services:
     image: 461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/sfs/dos-service-fuzzy-search-api:latest
     container_name: dos-service-fuzzy-search-api
     environment:
-      SPRING_PROFILES_ACTIVE: mock
+      SPRING_PROFILES_ACTIVE: test
+      PARAM.SERVICE.MAX_NUM_SERVICES_TO_RETURN: 20
       PARAM.VERSION: v0.0.1
       PARAM.VALIDATION.MIN_SEARCH_STRING_LENGTH: 3
       PARAM.VALIDATION.MAX_SEARCH_CRITERIA: 10
-      PARAM.BUSINESS.SEARCH_CRITERIA_DELIMITER: ","
     ports:
       - 9095:9095
     command: ["java", "-jar", "/application/dos-service-fuzzy-search-api.jar"]
+    networks:
+      default:
+        aliases:
+          - dos-service-fuzzy-search-api.sf.test
+
+  elasticsearchservice:
+    image: elasticsearch:$DOCKER_ELASTICSEARCH_VERSION
+    container_name: dos-service-fuzzy-search-api-elasticsearch
+    hostname: elasticsearch
+    user: elasticsearch
+    environment:
+      ES_JAVA_OPTS: "-Xms64m -Xmx128m"
+    ports:
+      - "9200:9200"
+    command: >
+      /bin/bash -c "
+        elasticsearch \
+          -E discovery.type=single-node \
+          -E http.port=9200 \
+          -E http.cors.enabled=true \
+          -E http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358 \
+          -E http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization \
+          -E http.cors.allow-credentials=true; "
     networks:
       default:
         aliases:
