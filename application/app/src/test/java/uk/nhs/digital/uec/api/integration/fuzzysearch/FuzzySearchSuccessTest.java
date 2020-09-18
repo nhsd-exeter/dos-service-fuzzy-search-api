@@ -23,12 +23,12 @@ import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 import uk.nhs.digital.uec.api.util.PropertySourceResolver;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@ActiveProfiles("test")
 /**
  * Test class which passes requests through the Fuzzy Search endpoint and asserts desired API
  * behavior. Only the model layer will be mocked here.
  */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ActiveProfiles("test")
 public class FuzzySearchSuccessTest {
 
   @Autowired private ObjectMapper mapper;
