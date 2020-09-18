@@ -34,9 +34,9 @@
           "referral_roles": ["role 1", "role 2"]
         }
       ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
     }
-  },
-  "headers": {
-    "Content-Type": "application/json"
   }
 }
