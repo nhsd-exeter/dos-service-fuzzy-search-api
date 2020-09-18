@@ -32,9 +32,9 @@ services:
         aliases:
           - elasticsearch.sfs.local
 
-  elasticsearchservice:
+  elasticsearch:
     image: elasticsearch:$DOCKER_ELASTICSEARCH_VERSION
-    container_name: dos-service-fuzzy-search-api-elasticsearch
+    container_name: elasticsearch
     hostname: elasticsearch
     user: elasticsearch
     environment:
