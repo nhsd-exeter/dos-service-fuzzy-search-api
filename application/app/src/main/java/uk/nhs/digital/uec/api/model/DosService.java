@@ -6,12 +6,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 /** Defines the structure and attributes that are returned for each service. */
+@Document(indexName = "service")
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+  "_score",
   "id",
   "u_identifier",
   "name",
@@ -25,6 +28,9 @@ import lombok.Setter;
   "referral_roles"
 })
 public class DosService {
+
+  @JsonProperty("_score")
+  private Float _score;
 
   @JsonProperty("id")
   private int id;

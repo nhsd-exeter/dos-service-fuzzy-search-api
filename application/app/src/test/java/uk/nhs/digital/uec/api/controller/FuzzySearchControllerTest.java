@@ -50,7 +50,7 @@ public class FuzzySearchControllerTest {
         .thenReturn(getDosServices());
 
     ResponseEntity<ApiResponse> responseEntity =
-        fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null);
+        fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null, 0, 0);
 
     // Assert
     final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.getBody();
@@ -80,7 +80,7 @@ public class FuzzySearchControllerTest {
         .validateSearchCriteria(searchCriteria);
 
     ResponseEntity<ApiResponse> responseEntity =
-        fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null);
+        fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null, 0, 0);
 
     // Assert
     final ApiValidationErrorResponse response =

@@ -1,6 +1,7 @@
 package uk.nhs.digital.uec.api.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import uk.nhs.digital.uec.api.model.ApiResponse;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
+import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
 import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 
@@ -20,9 +22,13 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 @RequestMapping("/dosapi/dosservices/v0.0.1")
 public class FuzzyServiceSearchController {
 
+  @Autowired private ApiSuccessResponse response;
+
   @Autowired private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
 
   @Autowired private ValidationServiceInterface validationService;
+
+  @Autowired private ApiUtilsServiceInterface utils;
 
   /**
    * Endpoint for retrieving services with attributes that match the search criteria provided.
@@ -34,10 +40,15 @@ public class FuzzyServiceSearchController {
    */
   @GetMapping("services/byfuzzysearch")
   public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
-      @RequestParam(name = "search_criteria", required = false) List<String> searchCriteria,
-      @RequestParam(name = "filter_referral_role", required = false) String filterReferralRole) {
+      HttpServletRequest request,
+      @RequestParam(name = "search_term", required = false) List<String> searchCriteria,
+      @RequestParam(name = "filter_referral_role", required = false) String filterReferralRole,
+      @RequestParam(name = "max_number_of_services_to_return", required = false)
+          Integer maxNumServicesToReturn,
+      @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel) {
 
-    final ApiSuccessResponse response = new ApiSuccessResponse();
+    utils.configureApiRequestParams(request);
+
     response.setSearchCriteria(searchCriteria);
 
     try {

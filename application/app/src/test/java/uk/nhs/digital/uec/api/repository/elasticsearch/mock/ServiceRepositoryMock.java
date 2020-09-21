@@ -6,12 +6,12 @@ import java.util.Map;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import uk.nhs.digital.uec.api.model.DosService;
-import uk.nhs.digital.uec.api.repository.elasticsearch.ServicesRepositoryInterface;
+import uk.nhs.digital.uec.api.repository.elasticsearch.CustomServicesRepositoryInterface;
 import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 
 @Repository
 @Profile("test")
-public class ServiceRepositoryMock implements ServicesRepositoryInterface {
+public class ServiceRepositoryMock implements CustomServicesRepositoryInterface {
 
   /** {@inheritDoc} */
   @Override

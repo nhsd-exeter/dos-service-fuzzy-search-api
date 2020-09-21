@@ -11,3 +11,4 @@ param:
     max_search_criteria: ${MAX_SEARCH_CRITERIA}
   services:
     max_num_services_to_return: ${MAX_NUM_SERVICES_TO_RETURN}
+    fuzz_level: 0
