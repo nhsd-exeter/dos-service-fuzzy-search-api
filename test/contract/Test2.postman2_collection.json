@@ -60,11 +60,11 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/Head unit EX8 5JA",
+          "raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=1",
           "protocol": "http",
           "host": ["{{host}}"],
           "port": "8080",
-          "path": ["dosapi/dosservices/v0.0.1/byfuzzysearch/Head unit_EX8 5JA"]
+          "path": ["dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=1"]
         }
       },
       "response": []
