@@ -19,12 +19,9 @@ services:
   #         - dos-service-fuzzy-search-api.sf.test
 
   elasticsearch:
-    image: nhsd/elasticsearch:latest
+    image: nhsd/elasticsearch:$DOCKER_LIBRARY_ELASTICSEARCH_VERSION
     container_name: elasticsearch
     hostname: elasticsearch
-    user: elasticsearch
-    environment:
-      ES_JAVA_OPTS: "-Xms64m -Xmx128m"
     ports:
       - "9200:9200"
     command: ["elasticsearch"]
