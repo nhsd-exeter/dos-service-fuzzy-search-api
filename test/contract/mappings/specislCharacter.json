@@ -7,21 +7,8 @@
     "status": 200,
     "jsonBody": {
       "search_string": "Totnes!",
-      "number_of_services": 1,
-      "services": [
-        {
-          "id": 45082,
-          "u_identifier": "1372850439",
-          "name": "Totnes Hospital",
-          "capacity_status": "GREEN",
-          "type_id": 28,
-          "type": "Community Hospital",
-          "ods_code": "ODS1",
-          "address": ["Totnes Hospital", "Coronation Road", "Totnes", "Devon"],
-          "postcode": "TQ9 5GH",
-          "referral_roles": ["role 1", "role 2"]
-        }
-      ]
+      "number_of_services": 0,
+      "services": []
     },
     "headers": {
       "Content-Type": "application/json"
