@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=service0"
+    "url": "/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=0"
   },
   "response": {
     "status": 200,

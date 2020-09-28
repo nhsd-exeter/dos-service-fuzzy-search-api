@@ -1,12 +1,12 @@
 {
   "request": {
     "method": "GET",
-    "url": "/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=TotnesHospital"
+    "url": "/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Totnes!"
   },
   "response": {
     "status": 200,
     "jsonBody": {
-      "search_string": "Totnes Hospital",
+      "search_string": "Totnes!",
       "number_of_services": 1,
       "services": [
         {

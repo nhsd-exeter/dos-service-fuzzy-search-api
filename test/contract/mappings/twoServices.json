@@ -1,18 +1,18 @@
 {
   "request": {
     "method": "GET",
-    "url": "/dosapi/dosservices/v0.0.1/byfuzzysearch/Head unit_EX8 5JA"
+    "url": "/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=service2"
   },
   "response": {
     "status": 200,
     "jsonBody": {
-      "search_string": "dummy",
+      "search_string": "service1",
       "number_of_services": 2,
       "services": [
         {
           "id": 45082,
           "u_identifier": "1372850439",
-          "name": "CH - Totnes Community Hospital - Totnes",
+          "name": "service1",
           "capacity_status": "GREEN",
           "type_id": 28,
           "type": "Community Hospital",
@@ -22,15 +22,15 @@
           "referral_roles": ["role 1", "role 2"]
         },
         {
-          "id": 45680,
+          "id": 45082,
           "u_identifier": "1377258117",
-          "name": "Totnes community Hospital (Capacity)",
+          "name": "service2",
           "capacity_status": "GREEN",
           "type_id": 28,
           "type": "Community Hospital",
           "ods_code": "ODS2",
-          "address": ["Not Available"],
-          "postcode": "Not Available",
+          "address": ["Totnes community Hospital (Capacity)"],
+          "postcode": "TQ9 5GH",
           "referral_roles": ["role 1", "role 2"]
         }
       ]
