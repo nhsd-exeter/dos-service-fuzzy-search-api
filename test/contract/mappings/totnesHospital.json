@@ -7,7 +7,7 @@
     "status": 200,
     "jsonBody": {
       "search_string": "TotnesHospital",
-      "number_of_services": 1,
+      "number_of_services": 0,
       "services": []
     },
     "headers": {
