@@ -9,8 +9,8 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 @Service
 public class ValidationService implements ValidationServiceInterface {
 
-  @Value("${param.validation.min_search_string_length}")
-  private int minSearchStringLength;
+  @Value("${param.validation.min_search_term_length}")
+  private int minSearchTermLength;
 
   @Value("${param.validation.max_search_criteria}")
   private int maxSearchCriteria;
@@ -53,7 +53,7 @@ public class ValidationService implements ValidationServiceInterface {
     boolean minSearchCriteriaLthMet = false;
 
     for (final String searchCriteriaStr : searchCriteria) {
-      if (searchCriteriaStr.length() >= minSearchStringLength) {
+      if (searchCriteriaStr.length() >= minSearchTermLength) {
         minSearchCriteriaLthMet = true;
         break;
       }

@@ -40,16 +40,19 @@ public class FuzzySearchControllerTest {
 
   @Test
   public void getServicesByFuzzySearchTestSucc() throws ValidationException {
+    // Arrange
     List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("term1");
     searchCriteria.add("term2");
 
+    // Act
     when(mockFuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria))
         .thenReturn(getDosServices());
 
     ResponseEntity<ApiResponse> responseEntity =
         fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null);
 
+    // Assert
     final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.getBody();
     final List<DosService> returnedServices = response.getServices();
 
@@ -66,10 +69,12 @@ public class FuzzySearchControllerTest {
 
   @Test
   public void getServicesByFuzzySearchTestValidationError() throws ValidationException {
+    // Arrange
     List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("term1");
     searchCriteria.add("term2");
 
+    // Act
     doThrow(new ValidationException(VALIDATION_ERROR_MSG, VALIDATION_ERROR_CODE))
         .when(mockValidationService)
         .validateSearchCriteria(searchCriteria);
@@ -77,6 +82,7 @@ public class FuzzySearchControllerTest {
     ResponseEntity<ApiResponse> responseEntity =
         fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null);
 
+    // Assert
     final ApiValidationErrorResponse response =
         (ApiValidationErrorResponse) responseEntity.getBody();
 

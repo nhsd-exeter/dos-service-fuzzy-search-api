@@ -19,22 +19,23 @@ public class ValidationServiceTest {
 
   @InjectMocks private ValidationService validationService;
 
-  private int minSearchStringLength = 3;
+  private int minSearchTermLength = 3;
 
   private int maxSearchCriteria = 10;
 
   @BeforeEach
   public void setup() {
-    ReflectionTestUtils.setField(validationService, "minSearchStringLength", minSearchStringLength);
+    ReflectionTestUtils.setField(validationService, "minSearchTermLength", minSearchTermLength);
     ReflectionTestUtils.setField(validationService, "maxSearchCriteria", maxSearchCriteria);
   }
 
   @Test
   public void validateSearchCriteriaMinSuccess() {
-
+    // Arrange
     final List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("term1");
 
+    // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
     } catch (ValidationException ve) {
@@ -44,12 +45,13 @@ public class ValidationServiceTest {
 
   @Test
   public void validateSearchCriteriaSuccess() {
-
+    // Arrange
     final List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("term1");
     searchCriteria.add("term2");
     searchCriteria.add("term3");
 
+    // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
     } catch (ValidationException ve) {
@@ -59,12 +61,13 @@ public class ValidationServiceTest {
 
   @Test
   public void validateSearchCriteriaLimitSuccess() {
-
+    // Arrange
     final List<String> searchCriteria = new ArrayList<>();
     for (int i = 0; i < maxSearchCriteria; i++) {
       searchCriteria.add("term" + i);
     }
 
+    // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
     } catch (ValidationException ve) {
@@ -74,9 +77,10 @@ public class ValidationServiceTest {
 
   @Test
   public void validateSearchCriteriaEmpty() {
-
+    // Arrange
     final List<String> searchCriteria = new ArrayList<>();
 
+    // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
       fail("No validation exception raised when expected because the search criteria is empty.");
@@ -89,7 +93,7 @@ public class ValidationServiceTest {
 
   @Test
   public void validateSearchCriteriaNull() {
-
+    // Act and Assert
     try {
       validationService.validateSearchCriteria(null);
       fail("No validation exception raised when expected because the search criteria is empty.");
@@ -102,13 +106,14 @@ public class ValidationServiceTest {
 
   @Test
   public void validateSearchCriteriaTooManyTerms() {
-
+    // Arrange
     final List<String> searchCriteria = new ArrayList<>();
 
     for (int i = 0; i < maxSearchCriteria + 1; i++) {
       searchCriteria.add("term" + i);
     }
 
+    // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
       fail(
@@ -123,10 +128,11 @@ public class ValidationServiceTest {
 
   @Test
   public void validateMinSearchTermLengthSuccess() {
-
+    // Arrange
     final List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("123");
 
+    // Act and Assert
     try {
       validationService.validateMinSearchCriteriaLength(searchCriteria);
     } catch (ValidationException ve) {
@@ -136,12 +142,13 @@ public class ValidationServiceTest {
 
   @Test
   public void validateMinSearchTermLengthOneTermValidSuccess() {
-
+    // Arrange
     final List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("1");
     searchCriteria.add("12");
     searchCriteria.add("123");
 
+    // Act and Assert
     try {
       validationService.validateMinSearchCriteriaLength(searchCriteria);
     } catch (ValidationException ve) {
@@ -151,9 +158,10 @@ public class ValidationServiceTest {
 
   @Test
   public void validateSearchCriteriaLengthEmpty() {
-
+    // Arrange
     final List<String> searchCriteria = new ArrayList<>();
 
+    // Act and Assert
     try {
       validationService.validateMinSearchCriteriaLength(searchCriteria);
       fail("No validation exception raised when expected because the search criteria is empty.");
@@ -166,7 +174,7 @@ public class ValidationServiceTest {
 
   @Test
   public void validateSearchCriteriaLengthNull() {
-
+    // Act and Assert
     try {
       validationService.validateMinSearchCriteriaLength(null);
       fail("No validation exception raised when expected because the search criteria is empty.");
@@ -179,10 +187,11 @@ public class ValidationServiceTest {
 
   @Test
   public void validateMinSearchTermLengthTooSmallError() {
-
+    // Arrange
     final List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("12");
 
+    // Act and Assert
     try {
       validationService.validateMinSearchCriteriaLength(searchCriteria);
       fail(

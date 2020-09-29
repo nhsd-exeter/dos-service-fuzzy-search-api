@@ -57,12 +57,16 @@ public class FuzzySearchSuccessTest {
    */
   @Test
   public void oneSearchCriteriaGiven() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam("search_criteria", "Term1");
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.OK);
 
     ApiSuccessResponse response =
@@ -86,15 +90,19 @@ public class FuzzySearchSuccessTest {
    */
   @Test
   public void atLeastOneValidSearchTermGiven() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
             .queryParam("search_criteria", "a")
             .queryParam("search_criteria", "ab")
             .queryParam("search_criteria", "Term1");
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.OK);
 
     ApiSuccessResponse response =
@@ -118,12 +126,16 @@ public class FuzzySearchSuccessTest {
    */
   @Test
   public void oneSearchCriteriaGivenNoResults() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam("search_criteria", "Term0");
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.OK);
 
     ApiSuccessResponse response =
@@ -135,12 +147,16 @@ public class FuzzySearchSuccessTest {
   /** Given search criteria of ALL, return the maximum number of services. */
   @Test
   public void allSearchCriteriaGivenMaxResults() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam("search_criteria", "All");
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.OK);
 
     ApiSuccessResponse response =

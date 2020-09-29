@@ -38,40 +38,56 @@ public class FuzzySearchGeneralErrorsTest {
   /** Given a Post call on the endpoint, ensure a 405 error is returned. */
   @Test
   public void postCallOnEndpoint() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
+
+    // Act
     ResponseEntity<String> response =
         restTemplate.exchange(endpointUrl, HttpMethod.POST, request, String.class);
 
+    // Assert
     assertTrue(response.getStatusCode() == HttpStatus.METHOD_NOT_ALLOWED);
   }
 
   /** Given a Patch call on the endpoint, ensure a 405 error is returned. */
   @Test
   public void patchCallOnEndpoint() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
+
+    // Act
     ResponseEntity<String> response =
         restTemplate.exchange(endpointUrl, HttpMethod.PATCH, request, String.class);
 
+    // Assert
     assertTrue(response.getStatusCode() == HttpStatus.METHOD_NOT_ALLOWED);
   }
 
   /** Given a Put call on the endpoint, ensure a 405 error is returned. */
   @Test
   public void putCallOnEndpoint() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
+
+    // Act
     ResponseEntity<String> response =
         restTemplate.exchange(endpointUrl, HttpMethod.PUT, request, String.class);
 
+    // Assert
     assertTrue(response.getStatusCode() == HttpStatus.METHOD_NOT_ALLOWED);
   }
 
   /** Given a Delete call on the endpoint, ensure a 405 error is returned. */
   @Test
   public void deleteCallOnEndpoint() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
+
+    // Act
     ResponseEntity<String> response =
         restTemplate.exchange(endpointUrl, HttpMethod.DELETE, request, String.class);
 
+    // Assert
     assertTrue(response.getStatusCode() == HttpStatus.METHOD_NOT_ALLOWED);
   }
 }

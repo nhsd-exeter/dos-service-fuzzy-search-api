@@ -35,7 +35,7 @@ public class FuzzyServiceSearchServiceTest {
 
   @Test
   public void retrieveServicesByFuzzySearchSuccess() {
-
+    // Arrange
     List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("term1");
     searchCriteria.add("term2");
@@ -46,15 +46,17 @@ public class FuzzyServiceSearchServiceTest {
 
     when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(dosServices);
 
+    // Act
     List<DosService> services =
         fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
 
+    // Assert
     assertEquals(2, services.size());
   }
 
   @Test
   public void retrieveServicesByFuzzySearchNoResults() {
-
+    // Arrange
     List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("term0");
 
@@ -62,15 +64,17 @@ public class FuzzyServiceSearchServiceTest {
 
     when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(dosServices);
 
+    // Act
     List<DosService> services =
         fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
 
+    // Assert
     assertEquals(0, services.size());
   }
 
   @Test
   public void retrieveServicesByFuzzySearchTooManyResults() {
-
+    // Arrange
     List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("All");
 
@@ -81,15 +85,17 @@ public class FuzzyServiceSearchServiceTest {
 
     when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(dosServices);
 
+    // Act
     List<DosService> services =
         fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
 
+    // Assert
     assertEquals(maxNumServicesToReturn, services.size());
   }
 
   @Test
   public void retrieveServicesByFuzzySearchMaxReturn() {
-
+    // Arrange
     List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("Max");
 
@@ -101,23 +107,27 @@ public class FuzzyServiceSearchServiceTest {
 
     when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(maxDosServices);
 
+    // Act
     List<DosService> services =
         fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
 
+    // Assert
     assertEquals(maxNumServicesToReturn, services.size());
   }
 
   @Test
   public void retrieveServicesByFuzzySearchNullReturn() {
-
+    // Arrange
     List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("Null");
 
     when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(null);
 
+    // Act
     List<DosService> services =
         fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
 
+    // Assert
     assertEquals(0, services.size());
   }
 }

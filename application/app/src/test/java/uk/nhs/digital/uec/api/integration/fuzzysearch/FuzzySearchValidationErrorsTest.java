@@ -47,10 +47,14 @@ public class FuzzySearchValidationErrorsTest {
    */
   @Test
   public void noSearchCriteriaGiven() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(endpointUrl, HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
 
     ApiValidationErrorResponse response =
@@ -65,6 +69,7 @@ public class FuzzySearchValidationErrorsTest {
    */
   @Test
   public void tooManySearchCriteriaGiven() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
@@ -74,9 +79,12 @@ public class FuzzySearchValidationErrorsTest {
             .queryParam("search_criteria", "Term4")
             .queryParam("search_criteria", "Term5")
             .queryParam("search_criteria", "Term6");
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
 
     ApiValidationErrorResponse response =
@@ -91,15 +99,19 @@ public class FuzzySearchValidationErrorsTest {
    */
   @Test
   public void noSearchTermMeetsRequirements() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
             .queryParam("search_criteria", "1")
             .queryParam("search_criteria", "ab")
             .queryParam("search_criteria", "z");
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
 
     ApiValidationErrorResponse response =
