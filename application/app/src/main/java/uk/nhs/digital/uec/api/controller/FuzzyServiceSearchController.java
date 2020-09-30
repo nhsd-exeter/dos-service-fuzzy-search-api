@@ -1,7 +1,6 @@
 package uk.nhs.digital.uec.api.controller;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,14 +39,13 @@ public class FuzzyServiceSearchController {
    */
   @GetMapping("services/byfuzzysearch")
   public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
-      HttpServletRequest request,
       @RequestParam(name = "search_term", required = false) List<String> searchCriteria,
       @RequestParam(name = "filter_referral_role", required = false) String filterReferralRole,
       @RequestParam(name = "max_number_of_services_to_return", required = false)
           Integer maxNumServicesToReturn,
       @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel) {
 
-    utils.configureApiRequestParams(request);
+    utils.configureApiRequestParams(fuzzLevel, filterReferralRole, maxNumServicesToReturn);
 
     response.setSearchCriteria(searchCriteria);
 

@@ -25,12 +25,6 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
   public List<DosService> findServiceBySearchTerms(List<String> searchTerms) {
     final List<DosService> dosServices = new ArrayList<>();
 
-    MockDosServicesUtil.addMockServices(10);
-
-    for (int i = 1; i <= 10; i++) {
-      servicesRepo.save(MockDosServicesUtil.mockDosServices.get(i));
-    }
-
     Iterable<DosService> services =
         servicesRepo.findByName(searchTerms.get(0), request.getFuzzLevel());
 
@@ -40,5 +34,14 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     }
 
     return dosServices;
+  }
+
+  @Override
+  public void saveMockServices() {
+    MockDosServicesUtil.addMockServices(10);
+
+    for (int i = 1; i <= 10; i++) {
+      servicesRepo.save(MockDosServicesUtil.mockDosServices.get(i));
+    }
   }
 }
