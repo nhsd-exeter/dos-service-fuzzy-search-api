@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=totNes"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "search_string": "totNes",
+      "number_of_services": 0,
+      "services": []
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
