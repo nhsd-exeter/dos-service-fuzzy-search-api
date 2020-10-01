@@ -1,13 +1,13 @@
 server:
-  port: 9095
+  port: ${SERVER_PORT}
 
 api:
-  endpoint: http://localhost:9095/dosapi/dosservices/v0.0.1/services/byfuzzysearch
+  endpoint: ${URL}
 
 param:
-  version: 0.0.1
+  version: ${VERSION}
   validation:
-    min_search_term_length: 3
-    max_search_criteria: 5
+    min_search_term_length: ${MIN_SEARCH_TERM_LENGTH}
+    max_search_criteria: ${MAX_SEARCH_CRITERIA}
   services:
-    max_num_services_to_return: 20
+    max_num_services_to_return: ${MAX_NUM_SERVICES_TO_RETURN}

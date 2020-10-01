@@ -18,7 +18,7 @@ services:
     networks:
       default:
         aliases:
-          - elasticsearch.sfs.local
+          - fuzzysearch.sfs.local
 
   elasticsearch:
     image: nhsd/elasticsearch:$DOCKER_LIBRARY_ELASTICSEARCH_VERSION
@@ -30,7 +30,7 @@ services:
     networks:
       default:
         aliases:
-          - fuzzysearch.sfs.local
+          - elasticsearch.sfs.local
 
 networks:
   default:
