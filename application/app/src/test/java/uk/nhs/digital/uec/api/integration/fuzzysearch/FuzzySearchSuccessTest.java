@@ -16,17 +16,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.DosService;
+import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 import uk.nhs.digital.uec.api.util.PropertySourceResolver;
-import uk.nhs.digital.uec.api.utils.MockDosServicesUtil;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 /**
  * Test class which passes requests through the Fuzzy Search endpoint and asserts desired API
  * behavior. Only the model layer will be mocked here.
  */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ActiveProfiles("test")
 public class FuzzySearchSuccessTest {
 
   @Autowired private ObjectMapper mapper;
@@ -34,6 +36,7 @@ public class FuzzySearchSuccessTest {
   @Autowired private PropertySourceResolver propertySourceResolver;
 
   private static String endpointUrl;
+  private static int maxNoServicesToReturn;
 
   TestRestTemplate restTemplate = new TestRestTemplate();
   HttpHeaders headers = new HttpHeaders();
@@ -41,6 +44,7 @@ public class FuzzySearchSuccessTest {
   @BeforeEach
   public void configureProperties() {
     endpointUrl = propertySourceResolver.endpointUrl;
+    maxNoServicesToReturn = propertySourceResolver.maxNumServicesToReturn;
   }
 
   /** Sunny day scenarios. */
@@ -53,12 +57,16 @@ public class FuzzySearchSuccessTest {
    */
   @Test
   public void oneSearchCriteriaGiven() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam("search_criteria", "Term1");
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.OK);
 
     ApiSuccessResponse response =
@@ -82,15 +90,19 @@ public class FuzzySearchSuccessTest {
    */
   @Test
   public void atLeastOneValidSearchTermGiven() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
             .queryParam("search_criteria", "a")
             .queryParam("search_criteria", "ab")
             .queryParam("search_criteria", "Term1");
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.OK);
 
     ApiSuccessResponse response =
@@ -114,18 +126,43 @@ public class FuzzySearchSuccessTest {
    */
   @Test
   public void oneSearchCriteriaGivenNoResults() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam("search_criteria", "Term0");
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.OK);
 
     ApiSuccessResponse response =
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
     assertEquals(response.getNumberOfServices(), 0);
+  }
+
+  /** Given search criteria of ALL, return the maximum number of services. */
+  @Test
+  public void allSearchCriteriaGivenMaxResults() throws Exception {
+    // Arrange
+    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    UriComponentsBuilder uriBuilder =
+        UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam("search_criteria", "All");
+
+    // Act
+    ResponseEntity<String> responseEntity =
+        restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
+
+    // Assert
+    assertTrue(responseEntity.getStatusCode() == HttpStatus.OK);
+
+    ApiSuccessResponse response =
+        mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
+
+    assertEquals(response.getNumberOfServices(), maxNoServicesToReturn);
   }
 
   /** Method to verify the service details that are returned from the API call. */

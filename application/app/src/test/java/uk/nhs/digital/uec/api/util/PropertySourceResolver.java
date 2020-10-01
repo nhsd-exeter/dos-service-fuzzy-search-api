@@ -8,4 +8,7 @@ public class PropertySourceResolver {
 
   @Value("${api.endpoint}")
   public String endpointUrl;
+
+  @Value("${param.services.max_num_services_to_return}")
+  public int maxNumServicesToReturn;
 }

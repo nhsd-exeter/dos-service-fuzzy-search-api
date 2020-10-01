@@ -14,15 +14,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.util.PropertySourceResolver;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 /**
  * Test class which passes requests through the Fuzzy Search endpoint and asserts desired API
  * behavior. Only the model layer will be mocked here.
  */
+@ActiveProfiles("test")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class FuzzySearchValidationErrorsTest {
 
   @Autowired private ObjectMapper mapper;
@@ -45,10 +47,14 @@ public class FuzzySearchValidationErrorsTest {
    */
   @Test
   public void noSearchCriteriaGiven() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(endpointUrl, HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
 
     ApiValidationErrorResponse response =
@@ -63,6 +69,7 @@ public class FuzzySearchValidationErrorsTest {
    */
   @Test
   public void tooManySearchCriteriaGiven() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
@@ -72,9 +79,12 @@ public class FuzzySearchValidationErrorsTest {
             .queryParam("search_criteria", "Term4")
             .queryParam("search_criteria", "Term5")
             .queryParam("search_criteria", "Term6");
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
 
     ApiValidationErrorResponse response =
@@ -89,15 +99,19 @@ public class FuzzySearchValidationErrorsTest {
    */
   @Test
   public void noSearchTermMeetsRequirements() throws Exception {
+    // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
             .queryParam("search_criteria", "1")
             .queryParam("search_criteria", "ab")
             .queryParam("search_criteria", "z");
+
+    // Act
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
+    // Assert
     assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
 
     ApiValidationErrorResponse response =

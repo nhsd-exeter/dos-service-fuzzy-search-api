@@ -1,22 +1,36 @@
 version: "3.7"
 
 services:
-  fuzzysearchapi:
+  fuzzysearch:
     image: 461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/sfs/dos-service-fuzzy-search-api:latest
-    container_name: dos-service-fuzzy-search-api
+    container_name: fuzzysearch
     environment:
-      SPRING_PROFILES_ACTIVE: mock
-      PARAM.VERSION: v0.0.1
-      PARAM.VALIDATION.MIN_SEARCH_STRING_LENGTH: 3
-      PARAM.VALIDATION.MAX_SEARCH_CRITERIA: 10
-      PARAM.BUSINESS.SEARCH_CRITERIA_DELIMITER: ","
+      SPRING_PROFILES_ACTIVE: $SPRING_PROFILES_ACTIVE
+      URL: $URL
+      SERVER_PORT: $SERVER_PORT
+      VERSION: $VERSION
+      MIN_SEARCH_TERM_LENGTH: $MIN_SEARCH_TERM_LENGTH
+      MAX_SEARCH_CRITERIA: $MAX_SEARCH_CRITERIA
+      MAX_NUM_SERVICES_TO_RETURN: $MAX_NUM_SERVICES_TO_RETURN
     ports:
       - 9095:9095
     command: ["java", "-jar", "/application/dos-service-fuzzy-search-api.jar"]
     networks:
       default:
         aliases:
-          - dos-service-fuzzy-search-api.sf.test
+          - fuzzysearch.sfs.local
+
+  elasticsearch:
+    image: nhsd/elasticsearch:$DOCKER_LIBRARY_ELASTICSEARCH_VERSION
+    container_name: elasticsearch
+    hostname: elasticsearch
+    ports:
+      - "9200:9200"
+    command: ["elasticsearch"]
+    networks:
+      default:
+        aliases:
+          - elasticsearch.sfs.local
 
 networks:
   default:

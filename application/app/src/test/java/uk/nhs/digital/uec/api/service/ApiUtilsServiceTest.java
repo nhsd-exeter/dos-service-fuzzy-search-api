@@ -18,7 +18,7 @@ public class ApiUtilsServiceTest {
 
   @Test
   public void sanitiseSearchTerms() {
-
+    // Arrange
     final List<String> searchCriteria = new ArrayList<>();
     searchCriteria.add("term1");
     searchCriteria.add("   term2");
@@ -27,9 +27,11 @@ public class ApiUtilsServiceTest {
     searchCriteria.add("term 5");
     searchCriteria.add("  term 6  ");
 
+    // Act
     final List<String> sanitisedSearchCriteria =
         apiUtilsService.sanitiseSearchTerms(searchCriteria);
 
+    // Assert
     assertTrue(sanitisedSearchCriteria.contains("term1"));
     assertTrue(sanitisedSearchCriteria.contains("term2"));
     assertTrue(sanitisedSearchCriteria.contains("term3"));

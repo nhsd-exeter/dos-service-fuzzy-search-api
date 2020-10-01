@@ -2,26 +2,32 @@ package uk.nhs.digital.uec.api.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.nhs.digital.uec.api.model.DosService;
+import uk.nhs.digital.uec.api.repository.elasticsearch.ServicesRepositoryInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
-import uk.nhs.digital.uec.api.utils.MockDosServicesUtil;
 
 @Service
 public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInterface {
 
+  @Autowired private ServicesRepositoryInterface elasticsearch;
+
+  @Value("${param.services.max_num_services_to_return}")
+  private int maxNumServicesToReturn;
+
   /** {@inheritDoc} */
   @Override
-  public List<DosService> retrieveServicesByFuzzySearch(final List<String> searchCriteria) {
+  public List<DosService> retrieveServicesByFuzzySearch(final List<String> searchTerms) {
 
-    List<DosService> dosServices = new ArrayList<>();
+    final List<DosService> dosServices = new ArrayList<>();
+    if (elasticsearch.findServiceBySearchTerms(searchTerms) != null) {
+      dosServices.addAll(elasticsearch.findServiceBySearchTerms(searchTerms));
+    }
 
-    // If "Term0" is included in the search criteria, return no services, otherwise return the whole
-    // set.
-    if (!searchCriteria.contains("Term0")) {
-      // Add the mock services we want to return:
-      dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
-      dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
+    if (dosServices.size() > maxNumServicesToReturn) {
+      return dosServices.subList(0, maxNumServicesToReturn);
     }
 
     return dosServices;
