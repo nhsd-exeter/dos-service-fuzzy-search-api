@@ -23,8 +23,6 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 @RequestMapping("/dosapi/dosservices/v0.0.1")
 public class FuzzyServiceSearchController {
 
-  @Autowired private ApiSuccessResponse response;
-
   @Autowired private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
 
   @Autowired private ValidationServiceInterface validationService;

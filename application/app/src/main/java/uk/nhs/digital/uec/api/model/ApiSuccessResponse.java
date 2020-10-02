@@ -6,16 +6,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.stereotype.Component;
 
 /**
  * Defines the successful response that is returned from the API when a successful search is
  * performed.
  */
-@Component
-@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)

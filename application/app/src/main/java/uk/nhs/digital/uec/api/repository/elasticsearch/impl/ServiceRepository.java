@@ -38,13 +38,4 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
     return dosServices;
   }
-
-  @Override
-  public void saveMockServices() {
-    MockDosServicesUtil.addMockServices(10);
-
-    for (int i = 1; i <= 10; i++) {
-      servicesRepo.save(MockDosServicesUtil.mockDosServices.get(i));
-    }
-  }
 }
