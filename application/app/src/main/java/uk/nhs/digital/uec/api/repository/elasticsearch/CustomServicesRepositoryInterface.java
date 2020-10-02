@@ -12,6 +12,4 @@ public interface CustomServicesRepositoryInterface {
    * @return list of Dos Services that match the search criteria.
    */
   List<DosService> findServiceBySearchTerms(List<String> searchTerms);
-
-  void saveMockServices();
 }

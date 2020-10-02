@@ -20,12 +20,22 @@ start: project-start # Start project
 
 stop: project-stop # Stop project
 
+restart: stop start
+
 log: project-log # Show project logs
 
-test: # Test project
+load-test-data: # Load test services into elasticsearch
+	sh ./build/data/services/service_data.sh
+
+load-bulk-data: # Load bulk service data into elasticsearch
+	sh ./build/data/services/bulk_service_data.sh
+
+test: load-test-data # Test project
 	make docker-run-mvn \
 		DIR="application/app" \
-		CMD="clean test"
+		CMD="clean test" \
+		PROFILE=local \
+		VARS_FILE=$(VAR_DIR)/profile/local.mk
 
 push: # Push project artefacts to the registry
 	#make docker-push NAME=NAME_TEMPLATE_TO_REPLACE

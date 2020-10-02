@@ -9,11 +9,15 @@ services:
       URL: $URL
       SERVER_PORT: $SERVER_PORT
       VERSION: $VERSION
+      ELASTICSEARCH_URL: $ELASTICSEARCH_URL
       MIN_SEARCH_TERM_LENGTH: $MIN_SEARCH_TERM_LENGTH
       MAX_SEARCH_CRITERIA: $MAX_SEARCH_CRITERIA
       MAX_NUM_SERVICES_TO_RETURN: $MAX_NUM_SERVICES_TO_RETURN
+      FUZZ_LEVEL: $FUZZ_LEVEL
     ports:
       - 9095:9095
+    depends_on:
+      - elasticsearch
     command: ["java", "-jar", "/application/dos-service-fuzzy-search-api.jar"]
     networks:
       default:
@@ -32,29 +36,6 @@ services:
         aliases:
           - elasticsearch.sfs.local
 
-  elasticsearch:
-    image: elasticsearch:$DOCKER_ELASTICSEARCH_VERSION
-    container_name: elasticsearch
-    hostname: elasticsearch
-    user: elasticsearch
-    environment:
-      ES_JAVA_OPTS: "-Xms64m -Xmx128m"
-    ports:
-      - "9200:9200"
-    command: >
-      /bin/bash -c "
-        elasticsearch \
-          -E discovery.type=single-node \
-          -E http.port=9200 \
-          -E http.cors.enabled=true \
-          -E http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358 \
-          -E http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization \
-          -E http.cors.allow-credentials=true; "
-    networks:
-      default:
-        aliases:
-          - elasticsearch.sf.test
-
   kibana:
     image: docker.elastic.co/kibana/kibana:7.9.2
     container_name: kibana
@@ -62,7 +43,7 @@ services:
       SERVER_HOST: "0.0.0.0"
       SERVER_PORT: 5601
       SERVER_NAME: kibana
-      ELASTICSEARCH_HOSTS: http://elasticsearch.sf.test:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch.sf.local:9200
     ports:
       - "5601:5601"
     depends_on:
@@ -70,7 +51,14 @@ services:
     networks:
       default:
         aliases:
-          - kibana.sf.test
+          - kibana.sf.local
+
+  # db-dos:
+  #   image: $DOCKER_REGISTRY/db-dos:20190502
+  #   hostname: db-dos
+  #   container_name: db-dos
+  #   ports:
+  #     - 5432:5432
 
 networks:
   default:

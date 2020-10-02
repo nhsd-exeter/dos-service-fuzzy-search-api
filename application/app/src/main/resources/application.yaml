@@ -1,14 +1,20 @@
+# This file is required for running the API in VSC
+spring:
+  elasticsearch:
+    rest:
+      uris: "localhost:9200"
+
 server:
-  port: ${SERVER_PORT}
+  port: 9095
 
 api:
-  endpoint: ${URL}
+  endpoint: "http://localhost:9095/dosapi/dosservices/v0.0.1/services/byfuzzysearch"
 
 param:
-  version: ${VERSION}
+  version: "v0.0.1"
   validation:
-    min_search_term_length: ${MIN_SEARCH_TERM_LENGTH}
-    max_search_criteria: ${MAX_SEARCH_CRITERIA}
+    min_search_term_length: 3
+    max_search_criteria: 5
   services:
-    max_num_services_to_return: ${MAX_NUM_SERVICES_TO_RETURN}
+    max_num_services_to_return: 5
     fuzz_level: 0

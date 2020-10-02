@@ -14,14 +14,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.exception.ValidationException;
+import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.ApiResponse;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
+import uk.nhs.digital.uec.api.service.impl.ApiUtilsService;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
 import uk.nhs.digital.uec.api.service.impl.ValidationService;
 import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
@@ -30,6 +33,9 @@ import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 public class FuzzySearchControllerTest {
 
   @InjectMocks FuzzyServiceSearchController fuzzyServiceSearchController;
+  @Spy ApiSuccessResponse mockResponse;
+  @Spy ApiRequestParams mockRequestParams;
+  @Mock ApiUtilsService mockUtilService;
 
   @Mock ValidationService mockValidationService;
   @Mock FuzzyServiceSearchService mockFuzzyServiceSearchService;

@@ -44,7 +44,7 @@ public class ElasticSearchTest {
 
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
-        UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam("search_criteria", "Service1");
+        UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam("search_term", "Service1");
     ResponseEntity<String> responseEntity =
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 

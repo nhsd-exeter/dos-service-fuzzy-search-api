@@ -2,12 +2,14 @@ package uk.nhs.digital.uec.api.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.nhs.digital.uec.api.exception.ValidationException;
+import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.ApiResponse;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
@@ -21,13 +23,19 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 @RequestMapping("/dosapi/dosservices/v0.0.1")
 public class FuzzyServiceSearchController {
 
-  @Autowired private ApiSuccessResponse response;
-
   @Autowired private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
 
   @Autowired private ValidationServiceInterface validationService;
 
   @Autowired private ApiUtilsServiceInterface utils;
+
+  @Autowired private ApiRequestParams requestParams;
+
+  @Value("${param.services.max_num_services_to_return}")
+  private String defaultMaxNumServicesToReturn;
+
+  @Value("${param.services.fuzz_level}")
+  private String defaultFuzzLevel;
 
   /**
    * Endpoint for retrieving services with attributes that match the search criteria provided.
@@ -47,7 +55,12 @@ public class FuzzyServiceSearchController {
 
     utils.configureApiRequestParams(fuzzLevel, filterReferralRole, maxNumServicesToReturn);
 
-    response.setSearchCriteria(searchCriteria);
+    final ApiSuccessResponse response =
+        new ApiSuccessResponse.ApiSuccessResponseBuilder()
+            .searchCriteria(searchCriteria)
+            .fuzzLevel(requestParams.getFuzzLevel())
+            .maxNumServicesToReturn(requestParams.getMaxNumServicesToReturn())
+            .build();
 
     try {
       validationService.validateSearchCriteria(searchCriteria);
