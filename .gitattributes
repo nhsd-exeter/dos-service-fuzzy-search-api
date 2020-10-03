@@ -1,1 +1,1 @@
-build/automation -linguist-vendored
+build/automation/* -linguist-vendored
