@@ -78,6 +78,12 @@ The supporting components are:
 - Kibana
 - DoS Test Database
 
+The supporting components are:
+
+- Elasticsearch
+- kibana
+- Dos Test DoS DB
+
 ## Stopping the API
 
 The API can be stopped by running the following command:
