@@ -18,3 +18,5 @@ param:
   services:
     max_num_services_to_return: 5
     fuzz_level: 0
+    name_priority: 1
+    address_priority: 0

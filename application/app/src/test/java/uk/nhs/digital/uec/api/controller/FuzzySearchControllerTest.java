@@ -44,6 +44,12 @@ public class FuzzySearchControllerTest {
 
   private static final String VALIDATION_ERROR_CODE = "VAL-001";
 
+  private static final String FILTER_REFERRAL_ROLE = null;
+  private static final Integer MAX_SERVICES_TO_RETURN = 0;
+  private static final Integer FUZZ_LEVEL = 0;
+  private static final Integer NAME_PRIORITY = 0;
+  private static final Integer ADDRESS_PRIORITY = 0;
+
   @Test
   public void getServicesByFuzzySearchTestSucc() throws ValidationException {
     // Arrange
@@ -56,7 +62,13 @@ public class FuzzySearchControllerTest {
         .thenReturn(getDosServices());
 
     ResponseEntity<ApiResponse> responseEntity =
-        fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null, 0, 0);
+        fuzzyServiceSearchController.getServicesByFuzzySearch(
+            searchCriteria,
+            FILTER_REFERRAL_ROLE,
+            MAX_SERVICES_TO_RETURN,
+            FUZZ_LEVEL,
+            NAME_PRIORITY,
+            ADDRESS_PRIORITY);
 
     // Assert
     final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.getBody();
@@ -86,7 +98,13 @@ public class FuzzySearchControllerTest {
         .validateSearchCriteria(searchCriteria);
 
     ResponseEntity<ApiResponse> responseEntity =
-        fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null, 0, 0);
+        fuzzyServiceSearchController.getServicesByFuzzySearch(
+            searchCriteria,
+            FILTER_REFERRAL_ROLE,
+            MAX_SERVICES_TO_RETURN,
+            FUZZ_LEVEL,
+            NAME_PRIORITY,
+            ADDRESS_PRIORITY);
 
     // Assert
     final ApiValidationErrorResponse response =

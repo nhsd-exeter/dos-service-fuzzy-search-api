@@ -19,11 +19,21 @@ public class ApiRequestParams {
 
   private Integer fuzzLevel;
 
+  private Integer namePriority;
+
+  private Integer addressPriority;
+
   @Value("${param.services.max_num_services_to_return}")
   private Integer defaultMaxNumServicesToReturn;
 
   @Value("${param.services.fuzz_level}")
   private Integer defaultFuzzLevel;
+
+  @Value("${param.services.name_priority}")
+  private Integer defaultNamePriority;
+
+  @Value("${param.services.address_priority}")
+  private Integer defaultAddressPriority;
 
   public Integer getMaxNumServicesToReturn() {
     if (this.maxNumServicesToReturn == null) {
@@ -39,5 +49,21 @@ public class ApiRequestParams {
     }
 
     return fuzzLevel;
+  }
+
+  public void setNamePriority(Integer namePriority) {
+    if (namePriority == null) {
+      namePriority = defaultNamePriority;
+    }
+
+    this.namePriority = namePriority;
+  }
+
+  public void setAddressPriority(Integer addressPriority) {
+    if (addressPriority == null) {
+      addressPriority = defaultAddressPriority;
+    }
+
+    this.addressPriority = addressPriority;
   }
 }

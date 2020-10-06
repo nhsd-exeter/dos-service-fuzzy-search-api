@@ -18,10 +18,16 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
   private int minSearchTermLength;
 
   public void configureApiRequestParams(
-      Integer fuzzLevel, String referralRole, Integer maxNumServicesToReturn) {
+      Integer fuzzLevel,
+      String referralRole,
+      Integer maxNumServicesToReturn,
+      Integer namePriority,
+      Integer addressPriority) {
     apiRequestParams.setFuzzLevel(fuzzLevel);
     apiRequestParams.setFilterReferralRole(referralRole);
     apiRequestParams.setMaxNumServicesToReturn(maxNumServicesToReturn);
+    apiRequestParams.setNamePriority(namePriority);
+    apiRequestParams.setAddressPriority(addressPriority);
   }
 
   /** {@inheritDoc} */

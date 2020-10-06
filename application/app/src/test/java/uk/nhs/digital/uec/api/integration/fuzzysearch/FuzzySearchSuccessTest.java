@@ -67,7 +67,7 @@ public class FuzzySearchSuccessTest {
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
     assertEquals(1, response.getNumberOfServices());
-    assertEquals("Service1", response.getServices().get(0).getName());
+    assertEquals("service1", response.getServices().get(0).getName());
   }
 
   /**
@@ -97,7 +97,7 @@ public class FuzzySearchSuccessTest {
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
     assertEquals(1, response.getNumberOfServices());
-    assertEquals("Service1", response.getServices().get(0).getName());
+    assertEquals("service1", response.getServices().get(0).getName());
   }
 
   /**

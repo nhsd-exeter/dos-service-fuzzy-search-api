@@ -23,7 +23,11 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     final List<DosService> dosServices = new ArrayList<>();
 
     Iterable<DosService> services =
-        servicesRepo.findByName(searchTerms.get(0), request.getFuzzLevel());
+        servicesRepo.findBySearchTerms(
+            searchTerms.get(0),
+            request.getFuzzLevel(),
+            request.getNamePriority(),
+            request.getAddressPriority());
 
     Iterator<DosService> serviceit = services.iterator();
     while (serviceit.hasNext()) {

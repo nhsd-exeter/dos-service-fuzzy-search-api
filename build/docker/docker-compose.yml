@@ -14,6 +14,8 @@ services:
       MAX_SEARCH_CRITERIA: $MAX_SEARCH_CRITERIA
       MAX_NUM_SERVICES_TO_RETURN: $MAX_NUM_SERVICES_TO_RETURN
       FUZZ_LEVEL: $FUZZ_LEVEL
+      NAME_PRIORITY: $NAME_PRIORITY
+      ADDRESS_PRIORITY: $ADDRESS_PRIORITY
     ports:
       - 9095:9095
     depends_on:
@@ -53,12 +55,16 @@ services:
         aliases:
           - kibana.sf.local
 
-  # db-dos:
-  #   image: $DOCKER_REGISTRY/db-dos:20190502
-  #   hostname: db-dos
-  #   container_name: db-dos
-  #   ports:
-  #     - 5432:5432
+  db-dos:
+    image: 461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/tdb/database:latest
+    hostname: db-dos
+    container_name: db-dos
+    ports:
+      - 5432:5432
+    networks:
+      default:
+        aliases:
+          - dbdos.sf.local
 
 networks:
   default:

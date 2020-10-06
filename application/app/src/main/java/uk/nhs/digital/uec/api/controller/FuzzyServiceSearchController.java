@@ -51,9 +51,12 @@ public class FuzzyServiceSearchController {
       @RequestParam(name = "filter_referral_role", required = false) String filterReferralRole,
       @RequestParam(name = "max_number_of_services_to_return", required = false)
           Integer maxNumServicesToReturn,
-      @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel) {
+      @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel,
+      @RequestParam(name = "name_priority", required = false) Integer namePriority,
+      @RequestParam(name = "address_priority", required = false) Integer addressPriority) {
 
-    utils.configureApiRequestParams(fuzzLevel, filterReferralRole, maxNumServicesToReturn);
+    utils.configureApiRequestParams(
+        fuzzLevel, filterReferralRole, maxNumServicesToReturn, namePriority, addressPriority);
 
     final ApiSuccessResponse response =
         new ApiSuccessResponse.ApiSuccessResponseBuilder()

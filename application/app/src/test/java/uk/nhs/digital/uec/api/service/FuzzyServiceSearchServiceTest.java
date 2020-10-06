@@ -1,6 +1,7 @@
 package uk.nhs.digital.uec.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class FuzzyServiceSearchServiceTest {
     dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
-    when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(dosServices);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
 
     // Act
     List<DosService> services =
@@ -67,7 +68,7 @@ public class FuzzyServiceSearchServiceTest {
     List<DosService> dosServices = new ArrayList<>();
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
-    when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(dosServices);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
 
     // Act
     List<DosService> services =
@@ -89,7 +90,7 @@ public class FuzzyServiceSearchServiceTest {
     }
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
-    when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(dosServices);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
 
     // Act
     List<DosService> services =
@@ -112,7 +113,7 @@ public class FuzzyServiceSearchServiceTest {
     List<DosService> maxDosServices = dosServices.subList(0, maxNumServicesToReturn);
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
-    when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(maxDosServices);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(maxDosServices);
 
     // Act
     List<DosService> services =

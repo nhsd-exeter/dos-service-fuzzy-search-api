@@ -13,7 +13,11 @@ public interface ApiUtilsServiceInterface {
    * @param request {@link HttpServletRequest} of the request.
    */
   void configureApiRequestParams(
-      Integer fuzzLevel, String referralRole, Integer maxNumServicesToReturn);
+      Integer fuzzLevel,
+      String referralRole,
+      Integer maxNumServicesToReturn,
+      Integer namePriority,
+      Integer addressPriority);
 
   /**
    * Takes the list of search criteria and sanitises each search term by removing trailing and
