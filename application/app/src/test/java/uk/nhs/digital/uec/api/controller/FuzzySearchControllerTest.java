@@ -45,7 +45,7 @@ public class FuzzySearchControllerTest {
   private static final String VALIDATION_ERROR_CODE = "VAL-001";
 
   private static final String FILTER_REFERRAL_ROLE = null;
-  private static final Integer MAX_SERVICES_TO_RETURN = 0;
+  private static final Integer MAX_SERVICES_TO_RETURN = 5;
   private static final Integer FUZZ_LEVEL = 0;
   private static final Integer NAME_PRIORITY = 0;
   private static final Integer ADDRESS_PRIORITY = 0;
@@ -57,10 +57,14 @@ public class FuzzySearchControllerTest {
     searchCriteria.add("term1");
     searchCriteria.add("term2");
 
-    // Act
+    when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
+    when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);
+    when(mockRequestParams.getFuzzLevel()).thenReturn(FUZZ_LEVEL);
+    when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
     when(mockFuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria))
         .thenReturn(getDosServices());
 
+    // Act
     ResponseEntity<ApiResponse> responseEntity =
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
@@ -92,11 +96,16 @@ public class FuzzySearchControllerTest {
     searchCriteria.add("term1");
     searchCriteria.add("term2");
 
-    // Act
+    when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
+    when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);
+    when(mockRequestParams.getFuzzLevel()).thenReturn(FUZZ_LEVEL);
+    when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
+
     doThrow(new ValidationException(VALIDATION_ERROR_MSG, VALIDATION_ERROR_CODE))
         .when(mockValidationService)
         .validateSearchCriteria(searchCriteria);
 
+    // Act
     ResponseEntity<ApiResponse> responseEntity =
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,

@@ -62,6 +62,8 @@ public class FuzzyServiceSearchController {
         new ApiSuccessResponse.ApiSuccessResponseBuilder()
             .searchCriteria(searchCriteria)
             .fuzzLevel(requestParams.getFuzzLevel())
+            .addressPriority(requestParams.getAddressPriority())
+            .namePriority(requestParams.getNamePriority())
             .maxNumServicesToReturn(requestParams.getMaxNumServicesToReturn())
             .build();
 

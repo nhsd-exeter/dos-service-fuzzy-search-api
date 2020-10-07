@@ -17,6 +17,10 @@ import lombok.Setter;
 @JsonPropertyOrder({
   "search_criteria",
   "fuzz_level",
+  "address_priority",
+  "name_priority",
+  "postcode_priority",
+  "public_name_priority",
   "max_num_services_to_return",
   "number_of_services",
   "services"
@@ -28,6 +32,18 @@ public class ApiSuccessResponse implements ApiResponse {
 
   @JsonProperty("fuzz_level")
   private int fuzzLevel;
+
+  @JsonProperty("address_priority")
+  private int addressPriority;
+
+  @JsonProperty("name_priority")
+  private int namePriority;
+
+  @JsonProperty("postcode_priority")
+  private int postcodePriority;
+
+  @JsonProperty("public_name_priority")
+  private int publicNamePriority;
 
   @JsonProperty("max_num_services_to_return")
   private int maxNumServicesToReturn;
@@ -43,6 +59,10 @@ public class ApiSuccessResponse implements ApiResponse {
   private ApiSuccessResponse(ApiSuccessResponseBuilder builder) {
     this.searchCriteria = builder.searchCriteria;
     this.fuzzLevel = builder.fuzzLevel;
+    this.addressPriority = builder.addressPriority;
+    this.namePriority = builder.namePriority;
+    this.postcodePriority = 0;
+    this.publicNamePriority = 0;
     this.maxNumServicesToReturn = builder.maxNumServicesToReturn;
   }
 
@@ -54,6 +74,8 @@ public class ApiSuccessResponse implements ApiResponse {
   public static class ApiSuccessResponseBuilder {
     private List<String> searchCriteria;
     private int fuzzLevel;
+    private int addressPriority;
+    private int namePriority;
     private int maxNumServicesToReturn;
 
     public ApiSuccessResponseBuilder searchCriteria(List<String> searchCriteria) {
@@ -62,17 +84,21 @@ public class ApiSuccessResponse implements ApiResponse {
     }
 
     public ApiSuccessResponseBuilder fuzzLevel(Integer fuzzLevel) {
-      if (fuzzLevel == null) {
-        fuzzLevel = 0;
-      }
       this.fuzzLevel = fuzzLevel;
       return this;
     }
 
+    public ApiSuccessResponseBuilder addressPriority(Integer addressPriority) {
+      this.addressPriority = addressPriority;
+      return this;
+    }
+
+    public ApiSuccessResponseBuilder namePriority(Integer namePriority) {
+      this.namePriority = namePriority;
+      return this;
+    }
+
     public ApiSuccessResponseBuilder maxNumServicesToReturn(Integer maxNumServicesToReturn) {
-      if (maxNumServicesToReturn == null) {
-        maxNumServicesToReturn = 0;
-      }
       this.maxNumServicesToReturn = maxNumServicesToReturn;
       return this;
     }
