@@ -23,17 +23,27 @@ public class ApiRequestParams {
 
   private Integer addressPriority;
 
-  @Value("${param.services.max_num_services_to_return}")
+  private Integer postcodePriority;
+
+  private Integer publicNamePriority;
+
+  @Value("${configuration.search_parameters.max_num_services_to_return}")
   private Integer defaultMaxNumServicesToReturn;
 
-  @Value("${param.services.fuzz_level}")
+  @Value("${configuration.search_parameters.fuzz_level}")
   private Integer defaultFuzzLevel;
 
-  @Value("${param.services.name_priority}")
+  @Value("${configuration.search_parameters.name_priority}")
   private Integer defaultNamePriority;
 
-  @Value("${param.services.address_priority}")
+  @Value("${configuration.search_parameters.address_priority}")
   private Integer defaultAddressPriority;
+
+  @Value("${configuration.search_parameters.postcode_priority}")
+  private Integer defaultPostcodePriority;
+
+  @Value("${configuration.search_parameters.public_name_priority}")
+  private Integer defaultPublicNamePriority;
 
   public Integer getMaxNumServicesToReturn() {
     if (this.maxNumServicesToReturn == null) {
@@ -65,5 +75,21 @@ public class ApiRequestParams {
     }
 
     this.addressPriority = addressPriority;
+  }
+
+  public void setPostcodePriority(Integer postcodePriority) {
+    if (postcodePriority == null) {
+      postcodePriority = defaultPostcodePriority;
+    }
+
+    this.postcodePriority = postcodePriority;
+  }
+
+  public void setPublicNamePriority(Integer publicNamePriority) {
+    if (publicNamePriority == null) {
+      publicNamePriority = defaultPublicNamePriority;
+    }
+
+    this.publicNamePriority = publicNamePriority;
   }
 }

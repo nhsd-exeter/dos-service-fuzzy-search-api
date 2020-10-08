@@ -8,15 +8,18 @@ server:
   port: 9095
 
 api:
-  endpoint: "http://localhost:9095/dosapi/dosservices/v0.0.1/services/byfuzzysearch"
+  endpoint:
+    service_search: "http://localhost:9095/dosapi/dosservices/v0.0.1/services/byfuzzysearch"
 
-param:
+configuration:
   version: "v0.0.1"
   validation:
     min_search_term_length: 3
     max_search_criteria: 5
-  services:
+  search_parameters:
     max_num_services_to_return: 5
     fuzz_level: 0
     name_priority: 1
     address_priority: 0
+    postcode_priority: 0
+    public_name_priority: 0

@@ -49,6 +49,8 @@ public class FuzzySearchControllerTest {
   private static final Integer FUZZ_LEVEL = 0;
   private static final Integer NAME_PRIORITY = 0;
   private static final Integer ADDRESS_PRIORITY = 0;
+  private static final Integer POSTCODE_PRIORITY = 0;
+  private static final Integer PUBLIC_NAME_PRIORITY = 0;
 
   @Test
   public void getServicesByFuzzySearchTestSucc() throws ValidationException {
@@ -59,6 +61,8 @@ public class FuzzySearchControllerTest {
 
     when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
     when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);
+    when(mockRequestParams.getPostcodePriority()).thenReturn(POSTCODE_PRIORITY);
+    when(mockRequestParams.getPublicNamePriority()).thenReturn(PUBLIC_NAME_PRIORITY);
     when(mockRequestParams.getFuzzLevel()).thenReturn(FUZZ_LEVEL);
     when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
     when(mockFuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria))
@@ -72,7 +76,9 @@ public class FuzzySearchControllerTest {
             MAX_SERVICES_TO_RETURN,
             FUZZ_LEVEL,
             NAME_PRIORITY,
-            ADDRESS_PRIORITY);
+            ADDRESS_PRIORITY,
+            POSTCODE_PRIORITY,
+            PUBLIC_NAME_PRIORITY);
 
     // Assert
     final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.getBody();
@@ -98,6 +104,8 @@ public class FuzzySearchControllerTest {
 
     when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
     when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);
+    when(mockRequestParams.getPostcodePriority()).thenReturn(POSTCODE_PRIORITY);
+    when(mockRequestParams.getPublicNamePriority()).thenReturn(PUBLIC_NAME_PRIORITY);
     when(mockRequestParams.getFuzzLevel()).thenReturn(FUZZ_LEVEL);
     when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
 
@@ -113,7 +121,9 @@ public class FuzzySearchControllerTest {
             MAX_SERVICES_TO_RETURN,
             FUZZ_LEVEL,
             NAME_PRIORITY,
-            ADDRESS_PRIORITY);
+            ADDRESS_PRIORITY,
+            POSTCODE_PRIORITY,
+            PUBLIC_NAME_PRIORITY);
 
     // Assert
     final ApiValidationErrorResponse response =

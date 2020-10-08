@@ -9,9 +9,40 @@ This is the DoS Service Fuzzy Search API. This is a RESTFUL API which will retur
 - service address
 - service postcode
 
-The API endpoint is called by passing the search criteria in as query parameters.
+### Search Terms
 
-The minimum number of characters in the search criteria is set by the PARAM.VALIDATION.MIN_SEARCH_STRING_LENGTH environment variable. The maximum number of search criteria is set by the PARAM.VALIDATION.MAX_SEARCH_CRITERIA environment variable.
+The service search endpoint requires at least one search term to be passed through as a query parameter. The query parameter is as follows:
+
+    search_term
+
+The minimum number of characters allowed in a the search term is set by the CONFIGURATION.VALIDATION.MIN_SEARCH_STRING_LENGTH environment variable. The maximum number of search terms allowed is set by the CONFIGURATION.VALIDATION.MAX_SEARCH_CRITERIA environment variable.
+
+### Search Prioritisation
+
+The service search endpoint also allows for a number of search prioritisation parameters to be passed through so as to tailor the search to prioritise the matching of certain fields above others. For example, it may be the case that the matching of the service public name is more important than the matching of the service address. These variants can be catered for using the following search prioritisation query parameters:
+
+    name_priority
+    public_name_priority
+    address_priority
+    postcode_priority
+
+The search prioritisation parameters are all optional, and default values will be applied if they are not passed through. The default values are set via correspondingly named environment variables. If values are provided they should be in the range of between 0 and 100.
+
+### Fuzz Level
+
+The service search endpoint will apply a zero level of fuzzy logic to the search terms by default. But this too can be configured by passing a value of between 0 and 2 into the following query parameter:
+
+    fuzz_level
+
+The value 0 means that the API will apply no fuzzy logic to the search terms, while a value of 2 will apply a maximum level of fuzziness.
+
+### Number of matches returned
+
+Also configurable is the number of matched services returned. This can be configured by supplying a value for the following query parameter:
+
+    max_num_services_to_return
+
+If set, this value should range from between 1 and 100.
 
 ## Building the API
 

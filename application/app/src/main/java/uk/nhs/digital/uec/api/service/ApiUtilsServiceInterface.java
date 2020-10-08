@@ -17,7 +17,9 @@ public interface ApiUtilsServiceInterface {
       String referralRole,
       Integer maxNumServicesToReturn,
       Integer namePriority,
-      Integer addressPriority);
+      Integer addressPriority,
+      Integer postcodePriority,
+      Integer publicNamePriority);
 
   /**
    * Takes the list of search criteria and sanitises each search term by removing trailing and

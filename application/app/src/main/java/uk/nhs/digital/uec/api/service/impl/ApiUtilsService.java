@@ -14,7 +14,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
 
   @Autowired private ApiRequestParams apiRequestParams;
 
-  @Value("${param.validation.min_search_term_length}")
+  @Value("${configuration.validation.min_search_term_length}")
   private int minSearchTermLength;
 
   public void configureApiRequestParams(
@@ -22,12 +22,16 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
       String referralRole,
       Integer maxNumServicesToReturn,
       Integer namePriority,
-      Integer addressPriority) {
+      Integer addressPriority,
+      Integer postcodePriority,
+      Integer publicNamePriority) {
     apiRequestParams.setFuzzLevel(fuzzLevel);
     apiRequestParams.setFilterReferralRole(referralRole);
     apiRequestParams.setMaxNumServicesToReturn(maxNumServicesToReturn);
     apiRequestParams.setNamePriority(namePriority);
     apiRequestParams.setAddressPriority(addressPriority);
+    apiRequestParams.setPostcodePriority(postcodePriority);
+    apiRequestParams.setPublicNamePriority(publicNamePriority);
   }
 
   /** {@inheritDoc} */

@@ -27,7 +27,9 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
             searchTerms.get(0),
             request.getFuzzLevel(),
             request.getNamePriority(),
-            request.getAddressPriority());
+            request.getAddressPriority(),
+            request.getPostcodePriority(),
+            request.getPublicNamePriority());
 
     Iterator<DosService> serviceit = services.iterator();
     while (serviceit.hasNext()) {
