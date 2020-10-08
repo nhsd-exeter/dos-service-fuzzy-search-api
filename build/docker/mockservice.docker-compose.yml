@@ -14,29 +14,6 @@ services:
         aliases:
           - mockservice.sf.test
 
-  db-dos:
-    image: 461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/tdb/database:latest
-    hostname: db-dos
-    container_name: db-dos
-    ports:
-      - 5432:5432
-    networks:
-      default:
-        aliases:
-          - dbdos.sf.test
-
-  elasticsearch:
-    image: nhsd/elasticsearch:$DOCKER_LIBRARY_ELASTICSEARCH_VERSION
-    container_name: elasticsearch
-    hostname: elasticsearch
-    ports:
-      - "9200:9200"
-    command: ["elasticsearch"]
-    networks:
-      default:
-        aliases:
-          - elasticsearch.sfs.test
-
 networks:
   default:
     external:
