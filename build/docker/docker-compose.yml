@@ -19,7 +19,7 @@ services:
       POSTCODE_PRIORITY: $POSTCODE_PRIORITY
       PUBLIC_NAME_PRIORITY: $PUBLIC_NAME_PRIORITY
     ports:
-      - 9095:9095
+      - 8443:8443
     depends_on:
       - elasticsearch
     command: ["java", "-jar", "/application/dos-service-fuzzy-search-api.jar"]

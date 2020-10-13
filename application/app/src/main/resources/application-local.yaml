@@ -6,6 +6,10 @@ spring:
 
 server:
   port: ${SERVER_PORT}
+  ssl:
+    key-store-type: PKCS12
+    keystore: classpath:certificate/${COOKIE_DOMAIN}.p12
+    key-store-password:
 
 api:
   endpoint:

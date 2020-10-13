@@ -6,10 +6,14 @@ spring:
 
 server:
   port: 9095
+  ssl:
+    key-store-type: PKCS12
+    keystore: classpath:certificate/localhost.p12
+    key-store-password:
 
 api:
   endpoint:
-    service_search: "http://localhost:9095/dosapi/dosservices/v0.0.1/services/byfuzzysearch"
+    service_search: "https://localhost:9095/dosapi/dosservices/v0.0.1/services/byfuzzysearch"
 
 configuration:
   version: "v0.0.1"
