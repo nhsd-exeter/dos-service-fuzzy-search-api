@@ -15,7 +15,7 @@ The service search endpoint requires at least one search term to be passed throu
 
     search_term
 
-The minimum number of characters allowed in a the search term is set by the CONFIGURATION.VALIDATION.MIN_SEARCH_STRING_LENGTH environment variable. The maximum number of search terms allowed is set by the CONFIGURATION.VALIDATION.MAX_SEARCH_CRITERIA environment variable.
+The minimum number of characters allowed in a the search term is set by the `CONFIGURATION.VALIDATION.MIN_SEARCH_STRING_LENGTH` environment variable. The maximum number of search terms allowed is set by the `CONFIGURATION.VALIDATION.MAX_SEARCH_CRITERIA` environment variable.
 
 ### Search Prioritisation
 
@@ -70,13 +70,13 @@ The API has a single GET Rest endpoint:
 
 - /byfuzzysearch
 
-The API will return a list of matching services in JSON format. This is defined on Confluence: https://nhsd-confluence.digital.nhs.uk/display/SFDEV/Known+Service+Search
+The API will return a list of matching services in JSON format. This is defined on Confluence: [Known Service Search](https://nhsd-confluence.digital.nhs.uk/display/SFDEV/Known+Service+Search)
 
 The supporting components are:
 
 - Elasticsearch
-- kibana
-- Dos Test DoS DB
+- Kibana
+- DoS Test Database
 
 ## Stopping the API
 

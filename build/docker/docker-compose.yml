@@ -47,7 +47,7 @@ services:
       SERVER_HOST: "0.0.0.0"
       SERVER_PORT: 5601
       SERVER_NAME: kibana
-      ELASTICSEARCH_HOSTS: http://elasticsearch.sf.local:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch.sfs.local:9200
     ports:
       - "5601:5601"
     depends_on:
@@ -55,7 +55,7 @@ services:
     networks:
       default:
         aliases:
-          - kibana.sf.local
+          - kibana.sfs.local
 
   db-dos:
     image: 461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/tdb/database:latest
@@ -66,7 +66,7 @@ services:
     networks:
       default:
         aliases:
-          - dbdos.sf.local
+          - db-dos.sfs.local
 
 networks:
   default:

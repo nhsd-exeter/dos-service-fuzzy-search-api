@@ -25,10 +25,10 @@ restart: stop start
 log: project-log # Show project logs
 
 load-test-data: # Load test services into elasticsearch
-	sh ./build/data/services/service_data.sh
+	sh ./data/services/service_data.sh
 
 load-bulk-data: # Load bulk service data into elasticsearch
-	sh ./build/data/services/bulk_service_data.sh
+	sh ./data/services/bulk_service_data.sh
 
 test: load-test-data # Test project
 	make docker-run-mvn \
