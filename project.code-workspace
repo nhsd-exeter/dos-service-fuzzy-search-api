@@ -8,7 +8,7 @@
   "settings": {
     "breadcrumbs.enabled": true,
     "editor.autoIndent": "full",
-    "editor.fontSize": 14,
+    "editor.fontSize": 18,
     "editor.formatOnSave": true,
     "editor.renderWhitespace": "all",
     "editor.suggestSelection": "recentlyUsedByPrefix",
@@ -30,7 +30,7 @@
     "java.completion.enabled": true,
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.format.enabled": false,
-    "java.home": "/Library/Java/JavaVirtualMachines/adoptopenjdk-13.jdk/Contents/Home",
+    "java.home": "/Library/Java/JavaVirtualMachines/adoptopenjdk-14.jdk/Contents/Home",
     "python.formatting.blackArgs": ["--line-length", "120"],
     "python.formatting.provider": "black",
     "python.linting.flake8Args": ["--max-line-length=120"],
@@ -141,21 +141,6 @@
       "titleBar.inactiveBackground": "#f9e64f99",
       "titleBar.inactiveForeground": "#15202b99"
     },
-    "peacock.color": "#f9e64f",
-    "cSpell.words": [
-      "Autowired",
-      "Succ",
-      "classpath",
-      "emeraldwalk",
-      "esbenp",
-      "factorypath",
-      "mypy",
-      "pyenv",
-      "pylint",
-      "runonsave",
-      "sanitise",
-      "sanitised",
-      "serviceit"
-    ]
+    "peacock.color": "#f9e64f"
   }
 }

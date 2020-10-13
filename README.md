@@ -81,8 +81,8 @@ The supporting components are:
 The supporting components are:
 
 - Elasticsearch
-- kibana
-- Dos Test DoS DB
+- Kibana
+- DoS Test Database
 
 ## Stopping the API
 
