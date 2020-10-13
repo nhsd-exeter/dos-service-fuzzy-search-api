@@ -1,22 +1,40 @@
 package uk.nhs.digital.uec.api.repository.elasticsearch.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import org.springframework.context.annotation.Profile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
+import uk.nhs.digital.uec.api.repository.elasticsearch.CustomServicesRepositoryInterface;
 import uk.nhs.digital.uec.api.repository.elasticsearch.ServicesRepositoryInterface;
 
-@Profile("prod")
 @Repository
-public class ServiceRepository implements ServicesRepositoryInterface {
+public class ServiceRepository implements CustomServicesRepositoryInterface {
+
+  @Autowired private ServicesRepositoryInterface servicesRepo;
+
+  @Autowired private ApiRequestParams request;
 
   /** {@inheritDoc} */
   @Override
   public List<DosService> findServiceBySearchTerms(List<String> searchTerms) {
     final List<DosService> dosServices = new ArrayList<>();
 
-    // TODO - IMPLEMENT ME.
+    Iterable<DosService> services =
+        servicesRepo.findBySearchTerms(
+            searchTerms.get(0),
+            request.getFuzzLevel(),
+            request.getNamePriority(),
+            request.getAddressPriority(),
+            request.getPostcodePriority(),
+            request.getPublicNamePriority());
+
+    Iterator<DosService> serviceit = services.iterator();
+    while (serviceit.hasNext()) {
+      dosServices.add(serviceit.next());
+    }
 
     return dosServices;
   }

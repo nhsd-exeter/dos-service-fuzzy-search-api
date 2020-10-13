@@ -14,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.util.PropertySourceResolver;
@@ -23,7 +22,6 @@ import uk.nhs.digital.uec.api.util.PropertySourceResolver;
  * Test class which passes requests through the Fuzzy Search endpoint and asserts desired API
  * behavior. Only the model layer will be mocked here.
  */
-@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class FuzzySearchValidationErrorsTest {
 
@@ -73,12 +71,12 @@ public class FuzzySearchValidationErrorsTest {
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
-            .queryParam("search_criteria", "Term1")
-            .queryParam("search_criteria", "Term2")
-            .queryParam("search_criteria", "Term3")
-            .queryParam("search_criteria", "Term4")
-            .queryParam("search_criteria", "Term5")
-            .queryParam("search_criteria", "Term6");
+            .queryParam("search_term", "Term1")
+            .queryParam("search_term", "Term2")
+            .queryParam("search_term", "Term3")
+            .queryParam("search_term", "Term4")
+            .queryParam("search_term", "Term5")
+            .queryParam("search_term", "Term6");
 
     // Act
     ResponseEntity<String> responseEntity =
@@ -103,9 +101,9 @@ public class FuzzySearchValidationErrorsTest {
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
-            .queryParam("search_criteria", "1")
-            .queryParam("search_criteria", "ab")
-            .queryParam("search_criteria", "z");
+            .queryParam("search_term", "1")
+            .queryParam("search_term", "ab")
+            .queryParam("search_term", "z");
 
     // Act
     ResponseEntity<String> responseEntity =

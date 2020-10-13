@@ -9,10 +9,10 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 @Service
 public class ValidationService implements ValidationServiceInterface {
 
-  @Value("${param.validation.min_search_term_length}")
+  @Value("${configuration.validation.min_search_term_length}")
   private int minSearchTermLength;
 
-  @Value("${param.validation.max_search_criteria}")
+  @Value("${configuration.validation.max_search_criteria}")
   private int maxSearchCriteria;
 
   /** {@inheritDoc} */

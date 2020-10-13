@@ -1,6 +1,7 @@
 package uk.nhs.digital.uec.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.util.ReflectionTestUtils;
+import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
@@ -27,10 +28,13 @@ public class FuzzyServiceSearchServiceTest {
 
   @Mock private ServiceRepository serviceRepository;
 
+  @Mock private ApiRequestParams apiRequestParams;
+
+  @Mock private ApiUtilsServiceInterface apiUtilsService;
+
   @BeforeEach
   public void setup() {
-    ReflectionTestUtils.setField(
-        fuzzyServiceSearchService, "maxNumServicesToReturn", maxNumServicesToReturn);
+    when(apiRequestParams.getMaxNumServicesToReturn()).thenReturn(maxNumServicesToReturn);
   }
 
   @Test
@@ -44,7 +48,8 @@ public class FuzzyServiceSearchServiceTest {
     dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
     dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
 
-    when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(dosServices);
+    when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
 
     // Act
     List<DosService> services =
@@ -62,7 +67,8 @@ public class FuzzyServiceSearchServiceTest {
 
     List<DosService> dosServices = new ArrayList<>();
 
-    when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(dosServices);
+    when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
 
     // Act
     List<DosService> services =
@@ -83,7 +89,8 @@ public class FuzzyServiceSearchServiceTest {
       dosServices.add(entry.getValue());
     }
 
-    when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(dosServices);
+    when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
 
     // Act
     List<DosService> services =
@@ -105,7 +112,8 @@ public class FuzzyServiceSearchServiceTest {
     }
     List<DosService> maxDosServices = dosServices.subList(0, maxNumServicesToReturn);
 
-    when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(maxDosServices);
+    when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(maxDosServices);
 
     // Act
     List<DosService> services =
@@ -119,14 +127,9 @@ public class FuzzyServiceSearchServiceTest {
   public void retrieveServicesByFuzzySearchNullReturn() {
     // Arrange
     List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("Null");
-
-    when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(null);
-
     // Act
     List<DosService> services =
         fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
-
     // Assert
     assertEquals(0, services.size());
   }

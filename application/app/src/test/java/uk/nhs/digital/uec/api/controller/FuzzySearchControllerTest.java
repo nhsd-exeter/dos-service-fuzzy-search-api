@@ -14,14 +14,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.exception.ValidationException;
+import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.ApiResponse;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
+import uk.nhs.digital.uec.api.service.impl.ApiUtilsService;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
 import uk.nhs.digital.uec.api.service.impl.ValidationService;
 import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
@@ -30,6 +33,9 @@ import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 public class FuzzySearchControllerTest {
 
   @InjectMocks FuzzyServiceSearchController fuzzyServiceSearchController;
+  @Spy ApiSuccessResponse mockResponse;
+  @Spy ApiRequestParams mockRequestParams;
+  @Mock ApiUtilsService mockUtilService;
 
   @Mock ValidationService mockValidationService;
   @Mock FuzzyServiceSearchService mockFuzzyServiceSearchService;
@@ -38,6 +44,14 @@ public class FuzzySearchControllerTest {
 
   private static final String VALIDATION_ERROR_CODE = "VAL-001";
 
+  private static final String FILTER_REFERRAL_ROLE = null;
+  private static final Integer MAX_SERVICES_TO_RETURN = 5;
+  private static final Integer FUZZ_LEVEL = 0;
+  private static final Integer NAME_PRIORITY = 0;
+  private static final Integer ADDRESS_PRIORITY = 0;
+  private static final Integer POSTCODE_PRIORITY = 0;
+  private static final Integer PUBLIC_NAME_PRIORITY = 0;
+
   @Test
   public void getServicesByFuzzySearchTestSucc() throws ValidationException {
     // Arrange
@@ -45,12 +59,26 @@ public class FuzzySearchControllerTest {
     searchCriteria.add("term1");
     searchCriteria.add("term2");
 
-    // Act
+    when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
+    when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);
+    when(mockRequestParams.getPostcodePriority()).thenReturn(POSTCODE_PRIORITY);
+    when(mockRequestParams.getPublicNamePriority()).thenReturn(PUBLIC_NAME_PRIORITY);
+    when(mockRequestParams.getFuzzLevel()).thenReturn(FUZZ_LEVEL);
+    when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
     when(mockFuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria))
         .thenReturn(getDosServices());
 
+    // Act
     ResponseEntity<ApiResponse> responseEntity =
-        fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null);
+        fuzzyServiceSearchController.getServicesByFuzzySearch(
+            searchCriteria,
+            FILTER_REFERRAL_ROLE,
+            MAX_SERVICES_TO_RETURN,
+            FUZZ_LEVEL,
+            NAME_PRIORITY,
+            ADDRESS_PRIORITY,
+            POSTCODE_PRIORITY,
+            PUBLIC_NAME_PRIORITY);
 
     // Assert
     final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.getBody();
@@ -74,13 +102,28 @@ public class FuzzySearchControllerTest {
     searchCriteria.add("term1");
     searchCriteria.add("term2");
 
-    // Act
+    when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
+    when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);
+    when(mockRequestParams.getPostcodePriority()).thenReturn(POSTCODE_PRIORITY);
+    when(mockRequestParams.getPublicNamePriority()).thenReturn(PUBLIC_NAME_PRIORITY);
+    when(mockRequestParams.getFuzzLevel()).thenReturn(FUZZ_LEVEL);
+    when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
+
     doThrow(new ValidationException(VALIDATION_ERROR_MSG, VALIDATION_ERROR_CODE))
         .when(mockValidationService)
         .validateSearchCriteria(searchCriteria);
 
+    // Act
     ResponseEntity<ApiResponse> responseEntity =
-        fuzzyServiceSearchController.getServicesByFuzzySearch(searchCriteria, null);
+        fuzzyServiceSearchController.getServicesByFuzzySearch(
+            searchCriteria,
+            FILTER_REFERRAL_ROLE,
+            MAX_SERVICES_TO_RETURN,
+            FUZZ_LEVEL,
+            NAME_PRIORITY,
+            ADDRESS_PRIORITY,
+            POSTCODE_PRIORITY,
+            PUBLIC_NAME_PRIORITY);
 
     // Assert
     final ApiValidationErrorResponse response =

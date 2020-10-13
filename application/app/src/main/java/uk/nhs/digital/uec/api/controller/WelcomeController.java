@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WelcomeController {
 
-  @Value("${param.version}")
+  @Value("${configuration.version}")
   private String apiVersion;
 
   @RequestMapping(value = "/dosapi/dosservices/v0.0.1/home")

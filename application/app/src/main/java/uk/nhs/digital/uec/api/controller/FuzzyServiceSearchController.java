@@ -2,16 +2,19 @@ package uk.nhs.digital.uec.api.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.nhs.digital.uec.api.exception.ValidationException;
+import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.ApiResponse;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
+import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
 import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 
@@ -24,6 +27,16 @@ public class FuzzyServiceSearchController {
 
   @Autowired private ValidationServiceInterface validationService;
 
+  @Autowired private ApiUtilsServiceInterface utils;
+
+  @Autowired private ApiRequestParams requestParams;
+
+  @Value("${configuration.search_parameters.max_num_services_to_return}")
+  private String defaultMaxNumServicesToReturn;
+
+  @Value("${configuration.search_parameters.fuzz_level}")
+  private String defaultFuzzLevel;
+
   /**
    * Endpoint for retrieving services with attributes that match the search criteria provided.
    *
@@ -34,11 +47,33 @@ public class FuzzyServiceSearchController {
    */
   @GetMapping("services/byfuzzysearch")
   public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
-      @RequestParam(name = "search_criteria", required = false) List<String> searchCriteria,
-      @RequestParam(name = "filter_referral_role", required = false) String filterReferralRole) {
+      @RequestParam(name = "search_term", required = false) List<String> searchCriteria,
+      @RequestParam(name = "filter_referral_role", required = false) String filterReferralRole,
+      @RequestParam(name = "max_number_of_services_to_return", required = false)
+          Integer maxNumServicesToReturn,
+      @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel,
+      @RequestParam(name = "name_priority", required = false) Integer namePriority,
+      @RequestParam(name = "address_priority", required = false) Integer addressPriority,
+      @RequestParam(name = "postcode_priority", required = false) Integer postcodePriority,
+      @RequestParam(name = "public_name_priority", required = false) Integer publicNamePriority) {
 
-    final ApiSuccessResponse response = new ApiSuccessResponse();
-    response.setSearchCriteria(searchCriteria);
+    utils.configureApiRequestParams(
+        fuzzLevel,
+        filterReferralRole,
+        maxNumServicesToReturn,
+        namePriority,
+        addressPriority,
+        postcodePriority,
+        publicNamePriority);
+
+    final ApiSuccessResponse response =
+        new ApiSuccessResponse.ApiSuccessResponseBuilder()
+            .searchCriteria(searchCriteria)
+            .fuzzLevel(requestParams.getFuzzLevel())
+            .addressPriority(requestParams.getAddressPriority())
+            .namePriority(requestParams.getNamePriority())
+            .maxNumServicesToReturn(requestParams.getMaxNumServicesToReturn())
+            .build();
 
     try {
       validationService.validateSearchCriteria(searchCriteria);
