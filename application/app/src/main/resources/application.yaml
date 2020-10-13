@@ -5,7 +5,7 @@ spring:
       uris: "localhost:9200"
 
 server:
-  port: 9095
+  port: 8443
   ssl:
     key-store-type: PKCS12
     keystore: classpath:certificate/localhost.p12
@@ -13,7 +13,7 @@ server:
 
 api:
   endpoint:
-    service_search: "https://localhost:9095/dosapi/dosservices/v0.0.1/services/byfuzzysearch"
+    service_search: "https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch"
 
 configuration:
   version: "v0.0.1"
