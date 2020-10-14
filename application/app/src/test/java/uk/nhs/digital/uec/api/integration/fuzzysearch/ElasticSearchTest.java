@@ -20,9 +20,10 @@ public class ElasticSearchTest {
 
   @Autowired private PropertySourceResolver propertySourceResolver;
 
+  @Autowired private TestRestTemplate restTemplate;
+
   private static String endpointUrl;
 
-  TestRestTemplate restTemplate = new TestRestTemplate();
   HttpHeaders headers = new HttpHeaders();
 
   @BeforeEach
