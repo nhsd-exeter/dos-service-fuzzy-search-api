@@ -5,7 +5,11 @@ spring:
       uris: "localhost:9200"
 
 server:
-  port: 9095
+  port: 8443
+  ssl:
+    key-store-type: PKCS12
+    keystore: classpath:certificate/localhost.p12
+    key-store-password:
 
 api:
   endpoint:
