@@ -82,7 +82,7 @@ public class FuzzySearchControllerTest {
 
     // Assert
     final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.getBody();
-    final List<DosService> returnedServices = response.getServices();
+    final List<DosService> returnedServices = response.getSearchResults().getServices();
 
     verify(mockValidationService, times(1)).validateSearchCriteria(searchCriteria);
     verify(mockValidationService, times(1)).validateMinSearchCriteriaLength(searchCriteria);
@@ -90,7 +90,7 @@ public class FuzzySearchControllerTest {
 
     assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
 
-    assertEquals(response.getNumberOfServices(), 2);
+    assertEquals(response.getSearchResults().getNumberOfServicesFound(), 2);
     assertTrue(isExpectedServiceReturned("service1", returnedServices));
     assertTrue(isExpectedServiceReturned("service2", returnedServices));
   }
