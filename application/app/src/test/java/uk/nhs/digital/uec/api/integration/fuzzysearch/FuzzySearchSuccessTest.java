@@ -29,10 +29,11 @@ public class FuzzySearchSuccessTest {
 
   @Autowired private PropertySourceResolver propertySourceResolver;
 
+  @Autowired private TestRestTemplate restTemplate;
+
   private static String endpointUrl;
   private static int maxNoServicesToReturn;
 
-  TestRestTemplate restTemplate = new TestRestTemplate();
   HttpHeaders headers = new HttpHeaders();
 
   @BeforeEach
@@ -66,8 +67,8 @@ public class FuzzySearchSuccessTest {
     ApiSuccessResponse response =
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
-    assertEquals(1, response.getNumberOfServices());
-    assertEquals("service1", response.getServices().get(0).getName());
+    assertEquals(1, response.getSearchResults().getNumberOfServicesFound());
+    assertEquals("service1", response.getSearchResults().getServices().get(0).getName());
   }
 
   /**
@@ -96,8 +97,8 @@ public class FuzzySearchSuccessTest {
     ApiSuccessResponse response =
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
-    assertEquals(1, response.getNumberOfServices());
-    assertEquals("service1", response.getServices().get(0).getName());
+    assertEquals(1, response.getSearchResults().getNumberOfServicesFound());
+    assertEquals("service1", response.getSearchResults().getServices().get(0).getName());
   }
 
   /**
@@ -124,7 +125,7 @@ public class FuzzySearchSuccessTest {
     ApiSuccessResponse response =
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
-    assertEquals(0, response.getNumberOfServices());
+    assertEquals(0, response.getSearchResults().getNumberOfServicesFound());
   }
 
   /** Given search criteria of ALL, return the maximum number of services. */
@@ -147,6 +148,6 @@ public class FuzzySearchSuccessTest {
     ApiSuccessResponse response =
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
-    assertEquals(maxNoServicesToReturn, response.getNumberOfServices());
+    assertEquals(maxNoServicesToReturn, response.getSearchResults().getNumberOfServicesFound());
   }
 }

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.nhs.digital.uec.api.exception.ValidationException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.ApiResponse;
+import uk.nhs.digital.uec.api.model.ApiSearchParamsResponse;
+import uk.nhs.digital.uec.api.model.ApiSearchResultsResponse;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
@@ -66,8 +68,8 @@ public class FuzzyServiceSearchController {
         postcodePriority,
         publicNamePriority);
 
-    final ApiSuccessResponse response =
-        new ApiSuccessResponse.ApiSuccessResponseBuilder()
+    final ApiSearchParamsResponse searchParamsResponse =
+        new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()
             .searchCriteria(searchCriteria)
             .fuzzLevel(requestParams.getFuzzLevel())
             .addressPriority(requestParams.getAddressPriority())
@@ -75,13 +77,18 @@ public class FuzzyServiceSearchController {
             .maxNumServicesToReturn(requestParams.getMaxNumServicesToReturn())
             .build();
 
+    final ApiSuccessResponse response = new ApiSuccessResponse();
+    final ApiSearchResultsResponse searchResultsResponse = new ApiSearchResultsResponse();
+
     try {
       validationService.validateSearchCriteria(searchCriteria);
       validationService.validateMinSearchCriteriaLength(searchCriteria);
 
       final List<DosService> dosServices =
           fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
-      response.setServices(dosServices);
+      searchResultsResponse.setServices(dosServices);
+      response.setSearchParameters(searchParamsResponse);
+      response.setSearchResults(searchResultsResponse);
     } catch (final ValidationException ex) {
       final ApiValidationErrorResponse valResponse =
           new ApiValidationErrorResponse(ex.getValidationCode(), ex.getMessage());
