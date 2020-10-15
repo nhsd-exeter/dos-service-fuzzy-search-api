@@ -185,16 +185,16 @@ Please, refer to the [Clean Code](https://learning.oreilly.com/library/view/clea
 When writing or updating unit tests, please always structure them using the 3 A's approach of 'Arrange', 'Act', and 'Assert'. For example:
 
     @Test
-    public void retrieveServicesByFuzzySearchNullReturn() {
-    // Arrange
-    List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("Null");
-    when(serviceRepository.findServiceBySearchTerms(searchCriteria)).thenReturn(null);
+    public void listServicesNullReturn() {
 
-    // Act
-    List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+      // Arrange
+      List<String> criteria = new ArrayList<>();
+      criteria.add("Null");
+      when(repository.findBy(criteria)).thenReturn(null);
 
-    // Assert
-    assertEquals(0, services.size());
+      // Act
+      List<Service> list = service.list(criteria);
+
+      // Assert
+      assertEquals(0, list.size());
     }

@@ -10,6 +10,11 @@ project-config: ### Configure project environment
 	if [ ! -f $(PROJECT_DIR)/project.code-workspace ]; then
 		cp -fv $(LIB_DIR)/project/template/project.code-workspace $(PROJECT_DIR)
 	fi
+	# Make sure project's SSL certificate is created
+	if [ ! -f $(SSL_CERTIFICATE_DIR)/certificate.pem ]; then
+		make ssl-generate-certificate-project
+		[ $(PROJECT_NAME) != "make-devops" ] && rm -f $(SSL_CERTIFICATE_DIR)/.gitignore
+	fi
 	# Re-configure developer's environment on demand
 	if [ -n "$(PROJECT_CONFIG_TIMESTAMP)" ] && ([ ! -f $(PROJECT_CONFIG_TIMESTAMP_FILE) ] || [ $(PROJECT_CONFIG_TIMESTAMP) -gt $$(cat $(PROJECT_CONFIG_TIMESTAMP_FILE)) ]) && [ $(BUILD_ID) -eq 0 ]; then
 		if [[ ! "$(PROJECT_CONFIG_FORCE)" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]]; then
@@ -90,13 +95,53 @@ project-create-infrastructure: ### Create infrastructure from template - mandato
 
 project-create-pipeline: ### Create pipeline
 	make -s jenkins-create-pipeline-from-template
+# ==============================================================================
+
+project-branch-deploy: ### Check if development branch can be deployed automatically - return: true|false
+	[ $(BUILD_BRANCH) == master ] && echo true && exit 0
+	[[ $(BUILD_BRANCH) =~ ^$(GIT_TASK_BRANCH_PATTERN) ]] && [ $$(make project-message-contains KEYWORD=deploy) == true ] && echo true && exit 0
+	[ $$(make project-branch-test) == true ] && echo true && exit 0
+	echo false
+
+project-branch-test: ### Check if development branch can be tested automatically - return: true|false
+	[ $(BUILD_BRANCH) == master ] && echo true && exit 0
+	[[ $(BUILD_BRANCH) =~ ^$(GIT_TASK_BRANCH_PATTERN) ]] && [ $$(make project-message-contains KEYWORD=test,func-test,perf-test,sec-test) == true ] && echo true && exit 0
+	echo false
+
+project-branch-func-test: ### Check if development branch can be tested (functional) automatically - return: true|false
+	[ $(BUILD_BRANCH) == master ] && echo true && exit 0
+	[[ $(BUILD_BRANCH) =~ ^$(GIT_TASK_BRANCH_PATTERN) ]] && [ $$(make project-message-contains KEYWORD=test,func-test) == true ] && echo true && exit 0
+	echo false
+
+project-branch-perf-test: ### Check if development branch can be tested (performance) automatically - return: true|false
+	[ $(BUILD_BRANCH) == master ] && echo true && exit 0
+	[[ $(BUILD_BRANCH) =~ ^$(GIT_TASK_BRANCH_PATTERN) ]] && [ $$(make project-message-contains KEYWORD=test,perf-test) == true ] && echo true && exit 0
+	echo false
+
+project-branch-sec-test: ### Check if development branch can be tested (security) automatically - return: true|false
+	[ $(BUILD_BRANCH) == master ] && echo true && exit 0
+	[[ $(BUILD_BRANCH) =~ ^$(GIT_TASK_BRANCH_PATTERN) ]] && [ $$(make project-message-contains KEYWORD=test,sec-test) == true ] && echo true && exit 0
+	echo false
+
+project-message-contains: ### Check if git commit message contains any give keyword - mandatory KEYWORD=[comma-separated keywords]
+	msg=$$(make git-msg)
+	for str in $$(echo $(KEYWORD) | sed "s/,/ /g"); do
+		echo "$$msg" | grep -E '[ci .*]' | grep -Eoq "\[ci .*$${str}[^-].*" && echo true && exit 0
+	done
+	echo false
 
 # ==============================================================================
 
 .SILENT: \
+	project-branch-deploy \
+	project-branch-func-test \
+	project-branch-perf-test \
+	project-branch-sec-test \
+	project-branch-test \
 	project-create-contract-test \
 	project-create-deployment \
 	project-create-image \
 	project-create-infrastructure \
 	project-create-pipeline \
-	project-create-profile
+	project-create-profile \
+	project-message-contains
