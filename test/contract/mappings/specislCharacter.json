@@ -6,9 +6,19 @@
   "response": {
     "status": 200,
     "jsonBody": {
-      "search_string": "Totnes!",
-      "number_of_services": 0,
-      "services": []
+      "search_parameters": {
+        "search_criteria": ["Totnes!"],
+        "fuzz_level": 1,
+        "address_priority": 0,
+        "name_priority": 2,
+        "postcode_priority": 0,
+        "public_name_priority": 0,
+        "max_num_services_to_return": 2
+      },
+      "search_results": {
+        "number_of_services_found": 0,
+        "services": []
+      }
     },
     "headers": {
       "Content-Type": "application/json"
