@@ -3,11 +3,12 @@
 # ==============================================================================
 # Service variables
 SPRING_PROFILES_ACTIVE := local
+CERTIFICATE_DOMAIN := localhost
 
 ELASTICSEARCH_URL := elasticsearch.sfs.local:9200
-API_SERVICE_SEARCH_ENDPOINT := http://localhost:9095/dosapi/dosservices/v0.0.1/services/byfuzzysearch
+API_SERVICE_SEARCH_ENDPOINT := https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch
 
-SERVER_PORT := 9095
+SERVER_PORT := 8443
 VERSION := v0.0.1
 
 # Validation parameters
