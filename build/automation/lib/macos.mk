@@ -1,6 +1,6 @@
 DEV_OHMYZSH_DIR := ~/.dotfiles/oh-my-zsh
 
-macos-setup devops-setup: ## Provision your MacBook (and become a DevOps ninja) - optional: REINSTALL=true
+macos-setup devops-setup: ### Provision your MacBook (and become a DevOps ninja) - optional: REINSTALL=true
 	rm -f $(SETUP_COMPLETE_FLAG_FILE)
 	make macos-disable-gatekeeper
 	make \
@@ -14,11 +14,11 @@ macos-setup devops-setup: ## Provision your MacBook (and become a DevOps ninja) 
 	make macos-enable-gatekeeper
 	touch $(SETUP_COMPLETE_FLAG_FILE)
 
-macos-prepare:: ## Prepare for installation and configuration of the development dependencies
+macos-prepare:: ### Prepare for installation and configuration of the development dependencies
 	networksetup -setdnsservers Wi-Fi 8.8.8.8
 	sudo chown -R $$(id -u) $$(brew --prefix)/*
 
-macos-update:: ## Update/upgrade all currently installed development dependencies
+macos-update:: ### Update/upgrade all currently installed development dependencies
 	which mas > /dev/null 2>&1 || brew install mas
 	mas upgrade $(mas list | grep -i xcode | awk '{ print $1 }')
 	brew update
@@ -26,7 +26,7 @@ macos-update:: ## Update/upgrade all currently installed development dependencie
 	brew tap buo/cask-upgrade
 	brew cu --all --yes
 
-macos-install-essential:: ## Install essential development dependencies - optional: REINSTALL=true
+macos-install-essential:: ### Install essential development dependencies - optional: REINSTALL=true
 	install="install"
 	if [[ "$$REINSTALL" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]]; then
 		install="reinstall --force"
@@ -91,7 +91,7 @@ macos-install-essential:: ## Install essential development dependencies - option
 	# maven depends on java
 	brew $$install maven ||:
 
-macos-install-additional:: ## Install additional development dependencies - optional: REINSTALL=true
+macos-install-additional:: ### Install additional development dependencies - optional: REINSTALL=true
 	install="install"
 	if [[ "$$REINSTALL" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]]; then
 		install="reinstall --force"
@@ -134,7 +134,7 @@ macos-install-additional:: ## Install additional development dependencies - opti
 	# 	https://raw.githubusercontent.com/Homebrew/homebrew-cask/5a0a2b2322e35ec867f6633ca985ee485255f0b1/Casks/virtualbox-extension-pack.rb ||:
 	brew cask $$install virtualbox-extension-pack ||:
 
-macos-install-corporate:: ## Install corporate dependencies - optional: REINSTALL=true
+macos-install-corporate:: ### Install corporate dependencies - optional: REINSTALL=true
 	install="install"
 	if [[ "$$REINSTALL" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]]; then
 		install="reinstall --force"
@@ -146,7 +146,7 @@ macos-install-corporate:: ## Install corporate dependencies - optional: REINSTAL
 	brew cask $$install vmware-horizon-client ||:
 	brew cask $$install avast-security ||:
 
-macos-check:: ## Check if the development dependencies are installed
+macos-check:: ### Check if the development dependencies are installed
 	# Essential dependencies
 	mas list | grep -i "xcode" ||:
 	brew list ack ||:
@@ -230,7 +230,7 @@ macos-check:: ## Check if the development dependencies are installed
 	brew cask list virtualbox ||:
 	brew cask list virtualbox-extension-pack ||:
 
-macos-config:: ## Configure development dependencies
+macos-config:: ### Configure development dependencies
 	make \
 		_macos-config-mac \
 		_macos-config-zsh \
@@ -241,20 +241,20 @@ macos-config:: ## Configure development dependencies
 		_macos-config-firefox
 	make macos-info
 
-macos-fix:: ## Fix development dependencies
+macos-fix:: ### Fix development dependencies
 	make _macos-fix-vagrant-virtualbox
 
-macos-info:: ## Show "Setting up your macOS using Make DevOps" manual
+macos-info:: ### Show "Setting up your macOS using Make DevOps" manual
 	info=$(LIB_DIR)/macos/README.md
 	html=$(TMP_DIR)/make-devops-doc-$(shell echo $$info | md5sum | cut -c1-7).html
 	perl $(BIN_DIR)/markdown --html4tags $$info > $$html
 	cp -f $$html ~/Desktop/Setting\ up\ your\ macOS\ using\ Make\ DevOps.html
 	open -a "Safari" ~/Desktop/Setting\ up\ your\ macOS\ using\ Make\ DevOps.html
 
-macos-disable-gatekeeper:: ## Disable Gatekeeper
+macos-disable-gatekeeper:: ### Disable Gatekeeper
 	sudo spctl --master-disable
 
-macos-enable-gatekeeper:: ## Enable Gatekeeper
+macos-enable-gatekeeper:: ### Enable Gatekeeper
 	sudo spctl --master-enable
 
 # ==============================================================================
@@ -299,6 +299,7 @@ _macos-config-oh-my-zsh:
 	echo "    httpie" >> ~/.zshrc
 	echo "    vscode" >> ~/.zshrc
 	echo "    iterm2" >> ~/.zshrc
+	echo "    nvm" >> ~/.zshrc
 	echo "    osx" >> ~/.zshrc
 	echo "    emoji" >> ~/.zshrc
 	echo "    ssh-agent" >> ~/.zshrc
@@ -308,14 +309,15 @@ _macos-config-oh-my-zsh:
 	echo "    copybuffer" >> ~/.zshrc
 	echo "    $(DEVOPS_PROJECT_NAME)" >> ~/.zshrc
 	echo ")" >> ~/.zshrc
-	echo 'function tx-status { [ -n "$$TEXAS_SESSION_EXPIRY_TIME" ] && [ "$$TEXAS_SESSION_EXPIRY_TIME" -gt $$(date -u +"%Y%m%d%H%M%S") ] && echo $$TEXAS_PROFILE ||: }' >> ~/.zshrc
+	echo 'function tx-status { [ -n "$$TEXAS_SESSION_EXPIRY_TIME" ] && [ "$$(echo $$TEXAS_SESSION_EXPIRY_TIME | sed s/\[-_:\]//g)" -gt $$(date -u +"%Y%m%d%H%M%S") ] && ( [ -n "$$TEXAS_PROFILE" ] && echo $$TEXAS_PROFILE || echo $$TEXAS_ACCOUNT ) ||: }' >> ~/.zshrc
 	echo "POWERLEVEL9K_CUSTOM_TEXAS=tx-status" >> ~/.zshrc
 	echo "POWERLEVEL9K_CUSTOM_TEXAS_BACKGROUND=balck" >> ~/.zshrc
 	echo "POWERLEVEL9K_CUSTOM_TEXAS_FOREGROUND=yellow" >> ~/.zshrc
+	echo "POWERLEVEL9K_NODE_VERSION_PROJECT_ONLY=true" >> ~/.zshrc
 	echo "POWERLEVEL9K_MODE=nerdfont-complete" >> ~/.zshrc
 	echo "POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)" >> ~/.zshrc
 	echo "POWERLEVEL9K_SHORTEN_DIR_LENGTH=3" >> ~/.zshrc
-	echo "POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status pyenv jenv custom_texas root_indicator background_jobs time)" >> ~/.zshrc
+	echo "POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status node_version pyenv jenv custom_texas root_indicator background_jobs time)" >> ~/.zshrc
 	echo "POWERLEVEL9K_PROMPT_ON_NEWLINE=true" >> ~/.zshrc
 	echo "POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true" >> ~/.zshrc
 	echo "ZSH_THEME=powerlevel10k/powerlevel10k" >> ~/.zshrc
@@ -430,8 +432,10 @@ _macos-config-visual-studio-code:
 	code --force --install-extension gruntfuggly.todo-tree
 	code --force --install-extension hashicorp.terraform
 	code --force --install-extension humao.rest-client
+	code --force --install-extension jebbs.plantuml
 	code --force --install-extension johnpapa.vscode-peacock
 	code --force --install-extension mhutchie.git-graph
+	code --force --install-extension mrmlnc.vscode-apache
 	code --force --install-extension ms-azuretools.vscode-docker
 	code --force --install-extension ms-python.anaconda-extension-pack
 	code --force --install-extension ms-python.python
@@ -442,6 +446,8 @@ _macos-config-visual-studio-code:
 	code --force --install-extension oderwat.indent-rainbow
 	code --force --install-extension pivotal.vscode-spring-boot
 	code --force --install-extension redhat.java
+	code --force --install-extension shengchen.vscode-checkstyle
+	code --force --install-extension sonarsource.sonarlint-vscode
 	code --force --install-extension streetsidesoftware.code-spell-checker
 	code --force --install-extension techer.open-in-browser
 	code --force --install-extension timonwong.shellcheck
@@ -474,6 +480,8 @@ _macos-config-visual-studio-code:
 	# List them all
 	code --list-extensions --show-versions
 	# Copy user key bindings
+	cp ~/Library/Application\ Support/Code/User/keybindings.json ~/Library/Application\ Support/Code/User/keybindings.json.bak.$$(date -u +"%Y%m%d%H%M%S") ||:
+	find ~/Library/Application\ Support/Code/User -maxdepth 1 -type f -mtime +7 -name 'keybindings.json.bak.*' -execdir rm -- '{}' \;
 	cp -fv $(PROJECT_DIR)/build/automation/lib/macos/vscode-keybindings.json ~/Library/Application\ Support/Code/User/keybindings.json
 
 _macos-config-firefox:

@@ -1,18 +1,23 @@
-help: help-project-flow # Show project development flow targets
+help: help-project-development # Show project specific development workflow targets
 
 help-all: # Show all targets
-	@awk 'BEGIN {FS = ":.*?#+ "} /^[ a-zA-Z0-9_-]+:.*? #+ / {printf "\033[36m%-41s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
+	tput setaf 190; printf "\nProject specific development workflow targets\n\n"; tput sgr 0
+	make help-project-development
+	tput setaf 190; printf "\nProject specific supporting and deployment workflow targets\n\n"; tput sgr 0
+	make help-project-supporting
+	tput setaf 190; printf "\nLibrary targets\n\n"; tput sgr 0
+	make help-library
 
-help-dev: # Show development documentation
-	# TODO: Show development documentation
-
-help-project-flow: ## Show project development flow targets
+help-project-development: ### Show project specific development workflow targets
 	@awk 'BEGIN {FS = ":.*?# "} /^[ a-zA-Z0-9_-]+:.*? # / {printf "\033[36m%-41s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-help-project-supporting: ## Show development supporting targets
+help-project-supporting: ### Show project specific supporting and deployment workflow targets
 	@awk 'BEGIN {FS = ":.*?## "} /^[ a-zA-Z0-9_-]+:.*? ## / {printf "\033[36m%-41s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-devops-print-variables: ### Print all the variables
+help-library: ### Show library targets
+	@awk 'BEGIN {FS = ":.*?### "} /^[ a-zA-Z0-9_-]+:.*? ### / {printf "\033[36m%-41s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
+
+devops-print-variables show-configuration: ### Print all the variables
 	$(foreach v, $(sort $(.VARIABLES)),
 		$(if $(filter-out default automatic, $(origin $v)),
 			$(if $(and $(patsubst %_PASSWORD,,$v), $(patsubst %_SECRET,,$v)),
@@ -36,6 +41,7 @@ devops-test-suite: ### Run the DevOps unit test suite - optional: DEBUG=true
 		test-jenkins \
 		test-python \
 		test-java \
+		test-node \
 		test-postgres \
 		test-techradar \
 		test-project \
@@ -70,14 +76,42 @@ devops-test-cleanup: ### Clean up adter the tests
 	# TODO: Remove older networks that remained after unsuccessful builds
 
 devops-copy: ### Copy the DevOps automation toolchain scripts to given destination - optional: DIR
+	function sync() {
+		cd $(PROJECT_DIR)
+		rsync -rav \
+			--include=build/ \
+			--exclude=automation/etc/certificate/certificate.* \
+			--exclude=automation/var/project.mk \
+			--exclude=Jenkinsfile \
+			build/* \
+			$(DIR)/build
+		[ -f $(DIR)/build/automation/etc/certificate/*.pem ] && rm -fv $(DIR)/build/automation/etc/certificate/.gitignore
+		[ -f $(DIR)/build/docker/docker-compose.yml ] && rm -fv $(DIR)/build/docker/.gitkeep
+		mkdir -p \
+			$(DIR)/.github \
+			$(DIR)/documentation/adr
+		cp -fv .github/CODEOWNERS $(DIR)/.github/CODEOWNERS && sed -i "s;@nhsd-exeter/admins;@nhsd-exeter/maintainers;" $(DIR)/.github/CODEOWNERS
+		cp -fv build/automation/lib/project/template/.gitattributes $(DIR)
+		cp -fv build/automation/lib/project/template/project.code-workspace $(DIR)
+		cp -fv documentation/adr/README.md $(DIR)/documentation/adr
+		cp -fv .editorconfig $(DIR)
+		cp -fv .gitignore $(DIR)
+		cp -fv CONTRIBUTING.md $(DIR)
+		cp -fv LICENSE.md $(DIR)/build/automation/LICENSE.md
+		[ ! -f $(DIR)/Makefile ] && cp -fv build/automation/lib/project/template/Makefile $(DIR)
+		[ ! -f $(DIR)/README.md ] && cp -fv build/automation/lib/project/template/README.md $(DIR)
+		return 0
+	}
+	function version() {
+		cd $(PROJECT_DIR)
+		tag=$$([ -n "$$(git tag --points-at HEAD)" ] && echo $$(git tag --points-at HEAD) || echo v$$(git show -s --format=%cd --date=format:%Y%m%d%H%M%S))
+		hash=$$(git rev-parse --short HEAD)
+		echo "$${tag:1}-$${hash}" > $(DIR)/build/automation/VERSION
+	}
 	mkdir -p $(DIR)/build
-	rm -rf $(DIR)/build/automation
-	cp -rfv $(PROJECT_DIR)/build/automation $(DIR)/build
-	cp -fv $(LIB_DIR)/project/template/Makefile $(DIR)
-	cp -fv $(LIB_DIR)/project/template/project.code-workspace $(DIR)
-	cp -fv $(PROJECT_DIR)/LICENSE.md $(DIR)/build/automation
+	sync && version
 
-devops-update devops-synchronise: ### Update/upgrade the DevOps automation toolchain scripts used by this project - optional: LATEST=true,ALL=true
+devops-update devops-synchronise: ### Update/upgrade the DevOps automation toolchain scripts used by this project - optional: LATEST=true
 	function download() {
 		cd $(PROJECT_DIR)
 		rm -rf \
@@ -95,25 +129,29 @@ devops-update devops-synchronise: ### Update/upgrade the DevOps automation toolc
 	}
 	function sync() {
 		cd $(PROJECT_DIR)
-		# Copy essentials
 		rsync -rav \
 			--include=build/ \
+			--exclude=automation/etc/certificate/certificate.* \
 			--exclude=automation/var/project.mk \
-			--exclude=docker/docker-compose.yml \
 			--exclude=Jenkinsfile \
 			build/* \
 			$(PARENT_PROJECT_DIR)/build
 		[ -f $(PARENT_PROJECT_DIR)/build/automation/etc/certificate/*.pem ] && rm -fv $(PARENT_PROJECT_DIR)/build/automation/etc/certificate/.gitignore
+		[ -f $(PARENT_PROJECT_DIR)/docker/docker-compose.yml ] && rm -fv $(PARENT_PROJECT_DIR)/docker/.gitkeep
+		mkdir -p \
+			$(PARENT_PROJECT_DIR)/.github \
+			$(PARENT_PROJECT_DIR)/documentation/adr
+		cp -fv .github/CODEOWNERS $(PARENT_PROJECT_DIR)/.github/CODEOWNERS && sed -i "s;@nhsd-exeter/admins;@nhsd-exeter/maintainers;" $(PARENT_PROJECT_DIR)/.github/CODEOWNERS
+		cp -fv build/automation/lib/project/template/.gitattributes $(PARENT_PROJECT_DIR)
+		cp -fv build/automation/lib/project/template/project.code-workspace $(PARENT_PROJECT_DIR)
+		cp -fv documentation/adr/README.md $(PARENT_PROJECT_DIR)/documentation/adr
+		cp -fv .editorconfig $(PARENT_PROJECT_DIR)
+		cp -fv .gitignore $(PARENT_PROJECT_DIR)
+		cp -fv CONTRIBUTING.md $(PARENT_PROJECT_DIR)
 		cp -fv LICENSE.md $(PARENT_PROJECT_DIR)/build/automation/LICENSE.md
-		# Copy additionals
-		if [[ "$(ALL)" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]]; then
-			mkdir -p $(PARENT_PROJECT_DIR)/documentation/adr
-			cp -fv documentation/adr/README.md $(PARENT_PROJECT_DIR)/documentation/adr
-			cp -fv .editorconfig $(PARENT_PROJECT_DIR)
-			cp -fv .gitignore $(PARENT_PROJECT_DIR)
-			cp -fv CONTRIBUTING.md $(PARENT_PROJECT_DIR)
-			cp -fv $(LIB_DIR)/project/template/project.code-workspace $(PARENT_PROJECT_DIR)
-		fi
+		[ ! -f $(PARENT_PROJECT_DIR)/Makefile ] && cp -fv build/automation/lib/project/template/Makefile $(PARENT_PROJECT_DIR)
+		[ ! -f $(PARENT_PROJECT_DIR)/README.md ] && cp -fv build/automation/lib/project/template/README.md $(PARENT_PROJECT_DIR)
+		return 0
 	}
 	function version() {
 		cd $(PROJECT_DIR)
@@ -246,7 +284,7 @@ devops-setup-aws-accounts: ### Ask user to input valid AWS account IDs to be use
 # ==============================================================================
 # Project configuration
 
-DEVOPS_PROJECT_ORG := nhsd-ddce
+DEVOPS_PROJECT_ORG := nhsd-exeter
 DEVOPS_PROJECT_NAME := make-devops
 DEVOPS_PROJECT_DIR := $(abspath $(lastword $(MAKEFILE_LIST))/..)
 
@@ -283,7 +321,6 @@ INFRASTRUCTURE_DIR := $(abspath $(or $(INFRASTRUCTURE_DIR), $(PROJECT_DIR)/infra
 INFRASTRUCTURE_DIR_REL := $(shell echo $(INFRASTRUCTURE_DIR) | sed "s;$(PROJECT_DIR);;g")
 JQ_DIR_REL := $(shell echo $(abspath $(LIB_DIR)/jq) | sed "s;$(PROJECT_DIR);;g")
 
-PROFILE := $(or $(PROFILE), local)
 BUILD_ID := $(or $(or $(BUILD_ID), $(CIRCLE_BUILD_NUM)), 0)
 BUILD_DATE := $(or $(BUILD_DATE), $(shell date -u +"%Y-%m-%dT%H:%M:%S%z"))
 BUILD_TIMESTAMP := $(shell date --date=$(BUILD_DATE) -u +"%Y%m%d%H%M%S")
@@ -291,10 +328,12 @@ BUILD_REPO := $(or $(shell git config --get remote.origin.url 2> /dev/null ||:),
 BUILD_BRANCH := $(if $(shell git rev-parse --abbrev-ref HEAD 2> /dev/null | grep -E ^HEAD$ ||:),$(or $(shell git name-rev --name-only HEAD 2> /dev/null ||:), unknown),$(or $(shell git rev-parse --abbrev-ref HEAD 2> /dev/null ||:), unknown))
 BUILD_COMMIT_HASH := $(or $(shell git rev-parse --short HEAD 2> /dev/null ||:), unknown)
 BUILD_COMMIT_DATE := $(or $(shell TZ=UTC git show -s --format=%cd --date=format-local:%Y-%m-%dT%H:%M:%S%z HEAD 2> /dev/null ||:), unknown)
+PROFILE := $(or $(PROFILE), local)
+ENVIRONMENT := $(or $(ENVIRONMENT), $(shell ([ $(PROFILE) = local ] && echo local) || ( echo $(BUILD_BRANCH) | grep -Eoq '^task/[A-Z]{2,5}-[0-9]{1,5}_[A-Za-z0-9_]{4,32}' && (echo $(BUILD_BRANCH) | grep -Eo '^task/[A-Z]{2,5}-[0-9]{1,5}' | grep -Eo '[A-Z]{2,5}-[0-9]{1,5}' | tr '[:upper:]' '[:lower:]') || ([ $(BUILD_BRANCH) = master ] && echo $(PROFILE)))))
 USER_ID := $(shell id -u)
 GROUP_ID := $(shell id -g)
-TTY_ENABLE := false
-_TTY := $$([ -t 0 ] && [ $(TTY_ENABLE) == true ] && echo "--tty")
+TTY_ENABLE := $(or $(TTY_ENABLE), $(shell [ $(BUILD_ID) -eq 0 ] && echo true || echo false))
+_TTY := $$([ -t 0 ] && [ $(TTY_ENABLE) = true ] && echo "--tty")
 
 GOSS_PATH := $(BIN_DIR)/goss-linux-amd64
 SETUP_COMPLETE_FLAG_FILE := $(TMP_DIR)/.make-devops-setup-complete
@@ -452,7 +491,9 @@ endif
 	_devops-synchronise-select-tag-to-install \
 	_devops-test \
 	devops-copy \
-	devops-print-variables \
+	devops-print-variables show-configuration \
 	devops-setup-aws-accounts \
 	devops-test-single \
-	devops-test-suite
+	devops-test-suite \
+	help \
+	help-all
