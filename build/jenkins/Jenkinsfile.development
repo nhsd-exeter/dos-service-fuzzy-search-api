@@ -19,9 +19,9 @@ pipeline {
       steps { sh "make show-configuration" }
     }
     stage("Deploy") {
-      agent { label "jenkins-slave" }
       steps {
         sh "make deploy PROFILE=dev"
+      }
     }
   }
   post {
