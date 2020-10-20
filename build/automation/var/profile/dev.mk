@@ -2,6 +2,34 @@
 
 # ==============================================================================
 # Service variables
+AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/76e2c1fd-37d0-42e9-9c45-2411f411da5e
+
+PROFILE := dev
+SPRING_PROFILES_ACTIVE := dev
+API_IMAGE_TAG := latest
+
+CERTIFICATE_DOMAIN := localhost
+
+APP_URL_PREFIX := $(K8S_APP_NAMESPACE)-$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)
+ELASTICSEARCH_URL := https://vpc-sfs-dev-csfa7ah6cfpbllxcfqf6wmdcxi.eu-west-2.es.amazonaws.com
+API_SERVICE_SEARCH_ENDPOINT := https://$(APP_URL_PREFIX)-service-search.$(TF_VAR_platform_zone)/dosapi/dosservices/v0.0.1/services/byfuzzysearch
+
+SERVER_PORT := 8443
+VERSION := v0.0.1
+
+SERVICE_SEARCH_REPLICAS := 3
+
+# Validation parameters
+MIN_SEARCH_TERM_LENGTH := 3
+MAX_SEARCH_CRITERIA := 5
+
+# Search parameters
+MAX_NUM_SERVICES_TO_RETURN := 5
+FUZZ_LEVEL := 0
+NAME_PRIORITY := 1
+ADDRESS_PRIORITY := 0
+POSTCODE_PRIORITY := 0
+PUBLIC_NAME_PRIORITY := 0
 
 SPRING_PROFILES_ACTIVE := local
 CERTIFICATE_DOMAIN := localhost

@@ -18,6 +18,7 @@ pipeline {
     stage("Show Configuration") {
       steps { sh "make show-configuration" }
     }
+    /*
     stage("Build") {
       parallel {
         stage("Build: App") {
@@ -33,23 +34,13 @@ pipeline {
         }
       }
     }
+    */
     stage("Deploy") {
-      when {
-        beforeAgent true
-        expression { sh(returnStdout: true, script: "make project-branch-deploy").trim() == "true" }
-      }
-      parallel {
-        stage("Deploy: App") {
-          agent { label "jenkins-slave" }
-          steps {
-            sh "make provision-infractructure"
-            sh "make deploy-artefact"
-            sh "make apply-data-changes"
-            sh "make run-smoke-test"
-          }
-        }
-      }
+      agent { label "jenkins-slave" }
+      steps {
+        sh "make deploy PROFILE=dev"
     }
+    /*
     stage("Test") {
       when {
         beforeAgent true
@@ -62,6 +53,7 @@ pipeline {
         sh "make run-security-test"
       }
     }
+    */
   }
   post {
     success { sh "make pipeline-on-success" }

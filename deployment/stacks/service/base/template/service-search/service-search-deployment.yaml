@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: uec-sfs
+  name: service-search
+spec:
+  replicas: SERVICE_SEARCH_REPLICAS_TO_REPLACE
+  selector:
+    matchLabels:
+      app: service-search
+      env: PROFILE_TO_REPLACE
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1        # how many pods we can add at a time
+      maxUnavailable: 0  # maxUnavailable define how many pods can be unavailable during the rolling update
+  template:
+    metadata:
+      labels:
+        app: service-search
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - service-search
+                topologyKey: kubernetes.io/hostname
+      containers:
+      - name: service-search
+        image: 461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/sfs/api:API_IMAGE_TAG_TO_REPLACE
+        envFrom:
+        - configMapRef:
+            name: service-search-configmap
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        # livenessProbe:
+        #   httpGet:
+        #     path: /actuator/health/liveness
+        #     port: 8443
+        #     scheme: HTTPS
+        #   initialDelaySeconds: 120
+        #   failureThreshold: 3
+        #   periodSeconds: 5
+        ports:
+        - containerPort: 8443
+          protocol: TCP
+        resources:
+          requests:
+            memory: "0Mi"
+            cpu: "0m"
+          limits:
+            memory: "1024Mi"
+            cpu: "500m"
+        imagePullPolicy: Always
