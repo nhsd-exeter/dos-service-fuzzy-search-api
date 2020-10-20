@@ -1,17 +1,19 @@
 // SQL for building the curl command to insert 1000 services into elasticsearch
+// Run in DBever and export as CSV. Turn quotes off.
 
 select
-'curl -XPUT "http://localhost:9200/service/_doc/'||s.id||'" -H ''Content-Type: application/json'' -d''{' ||
-'"id":'||s.id||', '||
-'"uIdentifier":"'||s.uid||'", '||
-'"name":"'||s.name||'", '||
-'"publicName":"'||coalesce(s.publicname,'')||'", '||
-'"capacityStatus":"'||cs.color||'", '||
-'"typeId":'||s.typeid||', '||
-'"type":"'||t.name||'", '||
-'"address":["'||s.address||'"], '||
-'"postcode":"'||s.postcode||'", '||
-'"referralRoles":["Test Role"]}'''
+'{"index":{"_index":"service","_type":"_doc","_id":'||s.id||'}}' ||E'\r\n'||
+'{' ||
+'"id":'||s.id||','||
+'"uIdentifier":"'||s.uid||'",'||
+'"name":"'||s.name||'",'||
+'"publicName":"'||coalesce(s.publicname,'')||'",'||
+'"capacityStatus":"'||cs.color||'",'||
+'"typeId":'||s.typeid||','||
+'"type":"'||t.name||'",'||
+'"address":["'||replace(replace(s.address,'$',' '),'''','''''')||'"],'||
+'"postcode":"'||s.postcode||'",'||
+'"referralRoles":["Test Role"]}'
 from pathwaysdos.services s,
 pathwaysdos.servicecapacities sc,
 pathwaysdos.capacitystatuses cs,
@@ -20,4 +22,5 @@ where s.typeid = t.id
 and sc.serviceid = s.id
 and cs.capacitystatusid = sc.capacitystatusid
 and s.typeid != -1
-and s.id between 1 and 1000;
+and s.typeid != -2
+and s.statusid = 1
