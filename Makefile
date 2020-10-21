@@ -46,7 +46,7 @@ deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	make project-deploy STACK=application PROFILE=$(PROFILE)
 
 provision: # Provision environment - mandatory: PROFILE=[name]
-	make terraform-apply-auto-approve STACK=database PROFILE=$(PROFILE)
+	make terraform-apply-auto-approve STACK=elasticsearch PROFILE=$(PROFILE)
 
 clean: # Clean up project
 
