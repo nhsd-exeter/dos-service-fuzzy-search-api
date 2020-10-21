@@ -22,3 +22,6 @@ NAME_PRIORITY := 1
 ADDRESS_PRIORITY := 0
 POSTCODE_PRIORITY := 0
 PUBLIC_NAME_PRIORITY := 0
+
+# Service Data files
+SERVICE_DATA_FILE := create_all_services_local.sh

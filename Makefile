@@ -4,6 +4,11 @@ include $(abspath $(PROJECT_DIR)/build/automation/init.mk)
 # ==============================================================================
 # Development workflow targets
 
+prepare: ## Prepare environment
+	make \
+		git-config \
+		docker-config
+
 build: project-config # Build project
 	make docker-run-mvn \
 		DIR="application/app" \
@@ -21,11 +26,11 @@ restart: stop start
 
 log: project-log # Show project logs
 
-load-test-data: # Load test services into elasticsearch
-	sh ./data/services/service_data.sh
+load-test-services: # Load test services into elasticsearch
+	sh ./data/services/create_test_services.sh
 
-load-bulk-data: # Load bulk service data into elasticsearch
-	sh ./data/services/bulk_service_data.sh
+load-all-services: # Load bulk service data into elasticsearch - mandatory: PROFILE=[name]
+	sh ./data/services/$(SERVICE_DATA_FILE)
 
 test: load-test-data # Test project
 	make docker-run-mvn \
@@ -41,7 +46,7 @@ deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	make project-deploy STACK=application PROFILE=$(PROFILE)
 
 provision: # Provision environment - mandatory: PROFILE=[name]
-	make terraform-apply-auto-approve STACK=database PROFILE=$(PROFILE)
+	make terraform-apply-auto-approve STACK=elasticsearch PROFILE=$(PROFILE)
 
 clean: # Clean up project
 
