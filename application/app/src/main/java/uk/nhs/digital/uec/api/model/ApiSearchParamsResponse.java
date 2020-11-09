@@ -21,7 +21,7 @@ import lombok.Setter;
   "name_priority",
   "postcode_priority",
   "public_name_priority",
-  "max_num_services_to_return"
+  "max_number_of_services_to_return"
 })
 public class ApiSearchParamsResponse {
 
@@ -43,7 +43,7 @@ public class ApiSearchParamsResponse {
   @JsonProperty("public_name_priority")
   private int publicNamePriority;
 
-  @JsonProperty("max_num_services_to_return")
+  @JsonProperty("max_number_of_services_to_return")
   private int maxNumServicesToReturn;
 
   public ApiSearchParamsResponse() {}
