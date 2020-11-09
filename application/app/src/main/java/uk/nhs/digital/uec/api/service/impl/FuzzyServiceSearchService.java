@@ -2,6 +2,7 @@ package uk.nhs.digital.uec.api.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
@@ -10,12 +11,13 @@ import uk.nhs.digital.uec.api.repository.elasticsearch.CustomServicesRepositoryI
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
 
+@Slf4j
 @Service
 public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInterface {
 
-  @Autowired ApiRequestParams apiRequest;
-
   @Autowired private ApiUtilsServiceInterface apiUtilsService;
+
+  @Autowired private ApiRequestParams apiRequestParams;
 
   @Autowired private CustomServicesRepositoryInterface elasticsearch;
 
@@ -28,8 +30,9 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     dosServices.addAll(
         elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms)));
 
-    if (dosServices.size() > apiRequest.getMaxNumServicesToReturn()) {
-      return dosServices.subList(0, apiRequest.getMaxNumServicesToReturn());
+    log.info("Max services to return: " + apiRequestParams.getMaxNumServicesToReturn());
+    if (dosServices.size() > apiRequestParams.getMaxNumServicesToReturn()) {
+      return dosServices.subList(0, apiRequestParams.getMaxNumServicesToReturn());
     }
 
     return dosServices;
