@@ -13,8 +13,8 @@ public interface ServicesRepositoryInterface extends ElasticsearchRepository<Dos
   // Fuzziness not allowed for multi-match type of cross_fields
   @Query(
       "{\"multi_match\": {\"query\": \"?0\", \"type\": \"best_fields\", \"fields\":"
-          + " [\"search_data^1\", \"name^?2\", \"public_name^5\", \"address^?3\", \"postcode^4\"],"
-          + " \"fuzziness\": \"?1\", \"operator\":\"or\"}}")
+          + " [\"search_data^1\", \"name^?2\", \"public_name^?5\", \"address^?3\","
+          + " \"postcode^?4\"], \"fuzziness\": \"?1\", \"operator\":\"or\"}}")
   Iterable<DosService> findBySearchTerms(
       String searchTerms_0,
       Integer fuzzLevel_1,

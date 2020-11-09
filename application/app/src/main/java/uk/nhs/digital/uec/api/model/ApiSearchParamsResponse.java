@@ -53,8 +53,8 @@ public class ApiSearchParamsResponse {
     this.fuzzLevel = builder.fuzzLevel;
     this.addressPriority = builder.addressPriority;
     this.namePriority = builder.namePriority;
-    this.postcodePriority = 0;
-    this.publicNamePriority = 0;
+    this.postcodePriority = builder.postcodePriority;
+    this.publicNamePriority = builder.publicNamePriority;
     this.maxNumServicesToReturn = builder.maxNumServicesToReturn;
   }
 
@@ -62,6 +62,8 @@ public class ApiSearchParamsResponse {
     private List<String> searchCriteria;
     private int fuzzLevel;
     private int addressPriority;
+    private int postcodePriority;
+    private int publicNamePriority;
     private int namePriority;
     private int maxNumServicesToReturn;
 
@@ -77,6 +79,16 @@ public class ApiSearchParamsResponse {
 
     public ApiSearchParamsResponseBuilder addressPriority(Integer addressPriority) {
       this.addressPriority = addressPriority;
+      return this;
+    }
+
+    public ApiSearchParamsResponseBuilder postcodePriority(Integer postcodePriority) {
+      this.postcodePriority = postcodePriority;
+      return this;
+    }
+
+    public ApiSearchParamsResponseBuilder publicNamePriority(Integer publicNamePriority) {
+      this.publicNamePriority = publicNamePriority;
       return this;
     }
 
