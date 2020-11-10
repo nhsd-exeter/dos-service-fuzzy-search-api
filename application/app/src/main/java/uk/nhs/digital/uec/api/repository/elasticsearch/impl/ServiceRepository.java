@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
@@ -34,7 +35,8 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
             apiRequestParams.getNamePriority(),
             apiRequestParams.getAddressPriority(),
             apiRequestParams.getPostcodePriority(),
-            apiRequestParams.getPublicNamePriority());
+            apiRequestParams.getPublicNamePriority(),
+            PageRequest.of(0, apiRequestParams.getMaxNumServicesToReturn()));
 
     Iterator<DosService> serviceit = services.iterator();
     while (serviceit.hasNext()) {
