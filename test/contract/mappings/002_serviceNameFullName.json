@@ -1,0 +1,52 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=GP-WoodburySurgery-Woodbury-GPC"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "search_parameters": {
+        "search_criteria": ["GP - Woodbury Surgery - Woodbury - GPC"],
+        "fuzz_level": 1,
+        "address_priority": 0,
+        "name_priority": 2,
+        "postcode_priority": 0,
+        "public_name_priority": 0,
+        "max_num_services_to_return": 2
+      },
+      "search_results": {
+        "number_of_services_found": 1,
+        "services": [
+          {
+            "id": 45081,
+            "u_identifier": "1372850440",
+            "name": "Dental Practice Woodbury Park Dental Practice Kent",
+            "capacity_status": "GREEN",
+            "type_id": 28,
+            "type": "Dental Service",
+            "ods_code": "ODS1",
+            "address": ["1 Woodbury Park Road", "Tunbridge Wells", "Kent"],
+            "postcode": "TN4 9NH",
+            "referral_roles": ["role 1", "role 2"]
+          },
+          {
+            "id": 45078,
+            "u_identifier": "1372850140",
+            "name": "GP - Woodbury Surgery - Woodbury - GPC",
+            "capacity_status": "GREEN",
+            "type_id": 28,
+            "type": "GP Service",
+            "ods_code": "ODS3",
+            "address": ["Woodbury Surgery", "Fulford Way", "Woodbury", "Devon"],
+            "postcode": "EX5 1NZ",
+            "referral_roles": ["role 1", "role 2"]
+          }
+        ]
+      }
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
