@@ -2,7 +2,7 @@
 
 # ==============================================================================
 # Service variables
-AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/76e2c1fd-37d0-42e9-9c45-2411f411da5e
+AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/c0718115-4e22-4f48-a4aa-8c16ea86c5e6
 
 PROFILE := dev
 SPRING_PROFILES_ACTIVE := dev
