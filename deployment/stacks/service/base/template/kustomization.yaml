@@ -33,5 +33,5 @@ configMapGenerator:
       - PUBLIC_NAME_PRIORITY=0
 
 images:
-  - name: 461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/sfs/api
+  - name: AWS_ECR_TO_REPLACE.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/sfs/api
     newTag: API_IMAGE_TAG_TO_REPLACE
