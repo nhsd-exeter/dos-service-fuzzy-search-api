@@ -73,6 +73,8 @@ public class FuzzyServiceSearchController {
             .searchCriteria(searchCriteria)
             .fuzzLevel(requestParams.getFuzzLevel())
             .addressPriority(requestParams.getAddressPriority())
+            .postcodePriority(requestParams.getPostcodePriority())
+            .publicNamePriority(requestParams.getPublicNamePriority())
             .namePriority(requestParams.getNamePriority())
             .maxNumServicesToReturn(requestParams.getMaxNumServicesToReturn())
             .build();

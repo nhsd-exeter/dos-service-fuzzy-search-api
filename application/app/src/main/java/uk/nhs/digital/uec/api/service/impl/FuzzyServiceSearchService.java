@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.repository.elasticsearch.CustomServicesRepositoryInterface;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
@@ -12,8 +11,6 @@ import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
 
 @Service
 public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInterface {
-
-  @Autowired ApiRequestParams apiRequest;
 
   @Autowired private ApiUtilsServiceInterface apiUtilsService;
 
@@ -27,10 +24,6 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
 
     dosServices.addAll(
         elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms)));
-
-    if (dosServices.size() > apiRequest.getMaxNumServicesToReturn()) {
-      return dosServices.subList(0, apiRequest.getMaxNumServicesToReturn());
-    }
 
     return dosServices;
   }

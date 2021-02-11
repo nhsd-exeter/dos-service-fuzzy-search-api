@@ -15,8 +15,8 @@ build: project-config # Build project
 		CMD="-Dmaven.test.skip=true clean install"
 	mv \
 		$(PROJECT_DIR)/application/app/target/dos-service-fuzzy-search-api-*.jar \
-		$(PROJECT_DIR)/build/docker/dos-service-fuzzy-search-api/assets/application/dos-service-fuzzy-search-api.jar
-	make docker-build NAME=dos-service-fuzzy-search-api
+		$(PROJECT_DIR)/build/docker/api/assets/application/dos-service-fuzzy-search-api.jar
+	make docker-build NAME=api
 
 start: project-start # Start project
 

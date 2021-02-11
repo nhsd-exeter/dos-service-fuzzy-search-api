@@ -18,48 +18,9 @@ pipeline {
     stage("Show Configuration") {
       steps { sh "make show-configuration" }
     }
-    stage("Build") {
-      parallel {
-        stage("Build: App") {
-          agent { label "jenkins-slave" }
-          steps {
-            sh "make run-static-analisys"
-            sh "make run-unit-test"
-            sh "make build-artefact"
-            sh "make run-integration-test"
-            sh "make run-contract-test"
-            sh "make publish-artefact"
-          }
-        }
-      }
-    }
     stage("Deploy") {
-      when {
-        beforeAgent true
-        expression { sh(returnStdout: true, script: "make project-branch-deploy").trim() == "true" }
-      }
-      parallel {
-        stage("Deploy: App") {
-          agent { label "jenkins-slave" }
-          steps {
-            sh "make provision-infractructure"
-            sh "make deploy-artefact"
-            sh "make apply-data-changes"
-            sh "make run-smoke-test"
-          }
-        }
-      }
-    }
-    stage("Test") {
-      when {
-        beforeAgent true
-        expression { sh(returnStdout: true, script: "make project-branch-test").trim() == "true" }
-      }
-      agent { label "jenkins-slave" }
       steps {
-        sh "make run-functional-test"
-        sh "make run-performance-test"
-        sh "make run-security-test"
+        sh "make deploy PROFILE=dev"
       }
     }
   }
