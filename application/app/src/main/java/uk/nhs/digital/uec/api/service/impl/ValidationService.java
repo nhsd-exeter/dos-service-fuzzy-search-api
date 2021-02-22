@@ -38,6 +38,14 @@ public class ValidationService implements ValidationServiceInterface {
 
   /** {@inheritDoc} */
   @Override
+  public void validateSearchLocation(final String searchLocation) throws ValidationException {
+
+    // TBC
+
+  }
+
+  /** {@inheritDoc} */
+  @Override
   public void validateMinSearchCriteriaLength(final List<String> searchCriteria)
       throws ValidationException {
 

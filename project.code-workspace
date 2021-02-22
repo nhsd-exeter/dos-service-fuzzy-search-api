@@ -8,7 +8,7 @@
   "settings": {
     "breadcrumbs.enabled": true,
     "editor.autoIndent": "full",
-    "editor.fontSize": 18,
+    "editor.fontSize": 14,
     "editor.formatOnSave": true,
     "editor.renderWhitespace": "all",
     "editor.suggestSelection": "recentlyUsedByPrefix",

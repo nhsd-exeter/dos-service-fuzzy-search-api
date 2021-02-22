@@ -52,4 +52,14 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
 
     return sanitisedSearchTerms;
   }
+
+  /** {@inheritDoc} */
+  @Override
+  public String removeBlankSpaces(final String field) {
+    if (field != null) {
+      return field.replaceAll("\\s", "");
+    }
+
+    return "";
+  }
 }

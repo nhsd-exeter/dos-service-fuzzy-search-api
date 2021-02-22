@@ -17,6 +17,14 @@ public interface ValidationServiceInterface {
   public void validateSearchCriteria(final List<String> searchCriteria) throws ValidationException;
 
   /**
+   * Validates that the search location is of the correct format.
+   *
+   * @param searchLocation the search location to validate.
+   * @throws ValidationException when the search location is not valid.
+   */
+  public void validateSearchLocation(final String searchLocation) throws ValidationException;
+
+  /**
    * Validates that at least one of the search criteria terms meets the minimum length required.
    *
    * @param searchCriteria the searchCriteria string to validate.

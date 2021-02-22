@@ -32,6 +32,9 @@ load-test-services: # Load test services into elasticsearch
 load-all-services: # Load bulk service data into elasticsearch - mandatory: PROFILE=[name]
 	sh ./data/services/$(SERVICE_DATA_FILE)
 
+load-test-postcode-locations:
+	sh ./data/locations/$(LOCATIONS_DATA_FILE)
+
 test: load-test-data # Test project
 	make docker-run-mvn \
 		DIR="application/app" \

@@ -1,6 +1,7 @@
 package uk.nhs.digital.uec.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -132,5 +133,12 @@ public class FuzzyServiceSearchServiceTest {
         fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
     // Assert
     assertEquals(0, services.size());
+  }
+
+  @Test
+  public void testDistance() {
+    Long distance = fuzzyServiceSearchService.retrieveDistance(301017, 83448, 321550, 124217);
+
+    assertNotNull(distance);
   }
 }

@@ -9,9 +9,11 @@ public interface FuzzyServiceSearchServiceInterface {
   /**
    * Returns a list of {@link DosService} for the search criteria provided.
    *
+   * @param searchPostcode the postcode location of the search
    * @param searchTerms the search terms to look for matching services. Services will be matched by:
    *     name public name address postcode
    * @return {@link DosService}
    */
-  List<DosService> retrieveServicesByFuzzySearch(final List<String> searchTerms);
+  List<DosService> retrieveServicesByFuzzySearch(
+      final String searchPostcode, final List<String> searchTerms);
 }

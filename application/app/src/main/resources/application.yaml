@@ -3,6 +3,15 @@ spring:
   elasticsearch:
     rest:
       uris: ${ELASTICSEARCH_URL}
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+
+dynamo:
+  config:
+    accesskey: $AWS_ACCESS_KEY_ID
+    region: eu-west-2
+    secretkey: $AWS_SECRET_ACCESS_KEY
+    endpoint: ${POSTCODE_LOCATION_DYNAMO_URL}
 
 server:
   port: ${SERVER_PORT}

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.decimal4j.util.DoubleRounder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -20,15 +21,18 @@ import org.springframework.data.elasticsearch.annotations.Document;
   "u_identifier",
   "name",
   "public_name",
+  "distance_in_miles",
   "capacity_status",
   "type_id",
   "type",
   "ods_code",
   "address",
   "postcode",
+  "easting",
+  "northing",
   "referral_roles"
 })
-public class DosService {
+public class DosService implements Comparable<DosService> {
 
   @JsonProperty("_score")
   private Float _score;
@@ -64,8 +68,17 @@ public class DosService {
   @JsonProperty("postcode")
   private String postcode;
 
+  @JsonProperty("easting")
+  private Integer easting;
+
+  @JsonProperty("northing")
+  private Integer northing;
+
   @JsonProperty("referral_roles")
   private List<String> referralRoles;
+
+  @JsonProperty("distance_in_miles")
+  private Double distance;
 
   private DosService(DosServiceBuilder builder) {
     this.id = builder.id;
@@ -78,6 +91,8 @@ public class DosService {
     this.odsCode = builder.odsCode;
     this.address = builder.address;
     this.postcode = builder.postcode;
+    this.easting = builder.easting;
+    this.northing = builder.northing;
     this.referralRoles = builder.referralRoles;
   }
 
@@ -98,6 +113,8 @@ public class DosService {
         && this.address.size() == that.address.size()
         && this.capacityStatus.equals(that.capacityStatus)
         && this.postcode.equals(that.postcode)
+        && this.easting.equals(that.easting)
+        && this.northing.equals(that.northing)
         && this.publicName.equals(that.publicName)
         && this.referralRoles.size() == that.referralRoles.size()
         && this.referralRoles.containsAll(that.referralRoles)
@@ -122,6 +139,8 @@ public class DosService {
     hash = 31 * hash + (null == this.name ? 0 : this.name.hashCode());
     hash = 31 * hash + (null == this.odsCode ? 0 : this.odsCode.hashCode());
     hash = 31 * hash + (null == this.postcode ? 0 : this.postcode.hashCode());
+    hash = 31 * hash + (null == this.easting ? 0 : this.easting.hashCode());
+    hash = 31 * hash + (null == this.northing ? 0 : this.northing.hashCode());
     hash = 31 * hash + (null == this.publicName ? 0 : this.publicName.hashCode());
     hash = 31 * hash + (null == this.referralRoles ? 0 : this.referralRoles.hashCode());
     hash = 31 * hash + (null == this.type ? 0 : this.type.hashCode());
@@ -141,6 +160,8 @@ public class DosService {
     private String odsCode;
     private List<String> address;
     private String postcode;
+    private Integer easting;
+    private Integer northing;
     private List<String> referralRoles;
 
     public DosServiceBuilder id(int id) {
@@ -193,6 +214,16 @@ public class DosService {
       return this;
     }
 
+    public DosServiceBuilder easting(Integer easting) {
+      this.easting = easting;
+      return this;
+    }
+
+    public DosServiceBuilder northing(Integer northing) {
+      this.northing = northing;
+      return this;
+    }
+
     public DosServiceBuilder referralRoles(List<String> referralRoles) {
       this.referralRoles = referralRoles;
       return this;
@@ -201,5 +232,14 @@ public class DosService {
     public DosService build() {
       return new DosService(this);
     }
+  }
+
+  public Double getDistance() {
+    return DoubleRounder.round(this.distance, 1);
+  }
+
+  @Override
+  public int compareTo(DosService ds) {
+    return this.getDistance().compareTo(ds.getDistance());
   }
 }

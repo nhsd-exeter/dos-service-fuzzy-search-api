@@ -50,6 +50,7 @@ public class FuzzyServiceSearchController {
   @GetMapping("services/byfuzzysearch")
   public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
       @RequestParam(name = "search_term", required = false) List<String> searchCriteria,
+      @RequestParam(name = "search_location", required = false) String searchPostcode,
       @RequestParam(name = "filter_referral_role", required = false) String filterReferralRole,
       @RequestParam(name = "max_number_of_services_to_return", required = false)
           Integer maxNumServicesToReturn,
@@ -71,6 +72,7 @@ public class FuzzyServiceSearchController {
     final ApiSearchParamsResponse searchParamsResponse =
         new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()
             .searchCriteria(searchCriteria)
+            .searchLocation(searchPostcode)
             .fuzzLevel(requestParams.getFuzzLevel())
             .addressPriority(requestParams.getAddressPriority())
             .postcodePriority(requestParams.getPostcodePriority())
@@ -84,10 +86,11 @@ public class FuzzyServiceSearchController {
 
     try {
       validationService.validateSearchCriteria(searchCriteria);
+      validationService.validateSearchLocation(searchPostcode);
       validationService.validateMinSearchCriteriaLength(searchCriteria);
 
       final List<DosService> dosServices =
-          fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+          fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchPostcode, searchCriteria);
       searchResultsResponse.setServices(dosServices);
       response.setSearchParameters(searchParamsResponse);
       response.setSearchResults(searchResultsResponse);

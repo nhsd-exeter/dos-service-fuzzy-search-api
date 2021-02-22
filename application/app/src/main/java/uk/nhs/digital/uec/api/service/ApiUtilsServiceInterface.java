@@ -29,4 +29,12 @@ public interface ApiUtilsServiceInterface {
    * @return List of Strings
    */
   List<String> sanitiseSearchTerms(final List<String> searchCriteria);
+
+  /**
+   * Removes any spaces from the postcode
+   *
+   * @param field field to remove spaces from
+   * @return field with no spaces
+   */
+  String removeBlankSpaces(final String field);
 }
