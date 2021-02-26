@@ -44,6 +44,13 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
       Collections.sort(dosServices);
     }
 
-    return dosServices.subList(0, apiRequestParams.getMaxNumServicesToReturn());
+    // return up to the max number of services, or the number of services returned. Which ever is
+    // the least.
+    int serviceResultLimit = apiRequestParams.getMaxNumServicesToReturn();
+    if (apiRequestParams.getMaxNumServicesToReturn() > dosServices.size()) {
+      serviceResultLimit = dosServices.size();
+    }
+
+    return dosServices.subList(0, serviceResultLimit);
   }
 }
