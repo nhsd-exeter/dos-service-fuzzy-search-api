@@ -20,6 +20,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
   public void configureApiRequestParams(
       Integer fuzzLevel,
       String referralRole,
+      Integer maxNumServicesToReturnFromEs,
       Integer maxNumServicesToReturn,
       Integer namePriority,
       Integer addressPriority,
@@ -27,6 +28,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
       Integer publicNamePriority) {
     apiRequestParams.setFuzzLevel(fuzzLevel);
     apiRequestParams.setFilterReferralRole(referralRole);
+    apiRequestParams.setMaxNumServicesToReturnFromElasticsearch(maxNumServicesToReturnFromEs);
     apiRequestParams.setMaxNumServicesToReturn(maxNumServicesToReturn);
     apiRequestParams.setNamePriority(namePriority);
     apiRequestParams.setAddressPriority(addressPriority);
@@ -41,12 +43,17 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
     List<String> listFromString = new ArrayList<>();
     listFromString = searchCriteria.stream().map(String::trim).collect(Collectors.toList());
 
-    // Now remove terms that are less than the min amount required.
     List<String> sanitisedSearchTerms = new ArrayList<>();
-    sanitisedSearchTerms.addAll(listFromString);
+
     for (String searchTerm : listFromString) {
-      if (searchTerm.length() < minSearchTermLength) {
-        sanitisedSearchTerms.remove(searchTerm);
+      if (searchTerm.length() >= minSearchTermLength) {
+
+        String searchTermToAdd = searchTerm.replaceAll("\\s+", " ");
+
+        // Remove weird characters
+        searchTermToAdd.replaceAll("[^a-zA-Z0-9:;.?! ]", "");
+
+        sanitisedSearchTerms.add(searchTermToAdd);
       }
     }
 

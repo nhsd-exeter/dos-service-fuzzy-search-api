@@ -1,7 +1,6 @@
 package uk.nhs.digital.uec.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -24,6 +23,7 @@ import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 public class FuzzyServiceSearchServiceTest {
 
   private int maxNumServicesToReturn = 10;
+  private static final String SEARCH_POSTCODE = "EX2 5SE";
 
   @InjectMocks private FuzzyServiceSearchService fuzzyServiceSearchService;
 
@@ -54,7 +54,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(SEARCH_POSTCODE, searchCriteria);
 
     // Assert
     assertEquals(2, services.size());
@@ -73,7 +73,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(SEARCH_POSTCODE, searchCriteria);
 
     // Assert
     assertEquals(0, services.size());
@@ -95,7 +95,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(SEARCH_POSTCODE, searchCriteria);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -118,7 +118,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(SEARCH_POSTCODE, searchCriteria);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -130,15 +130,8 @@ public class FuzzyServiceSearchServiceTest {
     List<String> searchCriteria = new ArrayList<>();
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(SEARCH_POSTCODE, searchCriteria);
     // Assert
     assertEquals(0, services.size());
-  }
-
-  @Test
-  public void testDistance() {
-    Long distance = fuzzyServiceSearchService.retrieveDistance(301017, 83448, 321550, 124217);
-
-    assertNotNull(distance);
   }
 }

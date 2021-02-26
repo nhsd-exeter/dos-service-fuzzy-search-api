@@ -3,11 +3,12 @@ namespace: K8S_APP_NAMESPACE_TO_REPLACE
 commonLabels:
   env: PROFILE_TO_REPLACE
 
-commonAnnotations:
-  splunk.com/index: eks_logs_service_search_nonprod
+#commonAnnotations:
+#  splunk.com/index: eks_logs_service_search_nonprod
 
 resources:
   - namespace.yaml
+  - service-search/service-account.yaml
   - service-search/service-search-deployment.yaml
   - service-search/service-search-service.yaml
   - network-policy/uec-sfs-default-deny-ingress.yaml
@@ -25,13 +26,15 @@ configMapGenerator:
       - VERSION=VERSION_TO_REPLACE
       - MIN_SEARCH_TERM_LENGTH=MIN_SEARCH_TERM_LENGTH_TO_REPLACE
       - MAX_SEARCH_CRITERIA=MAX_SEARCH_CRITERIA_TO_REPLACE
+      - MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH=MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH_TO_REPLACE
       - MAX_NUM_SERVICES_TO_RETURN=MAX_NUM_SERVICES_TO_RETURN_TO_REPLACE
       - FUZZ_LEVEL=FUZZ_LEVEL_TO_REPLACE
       - NAME_PRIORITY=NAME_PRIORITY_TO_REPLACE
       - ADDRESS_PRIORITY=ADDRESS_PRIORITY_TO_REPLACE
       - POSTCODE_PRIORITY=POSTCODE_PRIORITY_TO_REPLACE
-      - PUBLIC_NAME_PRIORITY=0
+      - PUBLIC_NAME_PRIORITY=NAME_PUBLIC_PRIORITY_TO_REPLACE
+      - POSTCODE_LOCATION_DYNAMO_URL=POSTCODE_LOCATION_DYNAMO_URL_TO_REPLACE
 
 images:
-  - name: AWS_ECR_TO_REPLACE.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/sfs/api
+  - name: AWS_ECR_TO_REPLACE/uec-dos-api/sfs/api
     newTag: API_IMAGE_TAG_TO_REPLACE

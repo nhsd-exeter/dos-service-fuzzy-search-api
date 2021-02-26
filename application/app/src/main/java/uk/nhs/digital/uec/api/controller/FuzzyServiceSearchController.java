@@ -52,6 +52,8 @@ public class FuzzyServiceSearchController {
       @RequestParam(name = "search_term", required = false) List<String> searchCriteria,
       @RequestParam(name = "search_location", required = false) String searchPostcode,
       @RequestParam(name = "filter_referral_role", required = false) String filterReferralRole,
+      @RequestParam(name = "max_num_services_to_return_from_es", required = false)
+          Integer maxNumServicesToReturnFromEs,
       @RequestParam(name = "max_number_of_services_to_return", required = false)
           Integer maxNumServicesToReturn,
       @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel,
@@ -63,6 +65,7 @@ public class FuzzyServiceSearchController {
     utils.configureApiRequestParams(
         fuzzLevel,
         filterReferralRole,
+        maxNumServicesToReturnFromEs,
         maxNumServicesToReturn,
         namePriority,
         addressPriority,

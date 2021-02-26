@@ -15,6 +15,7 @@ public interface ApiUtilsServiceInterface {
   void configureApiRequestParams(
       Integer fuzzLevel,
       String referralRole,
+      Integer maxNumServicesToReturnFromEs,
       Integer maxNumServicesToReturn,
       Integer namePriority,
       Integer addressPriority,

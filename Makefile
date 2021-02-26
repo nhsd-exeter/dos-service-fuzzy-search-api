@@ -35,7 +35,7 @@ load-all-services: # Load bulk service data into elasticsearch - mandatory: PROF
 load-test-postcode-locations:
 	sh ./data/locations/$(LOCATIONS_DATA_FILE)
 
-test: load-test-data # Test project
+test: load-test-services # Test project
 	make docker-run-mvn \
 		DIR="application/app" \
 		CMD="clean test" \

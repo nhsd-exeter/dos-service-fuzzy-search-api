@@ -15,6 +15,8 @@ public class ApiRequestParams {
 
   private String filterReferralRole;
 
+  private Integer maxNumServicesToReturnFromElasticsearch;
+
   private Integer maxNumServicesToReturn;
 
   private Integer fuzzLevel;
@@ -26,6 +28,9 @@ public class ApiRequestParams {
   private Integer postcodePriority;
 
   private Integer publicNamePriority;
+
+  @Value("${configuration.search_parameters.max_num_services_to_return_from_elasticsearch}")
+  private Integer defaultMaxNumServicesToReturnFromElasticsearch;
 
   @Value("${configuration.search_parameters.max_num_services_to_return}")
   private Integer defaultMaxNumServicesToReturn;
@@ -44,6 +49,14 @@ public class ApiRequestParams {
 
   @Value("${configuration.search_parameters.public_name_priority}")
   private Integer defaultPublicNamePriority;
+
+  public Integer getMaxNumServicesToReturnFromElasticsearch() {
+    if (this.maxNumServicesToReturnFromElasticsearch == null) {
+      return defaultMaxNumServicesToReturnFromElasticsearch;
+    }
+
+    return maxNumServicesToReturnFromElasticsearch;
+  }
 
   public Integer getMaxNumServicesToReturn() {
     if (this.maxNumServicesToReturn == null) {

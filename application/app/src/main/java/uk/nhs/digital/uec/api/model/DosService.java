@@ -235,6 +235,9 @@ public class DosService implements Comparable<DosService> {
   }
 
   public Double getDistance() {
+    if (this.distance == null) {
+      return Double.valueOf(999.9);
+    }
     return DoubleRounder.round(this.distance, 1);
   }
 
