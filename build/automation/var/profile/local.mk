@@ -4,6 +4,7 @@
 # Service variables
 SPRING_PROFILES_ACTIVE := local
 CERTIFICATE_DOMAIN := localhost
+ALLOWED_ORIGINS := *
 
 # Datastore URLs
 ELASTICSEARCH_URL := elasticsearch.sfs.local:9200

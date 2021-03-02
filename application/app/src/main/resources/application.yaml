@@ -23,6 +23,8 @@ server:
 api:
   endpoint:
     service_search: ${API_SERVICE_SEARCH_ENDPOINT}
+  cors:
+    allowedorigins: ${ALLOWED_ORIGINS}
 
 configuration:
   version: ${VERSION}
