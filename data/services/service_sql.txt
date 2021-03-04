@@ -13,6 +13,8 @@ select
 '"type":"'||t.name||'",'||
 '"address":["'||replace(replace(s.address,'$',' '),'''','''''')||'"],'||
 '"postcode":"'||s.postcode||'",'||
+'"easting":"'||s.easting||'",'||
+'"northing":"'||s.northing||'",'||
 '"referralRoles":["Test Role"]}'
 from pathwaysdos.services s,
 pathwaysdos.servicecapacities sc,

@@ -46,6 +46,7 @@ push: # Push project artefacts to the registry
 	make docker-push NAME=api
 
 deploy: # Deploy artefacts - mandatory: PROFILE=[name]
+	export TTL=$$(make -s k8s-get-namespace-ttl)
 	make project-deploy STACK=application PROFILE=$(PROFILE)
 
 provision: # Provision environment - mandatory: PROFILE=[name]

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
@@ -30,6 +31,17 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         "Number of services to get from elasticsearch: "
             + apiRequestParams.getMaxNumServicesToReturnFromElasticsearch());
 
+    // Adjust number of results to return from ES depending on how many words are in the search
+    int numOfSpaces = StringUtils.countMatches(searchTerms.get(0), " ");
+
+    int numServicesToReturnFromEs = apiRequestParams.getMaxNumServicesToReturnFromElasticsearch();
+    if (numOfSpaces == 1) {
+      numServicesToReturnFromEs = 100;
+    }
+    if (numOfSpaces > 1) {
+      numServicesToReturnFromEs = 50;
+    }
+
     Iterable<DosService> services =
         servicesRepo.findBySearchTerms(
             searchTerms.get(0),
@@ -38,7 +50,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
             apiRequestParams.getAddressPriority(),
             apiRequestParams.getPostcodePriority(),
             apiRequestParams.getPublicNamePriority(),
-            PageRequest.of(0, apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()));
+            PageRequest.of(0, numServicesToReturnFromEs));
 
     Iterator<DosService> serviceit = services.iterator();
     while (serviceit.hasNext()) {

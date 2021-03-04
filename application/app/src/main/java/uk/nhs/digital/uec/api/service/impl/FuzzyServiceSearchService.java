@@ -37,9 +37,12 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     PostcodeLocation searchLocation = locationService.getLocationForPostcode(searchPostcode);
     if (searchLocation != null) {
       for (DosService dosService : dosServices) {
-        dosService.setDistance(
-            locationService.distanceBetween(
-                locationService.getLocationForPostcode(dosService.getPostcode()), searchLocation));
+        PostcodeLocation serviceLocation = new PostcodeLocation();
+        serviceLocation.setPostcode(dosService.getPostcode());
+        serviceLocation.setEasting(dosService.getEasting());
+        serviceLocation.setNorthing(dosService.getNorthing());
+
+        dosService.setDistance(locationService.distanceBetween(searchLocation, serviceLocation));
       }
       Collections.sort(dosServices);
     }
