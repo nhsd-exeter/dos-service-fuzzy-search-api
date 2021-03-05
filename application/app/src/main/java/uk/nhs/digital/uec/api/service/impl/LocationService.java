@@ -43,7 +43,12 @@ public class LocationService implements LocationServiceInterface {
 
     Double distance = null;
 
-    if (source == null || destination == null) {
+    if (source == null
+        || destination == null
+        || source.getEasting() == null
+        || source.getNorthing() == null
+        || destination.getEasting() == null
+        || destination.getNorthing() == null) {
       return distance;
     }
 
