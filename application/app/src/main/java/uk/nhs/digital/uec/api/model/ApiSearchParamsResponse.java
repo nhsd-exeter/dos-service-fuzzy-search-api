@@ -28,6 +28,9 @@ public class ApiSearchParamsResponse {
   @JsonProperty("search_criteria")
   private List<String> searchCriteria;
 
+  @JsonProperty("search_location")
+  private String searchLocation;
+
   @JsonProperty("fuzz_level")
   private int fuzzLevel;
 
@@ -50,6 +53,7 @@ public class ApiSearchParamsResponse {
 
   private ApiSearchParamsResponse(ApiSearchParamsResponseBuilder builder) {
     this.searchCriteria = builder.searchCriteria;
+    this.searchLocation = builder.searchLocation;
     this.fuzzLevel = builder.fuzzLevel;
     this.addressPriority = builder.addressPriority;
     this.namePriority = builder.namePriority;
@@ -60,6 +64,7 @@ public class ApiSearchParamsResponse {
 
   public static class ApiSearchParamsResponseBuilder {
     private List<String> searchCriteria;
+    private String searchLocation;
     private int fuzzLevel;
     private int addressPriority;
     private int postcodePriority;
@@ -69,6 +74,11 @@ public class ApiSearchParamsResponse {
 
     public ApiSearchParamsResponseBuilder searchCriteria(List<String> searchCriteria) {
       this.searchCriteria = searchCriteria;
+      return this;
+    }
+
+    public ApiSearchParamsResponseBuilder searchLocation(String searchLocation) {
+      this.searchLocation = searchLocation;
       return this;
     }
 

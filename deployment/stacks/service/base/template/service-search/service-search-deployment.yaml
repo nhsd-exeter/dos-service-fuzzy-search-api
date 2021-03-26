@@ -19,6 +19,8 @@ spec:
       labels:
         app: service-search
     spec:
+      serviceAccountName: uec-dos-api-sfs-service-account
+      serviceAccount: uec-dos-api-sfs-service-account
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -33,7 +35,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
       containers:
       - name: service-search
-        image: AWS_ECR_TO_REPLACE.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/sfs/api:API_IMAGE_TAG_TO_REPLACE
+        image: AWS_ECR_TO_REPLACE/uec-dos-api/sfs/api:API_IMAGE_TAG_TO_REPLACE
         envFrom:
         - configMapRef:
             name: service-search-configmap
@@ -42,16 +44,16 @@ spec:
             path: /actuator/health/readiness
             port: 8443
             scheme: HTTPS
-          initialDelaySeconds: 10
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 120
+          failureThreshold: 3
           periodSeconds: 5
-        # livenessProbe:
-        #   httpGet:
-        #     path: /actuator/health/liveness
-        #     port: 8443
-        #     scheme: HTTPS
-        #   initialDelaySeconds: 120
-        #   failureThreshold: 3
-        #   periodSeconds: 5
         ports:
         - containerPort: 8443
           protocol: TCP

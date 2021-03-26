@@ -40,4 +40,31 @@ public class ApiUtilsServiceTest {
     assertTrue(sanitisedSearchCriteria.contains("term 6"));
     assertEquals(sanitisedSearchCriteria.size(), searchCriteria.size());
   }
+
+  @Test
+  public void removeBlankSpacesFromNull() {
+
+    String returnedValue = apiUtilsService.removeBlankSpaces(null);
+
+    assertTrue(returnedValue.isEmpty());
+  }
+
+  @Test
+  public void removeBlankSpacesFromEmpty() {
+
+    String returnedValue = apiUtilsService.removeBlankSpaces("");
+
+    assertTrue(returnedValue.isEmpty());
+  }
+
+  @Test
+  public void removeBlankSpaces() {
+
+    String valueWithSpaces = "    aaa    b   ccc d    ";
+    String expectedResult = "aaabcccd";
+
+    String returnedValue = apiUtilsService.removeBlankSpaces(valueWithSpaces);
+
+    assertEquals(expectedResult, returnedValue);
+  }
 }

@@ -2,11 +2,12 @@ version: "3.7"
 
 services:
   fuzzysearch:
-    image: $AWS_ECR.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/sfs/dos-service-fuzzy-search-api:latest
+    image: $AWS_ECR/uec-dos-api/sfs/dos-service-fuzzy-search-api:latest
     container_name: fuzzysearch
     environment:
       SPRING_PROFILES_ACTIVE: $SPRING_PROFILES_ACTIVE
       CERTIFICATE_DOMAIN: $CERTIFICATE_DOMAIN
+      ALLOWED_ORIGINS: $ALLOWED_ORIGINS
       API_SERVICE_SEARCH_ENDPOINT: $API_SERVICE_SEARCH_ENDPOINT
       SERVER_PORT: $SERVER_PORT
       VERSION: $VERSION
@@ -14,11 +15,15 @@ services:
       MIN_SEARCH_TERM_LENGTH: $MIN_SEARCH_TERM_LENGTH
       MAX_SEARCH_CRITERIA: $MAX_SEARCH_CRITERIA
       MAX_NUM_SERVICES_TO_RETURN: $MAX_NUM_SERVICES_TO_RETURN
+      MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH: $MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH
       FUZZ_LEVEL: $FUZZ_LEVEL
       NAME_PRIORITY: $NAME_PRIORITY
       ADDRESS_PRIORITY: $ADDRESS_PRIORITY
       POSTCODE_PRIORITY: $POSTCODE_PRIORITY
-      PUBLIC_NAME_PRIORITY: $PUBLIC_NAME_PRIORITY
+      PUBLIC_NAME_PRIORITY: $NAME_PUBLIC_PRIORITY
+      POSTCODE_LOCATION_DYNAMO_URL: $POSTCODE_LOCATION_DYNAMO_URL
+      AWS_ACCESS_KEY_ID: dummy
+      AWS_SECRET_ACCESS_KEY: dummy
     ports:
       - 8443:8443
     depends_on:
@@ -58,16 +63,30 @@ services:
   #       aliases:
   #         - kibana.sfs.local
 
-  db-dos:
-    image: $AWS_ECR.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/tdb/database:latest
-    hostname: db-dos
-    container_name: db-dos
+  # db-dos:
+  #   image: $AWS_ECR/uec-tools/dtdb/database:latest
+  #   hostname: db-dos
+  #   container_name: db-dos
+  #   ports:
+  #     - 5432:5432
+  #   networks:
+  #     default:
+  #       aliases:
+  #         - db-dos.sfs.local
+
+  dynamodb-local:
+    command: "-jar DynamoDBLocal.jar -sharedDb -optimizeDbBeforeStartup -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
     ports:
-      - 5432:5432
+      - "8000:8000"
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
     networks:
       default:
         aliases:
-          - db-dos.sfs.local
+          - dynamo.sfs.local
 
 networks:
   default:

@@ -3,6 +3,15 @@ spring:
   elasticsearch:
     rest:
       uris: ${ELASTICSEARCH_URL}
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+
+dynamo:
+  config:
+    accesskey: $AWS_ACCESS_KEY_ID
+    region: eu-west-2
+    secretkey: $AWS_SECRET_ACCESS_KEY
+    endpoint: ${POSTCODE_LOCATION_DYNAMO_URL}
 
 server:
   port: ${SERVER_PORT}
@@ -14,6 +23,8 @@ server:
 api:
   endpoint:
     service_search: ${API_SERVICE_SEARCH_ENDPOINT}
+  cors:
+    allowedorigins: ${ALLOWED_ORIGINS}
 
 configuration:
   version: ${VERSION}
@@ -21,6 +32,7 @@ configuration:
     min_search_term_length: ${MIN_SEARCH_TERM_LENGTH}
     max_search_criteria: ${MAX_SEARCH_CRITERIA}
   search_parameters:
+    max_num_services_to_return_from_elasticsearch: ${MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH}
     max_num_services_to_return: ${MAX_NUM_SERVICES_TO_RETURN}
     fuzz_level: ${FUZZ_LEVEL}
     name_priority: ${NAME_PRIORITY}

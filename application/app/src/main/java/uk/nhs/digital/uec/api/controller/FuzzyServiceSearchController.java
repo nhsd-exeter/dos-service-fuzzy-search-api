@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,9 +49,13 @@ public class FuzzyServiceSearchController {
    * @return {@link ApiResponse}
    */
   @GetMapping("services/byfuzzysearch")
+  @CrossOrigin(origins = "*")
   public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
       @RequestParam(name = "search_term", required = false) List<String> searchCriteria,
+      @RequestParam(name = "search_location", required = false) String searchPostcode,
       @RequestParam(name = "filter_referral_role", required = false) String filterReferralRole,
+      @RequestParam(name = "max_num_services_to_return_from_es", required = false)
+          Integer maxNumServicesToReturnFromEs,
       @RequestParam(name = "max_number_of_services_to_return", required = false)
           Integer maxNumServicesToReturn,
       @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel,
@@ -62,6 +67,7 @@ public class FuzzyServiceSearchController {
     utils.configureApiRequestParams(
         fuzzLevel,
         filterReferralRole,
+        maxNumServicesToReturnFromEs,
         maxNumServicesToReturn,
         namePriority,
         addressPriority,
@@ -71,6 +77,7 @@ public class FuzzyServiceSearchController {
     final ApiSearchParamsResponse searchParamsResponse =
         new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()
             .searchCriteria(searchCriteria)
+            .searchLocation(searchPostcode)
             .fuzzLevel(requestParams.getFuzzLevel())
             .addressPriority(requestParams.getAddressPriority())
             .postcodePriority(requestParams.getPostcodePriority())
@@ -84,10 +91,11 @@ public class FuzzyServiceSearchController {
 
     try {
       validationService.validateSearchCriteria(searchCriteria);
+      validationService.validateSearchLocation(searchPostcode);
       validationService.validateMinSearchCriteriaLength(searchCriteria);
 
       final List<DosService> dosServices =
-          fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+          fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchPostcode, searchCriteria);
       searchResultsResponse.setServices(dosServices);
       response.setSearchParameters(searchParamsResponse);
       response.setSearchResults(searchResultsResponse);

@@ -1,7 +1,10 @@
 package uk.nhs.digital.uec.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
+import uk.nhs.digital.uec.api.model.dynamo.PostcodeLocation;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
 import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
@@ -32,9 +36,12 @@ public class FuzzyServiceSearchServiceTest {
 
   @Mock private ApiUtilsServiceInterface apiUtilsService;
 
+  @Mock private LocationServiceInterface locationService;
+
   @BeforeEach
   public void setup() {
     when(apiRequestParams.getMaxNumServicesToReturn()).thenReturn(maxNumServicesToReturn);
+    when(locationService.getLocationForPostcode(null)).thenReturn(null);
   }
 
   @Test
@@ -53,7 +60,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(2, services.size());
@@ -72,7 +79,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(0, services.size());
@@ -94,7 +101,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -117,7 +124,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -129,8 +136,39 @@ public class FuzzyServiceSearchServiceTest {
     List<String> searchCriteria = new ArrayList<>();
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
     // Assert
     assertEquals(0, services.size());
+  }
+
+  @Test
+  public void retrieveServicesWithSearchLocation() {
+    List<String> searchCriteria = new ArrayList<>();
+    searchCriteria.add("term1");
+    searchCriteria.add("term2");
+
+    String searchLocation = "EX8 5SE";
+
+    List<DosService> dosServices = new ArrayList<>();
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
+
+    when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
+    when(locationService.getLocationForPostcode(any(String.class)))
+        .thenReturn(new PostcodeLocation());
+    when(locationService.distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class)))
+        .thenReturn(5.0, 10.0);
+
+    // Act
+    List<DosService> services =
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchLocation, searchCriteria);
+
+    verify(locationService).getLocationForPostcode(eq(searchLocation));
+    verify(locationService, times(2))
+        .distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class));
+    assertEquals(2, services.size());
+    assertEquals(5.0, services.get(0).getDistance());
+    assertEquals(10.0, services.get(1).getDistance());
   }
 }

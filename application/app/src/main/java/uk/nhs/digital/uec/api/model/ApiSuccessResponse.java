@@ -14,10 +14,14 @@ import lombok.Setter;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+  "search_location",
   "search_parameters",
   "search_results",
 })
 public class ApiSuccessResponse implements ApiResponse {
+
+  @JsonProperty("search_location")
+  private ApiSearchParamsResponse searchLocation;
 
   @JsonProperty("search_parameters")
   private ApiSearchParamsResponse searchParameters;
@@ -25,5 +29,7 @@ public class ApiSuccessResponse implements ApiResponse {
   @JsonProperty("search_results")
   private ApiSearchResultsResponse searchResults;
 
-  public ApiSuccessResponse() {}
+  public ApiSuccessResponse() {
+    // Default Constructor
+  }
 }

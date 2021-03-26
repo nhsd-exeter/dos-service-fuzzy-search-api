@@ -45,12 +45,14 @@ public class FuzzySearchControllerTest {
   private static final String VALIDATION_ERROR_CODE = "VAL-001";
 
   private static final String FILTER_REFERRAL_ROLE = null;
+  private static final Integer MAX_SERVICES_TO_RETURN_FROM_ES = 10;
   private static final Integer MAX_SERVICES_TO_RETURN = 5;
   private static final Integer FUZZ_LEVEL = 0;
   private static final Integer NAME_PRIORITY = 0;
   private static final Integer ADDRESS_PRIORITY = 0;
   private static final Integer POSTCODE_PRIORITY = 0;
   private static final Integer PUBLIC_NAME_PRIORITY = 0;
+  private static final String SEARCH_POSTCODE = "EX2 3SE";
 
   @Test
   public void getServicesByFuzzySearchTestSucc() throws ValidationException {
@@ -65,14 +67,17 @@ public class FuzzySearchControllerTest {
     when(mockRequestParams.getPublicNamePriority()).thenReturn(PUBLIC_NAME_PRIORITY);
     when(mockRequestParams.getFuzzLevel()).thenReturn(FUZZ_LEVEL);
     when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
-    when(mockFuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchCriteria))
+    when(mockFuzzyServiceSearchService.retrieveServicesByFuzzySearch(
+            SEARCH_POSTCODE, searchCriteria))
         .thenReturn(getDosServices());
 
     // Act
     ResponseEntity<ApiResponse> responseEntity =
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
+            SEARCH_POSTCODE,
             FILTER_REFERRAL_ROLE,
+            MAX_SERVICES_TO_RETURN_FROM_ES,
             MAX_SERVICES_TO_RETURN,
             FUZZ_LEVEL,
             NAME_PRIORITY,
@@ -86,11 +91,12 @@ public class FuzzySearchControllerTest {
 
     verify(mockValidationService, times(1)).validateSearchCriteria(searchCriteria);
     verify(mockValidationService, times(1)).validateMinSearchCriteriaLength(searchCriteria);
-    verify(mockFuzzyServiceSearchService, times(1)).retrieveServicesByFuzzySearch(searchCriteria);
+    verify(mockFuzzyServiceSearchService, times(1))
+        .retrieveServicesByFuzzySearch(SEARCH_POSTCODE, searchCriteria);
 
-    assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-    assertEquals(response.getSearchResults().getNumberOfServicesFound(), 2);
+    assertEquals(2, response.getSearchResults().getNumberOfServicesFound());
     assertTrue(isExpectedServiceReturned("service1", returnedServices));
     assertTrue(isExpectedServiceReturned("service2", returnedServices));
   }
@@ -117,7 +123,9 @@ public class FuzzySearchControllerTest {
     ResponseEntity<ApiResponse> responseEntity =
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
+            SEARCH_POSTCODE,
             FILTER_REFERRAL_ROLE,
+            MAX_SERVICES_TO_RETURN_FROM_ES,
             MAX_SERVICES_TO_RETURN,
             FUZZ_LEVEL,
             NAME_PRIORITY,
@@ -130,11 +138,12 @@ public class FuzzySearchControllerTest {
         (ApiValidationErrorResponse) responseEntity.getBody();
 
     verify(mockValidationService, times(1)).validateSearchCriteria(searchCriteria);
-    verify(mockFuzzyServiceSearchService, never()).retrieveServicesByFuzzySearch(searchCriteria);
+    verify(mockFuzzyServiceSearchService, never())
+        .retrieveServicesByFuzzySearch(SEARCH_POSTCODE, searchCriteria);
 
-    assertEquals(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST);
-    assertEquals(response.getValidationCode(), VALIDATION_ERROR_CODE);
-    assertEquals(response.getValidationError(), VALIDATION_ERROR_MSG);
+    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    assertEquals(VALIDATION_ERROR_CODE, response.getValidationCode());
+    assertEquals(VALIDATION_ERROR_MSG, response.getValidationError());
   }
 
   private boolean isExpectedServiceReturned(

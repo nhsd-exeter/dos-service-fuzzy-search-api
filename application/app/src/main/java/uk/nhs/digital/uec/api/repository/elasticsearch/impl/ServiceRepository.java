@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
@@ -25,8 +26,21 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
   public List<DosService> findServiceBySearchTerms(List<String> searchTerms) {
     final List<DosService> dosServices = new ArrayList<>();
 
-    log.info("Request Params: " + apiRequestParams.getMaxNumServicesToReturn());
     log.info("Request Params: " + apiRequestParams.getFuzzLevel());
+    log.info(
+        "Number of services to get from elasticsearch: "
+            + apiRequestParams.getMaxNumServicesToReturnFromElasticsearch());
+
+    // Adjust number of results to return from ES depending on how many words are in the search
+    int numOfSpaces = StringUtils.countMatches(searchTerms.get(0), " ");
+
+    int numServicesToReturnFromEs = apiRequestParams.getMaxNumServicesToReturnFromElasticsearch();
+    if (numOfSpaces == 1) {
+      numServicesToReturnFromEs = 100;
+    }
+    if (numOfSpaces > 1) {
+      numServicesToReturnFromEs = 50;
+    }
 
     Iterable<DosService> services =
         servicesRepo.findBySearchTerms(
@@ -36,7 +50,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
             apiRequestParams.getAddressPriority(),
             apiRequestParams.getPostcodePriority(),
             apiRequestParams.getPublicNamePriority(),
-            PageRequest.of(0, apiRequestParams.getMaxNumServicesToReturn()));
+            PageRequest.of(0, numServicesToReturnFromEs));
 
     Iterator<DosService> serviceit = services.iterator();
     while (serviceit.hasNext()) {
