@@ -69,4 +69,11 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
 
     return "";
   }
+
+  @Override
+  public List<String> removeBlankSpacesIn(final List<String> fields) {
+    List<String> collect =
+        fields.stream().map(this::removeBlankSpaces).collect(Collectors.toList());
+    return collect;
+  }
 }

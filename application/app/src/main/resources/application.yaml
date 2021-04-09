@@ -8,10 +8,10 @@ spring:
 
 dynamo:
   config:
-    accesskey: $AWS_ACCESS_KEY_ID
     region: eu-west-2
-    secretkey: $AWS_SECRET_ACCESS_KEY
     endpoint: ${POSTCODE_LOCATION_DYNAMO_URL}
+  table:
+    name: ${DYNAMODB_POSTCODE_LOC_MAP_TABLE}
 
 server:
   port: ${SERVER_PORT}

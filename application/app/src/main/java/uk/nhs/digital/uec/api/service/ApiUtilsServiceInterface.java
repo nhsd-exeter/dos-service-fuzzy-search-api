@@ -38,4 +38,12 @@ public interface ApiUtilsServiceInterface {
    * @return field with no spaces
    */
   String removeBlankSpaces(final String field);
+
+  /**
+   * Removes any spaces from all the postcodes in the list supplied
+   *
+   * @param fields
+   * @return list of fields with no spaces
+   */
+  List<String> removeBlankSpacesIn(final List<String> fields);
 }

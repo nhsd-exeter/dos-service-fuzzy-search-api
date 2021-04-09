@@ -16,6 +16,7 @@ APP_URL_PREFIX := $(K8S_APP_NAMESPACE)-$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHO
 # Datastore URLs
 ELASTICSEARCH_URL := https://vpc-sfs-dev-csfa7ah6cfpbllxcfqf6wmdcxi.eu-west-2.es.amazonaws.com
 POSTCODE_LOCATION_DYNAMO_URL := https://dynamodb.eu-west-2.amazonaws.com
+DYNAMODB_POSTCODE_LOC_MAP_TABLE := service-finder-${PROFILE}-postcode-location-mapping
 
 API_SERVICE_SEARCH_ENDPOINT := https://$(APP_URL_PREFIX)-service-search.$(TF_VAR_platform_zone)/dosapi/dosservices/v0.0.1/services/byfuzzysearch
 

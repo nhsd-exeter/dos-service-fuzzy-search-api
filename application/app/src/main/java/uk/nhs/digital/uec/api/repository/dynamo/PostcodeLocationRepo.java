@@ -9,4 +9,6 @@ import uk.nhs.digital.uec.api.model.dynamo.PostcodeLocation;
 @EnableScan
 public interface PostcodeLocationRepo extends CrudRepository<PostcodeLocation, String> {
   List<Optional<PostcodeLocation>> findByPostcode(String postcode);
+
+  List<Optional<PostcodeLocation>> findByPostcodeIn(List<String> postcodes);
 }
