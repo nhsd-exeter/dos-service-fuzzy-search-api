@@ -1,7 +1,9 @@
 package uk.nhs.digital.uec.api.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,5 +62,15 @@ public class LocationService implements LocationServiceInterface {
     Double distanceInMiles = distanceInMetres / 1609;
 
     return DoubleRounder.round(distanceInMiles, 1);
+  }
+
+  @Override
+  public List<PostcodeLocation> getLocationsForPostcodes(List<String> postCodes) {
+    List<Optional<PostcodeLocation>> locationResults =
+        postcodeLocationRepo.findByPostcodeIn(apiUtilsService.removeBlankSpacesIn(postCodes));
+    return Optional.ofNullable(locationResults).orElseGet(Collections::emptyList).stream()
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .collect(Collectors.toList());
   }
 }

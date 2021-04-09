@@ -9,7 +9,7 @@ ALLOWED_ORIGINS := *
 # Datastore URLs
 ELASTICSEARCH_URL := elasticsearch.sfs.local:9200
 POSTCODE_LOCATION_DYNAMO_URL := http://host.docker.internal:8000/
-
+DYNAMODB_POSTCODE_LOC_MAP_TABLE := service-finder-${PROFILE}-postcode-location-mapping
 API_SERVICE_SEARCH_ENDPOINT := https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch
 
 SERVER_PORT := 8443

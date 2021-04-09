@@ -2,6 +2,7 @@ package uk.nhs.digital.uec.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -150,5 +151,29 @@ public class LocationServiceTest {
     Double distanceReturned = locationService.distanceBetween(sourceLocation, destinationLocation);
 
     assertEquals(1.3, distanceReturned);
+  }
+
+  @Test
+  public void testGetLocationsForPostcodes() {
+
+    List<String> postCodes = new ArrayList<>();
+    postCodes.add("EX78PR");
+    postCodes.add("EX88PR");
+
+    PostcodeLocation location = new PostcodeLocation();
+    location.setPostcode("EX78PR");
+    Optional<PostcodeLocation> optLocation = Optional.of(location);
+    List<Optional<PostcodeLocation>> listLocations = new ArrayList<>();
+    listLocations.add(optLocation);
+
+    when(apiUtilsService.removeBlankSpacesIn(anyList())).thenReturn(postCodes);
+    when(postcodeLocationRepo.findByPostcodeIn(anyList())).thenReturn(listLocations);
+
+    List<PostcodeLocation> locationList = locationService.getLocationsForPostcodes(postCodes);
+
+    verify(apiUtilsService).removeBlankSpacesIn(eq(postCodes));
+    verify(postcodeLocationRepo).findByPostcodeIn(eq(postCodes));
+
+    assertEquals("EX78PR", "EX78PR");
   }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -15,6 +16,7 @@ import lombok.Setter;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"number_of_services_found", "services"})
+@NoArgsConstructor
 public class ApiSearchResultsResponse {
 
   @JsonProperty("number_of_services_found")
@@ -22,8 +24,6 @@ public class ApiSearchResultsResponse {
 
   @JsonProperty("services")
   private List<DosService> services;
-
-  public ApiSearchResultsResponse() {}
 
   public void setServices(final List<DosService> dosServices) {
     this.services = dosServices;

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,5 +67,15 @@ public class ApiUtilsServiceTest {
     String returnedValue = apiUtilsService.removeBlankSpaces(valueWithSpaces);
 
     assertEquals(expectedResult, returnedValue);
+  }
+
+  @Test
+  public void removeBlankSpacesIn() {
+
+    List<String> postCodes = Arrays.asList("TN4 9NH", "EX7 1PR");
+    List<String> returnedListValue = apiUtilsService.removeBlankSpacesIn(postCodes);
+
+    assertEquals(returnedListValue.get(0), "TN49NH");
+    assertEquals(returnedListValue.get(1), "EX71PR");
   }
 }

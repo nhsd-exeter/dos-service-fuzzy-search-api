@@ -1,10 +1,9 @@
 package uk.nhs.digital.uec.api.config;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,11 +20,8 @@ public class DynamoConfig {
   @Value("${dynamo.config.endpoint}")
   private String amazonDynamoDBEndpoint;
 
-  @Value("${dynamo.config.accesskey}")
-  private String amazonAWSAccessKey;
-
-  @Value("${dynamo.config.secretkey}")
-  private String amazonAWSSecretKey;
+  @Value("${dynamo.table.name}")
+  private String dynamoDbTableName;
 
   @Bean
   public AmazonDynamoDB amazonDynamoDB() {
@@ -42,7 +38,10 @@ public class DynamoConfig {
   }
 
   @Bean
-  public AWSCredentials amazonAWSCredentials() {
-    return new BasicAWSCredentials(amazonAWSAccessKey, amazonAWSSecretKey);
+  public DynamoDBMapperConfig dynamoDBMapperConfig() {
+    return new DynamoDBMapperConfig.Builder()
+        .withTableNameOverride(
+            DynamoDBMapperConfig.TableNameOverride.withTableNameReplacement(dynamoDbTableName))
+        .build();
   }
 }

@@ -2,6 +2,8 @@ package uk.nhs.digital.uec.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -170,5 +172,47 @@ public class FuzzyServiceSearchServiceTest {
     assertEquals(2, services.size());
     assertEquals(5.0, services.get(0).getDistance());
     assertEquals(10.0, services.get(1).getDistance());
+  }
+
+  @Test
+  public void retrieveServicesWithNoSearchLocationFromDos() {
+    List<String> searchCriteria = new ArrayList<>();
+    PostcodeLocation dynamoPostCodeLocation = new PostcodeLocation();
+    dynamoPostCodeLocation.setEasting(558439);
+    dynamoPostCodeLocation.setNorthing(140222);
+    dynamoPostCodeLocation.setPostcode("EX78PR");
+    List<PostcodeLocation> postcodesLocations = new ArrayList<>();
+    postcodesLocations.add(dynamoPostCodeLocation);
+    List<String> postCodes = new ArrayList<>();
+    postCodes.add("EX7 8PR");
+    postCodes.add("EX7 8PR");
+
+    searchCriteria.add("term1");
+    searchCriteria.add("term2");
+
+    String searchLocation = "EX8 5SE";
+
+    List<DosService> dosServices = new ArrayList<>();
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
+
+    when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
+    when(locationService.getLocationForPostcode(any(String.class)))
+        .thenReturn(new PostcodeLocation());
+    when(locationService.getLocationsForPostcodes(anyList())).thenReturn(postcodesLocations);
+    when(apiUtilsService.removeBlankSpaces(anyString())).thenReturn("EX78PR");
+    when(locationService.distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class)))
+        .thenReturn(357.7);
+
+    List<DosService> services =
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchLocation, searchCriteria);
+
+    verify(locationService).getLocationForPostcode(eq(searchLocation));
+    verify(locationService).getLocationsForPostcodes(eq(postCodes));
+    verify(locationService, times(2))
+        .distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class));
+    assertEquals(2, services.size());
+    assertEquals(357.7, services.get(0).getDistance());
   }
 }

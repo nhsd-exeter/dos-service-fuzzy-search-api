@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   fuzzysearch:
-    image: $AWS_ECR/uec-dos-api/sfs/api:latest
+    image: $AWS_ECR/uec-dos-api/sfs/dos-service-fuzzy-search-api:latest
     container_name: fuzzysearch
     environment:
       SPRING_PROFILES_ACTIVE: $SPRING_PROFILES_ACTIVE
@@ -24,11 +24,11 @@ services:
       POSTCODE_LOCATION_DYNAMO_URL: $POSTCODE_LOCATION_DYNAMO_URL
       AWS_ACCESS_KEY_ID: dummy
       AWS_SECRET_ACCESS_KEY: dummy
+      DYNAMODB_POSTCODE_LOC_MAP_TABLE: $DYNAMODB_POSTCODE_LOC_MAP_TABLE
     ports:
       - 8443:8443
     depends_on:
       - elasticsearch
-      - dynamodb-local
     command: ["java", "-jar", "/application/dos-service-fuzzy-search-api.jar"]
     networks:
       default:
@@ -74,15 +74,16 @@ services:
   #     default:
   #       aliases:
   #         - db-dos.sfs.local
-
   dynamodb-local:
-    command: "-jar DynamoDBLocal.jar -sharedDb -optimizeDbBeforeStartup -dbPath ./data"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal"
     image: "amazon/dynamodb-local:latest"
     container_name: dynamodb-local
+    environment:
+      ALLOWED_ORIGINS: $ALLOWED_ORIGINS
     ports:
       - "8000:8000"
     volumes:
-      - "./docker/dynamodb:/home/dynamodblocal/data"
+      - "/home/dynamodblocal"
     working_dir: /home/dynamodblocal
     networks:
       default:
