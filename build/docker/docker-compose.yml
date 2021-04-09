@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   fuzzysearch:
-    image: $AWS_ECR/uec-dos-api/sfs/dos-service-fuzzy-search-api:latest
+    image: $AWS_ECR/uec-dos-api/sfs/api:latest
     container_name: fuzzysearch
     environment:
       SPRING_PROFILES_ACTIVE: $SPRING_PROFILES_ACTIVE
@@ -28,6 +28,7 @@ services:
       - 8443:8443
     depends_on:
       - elasticsearch
+      - dynamodb-local
     command: ["java", "-jar", "/application/dos-service-fuzzy-search-api.jar"]
     networks:
       default:
