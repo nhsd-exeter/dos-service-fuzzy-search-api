@@ -19,18 +19,6 @@
         "number_of_services_found": 2,
         "services": [
           {
-            "id": 45081,
-            "u_identifier": "1372850440",
-            "name": "Dental Practice Woodbury Park Dental Practice Kent",
-            "capacity_status": "GREEN",
-            "type_id": 28,
-            "type": "Dental Service",
-            "ods_code": "ODS1",
-            "address": ["1 Woodbury Park Road", "Tunbridge Wells", "Kent"],
-            "postcode": "TN4 9NH",
-            "referral_roles": ["role 1", "role 2"]
-          },
-          {
             "id": 45078,
             "u_identifier": "1372850140",
             "name": "GP - Woodbury Surgery - Woodbury - GPC",
@@ -40,6 +28,18 @@
             "ods_code": "ODS3",
             "address": ["Woodbury Surgery", "Fulford Way", "Woodbury", "Devon"],
             "postcode": "EX5 1NZ",
+            "referral_roles": ["role 1", "role 2"]
+          },
+          {
+            "id": 45081,
+            "u_identifier": "1372850440",
+            "name": "Dental Practice Woodbury Park Dental Practice Kent",
+            "capacity_status": "GREEN",
+            "type_id": 28,
+            "type": "Dental Service",
+            "ods_code": "ODS1",
+            "address": ["1 Woodbury Park Road", "Tunbridge Wells", "Kent"],
+            "postcode": "TN4 9NH",
             "referral_roles": ["role 1", "role 2"]
           }
         ]
