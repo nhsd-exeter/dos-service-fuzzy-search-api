@@ -1,0 +1,136 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=Surgery&search_location=EX88PR&fuzz_level=2"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "search_parameters": {
+        "search_criteria": [
+            "test 1"
+        ],
+        "fuzz_level": 2,
+        "address_priority": 0,
+        "name_priority": 1,
+        "postcode_priority": 0,
+        "public_name_priority": 0,
+        "max_number_of_services_to_return": 5,
+        "search_location": "EX88PR"
+    },
+    "search_results": {
+        "number_of_services_found": 5,
+        "services": [
+            {
+                "id": 10,
+                "u_identifier": 10,
+                "name": "service10",
+                "public_name": "Public Service Name 10",
+                "distance_in_miles": 0.0,
+                "capacity_status": "GREEN",
+                "type_id": 10,
+                "type": "Type 1",
+                "ods_code": "odscode10",
+                "address": [
+                    "10 Service Street",
+                    "Service town",
+                    "Exmouth"
+                ],
+                "postcode": "EX8 8PR",
+                "referral_roles": [
+                    "Role 10",
+                    "Role 4"
+                ]
+            },
+            {
+                "id": 1,
+                "u_identifier": 1,
+                "name": "service1",
+                "public_name": "Public Service Name 1",
+                "distance_in_miles": 0.1,
+                "capacity_status": "GREEN",
+                "type_id": 1,
+                "type": "Type 1",
+                "ods_code": "odscode1",
+                "address": [
+                    "1 Service Street",
+                    "Service town",
+                    "Exmouth"
+                ],
+                "postcode": "EX7 1PR",
+                "referral_roles": [
+                    "Role 1",
+                    "Role 4"
+                ]
+            },
+            {
+                "id": 7001,
+                "u_identifier": 7001,
+                "name": "Head Clinic",
+                "public_name": "Head Clinic",
+                "distance_in_miles": 0.1,
+                "capacity_status": "GREEN",
+                "type_id": 1,
+                "type": "Type 1",
+                "ods_code": "odscode1",
+                "address": [
+                    "1 Foot Street",
+                    "Service town",
+                    "Bristol"
+                ],
+                "postcode": "EX7 1PR",
+                "referral_roles": [
+                    "Role 1",
+                    "Role 4"
+                ]
+            },
+            {
+                "id": 7002,
+                "u_identifier": 7002,
+                "name": "Foot Clinic",
+                "public_name": "Foot Clinic",
+                "distance_in_miles": 0.1,
+                "capacity_status": "GREEN",
+                "type_id": 1,
+                "type": "Type 1",
+                "ods_code": "odscode1",
+                "address": [
+                    "1 Head Street",
+                    "Service town",
+                    "Bristol"
+                ],
+                "postcode": "EX7 1PR",
+                "referral_roles": [
+                    "Role 1",
+                    "Role 4"
+                ]
+            },
+            {
+                "id": 7003,
+                "u_identifier": 7003,
+                "name": "Head Clinic",
+                "public_name": "Head Clinic",
+                "distance_in_miles": 0.1,
+                "capacity_status": "GREEN",
+                "type_id": 1,
+                "type": "Type 1",
+                "ods_code": "odscode1",
+                "address": [
+                    "1 Foot Street",
+                    "Service town",
+                    "Exeter"
+                ],
+                "postcode": "EX7 1PR",
+                "referral_roles": [
+                    "Role 1",
+                    "Role 4"
+                ]
+            }
+        ]
+    }
+},
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
