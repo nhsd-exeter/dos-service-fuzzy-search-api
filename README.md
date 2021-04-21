@@ -107,3 +107,9 @@ The full service data set contains over 65,000 services. These services have bee
 Note that `PROFILE` is a mandatory and the setting of this parameter determines where to load the data. A setting of local will load the full service data set into a locally running containerised instance of Elasticsearch, while a setting of dev will load the data set into an AWS instance of Elasticsearch running within the Texas non-prod environment.
 
 The service data files themselves are created by running the SQL code in the service_sql.txt file against a DoS database.
+
+## Clearing out data from the service index
+
+To clear out data from elasticsearch (service index), use the following command:
+
+    curl -XDELETE http://localhost:9200/service

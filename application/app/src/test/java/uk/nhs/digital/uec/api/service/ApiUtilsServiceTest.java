@@ -38,8 +38,10 @@ public class ApiUtilsServiceTest {
     assertTrue(sanitisedSearchCriteria.contains("term3"));
     assertTrue(sanitisedSearchCriteria.contains("term4"));
     assertTrue(sanitisedSearchCriteria.contains("term 5"));
+    assertTrue(sanitisedSearchCriteria.contains("term5"));
     assertTrue(sanitisedSearchCriteria.contains("term 6"));
-    assertEquals(sanitisedSearchCriteria.size(), searchCriteria.size());
+    assertTrue(sanitisedSearchCriteria.contains("term6"));
+    assertEquals(8, sanitisedSearchCriteria.size());
   }
 
   @Test

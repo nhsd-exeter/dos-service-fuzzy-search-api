@@ -17,6 +17,8 @@ public class ApiRequestParams {
 
   private Integer maxNumServicesToReturnFromElasticsearch;
 
+  private Integer maxNumServicesToReturnFromElasticsearch3SearchTerms;
+
   private Integer maxNumServicesToReturn;
 
   private Integer fuzzLevel;
@@ -31,6 +33,10 @@ public class ApiRequestParams {
 
   @Value("${configuration.search_parameters.max_num_services_to_return_from_elasticsearch}")
   private Integer defaultMaxNumServicesToReturnFromElasticsearch;
+
+  @Value(
+      "${configuration.search_parameters.max_num_services_to_return_from_elasticsearch_3_search_terms}")
+  private Integer defaultMaxNumServicesToReturnFromElasticsearch3SearchTerms;
 
   @Value("${configuration.search_parameters.max_num_services_to_return}")
   private Integer defaultMaxNumServicesToReturn;
@@ -56,6 +62,14 @@ public class ApiRequestParams {
     }
 
     return maxNumServicesToReturnFromElasticsearch;
+  }
+
+  public Integer getMaxNumServicesToReturnFromElasticsearch3SearchTerms() {
+    if (this.maxNumServicesToReturnFromElasticsearch3SearchTerms == null) {
+      return defaultMaxNumServicesToReturnFromElasticsearch3SearchTerms;
+    }
+
+    return maxNumServicesToReturnFromElasticsearch3SearchTerms;
   }
 
   public Integer getMaxNumServicesToReturn() {

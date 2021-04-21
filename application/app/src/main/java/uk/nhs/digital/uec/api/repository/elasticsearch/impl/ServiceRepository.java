@@ -31,20 +31,26 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         "Number of services to get from elasticsearch: "
             + apiRequestParams.getMaxNumServicesToReturnFromElasticsearch());
 
+    // Flattern search term list
+    String searchCriteria = String.join(" ", searchTerms);
+
     // Adjust number of results to return from ES depending on how many words are in the search
-    int numOfSpaces = StringUtils.countMatches(searchTerms.get(0), " ");
+    int numOfSpaces = StringUtils.countMatches(searchCriteria, " ");
 
     int numServicesToReturnFromEs = apiRequestParams.getMaxNumServicesToReturnFromElasticsearch();
-    if (numOfSpaces == 1) {
-      numServicesToReturnFromEs = 100;
+    if (numOfSpaces == 2) {
+      numServicesToReturnFromEs =
+          apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms();
     }
-    if (numOfSpaces > 1) {
-      numServicesToReturnFromEs = 50;
+    if (numOfSpaces > 2) {
+      numServicesToReturnFromEs =
+          Math.floorDiv(
+              apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms(), 2);
     }
 
     Iterable<DosService> services =
         servicesRepo.findBySearchTerms(
-            searchTerms.get(0),
+            searchCriteria,
             apiRequestParams.getFuzzLevel(),
             apiRequestParams.getNamePriority(),
             apiRequestParams.getAddressPriority(),
