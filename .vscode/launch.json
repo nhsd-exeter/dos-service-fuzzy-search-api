@@ -19,12 +19,14 @@
         "MIN_SEARCH_TERM_LENGTH":3,
         "MAX_SEARCH_CRITERIA":5,
         "MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH":100,
+        "MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH_3_SEARCH_TERMS":50,
         "MAX_NUM_SERVICES_TO_RETURN":5,
         "FUZZ_LEVEL":0,
         "NAME_PRIORITY":1,
         "ADDRESS_PRIORITY":0,
         "POSTCODE_PRIORITY":0,
-        "PUBLIC_NAME_PRIORITY":0
+        "PUBLIC_NAME_PRIORITY":0,
+        "DYNAMODB_POSTCODE_LOC_MAP_TABLE":"service-finder-nonprod-postcode-location-mapping"
       }
     },
     {
@@ -44,11 +46,13 @@
         "MAX_SEARCH_CRITERIA":5,
         "MAX_NUM_SERVICES_TO_RETURN":5,
         "MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH":100,
+        "MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH_3_SEARCH_TERMS":50,
         "FUZZ_LEVEL":0,
         "NAME_PRIORITY":1,
         "ADDRESS_PRIORITY":0,
         "POSTCODE_PRIORITY":0,
-        "PUBLIC_NAME_PRIORITY":0
+        "PUBLIC_NAME_PRIORITY":0,
+        "DYNAMODB_POSTCODE_LOC_MAP_TABLE":"service-finder-nonprod-postcode-location-mapping"
       }
     },
     {
@@ -67,11 +71,13 @@
         "MAX_SEARCH_CRITERIA":5,
         "MAX_NUM_SERVICES_TO_RETURN":5,
         "MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH":100,
+        "MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH_3_SEARCH_TERMS":50,
         "FUZZ_LEVEL":0,
         "NAME_PRIORITY":1,
         "ADDRESS_PRIORITY":0,
         "POSTCODE_PRIORITY":0,
-        "PUBLIC_NAME_PRIORITY":0
+        "PUBLIC_NAME_PRIORITY":0,
+        "DYNAMODB_POSTCODE_LOC_MAP_TABLE":"service-finder-nonprod-postcode-location-mapping"
       }
     }
   ]

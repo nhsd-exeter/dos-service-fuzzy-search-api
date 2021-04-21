@@ -1,0 +1,9 @@
+# This file is required for running the API tests via the make command
+spring:
+  elasticsearch:
+    rest:
+      uris: elasticsearch.sfs.local:9200
+
+dynamo:
+  config:
+    endpoint: http://host.docker.internal:8000/

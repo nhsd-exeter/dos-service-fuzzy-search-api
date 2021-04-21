@@ -33,6 +33,7 @@ configuration:
     max_search_criteria: ${MAX_SEARCH_CRITERIA}
   search_parameters:
     max_num_services_to_return_from_elasticsearch: ${MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH}
+    max_num_services_to_return_from_elasticsearch_3_search_terms: ${MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH_3_SEARCH_TERMS}
     max_num_services_to_return: ${MAX_NUM_SERVICES_TO_RETURN}
     fuzz_level: ${FUZZ_LEVEL}
     name_priority: ${NAME_PRIORITY}
