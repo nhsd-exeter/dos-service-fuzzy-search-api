@@ -13,7 +13,7 @@ DYNAMODB_POSTCODE_LOC_MAP_TABLE := service-finder-nonprod-postcode-location-mapp
 API_SERVICE_SEARCH_ENDPOINT := https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch
 
 SERVER_PORT := 8443
-VERSION := v0.0.2
+VERSION := v0.0.3
 
 # Validation parameters
 MIN_SEARCH_TERM_LENGTH := 3

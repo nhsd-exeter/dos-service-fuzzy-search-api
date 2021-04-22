@@ -6,7 +6,7 @@ AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/c0718115-
 
 PROFILE := dev
 SPRING_PROFILES_ACTIVE := dev
-API_IMAGE_TAG := v0.0.2
+API_IMAGE_TAG := v0.0.3
 
 CERTIFICATE_DOMAIN := localhost
 ALLOWED_ORIGINS := *
@@ -21,7 +21,7 @@ DYNAMODB_POSTCODE_LOC_MAP_TABLE := service-finder-${PROFILE}-postcode-location-m
 API_SERVICE_SEARCH_ENDPOINT := https://$(APP_URL_PREFIX)-service-search.$(TF_VAR_platform_zone)/dosapi/dosservices/v0.0.1/services/byfuzzysearch
 
 SERVER_PORT := 8443
-VERSION := v0.0.2
+VERSION := v0.0.3
 
 SERVICE_SEARCH_REPLICAS := 3
 
