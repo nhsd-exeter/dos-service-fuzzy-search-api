@@ -40,3 +40,10 @@ configuration:
     address_priority: ${ADDRESS_PRIORITY}
     postcode_priority: ${POSTCODE_PRIORITY}
     public_name_priority: ${PUBLIC_NAME_PRIORITY}
+
+fuzzysearch:
+  allowedorigins: ${ALLOWED_ORIGINS}
+  usermanagement:
+    url: ${USER_MANAGEMENT_URL}
+    cookie.domain: ${COOKIE_DOMAIN}
+security.oauth2.resource.jwk.key-set-uri: ${COGNITO_JWT_VERIFICATION_URL}

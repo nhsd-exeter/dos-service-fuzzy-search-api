@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 /** Controller for Fuzzy searching of services. */
 @RestController
 @RequestMapping("/dosapi/dosservices/v0.0.1")
+@PreAuthorize("hasAnyRole('ADMIN','SEARCH')")
 public class FuzzyServiceSearchController {
 
   @Autowired private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;

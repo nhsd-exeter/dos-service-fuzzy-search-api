@@ -32,3 +32,12 @@ NAME_PUBLIC_PRIORITY := 0
 # Service Data files
 SERVICE_DATA_FILE := create_all_services_local.sh
 LOCATIONS_DATA_FILE := load_locations_test.sh
+USER_MANAGEMENT_INTERNAL_URL := https://user-management.sf.test:8443
+USER_MANAGEMENT_URL := https://localhost:18083
+COOKIE_DOMAIN := localhost
+ALLOWED_ORIGINS := https://localhost:8080,https://localhost:8081,https://localhost:18081,https://localhost:18082,https://localhost:18083,https://localhost:18080,https://localhost:18084,https://localhost
+
+COGNITO_JWT_VERIFICATION_URL := http://testJwtVerificationUrl
+COGNITO_USER_POOL_CLIENT_ID := testUserPoolClientId
+COGNITO_USER_POOL_CLIENT_SECRET := testUserPoolClientSecret
+COGNITO_USER_POOL_ID := testUserPoolId
