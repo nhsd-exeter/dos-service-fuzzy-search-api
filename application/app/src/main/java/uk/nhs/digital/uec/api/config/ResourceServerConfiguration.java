@@ -3,7 +3,6 @@ package uk.nhs.digital.uec.api.config;
 import static org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER;
 
 import java.time.Duration;
-import javax.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +35,6 @@ import uk.nhs.digital.uec.api.auth.filter.RefreshTokenService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-  @NotBlank
   @Value("${fuzzysearch.usermanagement.cookie.domain}")
   private String cookieDomain;
 

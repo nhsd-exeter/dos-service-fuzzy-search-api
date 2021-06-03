@@ -7,3 +7,9 @@ spring:
 dynamo:
   config:
     endpoint: http://host.docker.internal:8000/
+fuzzysearch:
+  allowedorigins: ${ALLOWED_ORIGINS}
+  usermanagement:
+    url: ${USER_MANAGEMENT_URL}
+    cookie.domain: ${COOKIE_DOMAIN}
+security.oauth2.resource.jwk.key-set-uri: ${COGNITO_JWT_VERIFICATION_URL}
