@@ -50,7 +50,7 @@ TF_VAR_dynamo_db_postcode_store_table_name = service-finder-nonprod-postcode-loc
 TF_VAR_service_prefix := service-fuzzy-search-$(PROFILE)
 TF_VAR_service_prefix_short := sfs-$(PROFILE)
 
-TF_VAR_es_zone_awareness_enabled  := false
+TF_VAR_es_zone_awareness_enabled := false
 TF_VAR_es_availability_zone_count := null
 TF_VAR_es_instance_count := 1
 TF_VAR_es_instance_type := t3.small.elasticsearch

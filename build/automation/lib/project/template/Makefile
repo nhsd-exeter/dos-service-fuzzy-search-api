@@ -11,13 +11,15 @@ start: project-start # Start project
 
 stop: project-stop # Stop project
 
+restart: stop start # Restart project
+
 log: project-log # Show project logs
 
 test: # Test project
 	make start
 	make stop
 
-push: ## Push project artefacts to the registry
+push: # Push project artefacts to the registry
 	make docker-push NAME=NAME_TEMPLATE_TO_REPLACE
 
 deploy: # Deploy artefacts - mandatory: PROFILE=[name]
@@ -32,9 +34,6 @@ clean: # Clean up project
 # Supporting targets
 
 trust-certificate: ssl-trust-certificate-project ## Trust the SSL development certificate
-
-create-artefact-repositories: ## Create ECR repositories to store the artefacts
-	make docker-create-repository NAME=NAME_TEMPLATE_TO_REPLACE
 
 # ==============================================================================
 # Pipeline targets
@@ -99,14 +98,43 @@ remove-old-backups:
 
 # --------------------------------------
 
-pipeline-send-notification:
-	echo TODO: $(@)
+pipeline-finalise: ## Finalise pipeline execution - mandatory: PIPELINE_NAME,BUILD_STATUS
+	# Check if BUILD_STATUS is SUCCESS or FAILURE
+	make pipeline-send-notification
 
-pipeline-on-success:
-	echo TODO: $(@)
+pipeline-send-notification: ## Send Slack notification with the pipeline status - mandatory: PIPELINE_NAME,BUILD_STATUS
+	eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make secret-fetch-and-export-variables NAME=$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(PROFILE)/deployment)"
+	make slack-it
 
-pipeline-on-failure:
-	echo TODO: $(@)
+# --------------------------------------
+
+pipeline-check-resources: ## Check all the pipeline deployment supporting resources - optional: PROFILE=[name]
+	profiles="$$(make project-list-profiles)"
+	# for each profile
+	#export PROFILE=$$profile
+	# TODO:
+	# table: $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-deployment
+	# secret: $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(PROFILE)/deployment
+	# bucket: $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(PROFILE)-deployment
+	# certificate: SSL_DOMAINS_PROD
+	# repos: DOCKER_REPOSITORIES
+
+pipeline-create-resources: ## Create all the pipeline deployment supporting resources - optional: PROFILE=[name]
+	profiles="$$(make project-list-profiles)"
+	# for each profile
+	#export PROFILE=$$profile
+	# TODO:
+	# Per AWS accoount, i.e. `nonprod` and `prod`
+	eval "$$(make aws-assume-role-export-variables)"
+	#make aws-dynamodb-create NAME=$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-deployment ATTRIBUTE_DEFINITIONS= KEY_SCHEMA=
+	#make secret-create NAME=$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(PROFILE)/deployment VARS=DB_PASSWORD,SMTP_PASSWORD,SLACK_WEBHOOK_URL
+	#make aws-s3-create NAME=$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(PROFILE)-deployment
+	#make ssl-request-certificate-prod SSL_DOMAINS_PROD
+	# Centralised, i.e. `mgmt`
+	eval "$$(make aws-assume-role-export-variables AWS_ACCOUNT_ID=$(AWS_ACCOUNT_ID_MGMT))"
+	#make docker-create-repository NAME=NAME_TEMPLATE_TO_REPLACE
+	#make aws-codeartifact-setup REPOSITORY_NAME=$(PROJECT_GROUP_SHORT)
 
 # ==============================================================================
 

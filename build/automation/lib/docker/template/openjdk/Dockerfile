@@ -29,7 +29,7 @@ RUN set -eux && \
         --no-man-pages \
         --strip-java-debug-attributes \
         --module-path /opt/java/openjdk/jmods \
-        --add-modules java.base,java.desktop,java.instrument,java.logging,java.management,java.naming,java.net.http,java.security.jgss \
+        --add-modules java.base,java.desktop,java.instrument,java.logging,java.management,java.naming,java.net.http,java.security.jgss,jdk.attach,jdk.unsupported \
         --verbose \
         --compress 2 \
         --output /jdk
@@ -43,7 +43,7 @@ ENV \
     SYSTEM_USER_GID="999" \
     SYSTEM_USER_UID="999" \
     SYSTEM_USER="openjdk" \
-    TZ="Europe/London"
+    TZ="UTC"
 
 COPY --from=builder /usr/local/bin/gosu /usr/local/bin/gosu
 COPY --from=builder /jdk /opt/jdk/

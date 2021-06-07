@@ -8,6 +8,7 @@ test-aws:
 		test-aws-session-fail-if-invalid \
 		test-aws-session-fail-if-invalid-error \
 		test-aws-assume-role-export-variables \
+		test-aws-user-get-role \
 		test-aws-account-check-id \
 		test-aws-account-get-id \
 		test-aws-secret-create-value \
@@ -84,6 +85,9 @@ test-aws-session-fail-if-invalid-error:
 test-aws-assume-role-export-variables:
 	mk_test_skip
 
+test-aws-user-get-role:
+	mk_test_skip
+
 test-aws-account-check-id:
 	mk_test_skip
 
@@ -107,6 +111,8 @@ test-aws-secret-create-object:
 	mk_test "{\"DB_USERNAME\":\"admin\",\"DB_PASSWORD\":\"secret\"} = $$secret"
 
 test-aws-secret-put-get-value:
+	# arrange
+	make aws-secret-create NAME=$(@)
 	# act
 	make aws-secret-put NAME=$(@) VALUE=value
 	secret="$$(make aws-secret-get NAME=$(@))"
@@ -116,6 +122,7 @@ test-aws-secret-put-get-value:
 test-aws-secret-put-get-object:
 	# arrange
 	make TEST_AWS_SECRET_MANAGER_JSON
+	make aws-secret-create NAME=$(@)
 	# act
 	make aws-secret-put NAME=$(@) VALUE=file://$(TEST_AWS_SECRET_MANAGER_JSON)
 	secret=$$(make aws-secret-get NAME=$(@))
@@ -125,6 +132,7 @@ test-aws-secret-put-get-object:
 test-aws-secret-put-get-and-format:
 	# arrange
 	make TEST_AWS_SECRET_MANAGER_JSON
+	make aws-secret-create NAME=$(@)
 	# act
 	make aws-secret-put NAME=$(@) VALUE=file://$(TEST_AWS_SECRET_MANAGER_JSON)
 	secret="$$(make aws-secret-get-and-format NAME=$(@))"
@@ -247,33 +255,33 @@ test-aws-s3-upload-download:
 
 test-aws-dynamodb-exists:
 	# act
-	output=$$(make aws-dynamodb-exists TABLE_NAME=$(@)-table)
+	output=$$(make aws-dynamodb-exists NAME=$(@)-table)
 	# assert
 	mk_test "false = $$output"
 
 test-aws-dynamodb-create:
 	# act
 	make aws-dynamodb-create \
-		TABLE_NAME=$(@)-table \
+		NAME=$(@)-table \
 		ATTRIBUTE_DEFINITIONS="AttributeName=Artist,AttributeType=S AttributeName=SongTitle,AttributeType=S" \
 		KEY_SCHEMA="AttributeName=Artist,KeyType=HASH AttributeName=SongTitle,KeyType=RANGE" \
 		PROVISIONED_THROUGHPUT=ReadCapacityUnits=3,WriteCapacityUnits=3
 	# assert
-	output=$$(make aws-dynamodb-exists TABLE_NAME=$(@)-table)
+	output=$$(make aws-dynamodb-exists NAME=$(@)-table)
 	mk_test "true = $$output"
 
 test-aws-dynamodb-put-query:
 	# arrange
 	make aws-dynamodb-create \
-		TABLE_NAME=$(@)-table \
+		NAME=$(@)-table \
 		ATTRIBUTE_DEFINITIONS="AttributeName=Artist,AttributeType=S AttributeName=SongTitle,AttributeType=S" \
 		KEY_SCHEMA="AttributeName=Artist,KeyType=HASH AttributeName=SongTitle,KeyType=RANGE"
 	# act
-	make aws-dynamodb-put \
-		TABLE_NAME=$(@)-table \
+	make aws-dynamodb-put-item \
+		NAME=$(@)-table \
 		ITEM='{"Artist": {"S": "No One You Know"},"SongTitle": {"S": "Call Me Today"},"AlbumTitle": {"S": "Somewhat Famous"}}'
 	output=$$(make aws-dynamodb-query \
-		TABLE_NAME=$(@)-table \
+		NAME=$(@)-table \
 		CONDITION_EXPRESSION="Artist=:v1" \
 		EXPRESSION_ATTRIBUTES='{":v1": {"S": "No One You Know"}}')
 	# assert

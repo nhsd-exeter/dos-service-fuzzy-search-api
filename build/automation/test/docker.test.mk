@@ -23,22 +23,23 @@ test-docker:
 		test-docker-image-save \
 		test-docker-image-load \
 		test-docker-image-get-digest \
+		test-docker-image-find-and-version-as \
 		test-docker-tag \
-		test-docker-tag-as-release-candidate \
-		test-docker-tag-as-environment-deployment \
 		test-docker-get-variables-from-file \
 		test-docker-run \
 		test-docker-run-composer \
-		test-docker-run-dotnet \
 		test-docker-run-gradle \
 		test-docker-run-mvn \
 		test-docker-run-node \
 		test-docker-run-postman \
-		test-docker-run-pulumi \
 		test-docker-run-python-single-cmd \
 		test-docker-run-python-multiple-cmd \
 		test-docker-run-python-multiple-cmd-pip-install \
 		test-docker-run-terraform \
+		test-docker-run-terraform-tfsec \
+		test-docker-run-terraform-checkov \
+		test-docker-run-terraform-compliance \
+		test-docker-run-config-lint \
 		test-docker-run-tools-single-cmd \
 		test-docker-run-tools-multiple-cmd \
 		test-docker-run-pass-variables \
@@ -56,6 +57,7 @@ test-docker:
 		test-docker-compose-parallel-execution \
 		test-docker-clean \
 		test-docker-prune \
+		test-docker-repo-list-tags \
 	)
 	for test in $${tests[*]}; do
 		mk_test_initialise $$test
@@ -215,6 +217,9 @@ test-docker-image-load:
 test-docker-image-get-digest:
 	mk_test_skip
 
+test-docker-image-find-and-version-as:
+	mk_test_skip
+
 test-docker-tag:
 	# arrange
 	make docker-image-clean NAME=postgres
@@ -224,15 +229,9 @@ test-docker-tag:
 	# assert
 	mk_test "1 -eq $$(docker images --filter=reference=$(DOCKER_LIBRARY_REGISTRY)/postgres:version --quiet | wc -l)"
 
-test-docker-tag-as-release-candidate:
-	mk_test_skip
-
-test-docker-tag-as-environment-deployment:
-	mk_test_skip
-
 test-docker-get-variables-from-file:
 	# act
-	vars=$$(make _docker-get-variables-from-file VARS_FILE=$(VAR_DIR)/project.mk.default)
+	vars=$$(make _docker-get-variables-from-file VARS_FILE=$(LIB_DIR)/project/template/build/automation/var/project.mk)
 	# assert
 	mk_test "PROJECT_NAME= = $$(echo \"$$vars\" | grep -o PROJECT_NAME=)"
 
@@ -247,17 +246,6 @@ test-docker-run-composer:
 		make -s docker-run-composer \
 			CMD="--version" \
 		| grep -Eo "[0-9]+\.[0-9]+\.[0-9]+" | wc -l)
-	# assert
-	mk_test "0 -lt $$output"
-
-test-docker-run-dotnet:
-	# arrange
-	make docker-config
-	# act
-	output=$$(
-		make -s docker-run-dotnet \
-			CMD="--info" \
-		| grep -Eo ".NET Core SDK" | wc -l)
 	# assert
 	mk_test "0 -lt $$output"
 
@@ -305,17 +293,6 @@ test-docker-run-postman:
 	# assert
 	mk_test "0 -lt $$output"
 
-test-docker-run-pulumi:
-	# arrange
-	make docker-config
-	# act
-	output=$$(
-		make -s docker-run-pulumi \
-			CMD="pulumi version" \
-		| grep -Eo "v[0-9]+\.[0-9]+\.[0-9]+" | wc -l)
-	# assert
-	mk_test "0 -lt $$output"
-
 test-docker-run-python-single-cmd:
 	# arrange
 	make docker-config
@@ -359,6 +336,50 @@ test-docker-run-terraform:
 		| grep -Eo "Terraform" | wc -l)
 	# assert
 	mk_test "0 -lt $$output"
+
+test-docker-run-terraform-tfsec:
+	# arrange
+	make docker-config
+	# act
+	output=$$(
+		make -s docker-run-terraform-tfsec \
+			DIR="build/automation/lib/terraform/template/modules/s3" \
+		| grep -Eo "No problems detected" | wc -l)
+	# assert
+	mk_test "1 -eq $$output"
+
+test-docker-run-terraform-checkov:
+	# arrange
+	make docker-config
+	# act
+	output=$$(
+		make -s docker-run-terraform-checkov \
+			DIR="build/automation/lib/terraform/template/modules/s3" \
+		| grep -Eo "By bridgecrew" | wc -l)
+	# assert
+	mk_test "1 -eq $$output"
+
+test-docker-run-terraform-compliance:
+	# arrange
+	make docker-config
+	# act
+	output=$$(
+		make -s docker-run-terraform-compliance \
+			CMD="--version" \
+		| grep -Eo "terraform-compliance" | wc -l)
+	# assert
+	mk_test "1 -eq $$output"
+
+test-docker-run-config-lint:
+	# arrange
+	make docker-config
+	# act
+	output=$$(
+		make -s docker-run-config-lint \
+			CMD="--version" \
+		| grep -Eo "[0-9]+\.[0-9]+\.[0-9]+" | wc -l)
+	# assert
+	mk_test "1 -eq $$output"
 
 test-docker-run-tools-single-cmd:
 	# arrange
@@ -527,6 +548,12 @@ test-docker-compose-parallel-execution:
 	# clean up
 	docker rm --force --volumes $$(docker ps --all --filter "name=.*-$(BUILD_ID)_[1|2]" --quiet) #2> /dev/null ||:
 	docker network rm $$(docker network ls --filter "name=$(DOCKER_NETWORK)_[1|2]" --quiet)
+
+test-docker-repo-list-tags:
+	# act
+	output=$$(make docker-repo-list-tags REPO=python | wc -l)
+	# assert
+	mk_test "100 -lt $$output"
 
 # ==============================================================================
 
