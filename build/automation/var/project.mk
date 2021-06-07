@@ -16,9 +16,3 @@ PROJECT_TECH_STACK_LIST = java,terraform
 
 DOCKER_REPOSITORIES =
 SSL_DOMAINS_PROD =
-
-# ==============================================================================
-
-# Java version for the API is 11 because this is the current version of Java that the AWS
-# Lambda function supports.
-JAVA_VERSION = 14
