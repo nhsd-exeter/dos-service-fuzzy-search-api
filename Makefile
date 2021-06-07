@@ -52,6 +52,10 @@ deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 provision: # Provision environment - mandatory: PROFILE=[name]
 	make terraform-apply-auto-approve STACK=elasticsearch PROFILE=$(PROFILE)
 
+project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,AWS_ROLE=Developer
+	eval "$$(make aws-assume-role-export-variables)"
+	$(PROJECT_DIR)/infrastructure/scripts/cognito.sh
+
 clean: # Clean up project
 
 # ==============================================================================
