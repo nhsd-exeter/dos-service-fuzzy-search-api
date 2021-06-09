@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.config;
+package uk.nhs.digital.uec.api.config.test;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,10 +8,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import uk.nhs.digital.uec.api.auth.test.TestJwtAccessTokenConverterFactory;
 
-/* Only required when running locally to mimic the JWT Key store (which is in Cognito in AWS environments) */
 @Configuration
 @Profile({"local"})
-public class JWTTokenStoreConfig {
+public class TestTokenStoreConfig {
 
   @Bean
   public TokenStore tokenStore() {

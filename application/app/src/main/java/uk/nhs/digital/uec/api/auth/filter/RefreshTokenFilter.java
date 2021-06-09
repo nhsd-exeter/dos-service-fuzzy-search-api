@@ -16,7 +16,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.filter.OncePerRequestFilter;
 import uk.nhs.digital.uec.api.auth.exception.AccessTokenExpiredException;
 import uk.nhs.digital.uec.api.auth.factory.CookieFactory;
-import uk.nhs.digital.uec.api.auth.model.LoginResult;
 
 /**
  * A filter responsible for replacing expired access tokens with fresh ones. These tokens are held
@@ -51,15 +50,12 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         accessTokenChecker.isValid(accessToken);
       } catch (AccessTokenExpiredException e) {
         String identityProviderId = getSubFromAccessToken(accessToken);
-        LoginResult loginResult = refreshTokenService.refresh(refreshToken, identityProviderId);
-        request =
-            resetCookies(
-                request, response, loginResult.getAccessToken(), loginResult.getRefreshToken());
+        refreshTokenService.refresh(refreshToken, identityProviderId);
+        request = resetCookies(request, response, accessToken, refreshToken);
       }
     } catch (IllegalStateException | IllegalArgumentException | RestClientException e) {
       request = resetCookies(request, response, null, null);
     }
-
     chain.doFilter(request, response);
   }
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,9 +18,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.nhs.digital.uec.api.auth.CookieTokenExtractor;
-import uk.nhs.digital.uec.api.auth.CorsConfig;
 import uk.nhs.digital.uec.api.auth.factory.CookieFactory;
 import uk.nhs.digital.uec.api.auth.factory.SslFactorySupplier;
 import uk.nhs.digital.uec.api.auth.filter.AccessTokenChecker;
@@ -35,14 +34,8 @@ import uk.nhs.digital.uec.api.auth.filter.RefreshTokenService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-  @Value("${fuzzysearch.usermanagement.cookie.domain}")
+  @Value("${fuzzysearch.cookie.domain}")
   private String cookieDomain;
-
-  @Value("${fuzzysearch.usermanagement.url}")
-  private String userManagementUrl;
-
-  @Value("${fuzzysearch.allowedorigins}")
-  private String allowedOrigins;
 
   private final RestTemplateBuilder restTemplateBuilder;
 
@@ -57,16 +50,11 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
   }
 
   @Bean
-  public WebMvcConfigurer corsConfigurer() {
-    return new CorsConfig(allowedOrigins);
-  }
-
-  @Bean
   public RefreshTokenFilter refreshTokenFilter() {
     RestTemplate restTemplate =
         restTemplateBuilder.requestFactory(new SslFactorySupplier()).build();
     return new RefreshTokenFilter(
-        new RefreshTokenService(restTemplate, userManagementUrl),
+        new RefreshTokenService(restTemplate),
         new AccessTokenChecker(new JwtDecoder()),
         cookieFactory());
   }
@@ -112,6 +100,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         .cors()
         .and()
         .authorizeRequests()
+        .mvcMatchers(HttpMethod.POST, "/dosapi/accesstoken/**")
+        .permitAll()
         .anyRequest()
         .authenticated()
         .and()
