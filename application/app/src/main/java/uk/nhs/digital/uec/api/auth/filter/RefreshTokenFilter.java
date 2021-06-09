@@ -50,6 +50,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         accessTokenChecker.isValid(accessToken);
       } catch (AccessTokenExpiredException e) {
         String identityProviderId = getSubFromAccessToken(accessToken);
+        // TODO: Refresh has to return access and refresh token and reset cookie
         refreshTokenService.refresh(refreshToken, identityProviderId);
         request = resetCookies(request, response, accessToken, refreshToken);
       }

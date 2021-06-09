@@ -48,7 +48,3 @@ fuzzysearch:
   userPool.id: ${COGNITO_USER_POOL_ID}
   userPool.clientSecret: ${COGNITO_USER_POOL_CLIENT_SECRET}
 security.oauth2.resource.jwk.key-set-uri: ${COGNITO_JWT_VERIFICATION_URL}
-# COGNITO_JWT_VERIFICATION_URL := http://testJwtVerificationUrl
-# COGNITO_USER_POOL_CLIENT_ID := testUserPoolClientId
-# COGNITO_USER_POOL_CLIENT_SECRET := testUserPoolClientSecret
-# COGNITO_USER_POOL_ID := testUserPoolId
