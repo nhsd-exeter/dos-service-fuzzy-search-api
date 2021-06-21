@@ -64,16 +64,17 @@ public class CognitoServiceDefaultImpl implements CognitoService {
   /** {@inheritDoc} */
   @Override
   public AuthTokens authenticateWithRefreshToken(String refreshToken, String identityProviderId) {
-    CheckArgument.hasText(refreshToken, "refreshToken must have text");
     CheckArgument.hasText(identityProviderId, "identityProviderId must have text");
+    CheckArgument.hasText(refreshToken, "refreshToken must have text");
     Map<String, String> authenticationParameters = new HashMap<>();
     authenticationParameters.put("REFRESH_TOKEN", refreshToken);
+    authenticationParameters.put("USERNAME", identityProviderId);
     authenticationParameters.put("SECRET_HASH", secretHashFactory.create(identityProviderId));
     try {
-      AuthTokens loginResult =
+      AuthTokens authTokens =
           getAuthenticationResult(AuthFlowType.REFRESH_TOKEN_AUTH, authenticationParameters);
-      loginResult.setRefreshToken(refreshToken);
-      return loginResult;
+      authTokens.setRefreshToken(refreshToken);
+      return authTokens;
     } catch (AWSCognitoIdentityProviderException e) {
       throw new InvalidAccessTokenException(e.getMessage());
     }
@@ -91,4 +92,25 @@ public class CognitoServiceDefaultImpl implements CognitoService {
         authenticationResult.getAuthenticationResult().getAccessToken(),
         authenticationResult.getAuthenticationResult().getRefreshToken());
   }
+
+  /** {@inheritDoc} */
+  // @Override
+  // public AuthTokens authenticateWithRefreshToken(String refreshToken, Credentials credentials) {
+  //   CheckArgument.isNotNull(credentials, "credentials must not be null");
+  //   CheckArgument.hasText(refreshToken, "refreshToken must have text");
+  //   String emailAddress = credentials.getEmailAddress();
+  //   Map<String, String> authenticationParameters = new HashMap<>();
+  //   authenticationParameters.put("REFRESH_TOKEN", refreshToken);
+  //   authenticationParameters.put("USERNAME", emailAddress);
+  //   authenticationParameters.put("PASSWORD", credentials.getPassword());
+  //   authenticationParameters.put("SECRET_HASH", secretHashFactory.create(emailAddress));
+  //   try {
+  //     AuthTokens authTokens =
+  //         getAuthenticationResult(AuthFlowType.REFRESH_TOKEN_AUTH, authenticationParameters);
+  //     authTokens.setRefreshToken(refreshToken);
+  //     return authTokens;
+  //   } catch (AWSCognitoIdentityProviderException e) {
+  //     throw new InvalidAccessTokenException(e.getMessage());
+  //   }
+  // }
 }

@@ -32,7 +32,7 @@ public class TestAmazonCognitoIdentityClient extends AbstractAWSCognitoIdentityP
   public InitiateAuthResult initiateAuth(InitiateAuthRequest initiateAuthRequest) {
     Map<String, String> authParameters = initiateAuthRequest.getAuthParameters();
     String username = authParameters.get(AUTH_PARAM_USERNAME);
-    String password = authParameters.get(AUTH_PARAM_PASSWORD);
+    String password = identityProviderIdPasswordMap.get(username);
     log.info("Login attempt from : " + username + "/" + password);
 
     if (!identityProviderIdPasswordMap.get(username).equals(password)) {
@@ -45,7 +45,7 @@ public class TestAmazonCognitoIdentityClient extends AbstractAWSCognitoIdentityP
 
     AuthenticationResultType authenticationResult = new AuthenticationResultType();
     TestJwtFactory testJwtFactory = new TestJwtFactory();
-    String accessToken = testJwtFactory.create("id", "issuer", username, 3600000, groupNames);
+    String accessToken = testJwtFactory.create("id", "issuer", username, 60000, groupNames);
     authenticationResult.setAccessToken(accessToken);
     String refreshToken =
         testJwtFactory.create("rtid", "issuer", username, 86400000, new HashSet<>());

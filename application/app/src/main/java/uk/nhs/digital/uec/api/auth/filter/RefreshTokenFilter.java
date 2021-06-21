@@ -12,10 +12,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import uk.nhs.digital.uec.api.auth.exception.AccessTokenExpiredException;
 import uk.nhs.digital.uec.api.auth.factory.CookieFactory;
+import uk.nhs.digital.uec.api.auth.model.AuthTokens;
+import uk.nhs.digital.uec.api.service.AccessTokenServiceInterface;
+import uk.nhs.digital.uec.api.service.impl.AccessTokenService;
 
 /**
  * A filter responsible for replacing expired access tokens with fresh ones. These tokens are held
@@ -50,9 +55,20 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         accessTokenChecker.isValid(accessToken);
       } catch (AccessTokenExpiredException e) {
         String identityProviderId = getSubFromAccessToken(accessToken);
-        // TODO: Refresh has to return access and refresh token and reset cookie
-        refreshTokenService.refresh(refreshToken, identityProviderId);
-        request = resetCookies(request, response, accessToken, refreshToken);
+        ApplicationContext ctx =
+            WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        AccessTokenServiceInterface accessTokenService = ctx.getBean(AccessTokenService.class);
+
+        AuthTokens refreshedTokens =
+            refreshTokenService.refresh(refreshToken, identityProviderId, accessTokenService);
+
+        /** refresh the cookie with new access token and refresh token */
+        request =
+            resetCookies(
+                request,
+                response,
+                refreshedTokens.getAccessToken(),
+                refreshedTokens.getRefreshToken());
       }
     } catch (IllegalStateException | IllegalArgumentException | RestClientException e) {
       request = resetCookies(request, response, null, null);

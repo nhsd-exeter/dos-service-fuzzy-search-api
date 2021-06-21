@@ -24,4 +24,7 @@ public interface CognitoService {
    * @return {@link LoginResult}, will never be null
    */
   AuthTokens authenticateWithRefreshToken(String refreshToken, String identityProviderId);
+
+  // AuthTokens authenticateWithRefreshTokenAndIdentityProvId(
+  //   String refreshToken, Credentials credentials);
 }

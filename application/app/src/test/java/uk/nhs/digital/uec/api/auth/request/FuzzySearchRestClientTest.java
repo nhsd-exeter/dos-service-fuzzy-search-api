@@ -8,6 +8,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +57,7 @@ public class FuzzySearchRestClientTest {
 
   @Captor private ArgumentCaptor<HttpEntity> httpEntityCaptor;
 
-  @Test
+  // @Test
   public void sendRequestWithAuthenticationSuccess() {
 
     when(fuzzySearchRequest.getAuthenticationToken()).thenReturn(authenticationToken);
@@ -74,5 +78,41 @@ public class FuzzySearchRestClientTest {
     List<String> cookies = requestEntity.getHeaders().get("Cookie");
     assertTrue(cookies.contains(ACCESS_TOKEN_COOKIE));
     assertTrue(cookies.contains(REFRESH_TOKEN_COOKIE));
+  }
+
+  @Test
+  public void testJWT() throws Exception {
+    String token =
+        "eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJpZCIsImlhdCI6MTYyMzk0MDUzOSwic3ViIjoiYWRtaW5AbmhzLm5ldCIsImlzcyI6Imlzc3VlciIsImV4cCI6MTYyMzk0MDcxOSwiY29nbml0bzpncm91cHMiOlsiQVBJX1VTRVIiXX0.DXdKMkl5ImhsZXvgWYw6w0P9cxnNruFbXm10SB-fKtWHIn_q_H0vNPgs0K0_XUHnmkLTOYMgP5dKsGUGpQjsSaGeycYmMPCdmzngXkUlCagT9xfrsIuGeuj1RydkZOUNnjgszsBIGSDOrk5-VMk8MVtp0QZ1C9XB0B0xEqQkGI8ZTykmuBfRzpM7CJ-k6f07enRUglxJXZLnG-NfRhRTbc6hYbwYZhYcTu0707b_JlLBU_v38ApNy6niXmKRJEbAvO08l13AdQISUPK2oOyn1TkNAqb_BJVVI8z0RRmHnTO36uN6z-r53DzXArFrMu-ZXOmsaFlT_LjnWx24uicZww";
+    try {
+      DecodedJWT jwt = JWT.decode(token);
+
+      // Headers
+      String header = jwt.getHeader();
+      System.out.println("HEADER = " + header);
+
+      // claims
+      Map<String, Claim> claims = jwt.getClaims();
+      claims.forEach((k, v) -> System.out.println("KEY = " + k + ", VALUE =" + v));
+
+      System.out.println("-----------------------------------------------");
+      System.out.println("Subject = " + jwt.getSubject());
+      System.out.println("Algorithm = " + jwt.getAlgorithm());
+      System.out.println("Issuer = " + jwt.getIssuer());
+      System.out.println("Payload = " + jwt.getPayload());
+      System.out.println("Token = " + jwt.getToken());
+      System.out.println("Subject = " + jwt.getContentType());
+      System.out.println("Id = " + jwt.getId());
+      System.out.println("KeyId = " + jwt.getKeyId());
+      System.out.println("Signature = " + jwt.getSignature());
+      System.out.println("ExpiresAt = " + jwt.getExpiresAt());
+      System.out.println("IssuedAt = " + jwt.getIssuedAt());
+      System.out.println("NotBefore = " + jwt.getNotBefore());
+      System.out.println("Audience = " + jwt.getAudience());
+
+    } catch (JWTDecodeException e) {
+      // Invalid token
+      System.out.println(e);
+    }
   }
 }

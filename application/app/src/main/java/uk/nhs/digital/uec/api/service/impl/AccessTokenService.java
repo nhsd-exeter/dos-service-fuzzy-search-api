@@ -37,6 +37,13 @@ public class AccessTokenService implements AccessTokenServiceInterface {
     }
   }
 
+  @Override
+  public AuthTokens refreshToken(String refreshToken, String identityProviderId) {
+    CheckArgument.hasText(refreshToken, "refreshToken must not be blank");
+    CheckArgument.hasText(identityProviderId, "identityProviderId must not be blank");
+    return cognitoService.authenticateWithRefreshToken(refreshToken, identityProviderId);
+  }
+
   private void checkAccessTokenGroups(AuthTokens authTokens) throws NoRolesException {
     DecodedJWT jwt = jwtDecoder.decode(authTokens.getAccessToken());
     Claim groupsClaim = jwt.getClaim(COGNITO_GROUPS);

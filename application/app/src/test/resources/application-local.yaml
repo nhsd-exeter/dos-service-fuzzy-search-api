@@ -8,8 +8,8 @@ dynamo:
   config:
     endpoint: http://host.docker.internal:8000/
 fuzzysearch:
-  allowedorigins: ${ALLOWED_ORIGINS}
-  usermanagement:
-    url: ${USER_MANAGEMENT_URL}
-    cookie.domain: ${COOKIE_DOMAIN}
+  cookie.domain: ${COOKIE_DOMAIN}
+  userPool.clientId: ${COGNITO_USER_POOL_CLIENT_ID}
+  userPool.id: ${COGNITO_USER_POOL_ID}
+  userPool.clientSecret: ${COGNITO_USER_POOL_CLIENT_SECRET}
 security.oauth2.resource.jwk.key-set-uri: ${COGNITO_JWT_VERIFICATION_URL}

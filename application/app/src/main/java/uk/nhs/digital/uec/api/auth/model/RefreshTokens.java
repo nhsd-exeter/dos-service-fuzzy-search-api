@@ -14,5 +14,7 @@ public class RefreshTokens {
   private String refreshToken;
 
   @NotBlank(message = "identityProviderId must not be blank")
-  private String identityProviderId;
+  private String userName;
+
+  private String password;
 }

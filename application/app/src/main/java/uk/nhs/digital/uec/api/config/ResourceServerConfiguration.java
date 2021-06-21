@@ -17,10 +17,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-import org.springframework.web.client.RestTemplate;
 import uk.nhs.digital.uec.api.auth.CookieTokenExtractor;
 import uk.nhs.digital.uec.api.auth.factory.CookieFactory;
-import uk.nhs.digital.uec.api.auth.factory.SslFactorySupplier;
 import uk.nhs.digital.uec.api.auth.filter.AccessTokenChecker;
 import uk.nhs.digital.uec.api.auth.filter.AccessTokenFilter;
 import uk.nhs.digital.uec.api.auth.filter.JwtDecoder;
@@ -51,12 +49,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
   @Bean
   public RefreshTokenFilter refreshTokenFilter() {
-    RestTemplate restTemplate =
-        restTemplateBuilder.requestFactory(new SslFactorySupplier()).build();
     return new RefreshTokenFilter(
-        new RefreshTokenService(restTemplate),
-        new AccessTokenChecker(new JwtDecoder()),
-        cookieFactory());
+        new RefreshTokenService(), new AccessTokenChecker(new JwtDecoder()), cookieFactory());
   }
 
   @Bean

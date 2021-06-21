@@ -12,6 +12,7 @@ import uk.nhs.digital.uec.api.auth.exception.NoRolesException;
 import uk.nhs.digital.uec.api.auth.factory.CookieFactory;
 import uk.nhs.digital.uec.api.auth.model.AuthTokens;
 import uk.nhs.digital.uec.api.auth.model.Credentials;
+import uk.nhs.digital.uec.api.auth.model.RefreshTokens;
 import uk.nhs.digital.uec.api.service.AccessTokenServiceInterface;
 
 /** Simple welcome/home page controller for the DoS Service Fuzzy Search API. */
@@ -33,5 +34,12 @@ public class AccessTokenController {
     Cookie refreshTokenCookie = cookieFactory.createRefreshToken(resultPayload.getRefreshToken());
     response.addCookie(refreshTokenCookie);
     return ResponseEntity.ok(resultPayload.getAccessToken());
+  }
+
+  @PostMapping("/dosapi/refreshtoken")
+  public ResponseEntity refreshToken(@RequestBody RefreshTokens refreshTokens) {
+    AuthTokens authTokens =
+        authTokenService.refreshToken(refreshTokens.getRefreshToken(), refreshTokens.getUserName());
+    return ResponseEntity.ok(authTokens);
   }
 }

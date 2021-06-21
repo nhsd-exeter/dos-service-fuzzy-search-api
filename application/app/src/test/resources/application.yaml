@@ -40,3 +40,9 @@ configuration:
     address_priority: 2
     postcode_priority: 1
     public_name_priority: 4
+fuzzysearch:
+  cookie.domain: ${COOKIE_DOMAIN}
+  userPool.clientId: ${COGNITO_USER_POOL_CLIENT_ID}
+  userPool.id: ${COGNITO_USER_POOL_ID}
+  userPool.clientSecret: ${COGNITO_USER_POOL_CLIENT_SECRET}
+security.oauth2.resource.jwk.key-set-uri: ${COGNITO_JWT_VERIFICATION_URL}
