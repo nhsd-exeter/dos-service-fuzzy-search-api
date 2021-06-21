@@ -4,7 +4,7 @@ resource "aws_elasticsearch_domain" "elasticsearch_service" {
 
   vpc_options {
     subnet_ids  = local.subnet_ids
-    security_group_ids = ["${aws_security_group.elasticsearch.id}"]
+    security_group_ids = [aws_security_group.elasticsearch.id]
   }
 
   cluster_config {
