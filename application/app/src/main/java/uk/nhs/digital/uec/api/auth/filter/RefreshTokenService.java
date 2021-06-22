@@ -15,26 +15,6 @@ import uk.nhs.digital.uec.api.service.AccessTokenServiceInterface;
 public class RefreshTokenService {
 
   protected static final String REFRESH_PATH = "/dosapi/refreshtoken";
-
-  /**
-   * Obtain a fresh access token using a refresh token.
-   *
-   * @param refreshToken The refresh token to be used in the login flow, must not be null
-   * @param identityProviderId the identity provider id of the user, must not be null
-   * @return {@link AuthTokens} storing the access and the refresh tokens
-   * @throws IllegalStateException if {@link AuthTokens} is null or access or refresh tokens are
-   *     blank
-   */
-  // public RefreshTokens refresh(String refreshToken, String identityProviderId) {
-  //   CheckArgument.hasText(refreshToken, "refreshToken must have text");
-  //   CheckArgument.hasText(identityProviderId, "identityProviderId must have text");
-  //   RefreshTokens refreshTokens = new RefreshTokens(refreshToken, identityProviderId, null);
-  //   if (StringUtils.isBlank(refreshTokens.getRefreshToken())) {
-  //     throw new IllegalStateException("Unexpected state: null detected on refreshToken");
-  //   }
-  //   return refreshTokens;
-  // }
-
   /**
    * Obtain a fresh access token using a refresh token.
    *
