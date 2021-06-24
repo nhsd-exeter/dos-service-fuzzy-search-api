@@ -7,20 +7,6 @@ variable "platform_zone" { description = "The hosted zone used for the platform"
 
 variable "profile" { description = "K8s deployment profile name that can be either 'nonprod' or 'prod'" }
 
-variable "es_zone_awareness_enabled" { description = "Elastic search zone awareness enabled" }
-
-variable "es_availability_zone_count" { description = "Elastic search availability zone count" }
-
-variable "es_instance_count" { description = "Elastic search instance count" }
-
-variable "es_instance_type" { description = "Elastic search instance type" }
-
-variable "es_snapshot_bucket" { description = "Elastic search snapshot bucket name" }
-
-variable "es_snapshot_role" { description = "Elastic search snapshot role" }
-
-variable "es_domain_name" { description = "Elastic search domain name" }
-
 # === Common ===================================================================
 
 variable "aws_region" { description = "Texas AWS deployment region" }
