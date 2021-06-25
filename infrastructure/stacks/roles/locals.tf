@@ -1,5 +1,4 @@
 locals {
-
   service_account_role_iam_name = "${var.service_tag}-${var.profile}-service-account-role"
   service_account_policy_name   = "${var.service_tag}-${var.profile}-dynamodb_postcode_store_read_only_access"
 

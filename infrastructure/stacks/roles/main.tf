@@ -1,4 +1,3 @@
-
 resource "aws_iam_role" "service_account_role" {
   name               = local.service_account_role_iam_name
   assume_role_policy = <<EOF
