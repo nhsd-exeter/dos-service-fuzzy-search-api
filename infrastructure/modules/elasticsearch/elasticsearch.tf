@@ -3,7 +3,7 @@ resource "aws_elasticsearch_domain" "elasticsearch_service" {
   elasticsearch_version = var.elasticsearch_version
 
   vpc_options {
-    subnet_ids  = local.subnet_ids
+    subnet_ids         = local.subnet_ids
     security_group_ids = [aws_security_group.elasticsearch.id]
   }
 
