@@ -21,7 +21,7 @@ resource "aws_cognito_user_pool" "pool" {
   }
 
   username_configuration {
-    case_sensitive  = false
+    case_sensitive = false
   }
 
   tags = var.tags

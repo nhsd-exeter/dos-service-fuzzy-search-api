@@ -2,7 +2,7 @@ resource "aws_iam_role" "snapshot" {
   name               = var.es_snapshot_role
   description        = "Role used for the Elasticsearch domain"
   assume_role_policy = data.aws_iam_policy_document.assume_policy_es.json
-  tags = var.tags
+  tags               = var.tags
 }
 
 resource "aws_iam_policy" "snapshot_policy" {

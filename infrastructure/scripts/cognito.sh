@@ -17,14 +17,14 @@ COGNITO_ADMIN_PASSWORD=$(
 USER_POOL_ID=$(
     aws cognito-idp list-user-pools \
         --query "UserPools[?Name=='service-fuzzy-search-$COGNITO_PROFILE-pool'].Id" \
-		--region $AWS_REGION \
+    --region $AWS_REGION \
         --max-results 60 \
         --output text)
 
 USER_POOL_CLIENT_ID=$(
     aws cognito-idp list-user-pool-clients \
         --user-pool-id $USER_POOL_ID \
-		--region $AWS_REGION \
+    --region $AWS_REGION \
         --query 'UserPoolClients[].ClientId' \
         --output text)
 
@@ -32,7 +32,7 @@ USER_POOL_CLIENT_SECRET=$(
     aws cognito-idp describe-user-pool-client \
         --user-pool-id $USER_POOL_ID \
         --client-id $USER_POOL_CLIENT_ID \
-		--region $AWS_REGION \
+    --region $AWS_REGION \
         --query 'UserPoolClient.ClientSecret' \
         --output text)
 
@@ -42,7 +42,7 @@ function cognito_group_exists {
 
     FOUND=$(
         aws cognito-idp get-group \
-    		--region $AWS_REGION \
+        --region $AWS_REGION \
             --group-name $COGNITO_GROUP \
             --user-pool-id $USER_POOL_ID 2> /dev/null | grep -c "\"GroupName\": \"$COGNITO_GROUP\"")
     [ ${FOUND} -eq 1 ] && return 0 || return 1
@@ -65,7 +65,7 @@ function cognito_setup_groups {
     for COGNITO_GROUP in "${COGNITO_GROUPS[@]}"; do
         if ! cognito_group_exists $COGNITO_GROUP; then
             aws cognito-idp create-group \
-        		--region $AWS_REGION \
+            --region $AWS_REGION \
                 --group-name $COGNITO_GROUP \
                 --user-pool-id $USER_POOL_ID
         else
@@ -81,7 +81,7 @@ function cognito_add_user_to_group {
 
     if cognito_group_exists $COGNITO_GROUP; then
         aws cognito-idp admin-add-user-to-group \
-    		--region $AWS_REGION \
+        --region $AWS_REGION \
             --group-name $COGNITO_GROUP \
             --user-pool-id $USER_POOL_ID \
             --username $COGNITO_USER \
@@ -99,13 +99,13 @@ function cognito_setup_user {
     if ! cognito_user_exists $COGNITO_USER; then
         SECRET_HASH=$(calculate_secret_hash $COGNITO_USER)
         aws cognito-idp sign-up \
-    		--region $AWS_REGION \
+        --region $AWS_REGION \
             --client-id $USER_POOL_CLIENT_ID \
             --username $COGNITO_USER \
             --password $COGNITO_ADMIN_PASSWORD \
             --secret-hash $SECRET_HASH && \
         aws cognito-idp admin-confirm-sign-up \
-    		--region $AWS_REGION \
+        --region $AWS_REGION \
             --user-pool-id $USER_POOL_ID \
             --username $COGNITO_USER
     else
