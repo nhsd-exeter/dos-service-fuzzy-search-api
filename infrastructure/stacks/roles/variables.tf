@@ -7,6 +7,8 @@ variable "platform_zone" { description = "The hosted zone used for the platform"
 
 variable "profile" { description = "K8s deployment profile name that can be either 'nonprod' or 'prod'" }
 
+variable "dynamo_db_postcode_store_table_name" { description = "DynamoDB table name for the postcode store" }
+
 # === Common ===================================================================
 
 variable "aws_region" { description = "Texas AWS deployment region" }
