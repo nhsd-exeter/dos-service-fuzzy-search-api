@@ -113,3 +113,7 @@ The service data files themselves are created by running the SQL code in the ser
 To clear out data from elasticsearch (service index), use the following command:
 
     curl -XDELETE http://localhost:9200/service
+
+## Documentation
+
+Please see the /documentation section for supplementary information, diagrams, and flows for this API.
