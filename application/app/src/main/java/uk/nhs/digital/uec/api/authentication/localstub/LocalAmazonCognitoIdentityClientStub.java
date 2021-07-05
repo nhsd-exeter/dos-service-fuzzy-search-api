@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import uk.nhs.digital.uec.api.authentication.exception.InvalidAuthenticationException;
+import uk.nhs.digital.uec.api.authentication.exception.InvalidCredentialsException;
 
 @Slf4j
 public class LocalAmazonCognitoIdentityClientStub extends AbstractAWSCognitoIdentityProvider {
@@ -34,21 +34,26 @@ public class LocalAmazonCognitoIdentityClientStub extends AbstractAWSCognitoIden
     log.info("Login attempted using credentials : " + username + "/" + password);
 
     if (!identityProviderIdPasswordMap.get(username).equals(password)) {
-      throw new InvalidAuthenticationException("Invalid Authentication");
+      log.info("Attempted to login using invalid credentials");
+      throw new InvalidCredentialsException("Invalid Credentials");
     }
 
     log.info(LOGIN_ACCEPTED);
     Set<String> groupNames = new HashSet<>(Arrays.asList(COGNITO_GROUP));
     AuthenticationResultType authenticationResult = new AuthenticationResultType();
-    LocalJwtFactory testJwtFactory = new LocalJwtFactory();
-    String accessToken = testJwtFactory.create("id", "issuer", username, 360000, groupNames);
-    authenticationResult.setAccessToken(accessToken);
-
-    String refreshToken =
-        testJwtFactory.create("rtid", "issuer", username, 86400000, new HashSet<>());
-    authenticationResult.setRefreshToken(refreshToken);
+    authenticationResult.setAccessToken(
+        generateAuthToken("id", "issuer", username, 360000L, groupNames));
+    authenticationResult.setRefreshToken(
+        generateAuthToken("rtid", "issuer", username, 86400000, new HashSet<>()));
     InitiateAuthResult initiateAuthResult = new InitiateAuthResult();
     initiateAuthResult.setAuthenticationResult(authenticationResult);
     return initiateAuthResult;
+  }
+
+  private String generateAuthToken(
+      String id, String issuer, String userName, long duration, Set<String> groupNames) {
+    LocalJwtFactory testJwtFactory = new LocalJwtFactory();
+    Set<String> cognitoGroupNames = new HashSet<>(Arrays.asList(COGNITO_GROUP));
+    return testJwtFactory.create(id, issuer, userName, duration, cognitoGroupNames);
   }
 }

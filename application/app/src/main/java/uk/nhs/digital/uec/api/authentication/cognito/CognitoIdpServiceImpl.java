@@ -5,6 +5,7 @@ import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.USE
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.USER_PASSWORD_AUTH;
 
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
+import com.amazonaws.services.cognitoidp.model.AWSCognitoIdentityProviderException;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
 import java.util.Map;
@@ -12,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.nhs.digital.uec.api.authentication.exception.InvalidCredentialsException;
+import uk.nhs.digital.uec.api.authentication.exception.InvalidAccessTokenException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 
@@ -26,15 +27,15 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
   private String userPoolClientId;
 
   @Override
-  public AuthToken authenticate(Credential credential) {
+  public AuthToken authenticate(Credential credential) throws InvalidAccessTokenException {
 
     Map<String, String> authenticationParameters =
         Map.of(USERNAME, credential.getEmailAddress(), PASSWORD, credential.getPassword());
     try {
       return getAuthenticationTokens(USER_PASSWORD_AUTH, authenticationParameters);
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-      throw new InvalidCredentialsException(e.getMessage());
+    } catch (AWSCognitoIdentityProviderException e) {
+      log.error("Invalid access_token error occurred during authentication", e.getMessage());
+      throw new InvalidAccessTokenException(e.getMessage());
     }
   }
 
