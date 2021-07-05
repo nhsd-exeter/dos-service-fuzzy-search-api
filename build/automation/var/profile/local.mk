@@ -32,3 +32,8 @@ NAME_PUBLIC_PRIORITY := 0
 # Service Data files
 SERVICE_DATA_FILE := create_all_services_local.sh
 LOCATIONS_DATA_FILE := load_locations_test.sh
+
+COGNITO_JWT_VERIFICATION_URL := http://testJwtVerificationUrl
+COGNITO_USER_POOL_CLIENT_ID := testUserPoolClientId
+COGNITO_USER_POOL_CLIENT_SECRET := testUserPoolClientSecret
+COGNITO_USER_POOL_ID := testUserPoolId

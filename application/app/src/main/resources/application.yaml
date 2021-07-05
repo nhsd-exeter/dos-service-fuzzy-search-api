@@ -5,6 +5,8 @@ spring:
       uris: ${ELASTICSEARCH_URL}
       AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  profiles:
+    active: local
 
 dynamo:
   config:
@@ -40,3 +42,9 @@ configuration:
     address_priority: ${ADDRESS_PRIORITY}
     postcode_priority: ${POSTCODE_PRIORITY}
     public_name_priority: ${PUBLIC_NAME_PRIORITY}
+
+cognito:
+  userPool.clientId: testUserPoolClientId
+  userPool.id: ${COGNITO_USER_POOL_ID}
+  userPool.clientSecret: testUserPoolClientSecret
+security.oauth2.resource.jwk.key-set-uri: http://testJwtVerificationUrl
