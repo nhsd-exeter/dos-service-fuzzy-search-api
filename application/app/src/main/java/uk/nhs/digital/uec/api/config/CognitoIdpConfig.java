@@ -20,11 +20,10 @@ public class CognitoIdpConfig {
 
   @Bean
   public AWSCognitoIdentityProvider cognitoClient() {
-
-    BasicAWSCredentials awsCredentials =
-        new BasicAWSCredentials(userPoolAccessKey, userPoolSecretKey);
     return AWSCognitoIdentityProviderClientBuilder.standard()
-        .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+        .withCredentials(
+            new AWSStaticCredentialsProvider(
+                new BasicAWSCredentials(userPoolAccessKey, userPoolSecretKey)))
         .withRegion(Regions.EU_WEST_2)
         .build();
   }

@@ -1,5 +1,6 @@
 package uk.nhs.digital.uec.api.authentication.cognito;
 
+import uk.nhs.digital.uec.api.authentication.exception.InvalidCredentialsException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 
@@ -11,5 +12,5 @@ public interface CognitoIdpService {
    * @param credential
    * @return AuthToken object
    */
-  AuthToken authenticate(Credential credential);
+  AuthToken authenticate(Credential credential) throws InvalidCredentialsException;
 }

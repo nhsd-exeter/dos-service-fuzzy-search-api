@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-/** Configuration class to secure all the APIs */
+/** Configuration class to further secure all the APIs */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -16,11 +16,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   public static final String LOGIN_URL = "/authentication/login";
   public static final String WELCOME_URL = "/dosapi/dosservices/v0.0.1/home";
+  public static final String FUZZY_SEARCH_URL = "/dosapi/dosservices/v0.0.1/services/byfuzzysearch";
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
 
-    List<String> permitAllEndpointList = Arrays.asList(LOGIN_URL, WELCOME_URL);
+    List<String> permitAllEndpointList = Arrays.asList(LOGIN_URL, WELCOME_URL, FUZZY_SEARCH_URL);
 
     http.cors()
         .and()

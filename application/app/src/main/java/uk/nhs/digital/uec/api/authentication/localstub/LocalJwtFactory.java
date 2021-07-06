@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 
 public class LocalJwtFactory {
 
-  public String create(
+  public String createToken(
       String id, String issuer, String subject, long timeToLiveMs, Set<String> groupNames) {
 
     SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
