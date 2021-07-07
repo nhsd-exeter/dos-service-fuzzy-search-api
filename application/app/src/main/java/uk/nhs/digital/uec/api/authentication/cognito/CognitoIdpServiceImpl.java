@@ -3,6 +3,7 @@ package uk.nhs.digital.uec.api.authentication.cognito;
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.PASSWORD;
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.USERNAME;
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.USER_PASSWORD_AUTH;
+import static uk.nhs.digital.uec.api.util.Utils.calculateSecretHash;
 
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.AWSCognitoIdentityProviderException;
@@ -24,10 +25,12 @@ import uk.nhs.digital.uec.api.authentication.model.Credential;
 public class CognitoIdpServiceImpl implements CognitoIdpService {
 
   @Autowired private AWSCognitoIdentityProvider cognitoClient;
-  @Autowired private CognitoIdpSecretHashFactory secretHashFactory;
 
   @Value("${cognito.userPool.clientId}")
   private String userPoolClientId;
+
+  @Value(value = "${cognito.userPool.clientSecret}")
+  private String userPoolClientSecret;
 
   @Override
   public AuthToken authenticate(Credential credential) throws InvalidCredentialsException {
@@ -37,8 +40,9 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
             credential.getEmailAddress(),
             PASSWORD,
             credential.getPassword(),
-            "SECRET_HASH",
-            secretHashFactory.create(credential.getEmailAddress()));
+            SECRET_HASH,
+            calculateSecretHash(
+                credential.getEmailAddress(), userPoolClientId, userPoolClientSecret));
     try {
       return getAuthenticationTokens(USER_PASSWORD_AUTH, authenticationParameters);
     } catch (InvalidPasswordException | NotAuthorizedException e) {

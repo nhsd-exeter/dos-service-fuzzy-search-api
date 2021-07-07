@@ -6,6 +6,8 @@ import uk.nhs.digital.uec.api.authentication.model.Credential;
 
 public interface CognitoIdpService {
 
+  public static final String SECRET_HASH = "SECRET_HASH";
+
   /**
    * This method implementation authenticate the user credentials connecting Cognito
    *
