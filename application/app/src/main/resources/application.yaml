@@ -42,14 +42,6 @@ configuration:
     public_name_priority: ${PUBLIC_NAME_PRIORITY}
 
 cognito:
-  userPool.clientId: 5lhdm72j98qjuju66opb9uib2a
-  userPool.id: eu-west-2_XqDsDAZKj
-  userPool.clientSecret: 1csr2ngn594iau02ipc3nca6tmm64fgejli4c2gf2tht48la3e40
-
-  # userPool.id: eu-west-2_Ska4RxXWC
-  # userPool.clientId: 2gg7oedoho5tshcin734t51ct6
-  # userPool.clientSecret: uunuj22sp18jl1ier9igmi5rt7u2sgaah6gf91kgqfu6c5bnv1d
-
-  # userPool.clientId: ${COGNITO_USER_POOL_CLIENT_ID}
-  # userPool.id: ${COGNITO_USER_POOL_ID}
-  # userPool.clientSecret: ${COGNITO_USER_POOL_CLIENT_SECRET}
+  userPool.clientId: ${COGNITO_USER_POOL_CLIENT_ID}
+  userPool.id: ${COGNITO_USER_POOL_ID}
+  userPool.clientSecret: ${COGNITO_USER_POOL_CLIENT_SECRET}
