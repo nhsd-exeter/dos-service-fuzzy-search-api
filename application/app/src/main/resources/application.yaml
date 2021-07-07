@@ -5,8 +5,6 @@ spring:
       uris: ${ELASTICSEARCH_URL}
       AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-  profiles:
-    active: local
 
 dynamo:
   config:
@@ -44,6 +42,6 @@ configuration:
     public_name_priority: ${PUBLIC_NAME_PRIORITY}
 
 cognito:
-  userPool.clientId: testUserPoolClientId
+  userPool.clientId: ${COGNITO_USER_POOL_CLIENT_ID}
   userPool.id: ${COGNITO_USER_POOL_ID}
-  userPool.clientSecret: testUserPoolClientSecret
+  userPool.clientSecret: ${COGNITO_USER_POOL_CLIENT_SECRET}

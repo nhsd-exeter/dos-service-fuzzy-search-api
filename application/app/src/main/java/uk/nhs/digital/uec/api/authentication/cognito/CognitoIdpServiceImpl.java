@@ -24,15 +24,21 @@ import uk.nhs.digital.uec.api.authentication.model.Credential;
 public class CognitoIdpServiceImpl implements CognitoIdpService {
 
   @Autowired private AWSCognitoIdentityProvider cognitoClient;
+  @Autowired private CognitoIdpSecretHashFactory secretHashFactory;
 
   @Value("${cognito.userPool.clientId}")
   private String userPoolClientId;
 
   @Override
   public AuthToken authenticate(Credential credential) throws InvalidCredentialsException {
-
     Map<String, String> authenticationParameters =
-        Map.of(USERNAME, credential.getEmailAddress(), PASSWORD, credential.getPassword());
+        Map.of(
+            USERNAME,
+            credential.getEmailAddress(),
+            PASSWORD,
+            credential.getPassword(),
+            "SECRET_HASH",
+            secretHashFactory.create(credential.getEmailAddress()));
     try {
       return getAuthenticationTokens(USER_PASSWORD_AUTH, authenticationParameters);
     } catch (InvalidPasswordException | NotAuthorizedException e) {
