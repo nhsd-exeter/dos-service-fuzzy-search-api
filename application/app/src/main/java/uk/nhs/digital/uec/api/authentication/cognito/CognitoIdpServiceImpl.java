@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.nhs.digital.uec.api.authentication.exception.InvalidCredentialsException;
+import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 
@@ -33,7 +33,7 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
   private String userPoolClientSecret;
 
   @Override
-  public AuthToken authenticate(Credential credential) throws InvalidCredentialsException {
+  public AuthToken authenticate(Credential credential) throws UnauthorisedException {
     Map<String, String> authenticationParameters =
         Map.of(
             USERNAME,
@@ -47,10 +47,10 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
       return getAuthenticationTokens(USER_PASSWORD_AUTH, authenticationParameters);
     } catch (InvalidPasswordException | NotAuthorizedException e) {
       log.error(e.getErrorMessage());
-      throw new InvalidCredentialsException(e.getErrorMessage());
+      throw new UnauthorisedException(e.getErrorMessage());
     } catch (AWSCognitoIdentityProviderException e) {
       log.error(e.getErrorMessage());
-      throw new InvalidCredentialsException(e.getErrorMessage());
+      throw new UnauthorisedException(e.getErrorMessage());
     }
   }
 
@@ -61,8 +61,7 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
             .withAuthFlow(authFlowType)
             .withClientId(userPoolClientId)
             .withAuthParameters(authenticationParameters);
-    InitiateAuthResult authenticationResult = null;
-    authenticationResult = cognitoClient.initiateAuth(authenticationRequest);
+    InitiateAuthResult authenticationResult = cognitoClient.initiateAuth(authenticationRequest);
     return new AuthToken(
         authenticationResult.getAuthenticationResult().getAccessToken(),
         authenticationResult.getAuthenticationResult().getRefreshToken());

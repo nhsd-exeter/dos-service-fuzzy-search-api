@@ -36,7 +36,7 @@ public class LocalAmazonCognitoIdentityClientStub extends AbstractAWSCognitoIden
 
     if (validPassword == null || !validPassword.equals(inputPassword)) {
       log.info("Attempted to login using invalid credentials");
-      throw new AWSCognitoIdentityProviderException("Invalid Credentials");
+      throw new AWSCognitoIdentityProviderException("401 - Unauthorised");
     } else {
       return initiateAuthRequest(inputUserName);
     }
