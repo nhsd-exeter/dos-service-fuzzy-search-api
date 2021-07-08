@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.config;
+package uk.nhs.digital.uec.api.authentication.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

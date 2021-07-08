@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
-import uk.nhs.digital.uec.api.service.AuthenticationServiceInterface;
+import uk.nhs.digital.uec.api.authentication.service.AuthenticationServiceInterface;
 
 @RestController
 public class LoginController {

@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.service;
+package uk.nhs.digital.uec.api.authentication.service;
 
 import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;

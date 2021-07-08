@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.config;
+package uk.nhs.digital.uec.api.authentication.config;
 
 import java.util.Arrays;
 import java.util.List;

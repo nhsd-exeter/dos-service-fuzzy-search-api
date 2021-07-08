@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.service.impl;
+package uk.nhs.digital.uec.api.authentication.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +7,6 @@ import uk.nhs.digital.uec.api.authentication.cognito.CognitoIdpService;
 import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
-import uk.nhs.digital.uec.api.service.AuthenticationServiceInterface;
 
 @Service
 @Slf4j
