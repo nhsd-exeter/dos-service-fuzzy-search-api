@@ -1,8 +1,8 @@
 package uk.nhs.digital.uec.api.authentication.localstub;
 
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.COGNITO_GROUP;
-import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.PASSWORD;
-import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.USERNAME;
+import static uk.nhs.digital.uec.api.constants.AuthenticationConstants.PASSWORD;
+import static uk.nhs.digital.uec.api.constants.AuthenticationConstants.USERNAME;
 
 import com.amazonaws.services.cognitoidp.AbstractAWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.AWSCognitoIdentityProviderException;
