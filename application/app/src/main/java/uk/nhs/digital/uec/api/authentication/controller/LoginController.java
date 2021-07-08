@@ -1,7 +1,8 @@
-package uk.nhs.digital.uec.api.controller;
+package uk.nhs.digital.uec.api.authentication.controller;
 
 import javax.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,20 +13,18 @@ import uk.nhs.digital.uec.api.authentication.model.Credential;
 import uk.nhs.digital.uec.api.service.AuthenticationServiceInterface;
 
 @RestController
-@AllArgsConstructor
 public class LoginController {
 
-  private final AuthenticationServiceInterface authenticationService;
+  @Autowired private AuthenticationServiceInterface authenticationService;
 
   @PostMapping("/authentication/login")
-  public ResponseEntity<AuthToken> getAccessToken(
+  public ResponseEntity getAccessToken(
       @RequestBody Credential credentials, HttpServletResponse response) {
     AuthToken resultPayload = null;
     try {
       resultPayload = authenticationService.getAccessToken(credentials);
     } catch (UnauthorisedException ex) {
-      resultPayload = new AuthToken();
-      resultPayload.setMessage(ex.getMessage());
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(ex.getMessage());
     }
     return ResponseEntity.ok(resultPayload);
   }

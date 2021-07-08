@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.constants;
+package uk.nhs.digital.uec.api.authentication.constants;
 
 public class AuthenticationConstants {
 

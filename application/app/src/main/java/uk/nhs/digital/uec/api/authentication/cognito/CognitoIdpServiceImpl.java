@@ -1,8 +1,8 @@
 package uk.nhs.digital.uec.api.authentication.cognito;
 
-import static uk.nhs.digital.uec.api.constants.AuthenticationConstants.PASSWORD;
-import static uk.nhs.digital.uec.api.constants.AuthenticationConstants.USERNAME;
-import static uk.nhs.digital.uec.api.constants.AuthenticationConstants.USER_PASSWORD_AUTH;
+import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.PASSWORD;
+import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.USERNAME;
+import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.USER_PASSWORD_AUTH;
 import static uk.nhs.digital.uec.api.util.Utils.calculateSecretHash;
 
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
