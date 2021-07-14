@@ -1,0 +1,1874 @@
+{
+	"info": {
+		"_postman_id": "39ca575f-4f26-4b6a-8724-0a44f0db6d4b",
+		"name": "ServiceFinderFuzzySearchWiremock",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Real API call test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=service&fuzz_level=2&max_number_of_services_to_return=20&search_location=EX51NZ",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"services",
+						"byfuzzysearch"
+					],
+					"query": [
+						{
+							"key": "search_term",
+							"value": "service"
+						},
+						{
+							"key": "fuzz_level",
+							"value": "2"
+						},
+						{
+							"key": "max_number_of_services_to_return",
+							"value": "20"
+						},
+						{
+							"key": "search_location",
+							"value": "EX51NZ"
+						}
+					]
+				},
+				"description": "Real API"
+			},
+			"response": []
+		},
+		{
+			"name": "One service",
+			"event": [
+				{
+					"listen": "test2",
+					"script": {
+						"exec": [
+							"pm.test(\"Sample test\", function() {",
+							"  var response = pm.response.json();",
+							"  var result=tv4.validateResult(response, schema)",
+							"  pm.expect(result.valid).to.be.true;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"schema = {",
+							"    \"$schema\": \"http://json-schema.org/draft-07/schema\",",
+							"    \"$id\": \"http://example.com/example.json\",",
+							"    \"type\": \"object\",",
+							"    \"title\": \"The root schema\",",
+							"    \"required\": [",
+							"        \"message\"",
+							"    ],",
+							"    \"properties\": {",
+							"        \"message\": {",
+							"            \"$id\": \"#/properties/message\",",
+							"            \"type\": \"string\",",
+							"            \"title\": \"The message schema\",",
+							"            \"description\": \"An explanation about the purpose of this instance.\",",
+							"            \"default\": \"\",",
+							"            \"examples\": [",
+							"                \"Hello world2!\"",
+							"            ],",
+							"            \"pattern\": \"^(.*)$\"",
+							"        }",
+							"    }",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Service1",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Service1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "nullServices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=0",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Two services",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=service2",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "service2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Totnes Hospital",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=TotnesHospital",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "TotnesHospital"
+						}
+					]
+				},
+				"description": "Test for actual name"
+			},
+			"response": []
+		},
+		{
+			"name": "tot",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=tot",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "tot"
+						}
+					]
+				},
+				"description": "To test three characters lowercase"
+			},
+			"response": []
+		},
+		{
+			"name": "totn",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=totn",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "totn"
+						}
+					]
+				},
+				"description": "Four letters lowercase"
+			},
+			"response": []
+		},
+		{
+			"name": "totnes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=totnes",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "totnes"
+						}
+					]
+				},
+				"description": "full part of 1/2 of the service name"
+			},
+			"response": []
+		},
+		{
+			"name": "Search name with a trailing blank space",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=totnes ",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "totnes "
+						}
+					]
+				},
+				"description": "Trailing space test"
+			},
+			"response": []
+		},
+		{
+			"name": "Upper case in the middle of search string",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=totNes",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "totNes"
+						}
+					]
+				},
+				"description": "Test to check if the search returns with a upper case character "
+			},
+			"response": []
+		},
+		{
+			"name": "Request in quotes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term='totnes'",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "'totnes'"
+						}
+					]
+				},
+				"description": "A request in quotes should error"
+			},
+			"response": []
+		},
+		{
+			"name": "String starts with a capital",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Totnes",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Totnes"
+						}
+					]
+				},
+				"description": "Test that the search returns with a Capital start"
+			},
+			"response": []
+		},
+		{
+			"name": "All caps",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=TOTNES",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "TOTNES"
+						}
+					]
+				},
+				"description": "Test that a call all in capitals returns correctly"
+			},
+			"response": []
+		},
+		{
+			"name": "Special character",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Totnes!",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Totnes!"
+						}
+					]
+				},
+				"description": "Test that a request with a special character will not return"
+			},
+			"response": []
+		},
+		{
+			"name": "Public name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=TotnesCommunityHospital",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "TotnesCommunityHospital"
+						}
+					]
+				},
+				"description": "Test to ensure a search for public name returns the service correctly"
+			},
+			"response": []
+		},
+		{
+			"name": "Address",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=CoronationRoad",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "CoronationRoad"
+						}
+					]
+				},
+				"description": "Search by address correctly returns a service"
+			},
+			"response": []
+		},
+		{
+			"name": "Address partial string",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Coro",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Coro"
+						}
+					]
+				},
+				"description": "Search by address correctly returns a service"
+			},
+			"response": []
+		},
+		{
+			"name": "Postcode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=TQ95GH",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "TQ95GH"
+						}
+					]
+				},
+				"description": "Postcode search to test service returned."
+			},
+			"response": []
+		},
+		{
+			"name": "001_Service name-Woodbury",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Woodbury&search_location=EX51NZ",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Woodbury"
+						},
+						{
+							"key": "search_location",
+							"value": "EX51NZ"
+						}
+					]
+				},
+				"description": "Partial match on name:\nFuzz set to 1 \nName Priority set to 1 \nPublic name set to 0\nAddress set to 0 \nPostcode set to 0\nMax services set to 2"
+			},
+			"response": []
+		},
+		{
+			"name": "002-Search by service name - full name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=GP-WoodburySurgery-Woodbury-GPC",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "GP-WoodburySurgery-Woodbury-GPC"
+						}
+					]
+				},
+				"description": "Full match on name:\nFuzz set to 1 \nName Priority set to 1 \nPublic name set to 0\nAddress set to 0 \nPostcode set to 0\nMax services set to 2"
+			},
+			"response": []
+		},
+		{
+			"name": "003-Match on address",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=FulfordWay",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "FulfordWay"
+						}
+					]
+				},
+				"description": "Partial match on address:\nFuzz set to 1 \nName Priority set to 1 \nPublic name set to 0\nAddress set to 0 \nPostcode set to 0\nMax services set to 2"
+			},
+			"response": []
+		},
+		{
+			"name": "004-Match on postcode-EX5 1NZ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=EX51NZ",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "EX51NZ"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "005-Incorrect spelling of address-wodbury",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Wodbury",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Wodbury"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "006-Incorrect spelling of address-full address",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=GP-WoodburySurgery-Wodbury-GPC",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "GP-WoodburySurgery-Wodbury-GPC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "007-Incorrect spelling of address-fuford fuzzy set to 1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=FufordWay",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "FufordWay"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "008-Incorrect spelling of address-fuford fuzzy set to 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=FufordWay",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "FufordWay"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "009-Incorrect postcode-EX5 1N",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=EX51N",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "EX51N"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "010-public name partial string fuzzy set to name ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Wood",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Wood"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "011-Public name partial search - public name fuzzy search set",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Woodb",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Woodb"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "012-Public name partial search-fuzz set to address",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Woodbu",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Woodbu"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "013-Postcode-Postcode priority set",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Woodbur",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Woodbur"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "014-Name-No settings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Woo",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Woo"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "015-Iñtërnâtiônàlizætiøn☃💪- bad request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Iñtërnâtiônàlizætiøn☃💪",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Iñtërnâtiônàlizætiøn☃💪"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "016-John O'Grady-Bad request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=JohnO'Grady",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "JohnO'Grady"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "017-EC11AA-Postcode no space",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=EC11AA",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "EC11AA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "018-Long postcode-EC1A 1AA",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=EC1V2PD",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "EC1V2PD"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "019-5004-digits bad request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=5004",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "5004"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "020-website-bad request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=JoeSmith<email@domain.com>",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "JoeSmith<email@domain.com>"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "021-domain-Joe Smith <email@domain.com>-bad request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=www.mysite.com",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "www.mysite.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "022-Contains\tTabsAnd\tNewlines-bad request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Contains\tTabsAnd\tNewlines",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Contains\tTabsAnd\tNewlines"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "023-  leading spaces-bad request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=  leading spaces",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "  leading spaces"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "024-\t leading tabs and spaces",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=\t leading tabs and spaces",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "\t leading tabs and spaces"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "025- Space on both sides ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term= EX15NZ ",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": " EX15NZ "
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "026-\t \t  Just white space",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "027-Robert'); DROP TABLE Students;--SQL-bad request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Robert');DROPTABLEStudents;--",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Robert');DROPTABLEStudents;--"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "028-<i><b>Bold</i></b>-bad request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=<i><b>Bold</i></b>",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "<i><b>Bold</i></b>"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "029-<blink>Hello there</blink>-bad request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=<blink>Hello there</blink>",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "<blink>Hello there</blink>"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "030-Nice site,  I think I'll take it. <script>alert('Executing JS')</script>-bad request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Nicesite,IthinkI'lltakeit.<script>alert('Executing JS')</script>",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Nicesite,IthinkI'lltakeit.<script>alert('Executing JS')</script>"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "031-Quotes-\"woodbury\"",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=\"woodbury\"",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "\"woodbury\""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "032-Mixed case-woodBury",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=WoodBury",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "WoodBury"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "033-All caps-WOODBURY",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=WOODBURY",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "WOODBURY"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "034-Underscore-wood_bury",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Wood_Bury",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Wood_Bury"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "035-brackets-[Woodbury]",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=[woodbury]",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "[woodbury]"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "036-$Woodbury-Special character",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=$Woodbury",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "$Woodbury"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "037-Wood - 5 - services returned order: Name, public name, address, postcode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Lymps",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Lymps"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "038-Wood-5 - services returned order: Public Name, Name, address, postcode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Lympst",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Lympst"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "039-Wood-5 - services returned order: Address, Public name, Name, address, postcode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Lympsto",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Lympsto"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "040-5 - services returned order: Postcode, Address, public name, Name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Lympston",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Lympston"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "041-locationSameAsPostcode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Woodbury&search_location=EX51NZ",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Woodbury"
+						},
+						{
+							"key": "search_location",
+							"value": "EX51NZ"
+						}
+					]
+				},
+				"description": "With the location of the service = to that of the search the service returns top of the list."
+			},
+			"response": []
+		},
+		{
+			"name": "042-locationDifferentThenPostcode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Woodbury&search_location=EX51NZ",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Woodbury"
+						},
+						{
+							"key": "search_location",
+							"value": "EX51NZ"
+						}
+					]
+				},
+				"description": "With the location of the service = to that of the search the service returns top of the list."
+			},
+			"response": []
+		},
+		{
+			"name": "043-noPostcode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:8080/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=Woodbury&search_location=",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"byfuzzysearch",
+						""
+					],
+					"query": [
+						{
+							"key": "search-term",
+							"value": "Woodbury"
+						},
+						{
+							"key": "search_location",
+							"value": ""
+						}
+					]
+				},
+				"description": "With the location of the service = to that of the search the service returns top of the list."
+			},
+			"response": []
+		}
+	]
+}
