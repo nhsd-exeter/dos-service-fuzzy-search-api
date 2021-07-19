@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,9 +32,6 @@ import uk.nhs.digital.uec.api.authentication.util.JwtUtil;
 public class AccessTokenFilter extends OncePerRequestFilter {
 
   @Autowired private JwtUtil jwtUtil;
-
-  @Value("${token.expiration.message}")
-  private String expirationMessage;
 
   @Override
   protected void doFilterInternal(
