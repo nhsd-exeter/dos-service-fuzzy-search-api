@@ -21,24 +21,22 @@ public class JwtUtil {
   /**
    * Check whether an access token has expired.
    *
-   * @param accessToken the access token to check validity and return user name
+   * @param accessToken the access token to check
    * @throws AccessTokenExpiredException if the access token is expired.
    * @throws IllegalStateException if the access token cannot be decoded.
    */
-  public String isTokenValid(String accessToken) throws AccessTokenExpiredException {
-
-    if (accessToken == null) return null;
+  public void isTokenValid(String accessToken) throws AccessTokenExpiredException {
+    if (accessToken == null) return;
     DecodedJWT jwt;
     try {
       jwt = JWT.decode(accessToken);
     } catch (JWTDecodeException e) {
       log.info("Failed to decode access tokens", e);
-      throw new IllegalArgumentException();
+      throw new IllegalStateException(e);
     }
     if (jwt.getExpiresAt().before(new Date())) {
       throw new AccessTokenExpiredException();
     }
-    return jwt.getClaim(CLAIM_NAME).asString();
   }
 
   public String getUserNameFromToken(String accessToken) {

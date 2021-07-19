@@ -23,6 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.filter.OncePerRequestFilter;
 import uk.nhs.digital.uec.api.authentication.exception.AccessTokenExpiredException;
 import uk.nhs.digital.uec.api.authentication.util.JwtUtil;
@@ -38,19 +39,19 @@ public class AccessTokenFilter extends OncePerRequestFilter {
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
     String token = jwtUtil.getTokenFromHeader(request);
-
     try {
       jwtUtil.isTokenValid(token);
-    } catch (AccessTokenExpiredException e) {
-      token = null;
-    } catch (IllegalArgumentException e) {
+    } catch (AccessTokenExpiredException
+        | IllegalStateException
+        | IllegalArgumentException
+        | RestClientException e) {
       token = null;
     }
 
     if (token != null) {
-      String subFromAccessToken = jwtUtil.getUserNameFromToken(token);
-      request.setAttribute(IDENTITY_PROVIDER_ID, subFromAccessToken);
-      request.setAttribute(USER_HASH, jwtUtil.getIdentityProviderIdDigest(subFromAccessToken));
+      String userNameFromToken = jwtUtil.getUserNameFromToken(token);
+      request.setAttribute(IDENTITY_PROVIDER_ID, userNameFromToken);
+      request.setAttribute(USER_HASH, jwtUtil.getIdentityProviderIdDigest(userNameFromToken));
       Authentication origAuthentication = SecurityContextHolder.getContext().getAuthentication();
       Authentication newAuthentication = createNewAuthentication(origAuthentication, token);
       SecurityContextHolder.getContext().setAuthentication(newAuthentication);
