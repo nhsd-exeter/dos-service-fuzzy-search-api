@@ -29,9 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
 
-    List<String> permitAllEndpointList = Arrays.asList(LOGIN_URL, FUZZY_SEARCH_URL);
+    List<String> permitAllEndpointList = Arrays.asList(LOGIN_URL, WELCOME_URL);
 
-    http.cors()
+    http.addFilterBefore(accessTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
+        .cors()
         .and()
         .csrf()
         .disable()
@@ -46,19 +47,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    http.addFilterBefore(accessTokenFilter, AbstractPreAuthenticatedProcessingFilter.class);
-    // http.addFilterAfter(exceptionHandlerFilter, AbstractPreAuthenticatedProcessingFilter.class);
-
-    // http.cors()
-    //     .and()
-    //     .authorizeRequests()
-    //     .mvcMatchers(HttpMethod.POST, "/authentication/login/**")
-    //     .permitAll()
-    //     .anyRequest()
-    //     .authenticated()
-    //     .and()
-    //     .csrf()
-    //     .disable();
-    // http.addFilterBefore(accessTokenFilter, AbstractPreAuthenticatedProcessingFilter.class);
   }
 }

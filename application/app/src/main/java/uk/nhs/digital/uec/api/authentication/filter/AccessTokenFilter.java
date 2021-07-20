@@ -45,6 +45,7 @@ public class AccessTokenFilter extends OncePerRequestFilter {
         | IllegalStateException
         | IllegalArgumentException
         | RestClientException e) {
+      log.error("Error occurred while validating access token", e.getMessage());
       token = null;
     }
 
