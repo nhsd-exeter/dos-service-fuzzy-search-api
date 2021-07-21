@@ -19,3 +19,17 @@ https://nhsd-confluence.digital.nhs.uk/pages/viewpage.action?spaceKey=SFDEV&titl
 
 Please find the Login API c4 model diagrams in following link:
 https://nhsd-confluence.digital.nhs.uk/pages/viewpage.action?spaceKey=SFDEV&title=Authentication+Login+C4+Models
+
+
+# API Authorization
+
+Fuzzy Search API is authorized endpoint and you need to be fully authenticated to access this resource.
+When Fuzzy search API endpoint is called, the spring filter handles the authorization process by validating
+the ACCESS_TOKEN generated from Cognito during the login process.
+Authentication failed message is thrown back to the user, if the ACCESS_TOKEN is expired or if its invalid.
+
+Please find the Authorization process flow diagram in confluence:
+https://nhsd-confluence.digital.nhs.uk/display/SFDEV/Authentication+Flow
+
+Please find the Authorization c4 model diagrams in following link:
+https://nhsd-confluence.digital.nhs.uk/display/SFDEV/Authentication+C4+model
