@@ -148,6 +148,72 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Authenticate user with access token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Search returns success status code\", function() {",
+							"  pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "COOKIE",
+						"value": "ACCESS_TOKEN=eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJpZCIsImlhdCI6MTYyMzIzNTk0OSwic3ViIjoiYWRtaW5AbmhzLm5ldCIsImlzcyI6Imlzc3VlciIsImV4cCI6MTYyMzIzOTU0OSwiY29nbml0bzpncm91cHMiOlsiQVBJX1VTRVIiXX0.LCiFSP6rA5iyh_dT9PyPEn9dE4S6TItmAynFn88fCDb5fvGXutYzIodGAQ8xq-US4XaVHO5bxlo12k5d6PeY8DyPHzXb-O_fZ7a1QqOR6uxDETkW6AQ4FX2W30Xqw4svl7J_N7h3gtL9FpEoLSEp06j1X_WJdxJUJc7v9FQ05EvP14Dvynt-_2IomUFSkpHZ1lfSnQIEv_3ofx4oxN8F_Xnhw0L_BYDlS6gslQV2vmCJ8huMyPihwffS4UcCFuY6KwDsIfHoxusufDP7-mMOJhToe-db3pvM6VdZnROBOYuJ-cw5h1sJFGQ3qTauss9SJiDaETxjXUeaSccxnDQNEg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test 1&search_location=EX88PR&fuzz_level=2",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8443",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"services",
+						"byfuzzysearch"
+					],
+					"query": [
+						{
+							"key": "search_term",
+							"value": "test 1"
+						},
+						{
+							"key": "search_location",
+							"value": "EX88PR"
+						},
+						{
+							"key": "fuzz_level",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
