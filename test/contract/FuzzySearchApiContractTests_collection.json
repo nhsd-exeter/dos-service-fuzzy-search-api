@@ -148,6 +148,66 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Authenticate user with access token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Search returns success status code\", function() {",
+							"  pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test 1&search_location=EX88PR&fuzz_level=2",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8443",
+					"path": [
+						"dosapi",
+						"dosservices",
+						"v0.0.1",
+						"services",
+						"byfuzzysearch"
+					],
+					"query": [
+						{
+							"key": "search_term",
+							"value": "test 1"
+						},
+						{
+							"key": "search_location",
+							"value": "EX88PR"
+						},
+						{
+							"key": "fuzz_level",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
