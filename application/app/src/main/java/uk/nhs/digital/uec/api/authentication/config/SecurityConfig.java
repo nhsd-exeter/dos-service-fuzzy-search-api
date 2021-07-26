@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
 
-    List<String> permitAllEndpointList = Arrays.asList(LOGIN_URL, WELCOME_URL);
+    List<String> permitAllEndpointList = Arrays.asList(LOGIN_URL);
 
     http.addFilterBefore(accessTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
         .cors()

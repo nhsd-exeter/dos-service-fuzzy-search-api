@@ -35,7 +35,7 @@ public class AccessTokenFilter extends OncePerRequestFilter {
   @Autowired private JwtUtil jwtUtil;
 
   @Override
-  protected void doFilterInternal(
+  public void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
     String token = jwtUtil.getTokenFromHeader(request);
