@@ -31,25 +31,43 @@ package:
     installed: true
   netcat-openbsd:
     installed: true
+  unzip:
+    installed: true
   wget:
+    installed: true
+  zip:
     installed: true
 
 command:
-  pip list | grep -iE 'awscli-local.*0.8':
+  date | grep UTC:
     exit-status: 0
-  pip list | grep -iE 'awscli.*1.18':
+  gosu --version:
     exit-status: 0
-  pip list | grep -iE 'boto3.*1.14':
+  pip list | grep -iE 'awscli-local.*0.14':
     exit-status: 0
-  pip list | grep -iE 'requests.*2.24':
+    timeout: 60000
+  pip list | grep -iE 'awscli.*1.19':
     exit-status: 0
+    timeout: 60000
+  pip list | grep -iE 'black.*21.5':
+    exit-status: 0
+    timeout: 60000
+  pip list | grep -iE 'boto3.*1.17':
+    exit-status: 0
+    timeout: 60000
+  pip list | grep -iE 'diagrams.*0.20':
+    exit-status: 0
+    timeout: 60000
+  pip list | grep -iE 'requests.*2.25':
+    exit-status: 0
+    timeout: 60000
   aws-iam-authenticator version:
+    exit-status: 0
+  ecs-cli --version:
     exit-status: 0
   jq --version:
     exit-status: 0
   yq --version:
     exit-status: 0
   kubectl version | grep Client:
-    exit-status: 0
-  gosu --version:
     exit-status: 0

@@ -47,7 +47,7 @@ push: # Push project artefacts to the registry
 
 deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	export TTL=$$(make -s k8s-get-namespace-ttl)
-	make project-deploy STACK=application PROFILE=$(PROFILE)
+	make project-deploy PROFILE=$(PROFILE)
 
 provision: # Provision environment - mandatory: PROFILE=[name]
 	make terraform-apply-auto-approve STACK=elasticsearch PROFILE=$(PROFILE)

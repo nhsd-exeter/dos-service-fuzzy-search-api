@@ -2,17 +2,18 @@ test-git:
 	make test-git-setup
 	tests=( \
 		test-git-config \
+		test-git-check-if-branch-name-is-correct \
+		test-git-secrets-load \
+		test-git-secrets-add-banned \
 		test-git-secrets-add-allowed \
-		test-git-secrets-scan-history \
-		test-git-commit-has-changed-directory \
+		test-git-secrets-scan-repo-history \
+		test-git-secrets-scan-repo-files \
+		test-git-check-if-commit-changed-directory \
 		test-git-commit-get-hash \
 		test-git-commit-get-timestamp \
 		test-git-commit-get-message \
-		test-git-tag-is-release-candidate \
 		test-git-tag-is-environment-deployment \
-		test-git-tag-create-release-candidate \
 		test-git-tag-create-environment-deployment \
-		test-git-tag-get-release-candidate \
 		test-git-tag-get-environment-deployment \
 		test-git-tag-list \
 		test-git-tag-clear \
@@ -52,21 +53,35 @@ test-git-config:
 	mk_test ".git/hooks/pre-commit" "-x $(PROJECT_DIR)/.git/hooks/pre-commit"
 	mk_test ".git/hooks/prepare-commit-msg" "-x $(PROJECT_DIR)/.git/hooks/prepare-commit-msg"
 	mk_test "secrets.providers git secrets --aws-provider" "0 -lt $$(git-secrets --list | grep 'secrets.providers git secrets --aws-provider' | wc -l)"
-	mk_test "secrets.allowed 000000000000" "0 -lt $$(git-secrets --list | grep 'secrets.allowed 000000000000' | wc -l)"
 	mk_test_complete
+
+test-git-check-if-branch-name-is-correct:
+	mk_test_skip
+
+test-git-secrets-load:
+	mk_test_skip
+
+test-git-secrets-add-banned:
+	mk_test_skip
 
 test-git-secrets-add-allowed:
 	mk_test_skip
 
-test-git-secrets-scan-history:
+test-git-secrets-scan-repo-history:
 	# act
-	make git-secrets-scan-history
+	make git-secrets-scan-repo-history ||:
 	# assert
 	mk_test "0 -eq $$?"
 
-test-git-commit-has-changed-directory:
+test-git-secrets-scan-repo-files:
 	# act
-	output=$$(make git-commit-has-changed-directory DIR=build/automation/tmp)
+	make git-secrets-scan-repo-files
+	# assert
+	mk_test "0 -eq $$?"
+
+test-git-check-if-commit-changed-directory:
+	# act
+	output=$$(make git-check-if-commit-changed-directory DIR=build/automation/tmp)
 	# assert
 	mk_test "false == $$output"
 
@@ -79,19 +94,10 @@ test-git-commit-get-timestamp:
 test-git-commit-get-message:
 	mk_test_skip
 
-test-git-tag-is-release-candidate:
-	mk_test_skip
-
 test-git-tag-is-environment-deployment:
 	mk_test_skip
 
-test-git-tag-create-release-candidate:
-	mk_test_skip
-
 test-git-tag-create-environment-deployment:
-	mk_test_skip
-
-test-git-tag-get-release-candidate:
 	mk_test_skip
 
 test-git-tag-get-environment-deployment:
