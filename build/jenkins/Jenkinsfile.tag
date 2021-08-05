@@ -3,6 +3,8 @@ pipeline {
     Tags the release image
    */
 
+  agent { label "jenkins-slave" }
+
   parameters {
         string(
             description: 'Enter image tag for release candidate, e.g. 202103111417-e362c87',
