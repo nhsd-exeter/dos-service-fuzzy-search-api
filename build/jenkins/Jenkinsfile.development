@@ -1,3 +1,8 @@
+environment {
+    PROJECT_BUILD_TAG = ''
+    PROFILE = "dev"
+}
+
 pipeline {
   /*
     Description: Development pipeline to build test push and deploy to nonprod
@@ -9,11 +14,6 @@ pipeline {
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
     timeout(time: 30, unit: "MINUTES")
-  }
-
-  environment {
-    PROJECT_BUILD_TAG = ''
-    PROFILE = "dev"
   }
 
   triggers { pollSCM("* * * * *") }
