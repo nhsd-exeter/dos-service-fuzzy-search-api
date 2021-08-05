@@ -1,6 +1,6 @@
 pipeline {
   /*
-    TODO:
+    Tags the release image
    */
 
   parameters {

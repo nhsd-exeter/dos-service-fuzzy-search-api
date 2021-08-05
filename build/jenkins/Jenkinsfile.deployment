@@ -1,18 +1,22 @@
 pipeline {
   /*
-    Description: Development pipeline to build test push and deploy to nonprod
+    Description: Deployment pipeline
    */
+
   agent { label "jenkins-slave" }
+
   options {
     buildDiscarder(logRotator(daysToKeepStr: "7", numToKeepStr: "13"))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
     timeout(time: 30, unit: "MINUTES")
   }
+
   environment {
     IMAGE_TAG = ''
     PROFILE = "dev"
   }
+
   parameters {
         string(
             description: 'Enter image tag to deploy, e.g. 202103111417-e362c87',
@@ -20,7 +24,9 @@ pipeline {
             defaultValue: ''
         )
   }
+
   triggers { pollSCM("* * * * *") }
+
   stages {
     stage('Show Variables') {
       steps {
@@ -78,8 +84,11 @@ pipeline {
         }
       }
     }
+  }
+
   post {
     success { sh "make pipeline-on-success" }
     failure { sh "make pipeline-on-failure" }
   }
+
 }

@@ -52,6 +52,7 @@ test: load-test-services # Test project
 	make docker-run-mvn \
 		DIR="application/app" \
 		CMD="clean test" \
+		LIB_VOLUME_MOUNT="true" \
 		PROFILE=local \
 		VARS_FILE=$(VAR_DIR)/profile/local.mk
 
