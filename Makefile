@@ -9,6 +9,18 @@ prepare: ## Prepare environment
 		git-config \
 		docker-config
 
+derive-build-tag:
+	dir=$$(make _docker-get-dir NAME=api)
+	echo $$(cat $$dir/VERSION) | \
+				sed "s/YYYY/$$(date --date=$(BUILD_DATE) -u +"%Y")/g" | \
+				sed "s/mm/$$(date --date=$(BUILD_DATE) -u +"%m")/g" | \
+				sed "s/dd/$$(date --date=$(BUILD_DATE) -u +"%d")/g" | \
+				sed "s/HH/$$(date --date=$(BUILD_DATE) -u +"%H")/g" | \
+				sed "s/MM/$$(date --date=$(BUILD_DATE) -u +"%M")/g" | \
+				sed "s/ss/$$(date --date=$(BUILD_DATE) -u +"%S")/g" | \
+				sed "s/SS/$$(date --date=$(BUILD_DATE) -u +"%S")/g" | \
+				sed "s/hash/$$(git rev-parse --short HEAD)/g"
+
 build: project-config # Build project
 	make docker-run-mvn \
 		DIR="application/app" \
@@ -156,4 +168,5 @@ local-dynamodb-scripts:
 	./01-postcode-ccg-location-data.sh
 # ==============================================================================
 
-.SILENT:
+.SILENT: \
+	derive-build-tag
