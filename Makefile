@@ -24,7 +24,8 @@ derive-build-tag:
 build: project-config # Build project
 	make docker-run-mvn \
 		DIR="application/app" \
-		CMD="-Dmaven.test.skip=true clean install"
+		CMD="-Dmaven.test.skip=true clean install" \
+		LIB_VOLUME_MOUNT="true"
 	mv \
 		$(PROJECT_DIR)/application/app/target/dos-service-fuzzy-search-api-*.jar \
 		$(PROJECT_DIR)/build/docker/api/assets/application/dos-service-fuzzy-search-api.jar
