@@ -3,18 +3,22 @@ pipeline {
     Description: Development pipeline to build test push and deploy to nonprod
    */
   agent { label "jenkins-slave" }
+
   options {
     buildDiscarder(logRotator(daysToKeepStr: "7", numToKeepStr: "13"))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
     timeout(time: 30, unit: "MINUTES")
   }
+
   environment {
     BUILD_DATE = sh(returnStdout: true, script: "date -u +'%Y-%m-%dT%H:%M:%S%z'").trim()
     PROJECT_BUILD_TAG = ''
     PROFILE = "dev"
   }
+
   triggers { pollSCM("* * * * *") }
+
   stages {
     stage('Show Variables') {
       steps {
@@ -81,8 +85,11 @@ pipeline {
         }
       }
     }
+  }
+
   post {
     success { sh "make pipeline-on-success" }
     failure { sh "make pipeline-on-failure" }
   }
+
 }
