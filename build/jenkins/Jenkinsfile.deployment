@@ -72,7 +72,7 @@ pipeline {
     stage("Monitor Deployment") {
       steps {
         script {
-          sh "make k8s-check-deployment-of-replica-sets PROFILE=${env.PROFILE}"
+          sh echo 'to do'
         }
       }
     }
