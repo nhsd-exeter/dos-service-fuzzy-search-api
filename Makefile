@@ -45,9 +45,20 @@ test: load-test-services # Test project
 push: # Push project artefacts to the registry
 	make docker-push NAME=api
 
+tag-release: # Create the release tag - mandatory DEV_TAG RELEASE_TAG
+	make docker-login
+	docker pull $(DOCKER_REGISTRY)/api:$(DEV_TAG)
+	docker tag $(DOCKER_REGISTRY)/api:$(DEV_TAG) $(DOCKER_REGISTRY)/api:$(RELEASE_TAG)
+	docker tag $(DOCKER_REGISTRY)/api:$(DEV_TAG) $(DOCKER_REGISTRY_LIVE)/api:$(RELEASE_TAG)
+	docker push $(DOCKER_REGISTRY)/api:$(RELEASE_TAG)
+	docker push $(DOCKER_REGISTRY_LIVE)/api:$(RELEASE_TAG)
+
 deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	export TTL=$$(make -s k8s-get-namespace-ttl)
-	make project-deploy PROFILE=$(PROFILE)
+	make project-deploy PROFILE=$(PROFILE) STACK=application
+
+plan: # Plan environment - mandatory: PROFILE=[name]
+	make terraform-plan STACK=elasticsearch PROFILE=$(PROFILE)
 
 provision: # Provision environment - mandatory: PROFILE=[name]
 	make terraform-apply-auto-approve STACK=elasticsearch PROFILE=$(PROFILE)

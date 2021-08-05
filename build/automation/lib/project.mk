@@ -41,7 +41,7 @@ project-log: ### Print log from Docker Compose
 project-deploy: ### Deploy application service stack to the Kubernetes cluster - mandatory: PROFILE=[profile name]
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
-	make k8s-deploy STACK=$(or $(NAME), service)
+	make k8s-deploy STACK=$(or $(STACK), service)
 
 project-document-infrastructure: ### Generate infrastructure diagram - optional: FIN=[Python file path, defaults to infrastructure/diagram.py],FOUT=[PNG file path, defaults to documentation/Infrastructure_Diagram]
 	make docker-run-tools CMD="python \
@@ -77,18 +77,6 @@ project-tag-as-release-candidate: ### Tag release candidate - mandatory: ARTEFAC
 	commit=$(or $(COMMIT), master)
 	make git-tag-create-release-candidate COMMIT=$$commit
 	tag=$$(make git-tag-get-release-candidate COMMIT=$$commit)
-	for image in $$(echo $(or $(ARTEFACTS), $(ARTEFACT)) | tr "," "\n"); do
-		make docker-image-find-and-tag-as \
-			TAG=$$tag \
-			IMAGE=$$image \
-			COMMIT=$$commit
-	done
-
-project-tag-as-environment-deployment: ### Tag environment deployment - mandatory: ARTEFACT|ARTEFACTS=[comma-separated image names],PROFILE=[profile name]; optional: COMMIT=[git release candidate tag name, defaults to master]
-	[ $(PROFILE) = local ] && (echo "ERROR: Please, specify the PROFILE"; exit 1)
-	commit=$(or $(COMMIT), master)
-	make git-tag-create-environment-deployment COMMIT=$$commit PROFILE=$(PROFILE)
-	tag=$$(make git-tag-get-environment-deployment COMMIT=$$commit PROFILE=$(PROFILE) )
 	for image in $$(echo $(or $(ARTEFACTS), $(ARTEFACT)) | tr "," "\n"); do
 		make docker-image-find-and-tag-as \
 			TAG=$$tag \

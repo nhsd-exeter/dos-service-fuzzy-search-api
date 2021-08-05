@@ -10,9 +10,15 @@ pipeline {
     timeout(time: 30, unit: "MINUTES")
   }
   environment {
-    BUILD_DATE = sh(returnStdout: true, script: "date -u +'%Y-%m-%dT%H:%M:%S%z'").trim()
-    PROJECT_BUILD_TAG = ''
+    IMAGE_TAG = ''
     PROFILE = "dev"
+  }
+  parameters {
+        string(
+            description: 'Enter image tag to deploy, e.g. 202103111417-e362c87',
+            name: 'IMAGE_TAG',
+            defaultValue: ''
+        )
   }
   triggers { pollSCM("* * * * *") }
   stages {
@@ -37,47 +43,38 @@ pipeline {
         }
       }
     }
-    stage('Derive Build Tag') {
+    stage("Provision Infrastructure") {
       steps {
         script {
-          env.PROJECT_BUILD_TAG = sh(returnStdout: true, script: 'make derive-build-tag').trim()
+          sh 'make provision PROFILE=${env.PROFILE}'
         }
       }
     }
-    stage('Build API') {
-      steps {
-        script {
-          sh "make build VERSION=${env.PROJECT_BUILD_TAG}"
-        }
-      }
-    }
-    /*
-    stage('Unit Test') {
-      steps {
-        script {
-          sh "make test"
-        }
-      }
-    }
-    */
-    stage('Run Contract Tests') {
+    stage("Populate Search DB") {
       steps {
         script {
           echo "to do"
         }
       }
     }
-    stage('Push API Image to ECR') {
+    stage("Deploy API") {
       steps {
         script {
-          sh "make push VERSION=${env.PROJECT_BUILD_TAG}"
+          sh "make deploy PROFILE=${env.PROFILE} API_IMAGE_TAG=${env.IMAGE_TAG} STACK=${DEPLOYMENT_STACKS}"
         }
       }
     }
-    stage('Image Build Tag'){
-      steps{
-        script{
-          sh "echo 'Image Build Tag: '${env.PROJECT_BUILD_TAG}"
+    stage("Monitor Deployment") {
+      steps {
+        script {
+          sh "make k8s-check-deployment-of-replica-sets PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+    stage("Smoke Tests") {
+      steps {
+        script {
+          sh echo 'to do'
         }
       }
     }
