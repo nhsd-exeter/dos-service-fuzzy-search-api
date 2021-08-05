@@ -13,7 +13,6 @@ pipeline {
   }
 
   environment {
-    IMAGE_TAG = ''
     PROFILE = "dev"
   }
 
