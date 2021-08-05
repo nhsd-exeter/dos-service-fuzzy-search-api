@@ -63,21 +63,21 @@ pipeline {
     stage("Deploy API") {
       steps {
         script {
-          sh "make deploy PROFILE=${env.PROFILE} API_IMAGE_TAG=${env.IMAGE_TAG}"
+          sh "make deploy PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG}"
         }
       }
     }
     stage("Monitor Deployment") {
       steps {
         script {
-          sh echo 'to do'
+          echo "to do"
         }
       }
     }
     stage("Smoke Tests") {
       steps {
         script {
-          sh echo 'to do'
+          echo "to do"
         }
       }
     }
