@@ -41,7 +41,7 @@ pipeline {
     stage("Create Release Image") {
       steps {
         script {
-          sh "make tag-release TAG=${IMAGE_TAG} NEW_TAG=${RELEASE_TAG}"
+          sh "make tag-release DEV_TAG=${IMAGE_TAG} NEW_TAG=${RELEASE_TAG}"
         }
       }
     }
