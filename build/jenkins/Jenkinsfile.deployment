@@ -24,8 +24,6 @@ pipeline {
         )
   }
 
-  triggers { pollSCM("* * * * *") }
-
   stages {
     stage('Show Variables') {
       steps {
