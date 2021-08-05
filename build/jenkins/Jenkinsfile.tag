@@ -34,14 +34,14 @@ pipeline {
     stage("Prepare") {
       steps {
         script {
-          sh 'make project-prepare'
+          sh 'make prepare'
         }
       }
     }
     stage("Create Release Image") {
       steps {
         script {
-          sh "make project-tag-release TAG=${IMAGE_TAG} NEW_TAG=${RELEASE_TAG}"
+          sh "make tag-release TAG=${IMAGE_TAG} NEW_TAG=${RELEASE_TAG}"
         }
       }
     }
