@@ -1,6 +1,7 @@
 PROJECT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 include $(abspath $(PROJECT_DIR)/build/automation/init.mk)
 
+DOCKER_REGISTRY_LIVE = $(DOCKER_REGISTRY)/prod
 # ==============================================================================
 # Development workflow targets
 
