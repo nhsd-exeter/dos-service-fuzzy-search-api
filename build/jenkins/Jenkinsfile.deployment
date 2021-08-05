@@ -52,7 +52,7 @@ pipeline {
     stage("Provision Infrastructure") {
       steps {
         script {
-          sh 'make provision PROFILE=${env.PROFILE}'
+          sh "make provision PROFILE=${env.PROFILE}"
         }
       }
     }
