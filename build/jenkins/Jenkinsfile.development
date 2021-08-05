@@ -1,13 +1,12 @@
-environment {
-    PROJECT_BUILD_TAG = ''
-    PROFILE = "dev"
-}
-
 pipeline {
   /*
     Description: Development pipeline to build test push and deploy to nonprod
    */
   agent { label "jenkins-slave" }
+
+  environment {
+    PROFILE = "dev"
+  }
 
   options {
     buildDiscarder(logRotator(daysToKeepStr: "7", numToKeepStr: "13"))
