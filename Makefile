@@ -70,13 +70,13 @@ tag-release: # Create the release tag - mandatory DEV_TAG RELEASE_TAG
 
 deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	export TTL=$$(make -s k8s-get-namespace-ttl)
-	make project-deploy PROFILE=$(PROFILE) STACK=application
+	make project-deploy PROFILE=$(PROFILE) STACK=$(DEPLOYMENT_STACKS)
 
 plan: # Plan environment - mandatory: PROFILE=[name]
-	make terraform-plan STACK=elasticsearch PROFILE=$(PROFILE)
+	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
 
 provision: # Provision environment - mandatory: PROFILE=[name]
-	make terraform-apply-auto-approve STACK=elasticsearch PROFILE=$(PROFILE)
+	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
 
 project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,AWS_ROLE=Developer
 	eval "$$(make aws-assume-role-export-variables)"
