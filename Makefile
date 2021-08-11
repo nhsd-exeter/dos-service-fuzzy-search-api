@@ -1,6 +1,7 @@
 PROJECT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 include $(abspath $(PROJECT_DIR)/build/automation/init.mk)
 
+DOCKER_REGISTRY_LIVE = $(DOCKER_REGISTRY)/prod
 # ==============================================================================
 # Development workflow targets
 
@@ -9,10 +10,23 @@ prepare: ## Prepare environment
 		git-config \
 		docker-config
 
+derive-build-tag:
+	dir=$$(make _docker-get-dir NAME=api)
+	echo $$(cat $$dir/VERSION) | \
+				sed "s/YYYY/$$(date --date=$(BUILD_DATE) -u +"%Y")/g" | \
+				sed "s/mm/$$(date --date=$(BUILD_DATE) -u +"%m")/g" | \
+				sed "s/dd/$$(date --date=$(BUILD_DATE) -u +"%d")/g" | \
+				sed "s/HH/$$(date --date=$(BUILD_DATE) -u +"%H")/g" | \
+				sed "s/MM/$$(date --date=$(BUILD_DATE) -u +"%M")/g" | \
+				sed "s/ss/$$(date --date=$(BUILD_DATE) -u +"%S")/g" | \
+				sed "s/SS/$$(date --date=$(BUILD_DATE) -u +"%S")/g" | \
+				sed "s/hash/$$(git rev-parse --short HEAD)/g"
+
 build: project-config # Build project
 	make docker-run-mvn \
 		DIR="application/app" \
-		CMD="-Dmaven.test.skip=true clean install"
+		CMD="-Dmaven.test.skip=true clean install" \
+		LIB_VOLUME_MOUNT="true"
 	mv \
 		$(PROJECT_DIR)/application/app/target/dos-service-fuzzy-search-api-*.jar \
 		$(PROJECT_DIR)/build/docker/api/assets/application/dos-service-fuzzy-search-api.jar
@@ -39,18 +53,30 @@ test: load-test-services # Test project
 	make docker-run-mvn \
 		DIR="application/app" \
 		CMD="clean test" \
+		LIB_VOLUME_MOUNT="true" \
 		PROFILE=local \
 		VARS_FILE=$(VAR_DIR)/profile/local.mk
 
 push: # Push project artefacts to the registry
 	make docker-push NAME=api
 
+tag-release: # Create the release tag - mandatory DEV_TAG RELEASE_TAG
+	make docker-login
+	docker pull $(DOCKER_REGISTRY)/api:$(DEV_TAG)
+	docker tag $(DOCKER_REGISTRY)/api:$(DEV_TAG) $(DOCKER_REGISTRY)/api:$(RELEASE_TAG)
+	docker tag $(DOCKER_REGISTRY)/api:$(DEV_TAG) $(DOCKER_REGISTRY_LIVE)/api:$(RELEASE_TAG)
+	docker push $(DOCKER_REGISTRY)/api:$(RELEASE_TAG)
+	docker push $(DOCKER_REGISTRY_LIVE)/api:$(RELEASE_TAG)
+
 deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	export TTL=$$(make -s k8s-get-namespace-ttl)
-	make project-deploy PROFILE=$(PROFILE)
+	make project-deploy PROFILE=$(PROFILE) STACK=$(DEPLOYMENT_STACKS)
+
+plan: # Plan environment - mandatory: PROFILE=[name]
+	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
 
 provision: # Provision environment - mandatory: PROFILE=[name]
-	make terraform-apply-auto-approve STACK=elasticsearch PROFILE=$(PROFILE)
+	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
 
 project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,AWS_ROLE=Developer
 	eval "$$(make aws-assume-role-export-variables)"
@@ -145,4 +171,5 @@ local-dynamodb-scripts:
 	./01-postcode-ccg-location-data.sh
 # ==============================================================================
 
-.SILENT:
+.SILENT: \
+	derive-build-tag

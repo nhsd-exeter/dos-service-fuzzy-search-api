@@ -117,3 +117,33 @@ To clear out data from elasticsearch (service index), use the following command:
 ## Documentation
 
 Please see the /documentation section for supplementary information, diagrams, and flows for this API.
+
+## Pipelines
+
+The following section describes the pipelines that are available in this project. All pipelines reside under the 'Fuzzy Search API' tab in Jenkins
+
+### Development Pipeline
+
+The development pipeline will be triggered with every branch push to the code repository. The pipeline can also be triggered manually. The pipeline will:
+
+- Plan the infrastructure and report back on any changes
+- Derive a Build tag
+- Build the API and create a docker image
+- Run contract tests against the API
+- Push the docker image to the ECR
+- Report back the Image tag
+
+### Deployment Pipeline
+
+The deployment pipeline will deploy a specified image tag into the nonprod environment. The pipeline is configured to be run against the master branch only. The pipeline has to be run manually, and the image to deploy into the nonprod environment will need to be specified. When run manually, the pipeline will:
+
+- Plan and then provision any infrastructure changes
+- Populate the SF datastore with test data
+- Deploy the API into the nonprod environment
+- Run smoke tests against the deployed API
+
+### Release Tag Pipeline
+
+The release tag pipeline will promote a 'development' image into the 'production' ECR and will tag it with a release tag. The pipeline is configured to run against the master branch only. The pipeline has to be manually run, and the development image tag and release image tag will need to be specified. The pipeline will:
+
+- Promote the specified development image into the production ECR and tag it with the specified release tag

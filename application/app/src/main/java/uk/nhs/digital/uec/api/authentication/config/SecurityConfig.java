@@ -20,6 +20,8 @@ import uk.nhs.digital.uec.api.authentication.filter.TokenEntryPoint;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   public static final String LOGIN_URL = "/authentication/login";
+  public static final String HEALTH_CHECK_READINESS_URL = "/actuator/health/readiness";
+  public static final String HEALTH_CHECK_LIVENESS_URL = "/actuator/health/liveness";
   public static final String WELCOME_URL = "/dosapi/dosservices/v0.0.1/home";
   public static final String FUZZY_SEARCH_URL = "/dosapi/dosservices/v0.0.1/services/byfuzzysearch";
 
@@ -29,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
 
-    List<String> permitAllEndpointList = Arrays.asList(LOGIN_URL);
+    List<String> permitAllEndpointList = Arrays.asList(LOGIN_URL, HEALTH_CHECK_READINESS_URL,HEALTH_CHECK_LIVENESS_URL);
 
     http.addFilterBefore(accessTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
         .cors()
