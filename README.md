@@ -135,7 +135,7 @@ The development pipeline will be triggered with every branch push to the code re
 
 ### Deployment Pipeline
 
-The deployment pipeline will deploy a specified image tag into the nonprod environment. The pipeline is configured to be run against the develop and master branches only. The pipeline has to be run manually, and the image to deploy into the nonprod environment will need to be specified. When run manually, the pipeline will:
+The deployment pipeline will deploy a specified image tag into the nonprod environment. The pipeline is configured to be run against the master branch only. The pipeline has to be run manually, and the image to deploy into the nonprod environment will need to be specified. When run manually, the pipeline will:
 
 - Plan and then provision any infrastructure changes
 - Populate the SF datastore with test data
