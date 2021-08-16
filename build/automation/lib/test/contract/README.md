@@ -6,6 +6,7 @@
   - [Table of contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Run the test suite from the command-line](#run-the-test-suite-from-the-command-line)
+  - [Set up local environment variables](#set-up-local-environment-variables)
   - [Run the test suite using Postman](#run-the-test-suite-using-postman)
 
 ## Introduction
@@ -29,6 +30,15 @@ From within the `test/contract` directory which is the sub-project directory we 
 or simply run it as a single command
 
     make -s test
+
+## Set up local environment variables
+
+- Run the following in the terminal to set AWS variables before running this test:
+  
+```
+    export AWS_ACCESS_KEY_ID=local_aws_access_key_id
+    export AWS_SECRET_ACCESS_KEY=local_aws_secret_key
+```
 
 ## Run the test suite using Postman
 
