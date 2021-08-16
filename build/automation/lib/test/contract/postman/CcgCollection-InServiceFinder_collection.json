@@ -1,0 +1,485 @@
+{
+	"info": {
+		"_postman_id": "608c078f-e42e-4d83-ba44-424cda86d0ef",
+		"name": "CcgCollection-InServiceFinder",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Ccg-HOME",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login test\", function() {",
+							"  pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "ACCESS_TOKEN={{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:18084/api/ccg/home",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "18084",
+					"path": [
+						"api",
+						"ccg",
+						"home"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ccg-login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Login test\", function() {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Validate user email\", function() {",
+							"    pm.expect(jsonData.emailAddress).to.eql(\"admin@nhs.net\");",
+							"});",
+							"",
+							"pm.test(\"Save access_token to environment variable\", function() {",
+							"    postman.setEnvironmentVariable(\"accessToken\", pm.cookies.get('ACCESS_TOKEN'));",
+							"});",
+							"",
+							"pm.test(\"Save refresh_token to environment variable\", function() {",
+							"    postman.setEnvironmentVariable(\"refreshToken\", pm.cookies.get('REFRESH_TOKEN'));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"emailAddress\": \"admin@nhs.net\",\n    \"password\": \"password\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:18083/api/login",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "18083",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ccg-findByPostcode",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Postcode search returns success status code\", function() {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Validate easting and northing properties\", function() {",
+							"    pm.expect(jsonData).hasOwnProperty(\"postCode\");",
+							"    pm.expect(jsonData).hasOwnProperty(\"easting\");",
+							"    pm.expect(jsonData).hasOwnProperty(\"northing\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "ACCESS_TOKEN={{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "COOKIE",
+						"value": "ACCESS_TOKEN={{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:18084/api/ccg?postcodes=EX2 8LB",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "18084",
+					"path": [
+						"api",
+						"ccg"
+					],
+					"query": [
+						{
+							"key": "postcodes",
+							"value": "EX2 8LB"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ccg-findBy-Blank-Postcode",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Blank postcode search returns bad request\", function() {",
+							"  pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "ACCESS_TOKEN={{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "COOKIE",
+						"value": "ACCESS_TOKEN={{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:18084/api/ccg",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "18084",
+					"path": [
+						"api",
+						"ccg"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ccg-findByName",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Name search returns success status code\", function() {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Validate easting and northing properties\", function() {",
+							"    pm.expect(jsonData).hasOwnProperty(\"easting\");",
+							"    pm.expect(jsonData).hasOwnProperty(\"northing\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "ACCESS_TOKEN={{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "COOKIE",
+						"value": "ACCESS_TOKEN={{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:18084/api/ccg?name=NHS Halton CCG",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "18084",
+					"path": [
+						"api",
+						"ccg"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "NHS Halton CCG"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ccg-findbyPostcodeAndName",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Name/Postcode search returns success status code\", function() {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Validate easting and northing properties\", function() {",
+							"    pm.expect(jsonData).hasOwnProperty(\"postCode\");",
+							"    pm.expect(jsonData).hasOwnProperty(\"name\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "COOKIE",
+						"value": "ACCESS_TOKEN={{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:18084/api/ccg?postcodes=PO30 5XW&name=NHS Isle of Wight CCG",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "18084",
+					"path": [
+						"api",
+						"ccg"
+					],
+					"query": [
+						{
+							"key": "postcodes",
+							"value": "PO30 5XW"
+						},
+						{
+							"key": "name",
+							"value": "NHS Isle of Wight CCG"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ccg-findByPostcodes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Postcode search returns success status code\", function() {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Validate easting and northing properties\", function() {",
+							"    pm.expect(jsonData).to.have.lengthOf(2);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "ACCESS_TOKEN={{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "COOKIE",
+						"value": "ACCESS_TOKEN={{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:18084/api/ccg?postcodes=PO305xw,sl68885hw, al86jl",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "18084",
+					"path": [
+						"api",
+						"ccg"
+					],
+					"query": [
+						{
+							"key": "postcodes",
+							"value": "PO305xw,sl68885hw, al86jl"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ccg-findByPostcodes-InvalidPostCode",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Blank postcode search returns bad request\", function() {",
+							"  pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "ACCESS_TOKEN={{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "ACCESS_TOKEN={{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:18084/api/ccg?postcodes=sl68885hw",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "18084",
+					"path": [
+						"api",
+						"ccg"
+					],
+					"query": [
+						{
+							"key": "postcodes",
+							"value": "sl68885hw"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
