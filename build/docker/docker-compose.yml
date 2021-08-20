@@ -7,7 +7,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: $SPRING_PROFILES_ACTIVE
       CERTIFICATE_DOMAIN: $CERTIFICATE_DOMAIN
-      ALLOWED_ORIGINS: $"{ALLOWED_ORIGINS}"
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
       API_SERVICE_SEARCH_ENDPOINT: $API_SERVICE_SEARCH_ENDPOINT
       SERVER_PORT: $SERVER_PORT
       VERSION: $VERSION
@@ -83,7 +83,7 @@ services:
     image: "amazon/dynamodb-local:latest"
     container_name: dynamodb-local
     environment:
-      ALLOWED_ORIGINS: $"{ALLOWED_ORIGINS}"
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
     ports:
       - "8000:8000"
     volumes:
