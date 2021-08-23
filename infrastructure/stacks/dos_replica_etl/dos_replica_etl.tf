@@ -29,9 +29,44 @@ resource "aws_lambda_function" "dos_replica_etl_lambda" {
       data.terraform_remote_state.vpc.outputs.private_subnets[1],
       data.terraform_remote_state.vpc.outputs.private_subnets[2]
     ]
-    security_group_ids = [local.dos_replica_etl_vpc_security_group]
+    security_group_ids = [
+      local.dos_replica_etl_vpc_security_group,
+      aws_security_group.dos_replica_etl_security_group.id
+    ]
   }
 }
+
+resource "aws_security_group" "dos_replica_etl_security_group" {
+  name        = "uec-sf-${var.profile}-dos-replica-etl_sg"
+  description = "Allows outbound traffic from ETL lambda"
+  vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
+
+  egress = [
+    {
+      from_port        = 0
+      to_port          = 0
+      protocol         = "-1"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = null
+      description      = null
+      prefix_list_ids  = null
+      security_groups  = null
+      self             = null
+    }
+  ]
+}
+
+resource "aws_security_group_rule" "dos_replica_etl_security_group_rule" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  description              = "allows lambda etl process to insert data into ES"
+  security_group_id        = local.es_domain_security_group_id
+  source_security_group_id = aws_security_group.dos_replica_etl_security_group.id
+}
+
+
 resource "aws_iam_role" "dos_replica_etl_lambda_role" {
   name               = local.dos_replica_etl_iam_name
   assume_role_policy = <<EOF

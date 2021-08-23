@@ -18,6 +18,7 @@ SECRET_NAME = os.environ.get("SECRET_NAME")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 ES_DOMAIN_ENDPOINT = os.environ.get("ES_DOMAIN_ENDPOINT")
 BATCH_SIZE = 100000
+ES_INDEX = "service"
 
 
 
@@ -30,32 +31,10 @@ def get_secret():
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region_name)
 
-    # In this sample we only handle the specific exceptions for the 'GetSecretValue' API.
-    # See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-    # We rethrow the exception by default.
-
     try:
         get_secret_value_response = client.get_secret_value(SecretId=secret_name)
     except ClientError as e:
-        if e.response["Error"]["Code"] == "DecryptionFailureException":
-            # Secrets Manager can't decrypt the protected secret text using the provided KMS key.
-            # Deal with the exception here, and/or rethrow at your discretion.
-            raise e
-        elif e.response["Error"]["Code"] == "InternalServiceErrorException":
-            # An error occurred on the server side.
-            # Deal with the exception here, and/or rethrow at your discretion.
-            raise e
-        elif e.response["Error"]["Code"] == "InvalidParameterException":
-            # You provided an invalid value for a parameter.
-            # Deal with the exception here, and/or rethrow at your discretion.
-            raise e
-        elif e.response["Error"]["Code"] == "InvalidRequestException":
-            # You provided a parameter value that is not valid for the current state of the resource.
-            # Deal with the exception here, and/or rethrow at your discretion.
-            raise e
-        elif e.response["Error"]["Code"] == "ResourceNotFoundException":
-            # We can't find the resource that you asked for.
-            # Deal with the exception here, and/or rethrow at your discretion.
+            print("Unable to retrieve secret due to {}".format(e))
             raise e
     else:
         # Decrypts secret using the associated KMS CMK.
@@ -165,8 +144,10 @@ def extract_data_from_dos():
 
 def build_insert_dict(records, doc_list):
     print("adding " + str(len(records)) + " records to doc_list")
+
     for row in records:
         document = {
+            "_id": row[0],
             "id": row[0],
             "u_id": row[1],
             "name": row[2],
@@ -197,7 +178,7 @@ def connect_to_elastic_search():
     try:
         print("ES DOMAIN: " + ES_DOMAIN_ENDPOINT)
         host = ES_DOMAIN_ENDPOINT
-        region = REGION # For example, us-west-1
+        region = REGION
 
         print("getting credentials")
         service = 'es'
@@ -227,7 +208,7 @@ def insert_records_to_elasticsearch(doc_list):
     print("size of import: " + str(len(doc_list)))
     try:
         print("Inserting into ES...")
-        resp = helpers.bulk(es, doc_list, index = "service", doc_type = "_doc")
+        resp = helpers.bulk(es, doc_list, index = ES_INDEX, doc_type = "_doc", doc_as_upsert = True)
         print("Insert complete")
         return resp
     except Exception as e:

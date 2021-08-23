@@ -18,6 +18,10 @@ data "aws_security_group" "dos_application_security_group" {
   name = var.dos_security_group
 }
 
+data "aws_security_group" "elasticsearch_security_group" {
+  name = "${var.service_prefix}-elastic-search"
+}
+
 data "aws_lambda_layer_version" "dos_python_libs" {
   layer_name = var.core_dos_python_libs
 }

@@ -13,6 +13,8 @@ variable "vpc_terraform_state_key" { description = "The VPC key in the terraform
 
 variable "es_domain_name" { description = "Elastic search domain name" }
 
+variable "service_prefix" { description = "The prefix used to adhere to the naming conventions" }
+
 # === Stack Specific ============================================================
 
 variable "dos_replica_db" { description = "The DOS read replica to get the postcodes from" }

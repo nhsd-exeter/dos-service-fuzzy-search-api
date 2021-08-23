@@ -5,7 +5,7 @@ locals {
   dos_replica_etl_runtime       = "python3.8"
   //This is set to 3 mins and 59 seconds as the timer is set to run every 4 mins so it will timeout before the next job starts
   dos_replica_etl_timeout     = 239
-  dos_replica_etl_memory_size = 1024
+  dos_replica_etl_memory_size = 10240
 
   dos_replica_etl_core_dos_python_libs_arn = data.aws_lambda_layer_version.dos_python_libs.arn
   dos_replica_etl_vpc_security_group       = data.aws_security_group.dos_application_security_group.id
@@ -18,8 +18,9 @@ locals {
   dos_replica_etl_db_secret_key            = var.dos_read_replica_secret_key
   dos_replica_etl_db_secret_arn            = data.aws_secretsmanager_secret.dos_read_replica_secret_name.arn
 
-  es_domain_arn                            = data.aws_elasticsearch_domain.elasticsearch.arn
-  es_domain_endpoint                       = data.aws_elasticsearch_domain.elasticsearch.endpoint
+  es_domain_arn               = data.aws_elasticsearch_domain.elasticsearch.arn
+  es_domain_endpoint          = data.aws_elasticsearch_domain.elasticsearch.endpoint
+  es_domain_security_group_id = data.aws_security_group.elasticsearch_security_group.id
 
   dos_replica_etl_iam_name = "uec-sf-${var.profile}-dos-replica-etl-lambda"
 
