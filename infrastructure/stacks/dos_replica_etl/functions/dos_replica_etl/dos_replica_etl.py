@@ -208,7 +208,7 @@ def insert_records_to_elasticsearch(doc_list):
     print("size of import: " + str(len(doc_list)))
     try:
         print("Inserting into ES...")
-        resp = helpers.bulk(es, doc_list, index = ES_INDEX, doc_type = "_doc", doc_as_upsert = True)
+        resp = helpers.bulk(es, doc_list, index = ES_INDEX, doc_type = "_doc")
         print("Insert complete")
         return resp
     except Exception as e:
