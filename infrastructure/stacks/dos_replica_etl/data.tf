@@ -1,7 +1,7 @@
 # Lambda
 data "archive_file" "dos_replica_etl_function" {
   type        = "zip"
-  source_dir  = "${path.module}/functions/dos_replica_etl"
+  source_dir  = "${path.module}/functions/dos_replica_etl/deploy"
   output_path = "${path.module}/functions_zip/${local.dos_replica_etl_function_name}.zip"
 }
 
