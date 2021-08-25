@@ -72,10 +72,26 @@ deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	export TTL=$$(make -s k8s-get-namespace-ttl)
 	make project-deploy PROFILE=$(PROFILE) STACK=$(DEPLOYMENT_STACKS)
 
+prepare-lambda-deployment: # Downloads the required libraries for the Lambda functions
+	cd $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl
+	pip install \
+		-r requirements.txt \
+		-t $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy \
+		--upgrade \
+		--no-deps
+	cd $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
+	rm -rf ./bin
+	rm -rf ./*.dist-info
+	rm -f LICENSE
+	cp $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/service_etl.py \
+		$(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
+
 plan: # Plan environment - mandatory: PROFILE=[name]
+	make prepare-lambda-deployment
 	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
 
 provision: # Provision environment - mandatory: PROFILE=[name]
+	make prepare-lambda-deployment
 	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
 
 project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,AWS_ROLE=Developer

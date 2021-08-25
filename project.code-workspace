@@ -106,6 +106,10 @@
       "editor.tabSize": 2
     },
     "[python]": {
+
+
+
+
       "editor.tabSize": 4,
       "editor.insertSpaces": true
     },
@@ -163,6 +167,40 @@
       "titleBar.inactiveBackground": "#eb542499",
       "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "#eb5424"
+    "peacock.color": "#eb5424",
+    "cSpell.words": [
+      "boto",
+      "botocore",
+      "psycopg"
+    ],
+    "yaml.customTags": [
+      "!And",
+      "!And sequence",
+      "!If",
+      "!If sequence",
+      "!Not",
+      "!Not sequence",
+      "!Equals",
+      "!Equals sequence",
+      "!Or",
+      "!Or sequence",
+      "!FindInMap",
+      "!FindInMap sequence",
+      "!Base64",
+      "!Join",
+      "!Join sequence",
+      "!Cidr",
+      "!Ref",
+      "!Sub",
+      "!Sub sequence",
+      "!GetAtt",
+      "!GetAZs",
+      "!ImportValue",
+      "!ImportValue sequence",
+      "!Select",
+      "!Select sequence",
+      "!Split",
+      "!Split sequence"
+    ]
   }
 }
