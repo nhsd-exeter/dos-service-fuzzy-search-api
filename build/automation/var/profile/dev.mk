@@ -44,7 +44,7 @@ NAME_PUBLIC_PRIORITY := 4
 # Infrastructure variables
 
 DEPLOYMENT_STACKS = application
-INFRASTRUCTURE_STACKS = elasticsearch,authentication,roles,dos_replcia_etl
+INFRASTRUCTURE_STACKS = elasticsearch,authentication,roles,service_etl
 
 TF_VAR_dynamo_db_postcode_store_table_name = service-finder-nonprod-postcode-location-mapping
 TF_VAR_service_prefix := service-fuzzy-search-$(PROFILE)

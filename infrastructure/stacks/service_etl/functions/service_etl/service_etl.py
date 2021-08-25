@@ -64,7 +64,7 @@ def connect():
 # Method to get cursor from db
 def getCursor(conn):
     try:
-        cur = conn.cursor("dos_replica_etl_cursor")
+        cur = conn.cursor("service_etl_cursor")
         cur.itersize = BATCH_SIZE
         cur.arraysize = BATCH_SIZE
         return cur

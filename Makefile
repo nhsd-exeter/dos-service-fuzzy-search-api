@@ -73,18 +73,18 @@ deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	make project-deploy PROFILE=$(PROFILE) STACK=$(DEPLOYMENT_STACKS)
 
 prepare-lambda-deployment: # Downloads the required libraries for the Lambda functions
-	cd $(PROJECT_DIR)infrastructure/stacks/dos_replica_etl/functions/dos_replica_etl
+	cd $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl
 	pip install \
 		-r requirements.txt \
-		-t $(PROJECT_DIR)infrastructure/stacks/dos_replica_etl/functions/dos_replica_etl/deploy \
+		-t $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy \
 		--upgrade \
 		--no-deps
-	cd $(PROJECT_DIR)infrastructure/stacks/dos_replica_etl/functions/dos_replica_etl/deploy
+	cd $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
 	rm -rf ./bin
 	rm -rf ./*.dist-info
 	rm -f LICENSE
-	cp $(PROJECT_DIR)infrastructure/stacks/dos_replica_etl/functions/dos_replica_etl/dos_replica_etl.py \
-		$(PROJECT_DIR)infrastructure/stacks/dos_replica_etl/functions/dos_replica_etl/deploy
+	cp $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/service_etl.py \
+		$(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
 
 plan: # Plan environment - mandatory: PROFILE=[name]
 	make prepare-lambda-deployment

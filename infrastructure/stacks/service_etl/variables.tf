@@ -17,16 +17,16 @@ variable "service_prefix" { description = "The prefix used to adhere to the nami
 
 # === Stack Specific ============================================================
 
-variable "dos_replica_db" { description = "The DOS read replica to get the postcodes from" }
+variable "dos_sf_replica_db" { description = "The DOS read replica to get the postcodes from" }
 
-variable "dos_security_group" { description = "The security group for the dos read replica" }
+variable "service_finder_replica_sg" { description = "The security group for the dos read replica" }
 
 variable "dos_read_replica_secret_name" { description = "The dos read replica secret name" }
 
 variable "dos_read_replica_secret_key" { description = "The dos read replica secret key" }
 
-variable "dos_replica_etl_db_user" { description = "The dos read replica user name" }
+variable "service_etl_db_user" { description = "The dos read replica user name" }
 
-variable "dos_replica_etl_source_db" { description = "The dos read replica source database" }
+variable "service_etl_source_db" { description = "The dos read replica source database" }
 
 variable "core_dos_python_libs" { description = "core dos python libs for accessing dos databases" }

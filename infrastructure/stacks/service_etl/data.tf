@@ -1,8 +1,8 @@
 # Lambda
-data "archive_file" "dos_replica_etl_function" {
+data "archive_file" "service_etl_function" {
   type        = "zip"
-  source_dir  = "${path.module}/functions/dos_replica_etl/deploy"
-  output_path = "${path.module}/functions_zip/${local.dos_replica_etl_function_name}.zip"
+  source_dir  = "${path.module}/functions/service_etl/deploy"
+  output_path = "${path.module}/functions_zip/${local.service_etl_function_name}.zip"
 }
 
 data "terraform_remote_state" "vpc" {
@@ -14,8 +14,8 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
-data "aws_security_group" "dos_application_security_group" {
-  name = var.dos_security_group
+data "aws_security_group" "service_finder_replica_sg" {
+  name = var.service_finder_replica_sg
 }
 
 data "aws_security_group" "elasticsearch_security_group" {
