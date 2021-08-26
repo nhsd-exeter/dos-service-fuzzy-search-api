@@ -1,5 +1,7 @@
 # This file is required for running the API via the make commands
 spring:
+  profiles:
+    active: local
   elasticsearch:
     rest:
       uris: ${ELASTICSEARCH_URL}
@@ -45,3 +47,8 @@ cognito:
   userPool.clientId: ${COGNITO_USER_POOL_CLIENT_ID}
   userPool.id: ${COGNITO_USER_POOL_ID}
   userPool.clientSecret: ${COGNITO_USER_POOL_CLIENT_SECRET}
+
+postcode:
+  mapping:
+    url: ${POSTCODE_MAPPING_SERVICE_URL}
+    uri: /ccg

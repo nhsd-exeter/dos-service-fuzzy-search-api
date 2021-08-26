@@ -17,3 +17,8 @@ local:
   uri: authentication/login
   welcome:
     uri: /dosapi/dosservices/v0.0.1/home
+
+postcode:
+  mapping:
+    url: https://127.0.0.1:18084/api
+    uri: /ccg

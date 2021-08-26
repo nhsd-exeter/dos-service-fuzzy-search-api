@@ -3,13 +3,12 @@ package uk.nhs.digital.uec.api.service.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.utils.CollectionUtils;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
-import uk.nhs.digital.uec.api.model.dynamo.PostcodeLocation;
+import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.repository.elasticsearch.CustomServicesRepositoryInterface;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
@@ -35,15 +34,18 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     dosServices.addAll(
         elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms)));
 
-    // Calculate distance to services returned if we have a search location
+    /** Calculate distance to services returned if we have a search location */
     PostcodeLocation searchLocation = locationService.getLocationForPostcode(searchPostcode);
-    // if dos services returns empty locations populate the dynamodb matching values with postcode
+    /**
+     * if dos services returns empty locations populate postcode from service finder - postcode
+     * mapping API
+     */
     List<PostcodeLocation> dosServicePostCodeLocation = populateEmptyLocation(dosServices);
 
     if (searchLocation != null) {
       for (DosService dosService : dosServices) {
         PostcodeLocation serviceLocation = new PostcodeLocation();
-        serviceLocation.setPostcode(dosService.getPostcode());
+        serviceLocation.setPostCode(dosService.getPostcode());
         serviceLocation.setEasting(dosService.getEasting());
         serviceLocation.setNorthing(dosService.getNorthing());
 
@@ -61,7 +63,6 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     if (apiRequestParams.getMaxNumServicesToReturn() > dosServices.size()) {
       serviceResultLimit = dosServices.size();
     }
-
     return dosServices.subList(0, serviceResultLimit);
   }
 
@@ -69,16 +70,16 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
       PostcodeLocation serviceLocation, List<PostcodeLocation> dosServicePostCodeLocation) {
     if (dosServicePostCodeLocation != null) {
       String servicePostcodeWithoutSpace =
-          apiUtilsService.removeBlankSpaces(serviceLocation.getPostcode());
+          apiUtilsService.removeBlankSpaces(serviceLocation.getPostCode());
       serviceLocation.setEasting(
           dosServicePostCodeLocation.stream()
-              .filter(t -> t.getPostcode().equals(servicePostcodeWithoutSpace))
+              .filter(t -> t.getPostCode().equals(servicePostcodeWithoutSpace))
               .map(PostcodeLocation::getEasting)
               .findFirst()
               .orElse(null));
       serviceLocation.setNorthing(
           dosServicePostCodeLocation.stream()
-              .filter(t -> t.getPostcode().equals(servicePostcodeWithoutSpace))
+              .filter(t -> t.getPostCode().equals(servicePostcodeWithoutSpace))
               .map(PostcodeLocation::getNorthing)
               .findFirst()
               .orElse(null));
@@ -90,7 +91,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
         dosServices.stream()
             .filter(t -> t.getEasting() == null && t.getNorthing() == null)
             .map(DosService::getPostcode)
-            .collect(Collectors.toList());
+            .toList();
     return !CollectionUtils.isNullOrEmpty(postCodes)
         ? locationService.getLocationsForPostcodes(postCodes)
         : Collections.emptyList();
