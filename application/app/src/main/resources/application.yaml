@@ -1,7 +1,5 @@
 # This file is required for running the API via the make commands
 spring:
-  profiles:
-    active: local
   elasticsearch:
     rest:
       uris: ${ELASTICSEARCH_URL}
