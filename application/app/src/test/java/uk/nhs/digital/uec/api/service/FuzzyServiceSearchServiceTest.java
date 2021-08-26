@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
-import uk.nhs.digital.uec.api.model.dynamo.PostcodeLocation;
+import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
 import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
@@ -180,7 +180,7 @@ public class FuzzyServiceSearchServiceTest {
     PostcodeLocation dynamoPostCodeLocation = new PostcodeLocation();
     dynamoPostCodeLocation.setEasting(558439);
     dynamoPostCodeLocation.setNorthing(140222);
-    dynamoPostCodeLocation.setPostcode("EX78PR");
+    dynamoPostCodeLocation.setPostCode("EX78PR");
     List<PostcodeLocation> postcodesLocations = new ArrayList<>();
     postcodesLocations.add(dynamoPostCodeLocation);
     List<String> postCodes = new ArrayList<>();

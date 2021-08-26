@@ -1,42 +1,35 @@
 package uk.nhs.digital.uec.api.service.impl;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.apache.commons.lang3.StringUtils;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.nhs.digital.uec.api.model.dynamo.PostcodeLocation;
-import uk.nhs.digital.uec.api.repository.dynamo.PostcodeLocationRepo;
+import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.LocationServiceInterface;
+import uk.nhs.digital.uec.api.util.PostcodeMappingUtil;
 
 @Service
 public class LocationService implements LocationServiceInterface {
 
   @Autowired private ApiUtilsServiceInterface apiUtilsService;
 
-  @Autowired private PostcodeLocationRepo postcodeLocationRepo;
+  @Autowired private PostcodeMappingUtil postcodeMappingUtil;
 
   /** {@inheritDoc} */
   @Override
   public PostcodeLocation getLocationForPostcode(final String postcode) {
-
-    PostcodeLocation location = null;
-
-    if (postcode == null) {
-      return location;
+    if (StringUtils.isBlank(postcode)) {
+      return null;
     }
-
-    List<Optional<PostcodeLocation>> locationResult =
-        postcodeLocationRepo.findByPostcode(apiUtilsService.removeBlankSpaces(postcode));
-
-    if (!locationResult.isEmpty() && locationResult.get(0).isPresent()) {
-      location = locationResult.get(0).get();
-    }
-
-    return location;
+    List<PostcodeLocation> postcodeMappings =
+        postcodeMappingUtil.getPostcodeMappings(
+            apiUtilsService.removeBlankSpacesIn(Stream.of(postcode).toList()));
+    Optional<PostcodeLocation> postcodeLocation = postcodeMappings.stream().findFirst();
+    return postcodeLocation.isPresent() ? postcodeLocation.get() : null;
   }
 
   /** {@inheritDoc} */
@@ -66,11 +59,6 @@ public class LocationService implements LocationServiceInterface {
 
   @Override
   public List<PostcodeLocation> getLocationsForPostcodes(List<String> postCodes) {
-    List<Optional<PostcodeLocation>> locationResults =
-        postcodeLocationRepo.findByPostcodeIn(apiUtilsService.removeBlankSpacesIn(postCodes));
-    return Optional.ofNullable(locationResults).orElseGet(Collections::emptyList).stream()
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .collect(Collectors.toList());
+    return postcodeMappingUtil.getPostcodeMappings(apiUtilsService.removeBlankSpacesIn(postCodes));
   }
 }

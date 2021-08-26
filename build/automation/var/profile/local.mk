@@ -37,3 +37,5 @@ COGNITO_JWT_VERIFICATION_URL := http://testJwtVerificationUrl
 COGNITO_USER_POOL_CLIENT_ID := testUserPoolClientId
 COGNITO_USER_POOL_CLIENT_SECRET := testUserPoolClientSecret
 COGNITO_USER_POOL_ID := testUserPoolId
+
+POSTCODE_MAPPING_SERVICE_URL := https://127.0.0.1:18084/api
