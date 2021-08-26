@@ -78,7 +78,8 @@ prepare-lambda-deployment: # Downloads the required libraries for the Lambda fun
 		-r requirements.txt \
 		-t $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy \
 		--upgrade \
-		--no-deps
+		--no-deps \
+		--system
 	cd $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
 	rm -rf ./bin
 	rm -rf ./*.dist-info
