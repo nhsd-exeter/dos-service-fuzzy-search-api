@@ -74,12 +74,20 @@ deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 
 prepare-lambda-deployment: # Downloads the required libraries for the Lambda functions
 	cd $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl
-	pip install \
-		-r requirements.txt \
-		-t $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy \
-		--upgrade \
-		--no-deps \
-		--system
+	if [ $(BUILD_ID) -eq 0 ]; then
+		pip install \
+			-r requirements.txt \
+			-t $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy \
+			--upgrade \
+			--no-deps
+	else
+		pip install \
+			-r requirements.txt \
+			-t $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy \
+			--upgrade \
+			--no-deps \
+			--system
+	fi
 	cd $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
 	rm -rf ./bin
 	rm -rf ./*.dist-info
