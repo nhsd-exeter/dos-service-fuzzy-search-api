@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,37 +26,48 @@ public class LocationServiceTest {
 
   @Mock private PostcodeMappingUtil postcodeMappingUtil;
 
+  private PostcodeLocation postcodeLocation = null;
+
+  @BeforeEach
+  public void initialise() {
+    postcodeLocation = new PostcodeLocation();
+    postcodeLocation.setPostCode("EX88PR");
+    postcodeLocation.setEasting(297717);
+    postcodeLocation.setNorthing(81762);
+  }
+
   @Test
   public void getLocationForNullPostcode() {
-
     PostcodeLocation location = locationService.getLocationForPostcode(null);
-
     assertNull(location);
   }
 
   @Test
-  public void getLocationForValidPostcode() {
+  public void getPostcodeMappingLocationForValidPostcode() {
 
-    String postcode = "EX8 5SE";
-    String sanitisedPostcode = "EX85SE";
-
-    PostcodeLocation location = new PostcodeLocation();
-    location.setPostCode(sanitisedPostcode);
+    String postcode = "EX88PR";
     List<PostcodeLocation> listLocations = new ArrayList<>();
-    listLocations.add(location);
-
+    listLocations.add(postcodeLocation);
     when(postcodeMappingUtil.getPostcodeMappings(anyList())).thenReturn(listLocations);
-
     PostcodeLocation returnedLocation = locationService.getLocationForPostcode(postcode);
+    assertEquals(postcode, returnedLocation.getPostCode());
+    assertEquals(297717, returnedLocation.getEasting());
+    assertEquals(81762, returnedLocation.getNorthing());
+  }
 
-    assertEquals(sanitisedPostcode, returnedLocation.getPostCode());
+  @Test
+  public void getLocationForValidPostcode() {
+    String postcode = "EX88PR";
+    List<PostcodeLocation> listLocations = new ArrayList<>();
+    listLocations.add(postcodeLocation);
+    when(postcodeMappingUtil.getPostcodeMappings(anyList())).thenReturn(listLocations);
+    PostcodeLocation returnedLocation = locationService.getLocationForPostcode(postcode);
+    assertEquals(postcode, returnedLocation.getPostCode());
   }
 
   @Test
   public void distanceWithNullSourceAndDestination() {
-
     Double distanceReturned = locationService.distanceBetween(null, null);
-
     assertNull(distanceReturned);
   }
 
