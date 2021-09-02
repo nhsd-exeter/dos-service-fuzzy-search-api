@@ -4,10 +4,6 @@ spring:
     rest:
       uris: elasticsearch.sfs.local:9200
 
-dynamo:
-  config:
-    endpoint: http://host.docker.internal:8000/
-
 cognito:
   userPool.clientId: testUserPoolClientId
   userPool.id: ${COGNITO_USER_POOL_ID}

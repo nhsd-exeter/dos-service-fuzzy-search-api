@@ -22,10 +22,8 @@ services:
       ADDRESS_PRIORITY: $ADDRESS_PRIORITY
       POSTCODE_PRIORITY: $POSTCODE_PRIORITY
       PUBLIC_NAME_PRIORITY: $NAME_PUBLIC_PRIORITY
-      POSTCODE_LOCATION_DYNAMO_URL: $POSTCODE_LOCATION_DYNAMO_URL
       AWS_ACCESS_KEY_ID: dummy
       AWS_SECRET_ACCESS_KEY: dummy
-      DYNAMODB_POSTCODE_LOC_MAP_TABLE: $DYNAMODB_POSTCODE_LOC_MAP_TABLE
       COGNITO_USER_POOL_CLIENT_ID: $COGNITO_USER_POOL_CLIENT_ID
       COGNITO_USER_POOL_CLIENT_SECRET: $COGNITO_USER_POOL_CLIENT_SECRET
       COGNITO_USER_POOL_ID: $COGNITO_USER_POOL_ID
@@ -79,21 +77,6 @@ services:
   #     default:
   #       aliases:
   #         - db-dos.sfs.local
-  dynamodb-local:
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal"
-    image: "amazon/dynamodb-local:latest"
-    container_name: dynamodb-local
-    environment:
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
-    ports:
-      - "8000:8000"
-    volumes:
-      - "/home/dynamodblocal"
-    working_dir: /home/dynamodblocal
-    networks:
-      default:
-        aliases:
-          - dynamo.sfs.local
 
 networks:
   default:

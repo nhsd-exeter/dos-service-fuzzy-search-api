@@ -188,13 +188,6 @@ pipeline-on-success:
 
 pipeline-on-failure:
 	echo TODO: $(@)
-# --------------------------------------
-local-dynamodb-scripts:
-	cd $(PROJECT_DIR)data/dynamo
-	chmod +x *.sh
-	./00-postcode-ccg-location-table.sh > /dev/null
-	./01-postcode-ccg-location-data.sh
-# ==============================================================================
 
 .SILENT: \
 	derive-build-tag
