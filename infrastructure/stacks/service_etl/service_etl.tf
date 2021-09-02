@@ -37,7 +37,7 @@ resource "aws_lambda_function" "service_etl_lambda" {
 }
 
 resource "aws_security_group" "service_etl_security_group" {
-  name        = "uec-sf-${var.profile}-dos-replica-etl_sg"
+  name        = "uec-sf-${var.profile}-service-etl_sg"
   description = "Allows outbound traffic from ETL lambda"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
 

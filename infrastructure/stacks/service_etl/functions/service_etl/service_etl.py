@@ -8,6 +8,7 @@ import os
 import json
 from requests_aws4auth import AWS4Auth
 from elasticsearch import Elasticsearch, RequestsHttpConnection, helpers
+import time
 
 USR = os.environ.get("USR")
 SOURCE_DB = os.environ.get("SOURCE_DB")
@@ -19,6 +20,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 ES_DOMAIN_ENDPOINT = os.environ.get("ES_DOMAIN_ENDPOINT")
 BATCH_SIZE = 100000
 ES_INDEX = "service"
+TIMESTAMP_VERSION = time.time()
 
 
 
@@ -168,7 +170,8 @@ def build_insert_dict(records, doc_list):
             "referral_instructions": row[17],
             "ods_code": row[18],
             "is_national": row[19],
-            "updated": row[20]
+            "updated": row[20],
+            "timestamp_version": TIMESTAMP_VERSION
         }
         doc_list.append(document)
     return doc_list
@@ -202,14 +205,34 @@ def connect_to_elastic_search():
         print("Unable to connect to ElasticSearch due to {}".format(e))
 
 
-def insert_records_to_elasticsearch(doc_list):
+def remove_deleted_services(es):
+    query_string = {"query": {"bool": {"must_not": {"term": {"timestamp_version": TIMESTAMP_VERSION}}}}}
+    results = helpers.scan(es,
+                    query=query_string,  # same as the search() body parameter
+                    index=ES_INDEX,
+                    doc_type="_doc",
+                    _source=False,
+                    track_scores=False,
+                    scroll='5m')
+    bulk_deletes = []
+    for result in results:
+        result['_op_type'] = 'delete'
+        bulk_deletes.append(result)
 
+    resp = helpers.bulk(es, bulk_deletes)
+    return resp
+
+
+def send_dos_changes_to_elasticsearch(doc_list):
     es = connect_to_elastic_search()
     print("size of import: " + str(len(doc_list)))
     try:
         print("Inserting into ES...")
         resp = helpers.bulk(es, doc_list, index = ES_INDEX, doc_type = "_doc")
         print("Insert complete")
+        print("starting to remove old services")
+        delete_resp = remove_deleted_services(es)
+        print(delete_resp)
         return resp
     except Exception as e:
         print("Unable to insert records due to {}".format(e))
@@ -219,5 +242,5 @@ def lambda_handler(event, context):
 
     print("Starting DoS ETL")
     records = extract_data_from_dos()
-    resp = insert_records_to_elasticsearch(records)
+    resp = send_dos_changes_to_elasticsearch(records)
     return resp

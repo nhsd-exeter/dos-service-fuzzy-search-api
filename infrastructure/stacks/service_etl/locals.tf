@@ -1,6 +1,6 @@
 locals {
 
-  service_etl_function_name = "uec-sf-${var.profile}-dos-replica-etl"
+  service_etl_function_name = "uec-sf-${var.profile}-service-etl"
   service_etl_description   = "Service Finder function to extract data out of the DoS Read Replica and insert it into the elasticsearch datastore. Runs every 5 mins"
   service_etl_runtime       = "python3.8"
   //This is set to 3 mins and 59 seconds as the timer is set to run every 4 mins so it will timeout before the next job starts
@@ -22,14 +22,14 @@ locals {
   es_domain_endpoint          = data.aws_elasticsearch_domain.elasticsearch.endpoint
   es_domain_security_group_id = data.aws_security_group.elasticsearch_security_group.id
 
-  service_etl_iam_name = "uec-sf-${var.profile}-dos-replica-etl-lambda"
+  service_etl_iam_name = "uec-sf-${var.profile}-service-etl-lambda"
 
-  service_etl_policy_name = "uec-sf-${var.profile}-dos-replica-etl"
+  service_etl_policy_name = "uec-sf-${var.profile}-service-etl"
 
   rds_data_read_only_access_policy_arn = "arn:aws:iam::aws:policy/AmazonRDSReadOnlyAccess"
 
-  service_etl_cloudwatch_event_name            = "service-finder-${var.profile}-dos-replica-etl-rule"
-  service_etl_cloudwatch_event_description     = "Timer to run the dos-replica-etl every 4 minutes"
+  service_etl_cloudwatch_event_name            = "service-finder-${var.profile}-service-etl-rule"
+  service_etl_cloudwatch_event_description     = "Timer to run the service-etl every 4 minutes"
   service_etl_cloudwatch_event_cron_expression = "cron(0/4 * * * ? *)"
   service_etl_cloudwatch_event_target          = "lambda"
   service_etl_cloudwatch_event_statement       = "AllowExecutionFromCloudWatch"
