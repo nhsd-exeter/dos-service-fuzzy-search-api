@@ -1,7 +1,5 @@
 # This file is required for running the API via the make commands
 spring:
-  profiles:
-    active: local
   elasticsearch:
     rest:
       uris: ${ELASTICSEARCH_URL}
@@ -11,6 +9,9 @@ spring:
 dynamo:
   config:
     region: eu-west-2
+    endpoint: ${POSTCODE_LOCATION_DYNAMO_URL}
+  table:
+    name: ${DYNAMODB_POSTCODE_LOC_MAP_TABLE}
 
 server:
   port: ${SERVER_PORT}
@@ -40,15 +41,12 @@ configuration:
     postcode_priority: ${POSTCODE_PRIORITY}
     public_name_priority: ${PUBLIC_NAME_PRIORITY}
 
-# cognito:
-#   userPool.clientId: ${COGNITO_USER_POOL_CLIENT_ID}
-#   userPool.id: ${COGNITO_USER_POOL_ID}
-#   userPool.clientSecret: ${COGNITO_USER_POOL_CLIENT_SECRET}
 cognito:
-  userPool.clientId: testUserPoolClientId
-  userPool.id: testUserPoolId
-  userPool.clientSecret: testUserPoolClientSecret
+  userPool.clientId: ${COGNITO_USER_POOL_CLIENT_ID}
+  userPool.id: ${COGNITO_USER_POOL_ID}
+  userPool.clientSecret: ${COGNITO_USER_POOL_CLIENT_SECRET}
+
 postcode:
   mapping:
-    url: https://127.0.0.1:18084/api
+    url: ${POSTCODE_MAPPING_SERVICE_URL}
     uri: /ccg
