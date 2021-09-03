@@ -6,13 +6,6 @@ spring:
       AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
 
-dynamo:
-  config:
-    region: eu-west-2
-    endpoint: ${POSTCODE_LOCATION_DYNAMO_URL}
-  table:
-    name: ${DYNAMODB_POSTCODE_LOC_MAP_TABLE}
-
 server:
   port: ${SERVER_PORT}
   ssl:
