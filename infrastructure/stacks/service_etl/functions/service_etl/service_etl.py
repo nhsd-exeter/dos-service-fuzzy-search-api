@@ -245,7 +245,7 @@ def send_dos_changes_to_elasticsearch(doc_list):
 
 # This is the entry point for the Lambda function
 def lambda_handler(event, context):
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     logger.info("Starting Service ETL")
     records = extract_data_from_dos()
     resp = send_dos_changes_to_elasticsearch(records)
