@@ -56,6 +56,8 @@ TF_VAR_es_snapshot_bucket := $(TF_VAR_service_prefix)-elastic-search-snapshots
 TF_VAR_es_snapshot_role := $(TF_VAR_service_prefix)-elasticsearch-snapshot
 TF_VAR_es_domain_name := sfs-$(PROFILE)
 
+TF_VAR_service_etl_sns_email := service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si.slack.com
+
 # Service Data files
 SERVICE_DATA_FILE := create_all_services_dev.sh
 

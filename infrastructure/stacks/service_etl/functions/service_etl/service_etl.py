@@ -9,6 +9,10 @@ import json
 from requests_aws4auth import AWS4Auth
 from elasticsearch import Elasticsearch, RequestsHttpConnection, helpers
 import time
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger=logging.getLogger(__name__)
 
 USR = os.environ.get("USR")
 SOURCE_DB = os.environ.get("SOURCE_DB")
@@ -36,7 +40,7 @@ def get_secret():
     try:
         get_secret_value_response = client.get_secret_value(SecretId=secret_name)
     except ClientError as e:
-            print("Unable to retrieve secret due to {}".format(e))
+            logger.error("Unable to retrieve secret due to {}".format(e))
             raise e
     else:
         # Decrypts secret using the associated KMS CMK.
@@ -60,7 +64,7 @@ def connect():
         )
         return conn
     except Exception as e:
-        print("Database connection failed due to {}".format(e))
+        logger.error("Database connection failed due to {}".format(e))
 
 
 # Method to get cursor from db
@@ -71,7 +75,7 @@ def getCursor(conn):
         cur.arraysize = BATCH_SIZE
         return cur
     except Exception as e:
-        print("unable to retrieve cursor due to {}".format(e))
+        logger.error("unable to retrieve cursor due to {}".format(e))
         conn.close()
 
 
@@ -117,15 +121,15 @@ def extract_data_from_dos():
                             s.typeid = t.id
                         ) group by s.id, t.name, c.color"""
 
-    print("Open connection")
+    logger.debug("Open connection")
     conn = connect()
-    print("Connection opened")
+    logger.debug("Connection opened")
     cur = getCursor(conn)
-    print("got cursor")
+    logger.debug("got cursor")
     try:
-        print("execute records")
+        logger.debug("execute records")
         cur.execute(selectStatement)
-        print("records executed")
+        logger.debug("records executed")
         doc_list = []
         while True:
             records = cur.fetchmany()
@@ -134,18 +138,18 @@ def extract_data_from_dos():
 
             doc_list = build_insert_dict(records, doc_list)
         count = len(doc_list)
-        print("Successfully fetched " + str(count) + " records")
+        logger.debug("Successfully fetched " + str(count) + " records")
         return doc_list
     except Exception as e:
-        print("DoS Read Replica ETL extraction failed due to {}".format(e))
+        logger.error("DoS Read Replica ETL extraction failed due to {}".format(e))
     finally:
         cur.close()
         conn.close()
-        print("PostgreSQL connection is closed")
+        logger.debug("PostgreSQL connection is closed")
 
 
 def build_insert_dict(records, doc_list):
-    print("adding " + str(len(records)) + " records to doc_list")
+    logger.debug("adding " + str(len(records)) + " records to doc_list")
 
     for row in records:
         document = {
@@ -179,16 +183,16 @@ def build_insert_dict(records, doc_list):
 
 def connect_to_elastic_search():
     try:
-        print("ES DOMAIN: " + ES_DOMAIN_ENDPOINT)
+        logger.debug("ES DOMAIN: " + ES_DOMAIN_ENDPOINT)
         host = ES_DOMAIN_ENDPOINT
         region = REGION
 
-        print("getting credentials")
+        logger.debug("getting credentials")
         service = 'es'
         credentials = boto3.Session().get_credentials()
         awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, service, session_token=credentials.token)
 
-        print("connecting to es")
+        logger.debug("connecting to es")
         es = Elasticsearch(
             hosts = [{'host': host, 'port': 443}],
             http_auth = awsauth,
@@ -196,13 +200,13 @@ def connect_to_elastic_search():
             verify_certs = True,
             connection_class = RequestsHttpConnection
         )
-        print(es.info())
+        logger.debug(es.info())
         if not es.ping():
             raise ValueError("Connection failed")
-        print("connected to es")
+        logger.debug("connected to es")
         return es;
     except Exception as e:
-        print("Unable to connect to ElasticSearch due to {}".format(e))
+        logger.error("Unable to connect to ElasticSearch due to {}".format(e))
 
 
 def remove_deleted_services(es):
@@ -225,22 +229,25 @@ def remove_deleted_services(es):
 
 def send_dos_changes_to_elasticsearch(doc_list):
     es = connect_to_elastic_search()
-    print("size of import: " + str(len(doc_list)))
+    logger.debug("size of import: " + str(len(doc_list)))
     try:
-        print("Inserting into ES...")
+        logger.debug("Inserting into ES...")
         resp = helpers.bulk(es, doc_list, index = ES_INDEX, doc_type = "_doc")
-        print("Insert complete")
-        print("starting to remove old services")
+        logger.info("Insert complete")
+        logger.info(resp)
+        logger.debug("starting to remove old services")
         delete_resp = remove_deleted_services(es)
-        print(delete_resp)
+        logger.info("removed old services:")
+        logger.info(delete_resp)
         return resp
     except Exception as e:
-        print("Unable to insert records due to {}".format(e))
+        logger.error("Unable to insert records due to {}".format(e))
 
 # This is the entry point for the Lambda function
 def lambda_handler(event, context):
-
-    print("Starting DoS ETL")
+    logger.setLevel(logging.DEBUG)
+    logger.info("Starting Service ETL")
     records = extract_data_from_dos()
     resp = send_dos_changes_to_elasticsearch(records)
+    logger.info("completed Service ETL")
     return resp
