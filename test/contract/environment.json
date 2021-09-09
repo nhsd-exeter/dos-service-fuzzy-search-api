@@ -1,0 +1,29 @@
+{
+	"id": "bd51d3c3-569b-4cf7-bd20-1997806d1f49",
+	"name": "environmentVar",
+	"values": [
+		{
+			"key": "host",
+			"value": "localhost",
+			"enabled": true
+		},
+		{
+			"key": "adminUser",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2021-09-09T16:03:40.624Z",
+	"_postman_exported_using": "Postman/8.12.1"
+}
