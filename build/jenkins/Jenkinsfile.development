@@ -65,7 +65,7 @@ pipeline {
     stage('Run Contract Tests') {
       steps {
         script {
-          sh "make run"
+          sh "cd test/contract && make run"
         }
       }
     }
