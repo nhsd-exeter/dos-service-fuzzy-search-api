@@ -6,9 +6,9 @@ locals {
   postcode_store_arn  = data.aws_dynamodb_table.postcode_store.arn
 
   standard_tags = {
-    "Programme"   = var.programme
-    "Service"     = var.service_tag
-    "Product"     = var.project_tag
+    "Programme"   = "uec"
+    "Service"     = "service-finder"
+    "Product"     = "service-finder"
     "Environment" = var.profile
   }
 
