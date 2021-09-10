@@ -50,8 +50,8 @@ TF_VAR_service_prefix_short := sfs-$(PROFILE)
 
 TF_VAR_es_zone_awareness_enabled := false
 TF_VAR_es_availability_zone_count := null
-TF_VAR_es_instance_count := 1
-TF_VAR_es_instance_type := t3.small.elasticsearch
+TF_VAR_es_instance_count := 2
+TF_VAR_es_instance_type := m4.large.elasticsearch
 TF_VAR_es_snapshot_bucket := $(TF_VAR_service_prefix)-elastic-search-snapshots
 TF_VAR_es_snapshot_role := $(TF_VAR_service_prefix)-elasticsearch-snapshot
 TF_VAR_es_domain_name := sfs-$(PROFILE)
