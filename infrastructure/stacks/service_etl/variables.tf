@@ -30,3 +30,9 @@ variable "service_etl_db_user" { description = "The dos read replica user name" 
 variable "service_etl_source_db" { description = "The dos read replica source database" }
 
 variable "core_dos_python_libs" { description = "core dos python libs for accessing dos databases" }
+
+variable "service_etl_sns_email" { description = "email desitination for critical failures of etl process" }
+
+variable "service_etl_sns_logging_level" { description = "Logging level for service_etl_sns lambda" }
+
+variable "service_etl_logging_level" { description = "Logging level for service_etl lambda" }

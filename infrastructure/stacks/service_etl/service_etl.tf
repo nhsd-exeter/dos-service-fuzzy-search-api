@@ -21,6 +21,7 @@ resource "aws_lambda_function" "service_etl_lambda" {
       SECRET_NAME        = local.service_etl_db_secret_name
       SECRET_KEY         = local.service_etl_db_secret_key
       ES_DOMAIN_ENDPOINT = local.es_domain_endpoint
+      LOGGING_LEVEL      = local.service_etl_logging_level
     }
   }
   vpc_config {
