@@ -70,7 +70,8 @@ resource "aws_lambda_function" "service_etl_sns_lambda" {
   tags             = local.standard_tags
   environment {
     variables = {
-      snsARN = aws_sns_topic.service_etl_sns_topic.arn
+      snsARN        = aws_sns_topic.service_etl_sns_topic.arn
+      LOGGING_LEVEL = local.service_etl_sns_logging_level
     }
   }
   vpc_config {

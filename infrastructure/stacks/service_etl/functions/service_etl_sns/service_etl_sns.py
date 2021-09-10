@@ -14,6 +14,7 @@
 # Author: Sudhanshu Malhotra
 
 import base64
+from infrastructure.stacks.service_etl.functions.service_etl.service_etl import LOGGING_LEVEL
 import boto3
 import gzip
 import json
@@ -22,12 +23,14 @@ import os
 
 from botocore.exceptions import ClientError
 
-logging.basicConfig(level=logging.INFO)
+LOGGING_LEVEL = os.environ.get("LOGGING_LEVEL")
+
+logging.basicConfig(level=LOGGING_LEVEL)
 logger = logging.getLogger(__name__)
 
 
 def logpayload(event):
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(LOGGING_LEVEL)
     logger.debug(event['awslogs']['data'])
     compressed_payload = base64.b64decode(event['awslogs']['data'])
     uncompressed_payload = gzip.decompress(compressed_payload)
@@ -48,7 +51,7 @@ def error_details(payload):
     logger.debug(log_events)
     for log_event in log_events:
         error_msg += log_event['message']
-    logger.debug('Message: %s' % error_msg.split("\n"))
+    logger.info('Message: %s' % error_msg.split("\n"))
     return loggroup, logstream, error_msg, lambda_func_name
 
 

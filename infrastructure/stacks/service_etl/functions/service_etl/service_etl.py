@@ -11,9 +11,6 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection, helpers
 import time
 import logging
 
-logging.basicConfig(level=logging.INFO)
-logger=logging.getLogger(__name__)
-
 USR = os.environ.get("USR")
 SOURCE_DB = os.environ.get("SOURCE_DB")
 ENDPOINT = os.environ.get("ENDPOINT").split(":")[0]
@@ -25,8 +22,11 @@ ES_DOMAIN_ENDPOINT = os.environ.get("ES_DOMAIN_ENDPOINT")
 BATCH_SIZE = 100000
 ES_INDEX = "service"
 TIMESTAMP_VERSION = time.time()
+LOGGING_LEVEL = os.environ.get("LOGGING_LEVEL")
 
 
+logging.basicConfig(level=LOGGING_LEVEL)
+logger=logging.getLogger(__name__)
 
 def get_secret():
 
@@ -245,7 +245,7 @@ def send_dos_changes_to_elasticsearch(doc_list):
 
 # This is the entry point for the Lambda function
 def lambda_handler(event, context):
-    logger.setLevel(logging.INFO)
+    logger.setLevel(LOGGING_LEVEL)
     logger.info("Starting Service ETL")
     records = extract_data_from_dos()
     resp = send_dos_changes_to_elasticsearch(records)
