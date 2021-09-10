@@ -66,7 +66,7 @@ TF_VAR_service_etl_sns_email := service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si
 SERVICE_DATA_FILE := create_all_services_dev.sh
 
 #Cognito user pool details
-COGNITO_USER_POOL = $(TF_VAR_service_prefix)-pool
+COGNITO_USER_POOL = service-finder-api-authentication-pool-dev
 COGNITO_USER_POOL_CLIENT_SECRET := $(or $(COGNITO_USER_POOL_CLIENT_SECRET), )
 COGNITO_USER_POOL_CLIENT_ID := $(or $(COGNITO_USER_POOL_CLIENT_ID), )
 COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
