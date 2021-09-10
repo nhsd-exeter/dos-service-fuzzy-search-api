@@ -65,7 +65,6 @@ pipeline {
     stage('Run Contract Tests') {
       steps {
         script {
-          sh "make start"
           sh "newman run test/contract/FuzzySearchApiContractTests_collection.json -e test/contract/environment.json --insecure"
         }
       }
@@ -73,7 +72,6 @@ pipeline {
     stage('Push API Image to ECR') {
       steps {
         script {
-          sh "make stop"
           sh "make push VERSION=${env.PROJECT_BUILD_TAG}"
         }
       }
