@@ -65,7 +65,8 @@ pipeline {
     stage('Run Contract Tests') {
       steps {
         script {
-          echo "to do"
+          sh "make start"
+          sh "newman run test/contract/FuzzySearchApiContractTests_collection.json -e test/contract/environment.json --insecure"
         }
       }
     }
@@ -86,6 +87,7 @@ pipeline {
   }
 
   post {
+    sh "make stop"
     success { sh "make pipeline-on-success" }
     failure { sh "make pipeline-on-failure" }
   }
