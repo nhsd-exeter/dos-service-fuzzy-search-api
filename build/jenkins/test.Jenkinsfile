@@ -40,7 +40,7 @@ pipeline {
         }
       }
     }
-
+    */
     stage('Derive Build Tag') {
       steps {
         script {
@@ -48,7 +48,6 @@ pipeline {
         }
       }
     }
-    */
     stage('Build API') {
       steps {
         script {
@@ -74,7 +73,7 @@ pipeline {
         }
       }
     }
-    stage('End') {
+    stage('Final') {
       steps {
         script {
           sh "make stop"
