@@ -1,9 +1,9 @@
 locals {
 
   standard_tags = {
-    "Programme"   = var.programme
-    "Service"     = var.service_tag
-    "Product"     = var.project_tag
+    "Programme"   = "uec"
+    "Service"     = "service-finder"
+    "Product"     = "service-finder"
     "Environment" = var.profile
   }
 

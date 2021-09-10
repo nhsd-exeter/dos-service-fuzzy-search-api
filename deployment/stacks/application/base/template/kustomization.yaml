@@ -3,8 +3,8 @@ namespace: K8S_APP_NAMESPACE_TO_REPLACE
 commonLabels:
   env: PROFILE_TO_REPLACE
 
-#commonAnnotations:
-#  splunk.com/index: eks_logs_service_search_nonprod
+commonAnnotations:
+  splunk.com/index: SPLUNK_INDEX_TO_REPLACE
 
 resources:
   - namespace.yaml

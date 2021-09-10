@@ -12,6 +12,8 @@ API_IMAGE_TAG := v0.0.3
 CERTIFICATE_DOMAIN := localhost
 ALLOWED_ORIGINS := *
 
+SPLUNK_INDEX := eks_logs_service_finder_nonprod
+
 APP_URL_PREFIX := $(K8S_APP_NAMESPACE)-$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)
 
 # Datastore URLs
