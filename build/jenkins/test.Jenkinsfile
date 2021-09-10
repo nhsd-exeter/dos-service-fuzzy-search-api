@@ -32,6 +32,7 @@ pipeline {
         }
       }
     }
+    /*
     stage("Plan Infrastructure") {
       steps {
         script {
@@ -39,6 +40,7 @@ pipeline {
         }
       }
     }
+
     stage('Derive Build Tag') {
       steps {
         script {
@@ -46,10 +48,11 @@ pipeline {
         }
       }
     }
+    */
     stage('Build API') {
       steps {
         script {
-          sh "make build VERSION=${env.PROJECT_BUILD_TAG}"
+          sh "make build"
         }
       }
     }
@@ -71,22 +74,14 @@ pipeline {
         }
       }
     }
-    stage('Push API Image to ECR') {
+    stage('End') {
       steps {
         script {
-          sh "make push VERSION=${env.PROJECT_BUILD_TAG}"
-        }
-      }
-    }
-    stage('Image Build Tag'){
-      steps{
-        script{
-          sh "echo 'Image Build Tag: '${env.PROJECT_BUILD_TAG}"
+          sh "make stop"
         }
       }
     }
   }
-
   post {
     success { sh "make pipeline-on-success" }
     failure { sh "make pipeline-on-failure" }
