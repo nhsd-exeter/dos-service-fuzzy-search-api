@@ -73,6 +73,7 @@ pipeline {
     stage('Push API Image to ECR') {
       steps {
         script {
+          sh "make stop"
           sh "make push VERSION=${env.PROJECT_BUILD_TAG}"
         }
       }
@@ -87,7 +88,6 @@ pipeline {
   }
 
   post {
-    sh "make stop"
     success { sh "make pipeline-on-success" }
     failure { sh "make pipeline-on-failure" }
   }
