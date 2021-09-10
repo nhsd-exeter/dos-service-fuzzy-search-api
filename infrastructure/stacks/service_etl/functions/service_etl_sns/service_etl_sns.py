@@ -14,7 +14,6 @@
 # Author: Sudhanshu Malhotra
 
 import base64
-from infrastructure.stacks.service_etl.functions.service_etl.service_etl import LOGGING_LEVEL
 import boto3
 import gzip
 import json
