@@ -50,7 +50,6 @@ pipeline {
       steps {
         script {
           sh "make build VERSION=${env.PROJECT_BUILD_TAG}"
-          sh "make start"
         }
       }
     }
@@ -66,8 +65,6 @@ pipeline {
     stage('Run Contract Tests') {
       steps {
         script {
-          sleep 60
-          sh "make start"
           sh "make run"
         }
       }
