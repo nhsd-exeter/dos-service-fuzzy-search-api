@@ -50,6 +50,7 @@ pipeline {
       steps {
         script {
           sh "make build VERSION=${env.PROJECT_BUILD_TAG}"
+          sh "make stop"
         }
       }
     }
@@ -65,7 +66,7 @@ pipeline {
     stage('Run Contract Tests') {
       steps {
         script {
-          sh "newman run test/contract/FuzzySearchApiContractTests_collection.json -e test/contract/environment.json --insecure"
+          sh "cd test/contract && newman run FuzzySearchApiContractTests_collection.json -e environment.json --insecure"
         }
       }
     }
