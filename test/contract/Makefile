@@ -17,7 +17,6 @@ stop: ### Stop the contaract test project
 run: ### Run Postman test suite against the Wiremock mappings
 	make docker-run-postman \
 		DIR="$(APPLICATION_TEST_DIR)/contract" \
-		CMD="cd test/contract" \
 		CMD=" \
 			run FuzzySearchApiContractTests_collection.json -e environment.json --insecure \
 		"
