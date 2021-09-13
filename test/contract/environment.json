@@ -4,7 +4,7 @@
 	"values": [
 		{
 			"key": "host",
-			"value": "localhost",
+			"value": "fuzzysearch.sfs.local",
 			"enabled": true
 		},
 		{
