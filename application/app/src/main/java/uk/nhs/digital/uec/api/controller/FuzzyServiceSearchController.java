@@ -51,7 +51,7 @@ public class FuzzyServiceSearchController {
    */
   @GetMapping("services/byfuzzysearch")
   @CrossOrigin(origins = "*")
-  @PreAuthorize("hasAnyRole('FUZZY')")
+  @PreAuthorize("hasAnyRole('FUZZY_API_ACCESS')")
   public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
       @RequestParam(name = "search_term", required = false) List<String> searchCriteria,
       @RequestParam(name = "search_location", required = false) String searchPostcode,
