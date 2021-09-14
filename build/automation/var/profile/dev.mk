@@ -40,6 +40,7 @@ ADDRESS_PRIORITY := 2
 POSTCODE_PRIORITY := 0
 NAME_PUBLIC_PRIORITY := 4
 
+
 # ==============================================================================
 # Infrastructure variables
 
@@ -59,8 +60,18 @@ TF_VAR_es_snapshot_role := $(TF_VAR_service_prefix)-elasticsearch-snapshot
 TF_VAR_es_domain_name := sfs-$(PROFILE)
 TF_VAR_service_etl_logging_level := INFO
 TF_VAR_service_etl_sns_logging_level := INFO
-
 TF_VAR_service_etl_sns_email := service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si.slack.com
+
+# See : https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html
+# Config for the cron job trigger for the service etl set to be:
+# 6am Monday - Friday (This is because we dont want the service to be running every 4 minutes in non prod)
+# For prod we need to set cron(0/4 * * * ? *) (Every 4 minutes)
+TF_VAR_service_etl_cron_timer_minutes := 0
+TF_VAR_service_etl_cron_timer_hours := 6
+TF_VAR_service_etl_cron_timer_day_of_month := ?
+TF_VAR_service_etl_cron_timer_month := *
+TF_VAR_service_etl_cron_timer_day_of_week := MON-FRI
+TF_VAR_service_etl_cron_timer_year := *
 
 # Service Data files
 SERVICE_DATA_FILE := create_all_services_dev.sh
