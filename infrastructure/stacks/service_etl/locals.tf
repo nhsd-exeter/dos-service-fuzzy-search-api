@@ -31,7 +31,7 @@ locals {
 
   service_etl_cloudwatch_event_name            = "service-finder-${var.profile}-service-etl-rule"
   service_etl_cloudwatch_event_description     = "Timer to run the service-etl every 4 minutes"
-  service_etl_cloudwatch_event_cron_expression = "cron(0/4 * * * ? *)"
+  service_etl_cloudwatch_event_cron_expression = "cron(${var.service_etl_cron_timer_minutes} ${var.service_etl_cron_timer_hours} ${var.service_etl_cron_timer_day_of_month} ${var.service_etl_cron_timer_month} ${var.service_etl_cron_timer_day_of_week} ${var.service_etl_cron_timer_year})"
   service_etl_cloudwatch_event_target          = "lambda"
   service_etl_cloudwatch_event_statement       = "AllowExecutionFromCloudWatch"
   service_etl_cloudwatch_event_action          = "lambda:InvokeFunction"
