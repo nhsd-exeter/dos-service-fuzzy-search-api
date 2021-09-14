@@ -41,12 +41,7 @@ configuration:
     postcode_priority: ${POSTCODE_PRIORITY}
     public_name_priority: ${PUBLIC_NAME_PRIORITY}
 
-cognito:
-  userPool.clientId: ${COGNITO_USER_POOL_CLIENT_ID}
-  userPool.id: ${COGNITO_USER_POOL_ID}
-  userPool.clientSecret: ${COGNITO_USER_POOL_CLIENT_SECRET}
-
 postcode:
   mapping:
-    url: ${POSTCODE_MAPPING_SERVICE_URL}
+    url: ${POSTCODE_MAPPING_SERVICE_URL
     uri: /search

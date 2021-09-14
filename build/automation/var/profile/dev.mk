@@ -22,6 +22,7 @@ ELASTICSEARCH_URL := https://vpc-sfs-dev-csfa7ah6cfpbllxcfqf6wmdcxi.eu-west-2.es
 API_SERVICE_SEARCH_ENDPOINT := https://$(APP_URL_PREFIX)-service-search.$(TF_VAR_platform_zone)/dosapi/dosservices/v0.0.1/services/byfuzzysearch
 
 SERVER_PORT := 8443
+AUTH_SERVER_PORT:= 8992
 VERSION := v0.0.3
 
 SERVICE_SEARCH_REPLICAS := 3

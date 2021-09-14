@@ -65,3 +65,34 @@ spec:
             memory: "1024Mi"
             cpu: "500m"
         imagePullPolicy: Always
+      - name: service-auth
+        image: AWS_ECR_TO_REPLACE/uec-dos-api/sfs/auth:API_IMAGE_TAG_TO_REPLACE
+        envFrom:
+        - configMapRef:
+            name: service-search-configmap
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 9025
+            scheme: HTTPS
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 9025
+            scheme: HTTPS
+          initialDelaySeconds: 120
+          failureThreshold: 3
+          periodSeconds: 5
+        ports:
+        - containerPort: 9025
+          protocol: TCP
+        resources:
+          requests:
+            memory: "0Mi"
+            cpu: "0m"
+          limits:
+            memory: "1024Mi"
+            cpu: "500m"
+        imagePullPolicy: Always

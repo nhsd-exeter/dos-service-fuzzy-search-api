@@ -8,9 +8,10 @@ cognito:
   userPool.clientId: testUserPoolClientId
   userPool.id: testUserPoolId
   userPool.clientSecret: testUserPoolClientSecret
+
 local:
   host: https://localhost
-  uri: authentication/login
+  uri: /authentication/login
   welcome:
     uri: /dosapi/dosservices/v0.0.1/home
 

@@ -8,6 +8,20 @@
 *.code-workspace
 !project.code-workspace
 
+*/.classpath
+*/.settings/
+*/.factorypath
+*/.project
+
+.classpath
+.settings/
+.factorypath
+.project
+
 .vscode/
 
 infrastructure/stacks/elasticsearch/errored.tfstate
+*/bin
+.settings
+*/target
+
