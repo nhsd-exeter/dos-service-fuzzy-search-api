@@ -1,6 +1,7 @@
 package uk.nhs.digital.uec.api.service;
 
 import java.util.List;
+import org.springframework.util.MultiValueMap;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 
 public interface LocationServiceInterface {
@@ -11,7 +12,8 @@ public interface LocationServiceInterface {
    * @param postcode postcode to retrieve the {@link PostcodeLocation} for.
    * @return {@link PostcodeLocation}
    */
-  PostcodeLocation getLocationForPostcode(final String postcode);
+  PostcodeLocation getLocationForPostcode(
+      final String postcode, MultiValueMap<String, String> headers);
 
   /**
    * Returns the point-to-point distance (in miles) between the source and destination locations.
@@ -27,5 +29,6 @@ public interface LocationServiceInterface {
    * @param postcodes postcodes to retrieve the {@link PostcodeLocation} for.
    * @return {@link List of PostcodeLocation
    */
-  List<PostcodeLocation> getLocationsForPostcodes(final List<String> postcodes);
+  List<PostcodeLocation> getLocationsForPostcodes(
+      final List<String> postcodes, MultiValueMap<String, String> headers);
 }

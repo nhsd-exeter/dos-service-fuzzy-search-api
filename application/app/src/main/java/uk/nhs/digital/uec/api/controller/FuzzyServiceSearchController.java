@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,7 +66,8 @@ public class FuzzyServiceSearchController {
       @RequestParam(name = "name_priority", required = false) Integer namePriority,
       @RequestParam(name = "address_priority", required = false) Integer addressPriority,
       @RequestParam(name = "postcode_priority", required = false) Integer postcodePriority,
-      @RequestParam(name = "public_name_priority", required = false) Integer publicNamePriority) {
+      @RequestParam(name = "public_name_priority", required = false) Integer publicNamePriority,
+      @RequestHeader MultiValueMap<String, String> headers) {
 
     utils.configureApiRequestParams(
         fuzzLevel,
@@ -97,7 +100,8 @@ public class FuzzyServiceSearchController {
       validationService.validateMinSearchCriteriaLength(searchCriteria);
 
       final List<DosService> dosServices =
-          fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchPostcode, searchCriteria);
+          fuzzyServiceSearchService.retrieveServicesByFuzzySearch(
+              searchPostcode, searchCriteria, headers);
       searchResultsResponse.setServices(dosServices);
       response.setSearchParameters(searchParamsResponse);
       response.setSearchResults(searchResultsResponse);

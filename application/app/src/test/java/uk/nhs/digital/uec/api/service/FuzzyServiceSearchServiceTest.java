@@ -23,7 +23,7 @@ import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
-import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
+import uk.nhs.digital.uec.api.service.impl.MockDosServicesUtil;
 
 @ExtendWith(SpringExtension.class)
 public class FuzzyServiceSearchServiceTest {
@@ -43,7 +43,7 @@ public class FuzzyServiceSearchServiceTest {
   @BeforeEach
   public void setup() {
     when(apiRequestParams.getMaxNumServicesToReturn()).thenReturn(maxNumServicesToReturn);
-    when(locationService.getLocationForPostcode(null)).thenReturn(null);
+    when(locationService.getLocationForPostcode(null, null)).thenReturn(null);
   }
 
   @Test
@@ -62,7 +62,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
 
     // Assert
     assertEquals(2, services.size());
@@ -81,7 +81,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
 
     // Assert
     assertEquals(0, services.size());
@@ -103,7 +103,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -126,7 +126,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -138,7 +138,7 @@ public class FuzzyServiceSearchServiceTest {
     List<String> searchCriteria = new ArrayList<>();
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
     // Assert
     assertEquals(0, services.size());
   }
@@ -157,16 +157,16 @@ public class FuzzyServiceSearchServiceTest {
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
     when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
-    when(locationService.getLocationForPostcode(any(String.class)))
+    when(locationService.getLocationForPostcode(any(String.class), any()))
         .thenReturn(new PostcodeLocation());
     when(locationService.distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class)))
         .thenReturn(5.0, 10.0);
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchLocation, searchCriteria);
-
-    verify(locationService).getLocationForPostcode(eq(searchLocation));
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(
+            searchLocation, searchCriteria, any());
+    verify(locationService).getLocationForPostcode(eq(searchLocation), any());
     verify(locationService, times(2))
         .distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class));
     assertEquals(2, services.size());
@@ -198,18 +198,19 @@ public class FuzzyServiceSearchServiceTest {
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
     when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
-    when(locationService.getLocationForPostcode(any(String.class)))
+    when(locationService.getLocationForPostcode(any(String.class), any()))
         .thenReturn(new PostcodeLocation());
-    when(locationService.getLocationsForPostcodes(anyList())).thenReturn(postcodesLocations);
+    when(locationService.getLocationsForPostcodes(anyList(), any())).thenReturn(postcodesLocations);
     when(apiUtilsService.removeBlankSpaces(anyString())).thenReturn("EX78PR");
     when(locationService.distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class)))
         .thenReturn(357.7);
 
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchLocation, searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(
+            searchLocation, searchCriteria, any());
 
-    verify(locationService).getLocationForPostcode(eq(searchLocation));
-    verify(locationService).getLocationsForPostcodes(eq(postCodes));
+    verify(locationService).getLocationForPostcode(eq(searchLocation), any());
+    verify(locationService).getLocationsForPostcodes(eq(postCodes), any());
     verify(locationService, times(2))
         .distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class));
     assertEquals(2, services.size());

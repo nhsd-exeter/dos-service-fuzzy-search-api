@@ -40,3 +40,7 @@ configuration:
     address_priority: 2
     postcode_priority: 1
     public_name_priority: 4
+cognito:
+  userPool.clientId: testUserPoolClientId
+  userPool.id: testUserPoolId
+  userPool.clientSecret: testUserPoolClientSecret
