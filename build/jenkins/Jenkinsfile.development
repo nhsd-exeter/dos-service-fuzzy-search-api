@@ -50,7 +50,13 @@ pipeline {
       steps {
         script {
           sh "make build VERSION=${env.PROJECT_BUILD_TAG}"
-          sh "make stop"
+        }
+      }
+    }
+    stage('Start services') {
+      steps {
+        script {
+          sh "make start"
         }
       }
     }
@@ -66,13 +72,14 @@ pipeline {
     stage('Run Contract Tests') {
       steps {
         script {
-          sh "cd test/contract && newman run FuzzySearchApiContractTests_collection.json -e environment.json --insecure"
+          sh "cd test/contract && make run"
         }
       }
     }
     stage('Push API Image to ECR') {
       steps {
         script {
+          sh "make stop"
           sh "make push VERSION=${env.PROJECT_BUILD_TAG}"
         }
       }
