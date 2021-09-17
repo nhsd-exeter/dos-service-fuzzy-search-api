@@ -68,7 +68,7 @@ public class FuzzySearchControllerTest {
     when(mockRequestParams.getFuzzLevel()).thenReturn(FUZZ_LEVEL);
     when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
     when(mockFuzzyServiceSearchService.retrieveServicesByFuzzySearch(
-            SEARCH_POSTCODE, searchCriteria))
+            SEARCH_POSTCODE, searchCriteria, null))
         .thenReturn(getDosServices());
 
     // Act
@@ -83,7 +83,8 @@ public class FuzzySearchControllerTest {
             NAME_PRIORITY,
             ADDRESS_PRIORITY,
             POSTCODE_PRIORITY,
-            PUBLIC_NAME_PRIORITY);
+            PUBLIC_NAME_PRIORITY,
+            null);
 
     // Assert
     final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.getBody();
@@ -92,7 +93,7 @@ public class FuzzySearchControllerTest {
     verify(mockValidationService, times(1)).validateSearchCriteria(searchCriteria);
     verify(mockValidationService, times(1)).validateMinSearchCriteriaLength(searchCriteria);
     verify(mockFuzzyServiceSearchService, times(1))
-        .retrieveServicesByFuzzySearch(SEARCH_POSTCODE, searchCriteria);
+        .retrieveServicesByFuzzySearch(SEARCH_POSTCODE, searchCriteria, null);
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
@@ -131,7 +132,8 @@ public class FuzzySearchControllerTest {
             NAME_PRIORITY,
             ADDRESS_PRIORITY,
             POSTCODE_PRIORITY,
-            PUBLIC_NAME_PRIORITY);
+            PUBLIC_NAME_PRIORITY,
+            null);
 
     // Assert
     final ApiValidationErrorResponse response =
@@ -139,7 +141,7 @@ public class FuzzySearchControllerTest {
 
     verify(mockValidationService, times(1)).validateSearchCriteria(searchCriteria);
     verify(mockFuzzyServiceSearchService, never())
-        .retrieveServicesByFuzzySearch(SEARCH_POSTCODE, searchCriteria);
+        .retrieveServicesByFuzzySearch(SEARCH_POSTCODE, searchCriteria, null);
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     assertEquals(VALIDATION_ERROR_CODE, response.getValidationCode());

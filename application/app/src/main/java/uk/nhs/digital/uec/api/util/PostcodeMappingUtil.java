@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
@@ -24,7 +25,8 @@ public class PostcodeMappingUtil {
   @Value("${postcode.mapping.uri}")
   private String psmUri;
 
-  public List<PostcodeLocation> getPostcodeMappings(List<String> postCodes) {
+  public List<PostcodeLocation> getPostcodeMappings(
+      List<String> postCodes, MultiValueMap<String, String> headers) {
     List<PostcodeLocation> postcodeMappingLocationList = null;
 
     try {
@@ -33,6 +35,7 @@ public class PostcodeMappingUtil {
           webClient
               .get()
               .uri(builder -> builder.path(psmUri).queryParam("postcodes", postCodes).build())
+              .headers(httpHeaders -> httpHeaders.putAll(headers))
               .retrieve()
               .bodyToFlux(PostcodeLocation.class)
               .collectList()
