@@ -57,7 +57,7 @@ pipeline {
       steps {
         script {
           sh "make stop"
-          sh "make start VERSION=VERSION=${env.PROJECT_BUILD_TAG}"
+          sh "make start VERSION=${env.PROJECT_BUILD_TAG}"
         }
       }
     }
