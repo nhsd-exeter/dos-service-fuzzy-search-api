@@ -3,6 +3,8 @@ package uk.nhs.digital.uec.api.authentication.localstub;
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.PASSWORD;
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.USERNAME;
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.COGNITO_GROUP;
+import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.ROLE_FUZZY;
+import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.ROLE_POSTCODE;
 
 import com.amazonaws.services.cognitoidp.AbstractAWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.AWSCognitoIdentityProviderException;
@@ -52,7 +54,8 @@ public class LocalAmazonCognitoIdentityClientStub extends AbstractAWSCognitoIden
   }
 
   private String generateAuthToken(String id, String issuer, String userName, long duration) {
-    Set<String> cognitoGroupNames = new HashSet<>(Arrays.asList(COGNITO_GROUP));
+    Set<String> cognitoGroupNames =
+        new HashSet<>(Arrays.asList(COGNITO_GROUP, ROLE_FUZZY, ROLE_POSTCODE));
     return new LocalJwtFactory().createToken(id, issuer, userName, duration, cognitoGroupNames);
   }
 }

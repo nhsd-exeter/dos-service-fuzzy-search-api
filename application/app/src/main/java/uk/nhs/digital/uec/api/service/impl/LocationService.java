@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.LocationServiceInterface;
@@ -21,13 +22,14 @@ public class LocationService implements LocationServiceInterface {
 
   /** {@inheritDoc} */
   @Override
-  public PostcodeLocation getLocationForPostcode(final String postcode) {
+  public PostcodeLocation getLocationForPostcode(
+      final String postcode, MultiValueMap<String, String> headers) {
     if (StringUtils.isBlank(postcode)) {
       return null;
     }
     List<PostcodeLocation> postcodeMappings =
         postcodeMappingUtil.getPostcodeMappings(
-            apiUtilsService.removeBlankSpacesIn(Stream.of(postcode).toList()));
+            apiUtilsService.removeBlankSpacesIn(Stream.of(postcode).toList()), headers);
     Optional<PostcodeLocation> postcodeLocation = postcodeMappings.stream().findFirst();
     return postcodeLocation.isPresent() ? postcodeLocation.get() : null;
   }
@@ -58,7 +60,9 @@ public class LocationService implements LocationServiceInterface {
   }
 
   @Override
-  public List<PostcodeLocation> getLocationsForPostcodes(List<String> postCodes) {
-    return postcodeMappingUtil.getPostcodeMappings(apiUtilsService.removeBlankSpacesIn(postCodes));
+  public List<PostcodeLocation> getLocationsForPostcodes(
+      List<String> postCodes, MultiValueMap<String, String> headers) {
+    return postcodeMappingUtil.getPostcodeMappings(
+        apiUtilsService.removeBlankSpacesIn(postCodes), headers);
   }
 }

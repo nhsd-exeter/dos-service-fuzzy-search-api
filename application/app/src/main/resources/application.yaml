@@ -42,4 +42,4 @@ cognito:
 postcode:
   mapping:
     url: ${POSTCODE_MAPPING_SERVICE_URL}
-    uri: /ccg
+    uri: /search

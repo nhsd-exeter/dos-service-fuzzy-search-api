@@ -13,4 +13,8 @@ public class LocalConstants {
   public static final String KEY_STORE_PASSWORD = "mypass";
 
   public static final String KEY_STORE_ALIAS = "mytest";
+
+  public static final String ROLE_FUZZY = "FUZZY_API_ACCESS";
+
+  public static final String ROLE_POSTCODE = "POSTCODE_API_ACCESS";
 }

@@ -2,6 +2,7 @@ package uk.nhs.digital.uec.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +39,7 @@ public class LocationServiceTest {
 
   @Test
   public void getLocationForNullPostcode() {
-    PostcodeLocation location = locationService.getLocationForPostcode(null);
+    PostcodeLocation location = locationService.getLocationForPostcode(null, null);
     assertNull(location);
   }
 
@@ -48,8 +49,8 @@ public class LocationServiceTest {
     String postcode = "EX88PR";
     List<PostcodeLocation> listLocations = new ArrayList<>();
     listLocations.add(postcodeLocation);
-    when(postcodeMappingUtil.getPostcodeMappings(anyList())).thenReturn(listLocations);
-    PostcodeLocation returnedLocation = locationService.getLocationForPostcode(postcode);
+    when(postcodeMappingUtil.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
+    PostcodeLocation returnedLocation = locationService.getLocationForPostcode(postcode, any());
     assertEquals(postcode, returnedLocation.getPostCode());
     assertEquals(297717, returnedLocation.getEasting());
     assertEquals(81762, returnedLocation.getNorthing());
@@ -60,8 +61,8 @@ public class LocationServiceTest {
     String postcode = "EX88PR";
     List<PostcodeLocation> listLocations = new ArrayList<>();
     listLocations.add(postcodeLocation);
-    when(postcodeMappingUtil.getPostcodeMappings(anyList())).thenReturn(listLocations);
-    PostcodeLocation returnedLocation = locationService.getLocationForPostcode(postcode);
+    when(postcodeMappingUtil.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
+    PostcodeLocation returnedLocation = locationService.getLocationForPostcode(postcode, any());
     assertEquals(postcode, returnedLocation.getPostCode());
   }
 

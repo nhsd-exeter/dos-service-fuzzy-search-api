@@ -2,11 +2,11 @@
 spring:
   elasticsearch:
     rest:
-      uris: elasticsearch.sfs.local:9200
+      uris: http://localhost:9200
 
 cognito:
   userPool.clientId: testUserPoolClientId
-  userPool.id: ${COGNITO_USER_POOL_ID}
+  userPool.id: testUserPoolId
   userPool.clientSecret: testUserPoolClientSecret
 local:
   host: https://localhost
@@ -16,5 +16,5 @@ local:
 
 postcode:
   mapping:
-    url: https://127.0.0.1:18084/api
-    uri: /ccg
+    url: https://127.0.0.1:18085/api
+    uri: /search

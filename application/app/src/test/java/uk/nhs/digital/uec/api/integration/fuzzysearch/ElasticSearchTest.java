@@ -3,6 +3,7 @@ package uk.nhs.digital.uec.api.integration.fuzzysearch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import uk.nhs.digital.uec.api.util.PropertySourceResolver;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@Disabled
 public class ElasticSearchTest {
 
   @Autowired private PropertySourceResolver propertySourceResolver;
