@@ -77,7 +77,7 @@ TF_VAR_service_etl_cron_timer_year := *
 SERVICE_DATA_FILE := create_all_services_dev.sh
 
 #Cognito user pool details
-COGNITO_USER_POOL = service-finder-api-authentication-pool-dev
+COGNITO_USER_POOL = service-fuzzy-search-dev-pool
 COGNITO_USER_POOL_CLIENT_SECRET := $(or $(COGNITO_USER_POOL_CLIENT_SECRET), )
 COGNITO_USER_POOL_CLIENT_ID := $(or $(COGNITO_USER_POOL_CLIENT_ID), )
 COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
