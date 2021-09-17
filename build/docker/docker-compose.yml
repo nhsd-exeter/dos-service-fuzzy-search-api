@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   fuzzysearch:
-    image: $AWS_ECR/uec-dos-api/sfs/api:latest
+    image: $AWS_ECR/uec-dos-api/sfs/api:$VERSION
     container_name: fuzzysearch
     environment:
       SPRING_PROFILES_ACTIVE: $SPRING_PROFILES_ACTIVE

@@ -56,7 +56,8 @@ pipeline {
     stage('Start services') {
       steps {
         script {
-          sh "make start"
+          sh "make stop"
+          sh "make start VERSION=VERSION=${env.PROJECT_BUILD_TAG}"
         }
       }
     }
