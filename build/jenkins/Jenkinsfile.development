@@ -57,7 +57,8 @@ pipeline {
       steps {
         script {
           sh "make stop"
-          sh "make start VERSION=${env.PROJECT_BUILD_TAG}"
+          sh "make start PROFILE=local VERSION=${env.PROJECT_BUILD_TAG}"
+          sh "sleep 30"
         }
       }
     }
@@ -95,6 +96,7 @@ pipeline {
   }
 
   post {
+    always { sh "make stop" }
     success { sh "make pipeline-on-success" }
     failure { sh "make pipeline-on-failure" }
   }
