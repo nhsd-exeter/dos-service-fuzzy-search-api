@@ -32,6 +32,7 @@ pipeline {
         }
       }
     }
+    /*
     stage("Plan Infrastructure") {
       steps {
         script {
@@ -39,6 +40,7 @@ pipeline {
         }
       }
     }
+    */
     stage('Derive Build Tag') {
       steps {
         script {
@@ -57,6 +59,8 @@ pipeline {
       steps {
         script {
           sh "make stop"
+          sh "make start PROFILE=local VERSION=${env.PROJECT_BUILD_TAG}"
+          sh "sleep 30"
           sh "make start PROFILE=local VERSION=${env.PROJECT_BUILD_TAG}"
           sh "sleep 30"
         }
@@ -96,7 +100,7 @@ pipeline {
   }
 
   post {
-    always { sh "make stop" }
+    // always { sh "make stop" }
     success { sh "make pipeline-on-success" }
     failure { sh "make pipeline-on-failure" }
   }
