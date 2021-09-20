@@ -55,17 +55,6 @@ pipeline {
         }
       }
     }
-    stage('Start services') {
-      steps {
-        script {
-          sh "make stop"
-          sh "make start PROFILE=local VERSION=${env.PROJECT_BUILD_TAG}"
-          sh "sleep 30"
-          sh "make start PROFILE=local VERSION=${env.PROJECT_BUILD_TAG}"
-          sh "sleep 30"
-        }
-      }
-    }
     /*
     stage('Unit Test') {
       steps {
@@ -78,14 +67,13 @@ pipeline {
     stage('Run Contract Tests') {
       steps {
         script {
-          sh "cd test/contract && make run"
+          sh "make run-contract-tests-jenkins VERSION=${env.PROJECT_BUILD_TAG}"
         }
       }
     }
     stage('Push API Image to ECR') {
       steps {
         script {
-          sh "make stop"
           sh "make push VERSION=${env.PROJECT_BUILD_TAG}"
         }
       }
@@ -100,7 +88,7 @@ pipeline {
   }
 
   post {
-    // always { sh "make stop" }
+    always { sh "make stop" }
     success { sh "make pipeline-on-success" }
     failure { sh "make pipeline-on-failure" }
   }

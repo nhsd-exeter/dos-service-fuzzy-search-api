@@ -49,6 +49,16 @@ load-all-services: # Load bulk service data into elasticsearch - mandatory: PROF
 load-test-postcode-locations:
 	sh ./data/locations/$(LOCATIONS_DATA_FILE)
 
+run-contract-tests-jenkins:
+	make start PROFILE=local VERSION=$(VERSION)
+	sleep 30
+	make start PROFILE=local VERSION=$(VERSION)
+	sleep 30
+	cd test/contract
+	make run
+	cd ../../
+	make stop
+
 test: load-test-services # Test project
 	make docker-run-mvn \
 		DIR="application/app" \
