@@ -49,7 +49,7 @@ load-all-services: # Load bulk service data into elasticsearch - mandatory: PROF
 load-test-postcode-locations:
 	sh ./data/locations/$(LOCATIONS_DATA_FILE)
 
-run-contract-tests-jenkins:
+run-contract-tests:
 	make start PROFILE=local VERSION=$(VERSION)
 	sleep 30
 	make start PROFILE=local VERSION=$(VERSION)
