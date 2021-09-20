@@ -4,7 +4,7 @@
 	"values": [
 		{
 			"key": "host",
-			"value": "fuzzysearch.sfs.local",
+			"value": "fuzzysearch.sfs.test",
 			"enabled": true
 		},
 		{
