@@ -1,5 +1,7 @@
 # This file is required for running the API via the make commands
 spring:
+  profiles:
+    active: local
   elasticsearch:
     rest:
       uris: localhost:9200
@@ -44,3 +46,13 @@ cognito:
   userPool.clientId: testUserPoolClientId
   userPool.id: testUserPoolId
   userPool.clientSecret: testUserPoolClientSecret
+
+postcode:
+  mapping:
+    url: https://127.0.0.1:18085/api
+    uri: /search
+local:
+  host: https://localhost
+  uri: authentication/login
+  welcome:
+    uri: /dosapi/dosservices/v0.0.1/home

@@ -5,16 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.util.PropertySourceResolver;
@@ -23,9 +23,8 @@ import uk.nhs.digital.uec.api.util.PropertySourceResolver;
  * Test class which passes requests through the Fuzzy Search endpoint and asserts desired API
  * behavior. Only the model layer will be mocked here.
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Disabled
-public class FuzzySearchValidationErrorsTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class FuzzySearchValidationErrorsTest extends AuthServiceTest {
 
   @Autowired private ObjectMapper mapper;
 
@@ -35,11 +34,12 @@ public class FuzzySearchValidationErrorsTest {
 
   private static String endpointUrl;
 
-  HttpHeaders headers = new HttpHeaders();
+  MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 
   @BeforeEach
-  public void configureProperties() {
+  public void configureProperties() throws Exception {
     endpointUrl = propertySourceResolver.endpointUrl;
+    headers = getAuthorizedHeader();
   }
 
   /**
