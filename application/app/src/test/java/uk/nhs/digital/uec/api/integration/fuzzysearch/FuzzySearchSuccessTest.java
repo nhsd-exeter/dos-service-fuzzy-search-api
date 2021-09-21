@@ -5,16 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.util.PropertySourceResolver;
@@ -23,9 +23,8 @@ import uk.nhs.digital.uec.api.util.PropertySourceResolver;
  * Test class which passes requests through the Fuzzy Search endpoint and asserts desired API
  * behavior. Only the model layer will be mocked here.
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Disabled
-public class FuzzySearchSuccessTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class FuzzySearchSuccessTest extends AuthServiceTest {
 
   @Autowired private ObjectMapper mapper;
 
@@ -34,14 +33,13 @@ public class FuzzySearchSuccessTest {
   @Autowired private TestRestTemplate restTemplate;
 
   private static String endpointUrl;
-  private static int maxNoServicesToReturn;
 
-  HttpHeaders headers = new HttpHeaders();
+  MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 
   @BeforeEach
-  public void configureProperties() {
+  public void configureProperties() throws Exception {
     endpointUrl = propertySourceResolver.endpointUrl;
-    maxNoServicesToReturn = propertySourceResolver.maxNumServicesToReturn;
+    headers = getAuthorizedHeader();
   }
 
   /** Sunny day scenarios. */
@@ -132,7 +130,7 @@ public class FuzzySearchSuccessTest {
 
   /** Given search criteria of ALL, return the maximum number of services. */
   @Test
-  public void allSearchCriteriaGivenMaxResults() throws Exception {
+  public void allSearchCriteriaGivenResults() throws Exception {
     // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
@@ -150,6 +148,6 @@ public class FuzzySearchSuccessTest {
     ApiSuccessResponse response =
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
-    assertEquals(maxNoServicesToReturn, response.getSearchResults().getNumberOfServicesFound());
+    assertTrue(response.getSearchResults().getNumberOfServicesFound() > 1);
   }
 }
