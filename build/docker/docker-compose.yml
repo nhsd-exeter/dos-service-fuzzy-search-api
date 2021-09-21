@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   fuzzysearch:
-    image: $AWS_ECR/uec-dos-api/sfs/api:latest
+    image: $AWS_ECR/uec-dos-api/sfs/api:$VERSION
     container_name: fuzzysearch
     environment:
       SPRING_PROFILES_ACTIVE: $SPRING_PROFILES_ACTIVE
@@ -43,7 +43,7 @@ services:
     container_name: elasticsearch
     hostname: elasticsearch
     ports:
-      - "9200:9200"
+      - "19200:9200"
     command: ["elasticsearch"]
     networks:
       default:

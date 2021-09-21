@@ -18,8 +18,7 @@ run: ### Run Postman test suite against the Wiremock mappings
 	make docker-run-postman \
 		DIR="$(APPLICATION_TEST_DIR)/contract" \
 		CMD=" \
-			run Test.postman_collection.json \
-			--environment=docker.postman_environment.json \
+			run FuzzySearchApiContractTests_collection.json -e environment.json --insecure \
 		"
 
 reload: ### Reload the Wiremock mappings

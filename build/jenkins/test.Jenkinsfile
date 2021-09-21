@@ -5,7 +5,7 @@ pipeline {
   agent { label "jenkins-slave" }
 
   environment {
-    PROFILE = "dev"
+    PROFILE = "test"
   }
 
   options {
@@ -32,6 +32,15 @@ pipeline {
         }
       }
     }
+    /*
+    stage("Plan Infrastructure") {
+      steps {
+        script {
+          sh "make plan PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+    */
     stage('Derive Build Tag') {
       steps {
         script {
@@ -42,7 +51,7 @@ pipeline {
     stage('Build API') {
       steps {
         script {
-          sh "make build VERSION=${env.PROJECT_BUILD_TAG}"
+          sh "make build"
         }
       }
     }
@@ -58,28 +67,21 @@ pipeline {
     stage('Run Contract Tests') {
       steps {
         script {
-          sh "make run-contract-tests VERSION=${env.PROJECT_BUILD_TAG}"
+          sh "make start"
+          sh "newman run test/contract/FuzzySearchApiContractTests_collection.json -e test/contract/environment.json --insecure"
+          // echo "to do"
         }
       }
     }
-    stage('Push API Image to ECR') {
+    stage('Final') {
       steps {
         script {
-          sh "make push VERSION=${env.PROJECT_BUILD_TAG}"
-        }
-      }
-    }
-    stage('Image Build Tag'){
-      steps{
-        script{
-          sh "echo 'Image Build Tag: '${env.PROJECT_BUILD_TAG}"
+          sh "make stop"
         }
       }
     }
   }
-
   post {
-    always { sh "make stop" }
     success { sh "make pipeline-on-success" }
     failure { sh "make pipeline-on-failure" }
   }
