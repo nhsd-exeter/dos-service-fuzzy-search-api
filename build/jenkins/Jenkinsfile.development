@@ -32,15 +32,6 @@ pipeline {
         }
       }
     }
-    /*
-    stage("Plan Infrastructure") {
-      steps {
-        script {
-          sh "make plan PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-    */
     stage('Derive Build Tag') {
       steps {
         script {
