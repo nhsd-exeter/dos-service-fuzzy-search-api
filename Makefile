@@ -22,7 +22,12 @@ derive-build-tag:
 				sed "s/SS/$$(date --date=$(BUILD_DATE) -u +"%S")/g" | \
 				sed "s/hash/$$(git rev-parse --short HEAD)/g"
 
-build: project-config # Build project
+build:
+	make \
+		build-api \
+		build-auth \
+
+build-api: project-config # Build search serivce
 	make docker-run-mvn \
 		DIR="application/app" \
 		CMD="-Dmaven.test.skip=true clean install" \
@@ -31,6 +36,16 @@ build: project-config # Build project
 		$(PROJECT_DIR)/application/app/target/dos-service-fuzzy-search-api-*.jar \
 		$(PROJECT_DIR)/build/docker/api/assets/application/dos-service-fuzzy-search-api.jar
 	make docker-build NAME=api
+
+build-auth: project-config # Build auth serivce
+	make docker-run-mvn \
+		DIR="application/authentication" \
+		CMD="-Dmaven.test.skip=true clean install" \
+		LIB_VOLUME_MOUNT="true"
+	mv \
+		$(PROJECT_DIR)/application/authentication/target/dos-service-fuzzy-search-authentication-api-*.jar \
+		$(PROJECT_DIR)/build/docker/auth/assets/application/dos-service-fuzzy-search-authentication-api.jar
+	make docker-build NAME=auth
 
 start: project-start # Start project
 
@@ -59,7 +74,12 @@ run-contract-tests:
 	cd ../../
 	make stop
 
-test: load-test-services # Test project
+test:
+	make \
+		test-auth \
+		test-api
+
+test-api: load-test-services # Test project
 	make docker-run-mvn \
 		DIR="application/app" \
 		CMD="clean test" \
@@ -67,8 +87,24 @@ test: load-test-services # Test project
 		PROFILE=local \
 		VARS_FILE=$(VAR_DIR)/profile/local.mk
 
+test-auth: load-test-services # Test project
+	make docker-run-mvn \
+		DIR="application/authentication" \
+		CMD="clean test" \
+		LIB_VOLUME_MOUNT="true" \
+		PROFILE=local \
+		VARS_FILE=$(VAR_DIR)/profile/local.mk
+
 push: # Push project artefacts to the registry
+	make
+		push-api \
+		push-auth
+
+push-api:
 	make docker-push NAME=api
+
+push-auth:
+	make docker-push NAME=auth
 
 tag-release: # Create the release tag - mandatory DEV_TAG RELEASE_TAG
 	make docker-login
@@ -77,6 +113,11 @@ tag-release: # Create the release tag - mandatory DEV_TAG RELEASE_TAG
 	docker tag $(DOCKER_REGISTRY)/api:$(DEV_TAG) $(DOCKER_REGISTRY_LIVE)/api:$(RELEASE_TAG)
 	docker push $(DOCKER_REGISTRY)/api:$(RELEASE_TAG)
 	docker push $(DOCKER_REGISTRY_LIVE)/api:$(RELEASE_TAG)
+	docker pull $(DOCKER_REGISTRY)/auth:$(DEV_TAG)
+	docker tag $(DOCKER_REGISTRY)/auth:$(DEV_TAG) $(DOCKER_REGISTRY)/api:$(RELEASE_TAG)
+	docker tag $(DOCKER_REGISTRY)/auth:$(DEV_TAG) $(DOCKER_REGISTRY_LIVE)/api:$(RELEASE_TAG)
+	docker push $(DOCKER_REGISTRY)/auth:$(RELEASE_TAG)
+	docker push $(DOCKER_REGISTRY_LIVE)/auth:$(RELEASE_TAG)
 
 deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	export TTL=$$(make -s k8s-get-namespace-ttl)
@@ -125,7 +166,9 @@ clean: # Clean up project
 trust-certificate: ssl-trust-certificate-project ## Trust the SSL development certificate
 
 create-artefact-repositories: ## Create ECR repositories to store the artefacts
-	make docker-create-repository NAME=api
+	make
+		docker-create-repository NAME=api \
+		docker-create-repository NAME=auth
 
 # ==============================================================================
 # Pipeline targets

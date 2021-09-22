@@ -1,0 +1,21 @@
+# This file is required for running the API tests via the make command
+spring:
+  elasticsearch:
+    rest:
+      uris: http://localhost:9200
+
+cognito:
+  userPool.clientId: testUserPoolClientId
+  userPool.id: testUserPoolId
+  userPool.clientSecret: testUserPoolClientSecret
+
+local:
+  host: https://localhost
+  uri: /authentication/login
+  welcome:
+    uri: /dosapi/dosservices/v0.0.1/home
+
+postcode:
+  mapping:
+    url: https://127.0.0.1:18085/api
+    uri: /search

@@ -62,12 +62,12 @@
           }
         },
         "url": {
-          "raw": "https://{{host}}:8443/authentication/login",
+          "raw": "https://{{authHost}}:9025/authentication/login",
           "protocol": "https",
           "host": [
-            "{{host}}"
+            "{{authHost}}"
           ],
-          "port": "8443",
+          "port": "9025",
           "path": [
             "authentication",
             "login"
@@ -135,12 +135,12 @@
           }
         },
         "url": {
-          "raw": "https://{{host}}:8443/authentication/login",
+          "raw": "https://{{authHost}}:9025/authentication/login",
           "protocol": "https",
           "host": [
-            "{{host}}"
+            "{{authHost}}"
           ],
-          "port": "8443",
+          "port": "9025",
           "path": [
             "authentication",
             "login"

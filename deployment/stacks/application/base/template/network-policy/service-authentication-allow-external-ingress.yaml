@@ -1,0 +1,13 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: service-authentication-allow-external-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: service-authentication
+  ingress:
+  - from: []
+    ports:
+    - protocol: TCP
+      port: 9025

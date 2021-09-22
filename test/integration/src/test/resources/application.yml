@@ -1,0 +1,46 @@
+# This file is required for running the API via the make commands
+spring:
+  elasticsearch:
+    rest:
+      uris: localhost:9200
+      AWS_ACCESS_KEY_ID: dummy
+      AWS_SECRET_ACCESS_KEY: dummy
+
+dynamo:
+  config:
+    region: eu-west-2
+    endpoint: http://localhost:8000/
+  table:
+    name: service-finder-nonprod-postcode-location-mapping
+
+server:
+  port: 8444
+  ssl:
+    key-store-type: PKCS12
+    keystore: classpath:certificate/localhost.p12
+    key-store-password:
+
+api:
+  endpoint:
+    service_search: https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch
+  cors:
+    allowedorigins: "*"
+
+configuration:
+  version: v0.0.3
+  validation:
+    min_search_term_length: 3
+    max_search_criteria: 5
+  search_parameters:
+    max_num_services_to_return_from_elasticsearch: 50
+    max_num_services_to_return_from_elasticsearch_3_search_terms: 25
+    max_num_services_to_return: 10
+    fuzz_level: 0
+    name_priority: 4
+    address_priority: 2
+    postcode_priority: 1
+    public_name_priority: 4
+cognito:
+  userPool.clientId: testUserPoolClientId
+  userPool.id: testUserPoolId
+  userPool.clientSecret: testUserPoolClientSecret

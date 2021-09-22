@@ -3,6 +3,11 @@
   "name": "environmentVar",
   "values": [
     {
+      "key": "authHost",
+      "value": "authentication.sfs.local",
+      "enabled": true
+    },
+    {
       "key": "host",
       "value": "fuzzysearch.sfs.local",
       "enabled": true

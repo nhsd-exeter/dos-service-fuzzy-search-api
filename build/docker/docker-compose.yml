@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   fuzzysearch:
-    image: $AWS_ECR/uec-dos-api/sfs/api:$VERSION
+    image: $AWS_ECR/uec-dos-api/sfs/api:latest
     container_name: fuzzysearch
     environment:
       SPRING_PROFILES_ACTIVE: $SPRING_PROFILES_ACTIVE
@@ -24,12 +24,10 @@ services:
       PUBLIC_NAME_PRIORITY: $NAME_PUBLIC_PRIORITY
       AWS_ACCESS_KEY_ID: dummy
       AWS_SECRET_ACCESS_KEY: dummy
-      COGNITO_USER_POOL_CLIENT_ID: $COGNITO_USER_POOL_CLIENT_ID
-      COGNITO_USER_POOL_CLIENT_SECRET: $COGNITO_USER_POOL_CLIENT_SECRET
-      COGNITO_USER_POOL_ID: $COGNITO_USER_POOL_ID
       POSTCODE_MAPPING_SERVICE_URL: $POSTCODE_MAPPING_SERVICE_URL
     ports:
       - 8443:8443
+    restart: on-failure
     depends_on:
       - elasticsearch
     command: ["java", "-jar", "/application/dos-service-fuzzy-search-api.jar"]
@@ -43,13 +41,30 @@ services:
     container_name: elasticsearch
     hostname: elasticsearch
     ports:
-      - "19200:9200"
+      - "9200:9200"
     command: ["elasticsearch"]
     networks:
       default:
         aliases:
           - elasticsearch.sfs.local
 
+  authentication:
+    image: $AWS_ECR/uec-dos-api/sfs/auth:latest
+    container_name: authentication
+    environment:
+      COGNITO_USER_POOL_CLIENT_ID: $COGNITO_USER_POOL_CLIENT_ID
+      COGNITO_USER_POOL_CLIENT_SECRET: $COGNITO_USER_POOL_CLIENT_SECRET
+      COGNITO_USER_POOL_ID: $COGNITO_USER_POOL_ID
+      SERVER_PORT: $AUTH_SERVER_PORT
+      CERTIFICATE_DOMAIN: $CERTIFICATE_DOMAIN
+      SPRING_PROFILES_ACTIVE: $SPRING_PROFILES_ACTIVE
+    ports:
+      - 9025:9025
+    command: ["java", "-jar", "/application/dos-service-fuzzy-search-authentication-api.jar"]
+    networks:
+      default:
+        aliases:
+          - authentication.sfs.local
   # kibana:
   #   image: docker.elastic.co/kibana/kibana:7.9.2
   #   container_name: kibana
@@ -80,5 +95,4 @@ services:
 
 networks:
   default:
-    external:
       name: $DOCKER_NETWORK
