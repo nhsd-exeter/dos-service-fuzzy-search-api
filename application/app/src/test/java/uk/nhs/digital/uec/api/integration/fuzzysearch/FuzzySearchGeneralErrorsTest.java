@@ -3,9 +3,11 @@ package uk.nhs.digital.uec.api.integration.fuzzysearch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -21,9 +23,11 @@ import uk.nhs.digital.uec.api.util.PropertySourceResolver;
  * be mocked here.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class FuzzySearchGeneralErrorsTest extends AuthServiceTest {
+@Disabled
+public class FuzzySearchGeneralErrorsTest {
 
   @Autowired private PropertySourceResolver propertySourceResolver;
+  @Autowired public TestRestTemplate restTemplate;
 
   private static String endpointUrl;
 
@@ -32,10 +36,11 @@ public class FuzzySearchGeneralErrorsTest extends AuthServiceTest {
   @BeforeEach
   public void configureProperties() throws Exception {
     endpointUrl = propertySourceResolver.endpointUrl;
-    headers = getAuthorizedHeader();
+    headers.add("Content-Type", "application/json");
+    headers.add("Authorization", "Bearer " + "eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJpZCIsImlhdCI6MTYzMjMwNzYzNiwic3ViIjoiYWRtaW5AbmhzLm5ldCIsImlzcyI6Imlzc3VlciIsImV4cCI6MTYzMjMxMTIzNiwiY29nbml0bzpncm91cHMiOlsiQVBJX1VTRVIiXX0.ImG80nV8Amb9Q4pZrcGm6cYnfSo7onHy_q0E_7u6w8muUOdDQOcmgPpfmdqsu8fhlYGouEhR8y5UWctp-LT-cFuoquVFELY-IeM02zj7hRVqNrSvhATeVUai8xUHcq7cxmf6IiWcrSwcRSN9oA1F6pc3E0q88Kk3nd_ieHMZfGbbbs1DkycqsR-KIGkymVN0W527meBM_9P8PMknfzvYWUJh4GV_h47V0Fx_e9R6lOTH0NfRYWc1nSM3q8cU6RkypF-Uyq9dHkcuiYlwwBYqRenoHbFbLsYFdGUby6OMwERbKlUvdCXyJB_yyp7-QVKRuSetaYCWksJUqp5pdxujXw");
   }
 
-  /** Given a Post call on the endpoint, ensure a 405 error is returned. */
+    /** Given a Post call on the endpoint, ensure a 405 error is returned. */
   @Test
   public void postCallOnEndpoint() throws Exception {
     // Arrange
