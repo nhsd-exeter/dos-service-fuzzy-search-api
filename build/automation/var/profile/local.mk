@@ -36,4 +36,4 @@ COGNITO_USER_POOL_CLIENT_ID := testUserPoolClientId
 COGNITO_USER_POOL_CLIENT_SECRET := testUserPoolClientSecret
 COGNITO_USER_POOL_ID := testUserPoolId
 
-POSTCODE_MAPPING_SERVICE_URL := https://127.0.0.1:18085/api
+POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
