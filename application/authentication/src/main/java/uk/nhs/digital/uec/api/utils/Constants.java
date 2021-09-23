@@ -18,7 +18,7 @@ public class Constants {
 
   public static final String ROLE_PREFIX = "ROLE_";
 
-  public static final String KEY_STORE = "integTest.jks";
+  public static final String KEY_STORE = "integTestRSA.jks";
 
   public static final String KEY_STORE_PASSWORD = "mypass";
 
