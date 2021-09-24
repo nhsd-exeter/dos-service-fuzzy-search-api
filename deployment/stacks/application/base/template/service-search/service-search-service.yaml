@@ -3,17 +3,10 @@ kind: Service
 metadata:
   name: uec-dos-api-sfs-service
   namespace: uec-dos-api-sfs
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: https
-    service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
-    service.beta.kubernetes.io/aws-load-balancer-connection-draining-timeout: "60"
-    service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: "Service=service-search"
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: AWS_CERTIFICATE_TO_REPLACE
-    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
   labels:
     app: service-search
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - name: https
     protocol: TCP
