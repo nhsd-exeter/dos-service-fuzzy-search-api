@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: uec-dos-api-sfs-service
+  namespace: uec-dos-api-sfs
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/listen-port: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-policy: AWS_ALB_SSL_TLS_POLICY_TO_REPLACE
+    alb.ingress.kubernetes.io/waf-acl-id: AWS_WAF_ACL_ID_TO_REPLACE
+    alb.ingress.kubernetes.io/certificate-arn: AWS_CERTIFICATE_TO_REPLACE
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/tags: Service=service-finder
+  labels:
+    app: service-search
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: uec-dos-api-sfs-service
+              servicePort: 443

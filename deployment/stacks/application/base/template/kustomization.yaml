@@ -11,6 +11,7 @@ resources:
   - service-search/service-account.yaml
   - service-search/service-search-deployment.yaml
   - service-search/service-search-service.yaml
+  - service-search/service-search-ingress.yaml
   - network-policy/uec-sfs-default-deny-ingress.yaml
   - network-policy/service-search-allow-external-ingress.yaml
 
