@@ -43,8 +43,8 @@ log: project-log # Show project logs
 load-test-services: # Load test services into elasticsearch
 	sh ./data/services/create_test_services.sh
 
-load-all-services: # Load bulk service data into elasticsearch - mandatory: PROFILE=[name]
-	sh ./data/services/$(SERVICE_DATA_FILE)
+load-all-services: # Load bulk service data into elasticsearch
+	sh ./data/services/create_all_services_local.sh
 
 load-test-postcode-locations:
 	sh ./data/locations/$(LOCATIONS_DATA_FILE)
@@ -79,7 +79,6 @@ tag-release: # Create the release tag - mandatory DEV_TAG RELEASE_TAG
 	docker push $(DOCKER_REGISTRY_LIVE)/api:$(RELEASE_TAG)
 
 deploy: # Deploy artefacts - mandatory: PROFILE=[name]
-	export TTL=$$(make -s k8s-get-namespace-ttl)
 	make project-deploy PROFILE=$(PROFILE) STACK=$(DEPLOYMENT_STACKS)
 
 prepare-lambda-deployment: # Downloads the required libraries for the Lambda functions
