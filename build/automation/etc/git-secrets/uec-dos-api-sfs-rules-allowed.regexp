@@ -1,1 +1,2 @@
-*os.environ.get*
+.*.py:.*:*os.environ.get*
+*PASSWORD=[$$][(]

@@ -7,7 +7,7 @@ COGNITO_GROUPS=(API_USER)
 COGNITO_ADMIN_USER="service-finder-admin@nhs.net"
 COGNITO_PROFILE=$PROFILE
 
-COGNITO_ADMIN_PWD=$(
+COGNITO_ADMIN_PASSWORD=$(
     aws secretsmanager get-secret-value \
         --secret-id service-fuzzy-search-$COGNITO_PROFILE-cognito-admin-password \
         --region $AWS_REGION \
@@ -102,7 +102,7 @@ function cognito_setup_user {
         --region $AWS_REGION \
             --client-id $USER_POOL_CLIENT_ID \
             --username $COGNITO_USER \
-            --password $COGNITO_ADMIN_PWD \
+            --password $COGNITO_ADMIN_PASSWORD \
             --secret-hash $SECRET_HASH && \
         aws cognito-idp admin-confirm-sign-up \
         --region $AWS_REGION \
