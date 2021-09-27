@@ -96,7 +96,7 @@ test-auth: load-test-services # Test project
 		VARS_FILE=$(VAR_DIR)/profile/local.mk
 
 push: # Push project artefacts to the registry
-	make
+	make \
 		push-api \
 		push-auth
 
