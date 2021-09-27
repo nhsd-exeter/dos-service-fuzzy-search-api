@@ -1,2 +1,3 @@
 .*.py:.*:*os.environ.get*
-*PASSWORD=[$$][(]
+*PASSWORD[[:blank:]]*:*=[[:blank:]]*[$$][(]
+*SECRET[[:blank:]]*:*=[[:blank:]]*[$$][(]
