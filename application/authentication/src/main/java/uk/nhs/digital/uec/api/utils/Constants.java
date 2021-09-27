@@ -8,7 +8,7 @@ public class Constants {
 
   public static final String USER_PASSWORD_AUTH = "USER_PASSWORD_AUTH";
 
-  public static final String COGNITO_GROUP = "API_USER";
+  public static final String COGNITO_GROUP = "FUZZY_API_ACCESS";
 
   public static final String COGNITO_GROUPS = "cognito:groups";
 
