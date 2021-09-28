@@ -23,9 +23,9 @@ jobs:
       - name: Compile project
         run: |
           make compile
-      - name: Create coverage reports
-        run: |
-          make coverage-report
+      # - name: Create coverage reports
+      #   run: |
+      #     make coverage-report
       - uses: sonarsource/sonarcloud-github-action@master
         # SEE: https://github.com/SonarSource/sonarcloud-github-action
         env:
