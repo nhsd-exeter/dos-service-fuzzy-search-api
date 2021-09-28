@@ -24,7 +24,7 @@ derive-build-tag:
 
 compile: # Compile the project to make the target class (binary) files
 	make docker-run-mvn \
-		DIR="application" \
+		DIR="application/app" \
 		CMD="compile"
 
 build: project-config # Build project
@@ -47,13 +47,13 @@ log: project-log # Show project logs
 
 unit-test: # Run project unit tests
 	make docker-run-mvn \
-		DIR="application" \
+		DIR="application/app" \
 		CMD="test"
 
 coverage-report: # Generate jacoco test coverage reports
 	make unit-test
 	make docker-run-mvn \
-		DIR="application" \
+		DIR="application/app" \
 		CMD="jacoco:report"
 
 load-test-services: # Load test services into elasticsearch
