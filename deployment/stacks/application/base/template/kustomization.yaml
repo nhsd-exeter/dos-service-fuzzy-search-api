@@ -14,6 +14,9 @@ resources:
   - service-search/service-search-ingress.yaml
   - network-policy/uec-sfs-default-deny-ingress.yaml
   - network-policy/service-search-allow-external-ingress.yaml
+  - service-authentication/service-account.yaml
+  - service-authentication/service-authentication-deployment.yaml
+  - service-authentication/service-authentication-service.yaml
 
 configMapGenerator:
   - name: service-search-configmap
@@ -36,12 +39,21 @@ configMapGenerator:
       - ADDRESS_PRIORITY=ADDRESS_PRIORITY_TO_REPLACE
       - POSTCODE_PRIORITY=POSTCODE_PRIORITY_TO_REPLACE
       - PUBLIC_NAME_PRIORITY=NAME_PUBLIC_PRIORITY_TO_REPLACE
+      - POSTCODE_MAPPING_SERVICE_URL=POSTCODE_MAPPING_SERVICE_URL_TO_REPLACE
+  - name: service-authentication-configmap
+    literals:
       - COGNITO_USER_POOL=COGNITO_USER_POOL_TO_REPLACE
       - COGNITO_USER_POOL_CLIENT_SECRET=COGNITO_USER_POOL_CLIENT_SECRET_TO_REPLACE
       - COGNITO_USER_POOL_CLIENT_ID=COGNITO_USER_POOL_CLIENT_ID_TO_REPLACE
       - COGNITO_USER_POOL_ID=COGNITO_USER_POOL_ID_TO_REPLACE
-      - POSTCODE_MAPPING_SERVICE_URL=POSTCODE_MAPPING_SERVICE_URL_TO_REPLACE
+      - CERTIFICATE_DOMAIN=CERTIFICATE_DOMAIN_TO_REPLACE
+      - ALLOWED_ORIGINS=ALLOWED_ORIGINS_TO_REPLACE
+      - PROFILE=PROFILE_TO_REPLACE
+      - SPRING_PROFILES_ACTIVE=SPRING_PROFILES_ACTIVE_TO_REPLACE
+      - SERVER_PORT=AUTH_SERVER_PORT_TO_REPLACE
 
 images:
   - name: AWS_ECR_TO_REPLACE/uec-dos-api/sfs/api
+    newTag: API_IMAGE_TAG_TO_REPLACE
+  - name: AWS_ECR_TO_REPLACE/uec-dos-api/sfs/auth
     newTag: API_IMAGE_TAG_TO_REPLACE

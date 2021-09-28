@@ -4,7 +4,7 @@ metadata:
   namespace: uec-sfs
   name: service-authentication
 spec:
-  replicas: SERVICE_SEARCH_REPLICAS_TO_REPLACE
+  replicas: SERVICE_AUTHENTICATION_REPLICAS_TO_REPLACE
   selector:
     matchLabels:
       app: service-authentication
@@ -12,8 +12,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1        # how many pods we can add at a time
-      maxUnavailable: 0  # maxUnavailable define how many pods can be unavailable during the rolling update
+      maxSurge: 1 # how many pods we can add at a time
+      maxUnavailable: 0 # maxUnavailable define how many pods can be unavailable during the rolling update
   template:
     metadata:
       labels:
@@ -34,34 +34,34 @@ spec:
                         - service-authentication
                 topologyKey: kubernetes.io/hostname
       containers:
-      - name: service-authentication
-        image: AWS_ECR_TO_REPLACE/uec-dos-api/sfs/auth:API_IMAGE_TAG_TO_REPLACE
-        envFrom:
-        - configMapRef:
-            name: service-authentication-configmap
-        readinessProbe:
-          httpGet:
-            path: /actuator/health/readiness
-            port: 9025
-            scheme: HTTPS
-          initialDelaySeconds: 20
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /actuator/health/liveness
-            port: 9025
-            scheme: HTTPS
-          initialDelaySeconds: 120
-          failureThreshold: 3
-          periodSeconds: 5
-        ports:
-        - containerPort: 9025
-          protocol: TCP
-        resources:
-          requests:
-            memory: "0Mi"
-            cpu: "0m"
-          limits:
-            memory: "1024Mi"
-            cpu: "500m"
-        imagePullPolicy: Always
+        - name: service-authentication
+          image: AWS_ECR_TO_REPLACE/uec-dos-api/sfs/auth:API_IMAGE_TAG_TO_REPLACE
+          envFrom:
+            - configMapRef:
+                name: service-authentication-configmap
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 9025
+              scheme: HTTPS
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 9025
+              scheme: HTTPS
+            initialDelaySeconds: 120
+            failureThreshold: 3
+            periodSeconds: 5
+          ports:
+            - containerPort: 9025
+              protocol: TCP
+          resources:
+            requests:
+              memory: "0Mi"
+              cpu: "0m"
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
+          imagePullPolicy: Always
