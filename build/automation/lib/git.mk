@@ -34,6 +34,19 @@ git-check-if-branch-name-is-correct: ### Check if the branch name meets the acce
 		echo false
 	fi
 
+git-check-if-commit-msg-is-correct: ### Check if the commit message meets the accepted convention - optional: BUILD_BRANCH,BUILD_COMMIT_MESSAGE
+	if [[ $(BUILD_BRANCH) =~ $(GIT_BRANCH_PATTERN_MAIN) ]] && \
+			[[ "$$(echo '$(BUILD_COMMIT_MESSAGE)' | head -1)" =~ $(GIT_COMMIT_MESSAGE_PATTERN_MAIN) ]] && \
+			[ "$$(echo '$(BUILD_COMMIT_MESSAGE)' | head -1 | wc -m)" -le $(GIT_COMMIT_MESSAGE_MAX_LENGTH) ]; then
+		echo true
+	elif ! [[ $(BUILD_BRANCH) =~ $(GIT_BRANCH_PATTERN_MAIN) ]] && \
+			[[ "$$(echo '$(BUILD_COMMIT_MESSAGE)' | head -1)" =~ $(GIT_COMMIT_MESSAGE_PATTERN_ADDITIONAL) ]] && \
+			[ "$$(echo '$(BUILD_COMMIT_MESSAGE)' | head -1 | wc -m)" -le $(GIT_COMMIT_MESSAGE_MAX_LENGTH) ]; then
+		echo true
+	else
+		echo false
+	fi
+
 # ==============================================================================
 
 git-secrets-load:
