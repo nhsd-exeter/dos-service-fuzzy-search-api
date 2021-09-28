@@ -22,6 +22,11 @@ derive-build-tag:
 				sed "s/SS/$$(date --date=$(BUILD_DATE) -u +"%S")/g" | \
 				sed "s/hash/$$(git rev-parse --short HEAD)/g"
 
+compile: # Compile the project to make the target class (binary) files
+	make docker-run-mvn \
+		DIR="application" \
+		CMD="compile"
+
 build: project-config # Build project
 	make docker-run-mvn \
 		DIR="application/app" \
@@ -39,6 +44,17 @@ stop: project-stop # Stop project
 restart: stop start
 
 log: project-log # Show project logs
+
+unit-test: # Run project unit tests
+	make docker-run-mvn \
+		DIR="application" \
+		CMD="test"
+
+coverage-report: # Generate jacoco test coverage reports
+	make unit-test
+	make docker-run-mvn \
+		DIR="application" \
+		CMD="jacoco:report"
 
 load-test-services: # Load test services into elasticsearch
 	sh ./data/services/create_test_services.sh
