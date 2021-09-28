@@ -22,6 +22,11 @@ derive-build-tag:
 				sed "s/SS/$$(date --date=$(BUILD_DATE) -u +"%S")/g" | \
 				sed "s/hash/$$(git rev-parse --short HEAD)/g"
 
+compile: # Compile the project to make the target class (binary) files
+	make docker-run-mvn \
+		DIR="application/app" \
+		CMD="compile"
+
 build: project-config # Build project
 	make docker-run-mvn \
 		DIR="application/app" \
@@ -40,11 +45,22 @@ restart: stop start
 
 log: project-log # Show project logs
 
+unit-test: # Run project unit tests
+	make docker-run-mvn \
+		DIR="application/app" \
+		CMD="test"
+
+coverage-report: # Generate jacoco test coverage reports
+	make unit-test
+	make docker-run-mvn \
+		DIR="application/app" \
+		CMD="jacoco:report"
+
 load-test-services: # Load test services into elasticsearch
 	sh ./data/services/create_test_services.sh
 
-load-all-services: # Load bulk service data into elasticsearch - mandatory: PROFILE=[name]
-	sh ./data/services/$(SERVICE_DATA_FILE)
+load-all-services: # Load bulk service data into elasticsearch
+	sh ./data/services/create_all_services_local.sh
 
 load-test-postcode-locations:
 	sh ./data/locations/$(LOCATIONS_DATA_FILE)
@@ -79,7 +95,6 @@ tag-release: # Create the release tag - mandatory DEV_TAG RELEASE_TAG
 	docker push $(DOCKER_REGISTRY_LIVE)/api:$(RELEASE_TAG)
 
 deploy: # Deploy artefacts - mandatory: PROFILE=[name]
-	export TTL=$$(make -s k8s-get-namespace-ttl)
 	make project-deploy PROFILE=$(PROFILE) STACK=$(DEPLOYMENT_STACKS)
 
 prepare-lambda-deployment: # Downloads the required libraries for the Lambda functions

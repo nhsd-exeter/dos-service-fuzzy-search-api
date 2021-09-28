@@ -16,8 +16,9 @@ SPLUNK_INDEX := eks_logs_service_finder_nonprod
 
 APP_URL_PREFIX := $(K8S_APP_NAMESPACE)-$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)
 
-# Datastore URLs
-ELASTICSEARCH_URL := https://vpc-sfs-dev-csfa7ah6cfpbllxcfqf6wmdcxi.eu-west-2.es.amazonaws.com
+# Elastic search datastore
+DOMAIN := sfs-$(PROFILE)
+# ELASTICSEARCH_URL configured in make project-populate-application-variables
 
 API_SERVICE_SEARCH_ENDPOINT := https://$(APP_URL_PREFIX)-service-search.$(TF_VAR_platform_zone)/dosapi/dosservices/v0.0.1/services/byfuzzysearch
 
@@ -72,9 +73,6 @@ TF_VAR_service_etl_cron_timer_day_of_month := ?
 TF_VAR_service_etl_cron_timer_month := *
 TF_VAR_service_etl_cron_timer_day_of_week := MON-FRI
 TF_VAR_service_etl_cron_timer_year := *
-
-# Service Data files
-SERVICE_DATA_FILE := create_all_services_dev.sh
 
 #Cognito user pool details
 COGNITO_USER_POOL = service-fuzzy-search-dev-pool

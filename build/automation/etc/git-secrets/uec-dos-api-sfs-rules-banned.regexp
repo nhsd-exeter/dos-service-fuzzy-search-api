@@ -1,0 +1,2 @@
+^[#A-Za-z0-9_]*(SECRET)[[:blank:]]*:*=[[:blank:]]*[[:print:]]*
+^[#A-Za-z0-9_[:blank:]]*(--password|--secret)[[:blank:]]*
