@@ -7,3 +7,9 @@
 .scannerwork
 *.code-workspace
 !project.code-workspace
+
+.vscode/
+
+infrastructure/stacks/elasticsearch/errored.tfstate
+
+test/perfermance-tests/*.jtl
