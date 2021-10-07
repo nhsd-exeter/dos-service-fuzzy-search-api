@@ -37,13 +37,13 @@ locals {
   service_etl_cloudwatch_event_action          = "lambda:InvokeFunction"
   service_etl_cloudwatch_event_princinple      = "events.amazonaws.com"
 
-  service_etl_sns_name                             = "uec-sf-${var.profile}-service-etl-sns"
-  service_etl_sns_description                      = "Triggers when the service-etl process fails and sends a notification to the sns service"
-  service_etl_sns_runtime                          = "python3.7"
-  service_etl_sns_policy_name                      = "uec-sf-${var.profile}-service-etl_sns_policy"
-  service_etl_sns_cloudwatch_event_name            = "service-finder-${var.profile}-service-etl-sns-rule"
-  service_etl_sns_cloudwatch_event_description     = "Log event watcher to send an SNS event whenever an error log event is recorded"
-  service_etl_sns_logging_level                    = var.service_etl_sns_logging_level
+  service_etl_sns_name                         = "uec-sf-${var.profile}-service-etl-sns"
+  service_etl_sns_description                  = "Triggers when the service-etl process fails and sends a notification to the sns service"
+  service_etl_sns_runtime                      = "python3.7"
+  service_etl_sns_policy_name                  = "uec-sf-${var.profile}-service-etl_sns_policy"
+  service_etl_sns_cloudwatch_event_name        = "service-finder-${var.profile}-service-etl-sns-rule"
+  service_etl_sns_cloudwatch_event_description = "Log event watcher to send an SNS event whenever an error log event is recorded"
+  service_etl_sns_logging_level                = var.service_etl_sns_logging_level
 
   standard_tags = {
     "Programme"   = "uec"
