@@ -20,12 +20,9 @@ jobs:
       - name: Check Terraform files format
         run: |
           build/automation/etc/githooks/scripts/terraform-format-pre-commit.sh
-      - name: Compile project
-        run: |
-          make compile
       - name: Create coverage reports
         run: |
-          make coverage-report
+          make compile coverage-report
       - uses: sonarsource/sonarcloud-github-action@master
         # SEE: https://github.com/SonarSource/sonarcloud-github-action
         env:
