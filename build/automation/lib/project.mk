@@ -15,7 +15,6 @@ project-config: ### Configure project environment
 	# Make sure project's SSL certificate is created
 	if [ ! -f $(SSL_CERTIFICATE_DIR)/certificate.pem ]; then
 		make ssl-generate-certificate-project
-		[ $(PROJECT_NAME) != "make-devops" ] && rm -f $(SSL_CERTIFICATE_DIR)/.gitignore
 	fi
 	# Re-configure developer's environment on demand
 	if [ -n "$(_PROJECT_CONFIG_DEV_ENV_TIMESTAMP)" ] && ([ ! -f $(_PROJECT_CONFIG_DEV_ENV_TIMESTAMP_FILE) ] || [ $(_PROJECT_CONFIG_DEV_ENV_TIMESTAMP) -gt $$(cat $(_PROJECT_CONFIG_DEV_ENV_TIMESTAMP_FILE)) ]) && [ $(BUILD_ID) -eq 0 ]; then
@@ -38,10 +37,17 @@ project-stop: ### Stop Docker Compose
 project-log: ### Print log from Docker Compose
 	make docker-compose-log
 
-project-deploy: ### Deploy application service stack to the Kubernetes cluster - mandatory: PROFILE=[profile name]
-	eval "$$(make aws-assume-role-export-variables)"
-	eval "$$(make project-populate-application-variables)"
-	make k8s-deploy STACK=$(or $(STACK), service)
+project-deploy: ### Deploy application stack to the Kubernetes cluster - mandatory: STACK|STACKS|DEPLOYMENT_STACKS=[comma-separated names],PROFILE=[profile name]
+	make k8s-deploy STACK=$(or $(STACK), $(or $(STACKS), $(DEPLOYMENT_STACKS)))
+
+project-undeploy: ### Undeploy application stack from the Kubernetes cluster - mandatory: PROFILE=[profile name]
+	make k8s-undeploy
+
+project-deploy-job: ### Deploy job stack to the Kubernetes cluster - mandatory: STACK|STACKS|DEPLOYMENT_STACKS=[comma-separated names],PROFILE=[profile name]
+	make k8s-deploy-job STACK=$(or $(STACK), $(or $(STACKS), $(DEPLOYMENT_STACKS)))
+
+project-undeploy-job: ### Undeploy job stack from the Kubernetes cluster - mandatory: PROFILE=[profile name]
+	make k8s-undeploy-job
 
 project-document-infrastructure: ### Generate infrastructure diagram - optional: FIN=[Python file path, defaults to infrastructure/diagram.py],FOUT=[PNG file path, defaults to documentation/Infrastructure_Diagram]
 	make docker-run-tools CMD="python \
@@ -49,43 +55,8 @@ project-document-infrastructure: ### Generate infrastructure diagram - optional:
 		$(or $(FOUT), $(DOCUMENTATION_DIR_REL)/Infrastructure_Diagram) \
 	"
 
-project-populate-application-variables:
-	export TTL=$$(make -s k8s-get-namespace-ttl)
-
-	export COGNITO_USER_POOL_CLIENT_SECRET=$$(make -s project-aws-get-cognito-client-secret NAME=$(COGNITO_USER_POOL))
-	export COGNITO_USER_POOL_CLIENT_ID=$$(make -s project-aws-get-cognito-client-id NAME=$(COGNITO_USER_POOL))
-	export COGNITO_USER_POOL_ID=$$(make -s aws-cognito-get-userpool-id NAME=$(COGNITO_USER_POOL))
-	export COGNITO_JWT_VERIFICATION_URL=https://cognito-idp.eu-west-2.amazonaws.com/$${COGNITO_USER_POOL_ID}/.well-known/jwks.json
-
-	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
-	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}
-
-project-aws-get-cognito-client-id: # Get AWS cognito client id - mandatory: NAME
-	aws cognito-idp list-user-pool-clients \
-		--user-pool-id $$(make -s aws-cognito-get-userpool-id NAME=$(NAME)) \
-		--region $(AWS_REGION) \
-		--query 'UserPoolClients[].ClientId' \
-		--output text
-
-project-aws-get-cognito-client-secret: # Get AWS secret - mandatory: NAME
-	aws cognito-idp describe-user-pool-client \
-		--user-pool-id $$(make -s aws-cognito-get-userpool-id NAME=$(NAME)) \
-		--client-id $$(make -s project-aws-get-cognito-client-id NAME=$(NAME)) \
-		--region $(AWS_REGION) \
-		--query 'UserPoolClient.ClientSecret' \
-		--output text
-# ==============================================================================
-
-project-tag-as-release-candidate: ### Tag release candidate - mandatory: ARTEFACT|ARTEFACTS=[comma-separated image names]; optional: COMMIT=[git commit hash, defaults to master]
-	commit=$(or $(COMMIT), master)
-	make git-tag-create-release-candidate COMMIT=$$commit
-	tag=$$(make git-tag-get-release-candidate COMMIT=$$commit)
-	for image in $$(echo $(or $(ARTEFACTS), $(ARTEFACT)) | tr "," "\n"); do
-		make docker-image-find-and-tag-as \
-			TAG=$$tag \
-			IMAGE=$$image \
-			COMMIT=$$commit
-	done
+project-clear-tmp: ### Remove all temporary files and directories from the ./build/automation/tmp directory
+	find $(TMP_DIR) -mindepth 1 -maxdepth 1 -name '*' -a ! -path '$(TMP_DIR)/.gitignore' | xargs rm -rf
 
 # ==============================================================================
 
@@ -156,10 +127,10 @@ project-branch-sec-test: ### Check if development branch can be tested (security
 			echo true && exit 0
 	echo false
 
-project-message-contains: ### Check if git commit message contains any give keyword, format: '[ci keyword-one,keyword-two,...]' - mandatory KEYWORD=[comma-separated keywords]
+project-message-contains: ### Check if git commit message contains any give keyword, format: '[ci:keyword-one,keyword-two,...]' - mandatory KEYWORD=[comma-separated keywords]
 	msg=$$(make git-commit-get-message)
 	for str in $$(echo $(KEYWORD) | sed "s/,/ /g"); do
-		echo "$$msg" | grep -E '\[ci .*\]' | grep -Eoq "\[ci .*[^-]$${str}[^-].*" && echo true && exit 0
+		echo "$$msg" | grep -E '\[ci:.*\]' | grep -Eoq "\[ci:.*[^-]$${str}[^-].*" && echo true && exit 0
 	done
 	echo false
 
