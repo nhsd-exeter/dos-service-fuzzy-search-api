@@ -38,7 +38,7 @@ resource "aws_lambda_function" "service_etl_lambda" {
 }
 
 resource "aws_security_group" "service_etl_security_group" {
-  name        = "uec-sf-${var.profile}-service-etl_sg"
+  name        = "uec-sfs-${var.profile}-service-etl_sg"
   description = "Allows outbound traffic from ETL lambda"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
 
@@ -87,7 +87,7 @@ resource "aws_iam_role" "service_etl_lambda_role" {
 EOF
 }
 
-resource "aws_iam_role_policy" "uec-sf-dos-extract" {
+resource "aws_iam_role_policy" "uec-sfs-dos-extract" {
   name   = local.service_etl_policy_name
   role   = aws_iam_role.service_etl_lambda_role.name
   policy = <<EOF
