@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   fuzzysearch:
-    image: $DOCKER_REGISTERY/api:$VERSION
+    image: $DOCKER_REGISTRY/api:$VERSION
     container_name: fuzzysearch
     environment:
       SPRING_PROFILES_ACTIVE: $SPRING_PROFILES_ACTIVE
