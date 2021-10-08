@@ -1,9 +1,10 @@
 TERRAFORM_DIR = $(INFRASTRUCTURE_DIR)/stacks
 TERRAFORM_DIR_REL = $(shell echo $(TERRAFORM_DIR) | sed "s;$(PROJECT_DIR);;g")
-TERRAFORM_STATE_KEY = $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)/$(PROFILE)
-TERRAFORM_STATE_LOCK = $(or $(TEXAS_TERRAFORM_STATE_LOCK), terraform-service-state-lock-$(PROFILE))
-TERRAFORM_STATE_STORE = $(or $(TEXAS_TERRAFORM_STATE_STORE), terraform-service-state-store-$(PROFILE))
-TERRAFORM_VERSION = 0.13.6
+TERRAFORM_STATE_STORE = $(or $(TEXAS_TERRAFORM_STATE_STORE), state-store-$(AWS_ACCOUNT_NAME))
+TERRAFORM_STATE_LOCK = $(or $(TEXAS_TERRAFORM_STATE_LOCK), state-lock-$(AWS_ACCOUNT_NAME))
+TERRAFORM_STATE_KEY = $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)/$(ENVIRONMENT)
+TERRAFORM_STATE_KEY_SHARED = texas
+TERRAFORM_VERSION = $(or $(TEXAS_TERRAFORM_VERSION), 0.13.6)
 
 # ==============================================================================
 
@@ -104,9 +105,9 @@ terraform-export-variables: ### Get environment variables as TF_VAR_[name] varia
 	make terraform-export-variables-from-shell PATTERN="^(DB|DATABASE|APP|APPLICATION|UI|API|SERVER|HOST|URL)"
 	make terraform-export-variables-from-shell PATTERN="^(PROFILE|ENVIRONMENT|BUILD|PROGRAMME|ORG|SERVICE|PROJECT)"
 
-terraform-export-variables-from-secret: ### Get secret as TF_VAR_[name] variables - mandatory: NAME=[secret name]; return: [variables export]
-	if [ -n "$(NAME)" ]; then
-		secret=$$(make secret-fetch NAME=$(NAME))
+terraform-export-variables-from-secret: ### Get secret as TF_VAR_[name] variables - mandatory: NAME|DEPLOYMENT_SECRETS=[secret name]; return: [variables export]
+	if [ -n "$(NAME)" ] || [ -n "$(DEPLOYMENT_SECRETS)" ]; then
+		secret=$$(make secret-fetch NAME=$(or $(NAME), $(DEPLOYMENT_SECRETS)))
 		exports=$$(make terraform-export-variables-from-json JSON="$$secret")
 		echo "$$exports"
 	fi
