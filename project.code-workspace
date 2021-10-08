@@ -1,6 +1,10 @@
 {
   "folders": [
     {
+      "name": "Configuration",
+      "path": "./build/automation/var"
+    },
+    {
       "name": "[Repository]",
       "path": "."
     }
@@ -8,14 +12,17 @@
   "settings": {
     "breadcrumbs.enabled": true,
     "editor.autoIndent": "full",
+    "editor.bracketPairColorization.enabled": true,
     "editor.fontSize": 14,
     "editor.formatOnSave": true,
     "editor.renderWhitespace": "all",
+    "editor.rulers": [
+      120
+    ],
     "editor.suggestSelection": "recentlyUsedByPrefix",
     "explorer.autoReveal": true,
     "explorer.sortOrder": "type",
     "extensions.ignoreRecommendations": true,
-    "extensions.showRecommendationsOnlyOnDemand": true,
     "files.associations": {
       "Jenkinsfile*": "jenkinsfile"
     },
@@ -53,14 +60,14 @@
       "--max-line-length=120"
     ],
     "python.linting.flake8Enabled": true,
-    "python.linting.flake8Path": "~/.pyenv/versions/3.9.5/bin/flake8",
+    "python.linting.flake8Path": "~/.pyenv/versions/3.9.7/bin/flake8",
     "python.linting.mypyArgs": [],
     "python.linting.mypyEnabled": true,
-    "python.linting.mypyPath": "~/.pyenv/versions/3.9.5/bin/mypy",
+    "python.linting.mypyPath": "~/.pyenv/versions/3.9.7/bin/mypy",
     "python.linting.pylintArgs": [],
     "python.linting.pylintEnabled": true,
-    "python.linting.pylintPath": "~/.pyenv/versions/3.9.5/bin/pylint",
-    "python.pythonPath": "~/.pyenv/versions/3.9.5/bin/python",
+    "python.linting.pylintPath": "~/.pyenv/versions/3.9.7/bin/pylint",
+    "python.pythonPath": "~/.pyenv/versions/3.9.7/bin/python",
     "python.terminal.activateEnvironment": false,
     "search.exclude": {
       "**/.git": true,
@@ -91,25 +98,18 @@
       "editor.insertSpaces": true
     },
     "[javascript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.insertSpaces": true,
       "editor.tabSize": 2
     },
     "[javascriptreact]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.insertSpaces": true,
       "editor.tabSize": 2
     },
     "[json]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.insertSpaces": true,
       "editor.tabSize": 2
     },
     "[python]": {
-
-
-
-
       "editor.tabSize": 4,
       "editor.insertSpaces": true
     },
@@ -118,12 +118,10 @@
       "editor.tabSize": 2
     },
     "[typescript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.insertSpaces": true,
       "editor.tabSize": 2
     },
     "[typescriptreact]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.insertSpaces": true,
       "editor.tabSize": 2
     },
@@ -143,36 +141,6 @@
       "editor.insertSpaces": true,
       "editor.tabSize": 2
     },
-    "emeraldwalk.runonsave": {
-      "commands": [
-        {
-          "match": "\\.java$",
-          "cmd": "/usr/local/bin/google-java-format --replace ${file}"
-        }
-      ]
-    },
-    "workbench.colorCustomizations": {
-      "activityBar.activeBackground": "#ef7853",
-      "activityBar.activeBorder": "#8af4a3",
-      "activityBar.background": "#ef7853",
-      "activityBar.foreground": "#15202b",
-      "activityBar.inactiveForeground": "#15202b99",
-      "activityBarBadge.background": "#8af4a3",
-      "activityBarBadge.foreground": "#15202b",
-      "statusBar.background": "#eb5424",
-      "statusBar.foreground": "#e7e7e7",
-      "statusBarItem.hoverBackground": "#ef7853",
-      "titleBar.activeBackground": "#eb5424",
-      "titleBar.activeForeground": "#e7e7e7",
-      "titleBar.inactiveBackground": "#eb542499",
-      "titleBar.inactiveForeground": "#e7e7e799"
-    },
-    "peacock.color": "#eb5424",
-    "cSpell.words": [
-      "boto",
-      "botocore",
-      "psycopg"
-    ],
     "yaml.customTags": [
       "!And",
       "!And sequence",
@@ -201,6 +169,37 @@
       "!Select sequence",
       "!Split",
       "!Split sequence"
-    ]
+    ],
+    "emeraldwalk.runonsave": {
+      "commands": [
+        {
+          "match": "\\.java$",
+          "cmd": "/usr/local/bin/google-java-format --replace ${file}"
+        }
+      ]
+    },
+    "workbench.colorCustomizations": {
+      "activityBar.activeBackground": "#ef7853",
+      "activityBar.activeBorder": "#8af4a3",
+      "activityBar.background": "#ef7853",
+      "activityBar.foreground": "#15202b",
+      "activityBar.inactiveForeground": "#15202b99",
+      "activityBarBadge.background": "#8af4a3",
+      "activityBarBadge.foreground": "#15202b",
+      "statusBar.background": "#eb5424",
+      "statusBar.foreground": "#e7e7e7",
+      "statusBarItem.hoverBackground": "#ef7853",
+      "titleBar.activeBackground": "#eb5424",
+      "titleBar.activeForeground": "#e7e7e7",
+      "titleBar.inactiveBackground": "#eb542499",
+      "titleBar.inactiveForeground": "#e7e7e799",
+      "editorGroup.border": "#ef7853",
+      "panel.border": "#ef7853",
+      "sash.hoverBorder": "#ef7853",
+      "sideBar.border": "#ef7853",
+      "statusBarItem.remoteBackground": "#eb5424",
+      "statusBarItem.remoteForeground": "#e7e7e7"
+    },
+    "peacock.color": "#eb5424"
   }
 }

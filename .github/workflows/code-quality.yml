@@ -11,21 +11,18 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      # - name: Check text files format
-      #   run: |
-      #     build/automation/etc/githooks/scripts/editorconfig-pre-commit.sh
+      - name: Check text files format
+        run: |
+          build/automation/etc/githooks/scripts/editorconfig-pre-commit.sh
       - name: Check Python files format
         run: |
           build/automation/etc/githooks/scripts/python-code-pre-commit.sh
       - name: Check Terraform files format
         run: |
           build/automation/etc/githooks/scripts/terraform-format-pre-commit.sh
-      - name: Compile project
+      - name: Create coverage report
         run: |
-          make compile
-      # - name: Create coverage reports
-      #   run: |
-      #     make coverage-report
+          make compile coverage-report
       - uses: sonarsource/sonarcloud-github-action@master
         # SEE: https://github.com/SonarSource/sonarcloud-github-action
         env:
@@ -35,7 +32,7 @@ jobs:
           projectBaseDir: ./application/app
           args: >
             -Dsonar.organization=nhsd-exeter
-            -Dsonar.projectKey=nhsd-exeter_dos-service-fuzzy-search-api
+            -Dsonar.projectKey=uec-dos-api-sfsa
             -Dsonar.java.binaries=target/classes
             -Dsonar.coverage.exclusions=src/main/java/**/config/*.java,src/test/**/*.*
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco

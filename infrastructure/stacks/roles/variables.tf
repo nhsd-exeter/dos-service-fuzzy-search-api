@@ -15,8 +15,6 @@ variable "aws_region" { description = "Texas AWS deployment region" }
 
 variable "service_prefix" { description = "The prefix to be used for all infrastructure" }
 
-variable "service_prefix_short" { description = "The prefix to be used for all infrastructure - this is a short version used when a name exceeds limits " }
-
 variable "terraform_platform_state_store" { description = "Name of the S3 bucket used to store the platform infrastructure terraform state" }
 
 variable "vpc_terraform_state_key" { description = "The VPC key in the terraform state bucket" }

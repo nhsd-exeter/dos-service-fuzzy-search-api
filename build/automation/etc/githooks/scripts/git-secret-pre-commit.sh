@@ -1,5 +1,6 @@
 #!/bin/bash
-
-exit 0
+set -e
 
 git secrets --pre_commit_hook -- "$@"
+
+exit 0

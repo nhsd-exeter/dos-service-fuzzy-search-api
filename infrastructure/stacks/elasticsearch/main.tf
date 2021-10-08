@@ -2,7 +2,7 @@
 module "sfs_elasticsearch" {
   source                  = "../../modules/elasticsearch"
   service_prefix          = var.service_prefix
-  service_prefix_short    = var.service_prefix_short
+  service_prefix_short    = var.service_prefix
   es_domain_name          = var.es_domain_name
   es_snapshot_bucket      = var.es_snapshot_bucket
   es_snapshot_role        = var.es_snapshot_role

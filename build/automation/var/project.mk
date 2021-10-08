@@ -2,10 +2,13 @@ ORG_NAME = nhsd-exeter
 PROGRAMME = uec
 PROJECT_GROUP = uec/dos-api
 PROJECT_GROUP_SHORT = uec-dos-api
-PROJECT_NAME = service-fuzzy-search
-PROJECT_NAME_SHORT = sfs
+PROJECT_NAME = service-fuzzy-search-api
+PROJECT_NAME_SHORT = sfsa
 PROJECT_DISPLAY_NAME = DoS Service Fuzzy Search API
 PROJECT_ID = $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)
+
+TEAM_NAME = Service Finder
+TEAM_ID = service-finder
 
 ROLE_PREFIX = UECDoSAPI
 PROJECT_TAG = $(PROJECT_NAME)
@@ -16,3 +19,4 @@ PROJECT_TECH_STACK_LIST = java,terraform
 
 DOCKER_REPOSITORIES =
 SSL_DOMAINS_PROD =
+DEPLOYMENT_SECRETS = $(PROJECT_ID)-$(PROFILE)/deployment

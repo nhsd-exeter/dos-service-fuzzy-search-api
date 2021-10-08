@@ -26,7 +26,7 @@ This document must be discussed regularly with the Tech Lead and considered in t
 
 ### Automation
 
-- TODO
+- Move application from `./application/app` to `./application`
 
 ### Architecture
 
@@ -34,7 +34,7 @@ This document must be discussed regularly with the Tech Lead and considered in t
 
 ### Infrastructure
 
-- TODO
+- Review the infrastructure code, e.g. use of the prefix `uec-sf`, configuration and variables
 
 ### Security
 

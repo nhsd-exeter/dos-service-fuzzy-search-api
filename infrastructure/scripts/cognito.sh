@@ -5,18 +5,17 @@ set -e
 
 COGNITO_GROUPS=(API_USER)
 COGNITO_ADMIN_USER="service-finder-admin@nhs.net"
-COGNITO_PROFILE=$PROFILE
 
 COGNITO_ADMIN_PASSWORD=$(
     aws secretsmanager get-secret-value \
-        --secret-id service-fuzzy-search-$COGNITO_PROFILE-cognito-admin-password \
+        --secret-id $PROJECT_GROUP_SHORT-$PROJECT_NAME_SHORT-$ENVIRONMENT-cognito-admin-password \
         --region $AWS_REGION \
         --query 'SecretString' \
         --output text)
 
 USER_POOL_ID=$(
     aws cognito-idp list-user-pools \
-        --query "UserPools[?Name=='service-fuzzy-search-$COGNITO_PROFILE-pool'].Id" \
+        --query "UserPools[?Name=='$COGNITO_USER_POOL'].Id" \
     --region $AWS_REGION \
         --max-results 60 \
         --output text)
