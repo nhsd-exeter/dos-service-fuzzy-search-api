@@ -95,7 +95,35 @@ tag-release: # Create the release tag - mandatory DEV_TAG RELEASE_TAG
 	docker push $(DOCKER_REGISTRY_LIVE)/api:$(RELEASE_TAG)
 
 deploy: # Deploy artefacts - mandatory: PROFILE=[name]
+	eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make project-populate-application-variables)"
 	make project-deploy PROFILE=$(PROFILE) STACK=$(DEPLOYMENT_STACKS)
+
+project-populate-application-variables:
+	export TTL=$$(make -s k8s-get-namespace-ttl)
+
+	export COGNITO_USER_POOL_CLIENT_SECRET=$$(make -s project-aws-get-cognito-client-secret NAME=$(COGNITO_USER_POOL))
+	export COGNITO_USER_POOL_CLIENT_ID=$$(make -s project-aws-get-cognito-client-id NAME=$(COGNITO_USER_POOL))
+	export COGNITO_USER_POOL_ID=$$(make -s aws-cognito-get-userpool-id NAME=$(COGNITO_USER_POOL))
+	export COGNITO_JWT_VERIFICATION_URL=https://cognito-idp.eu-west-2.amazonaws.com/$${COGNITO_USER_POOL_ID}/.well-known/jwks.json
+
+	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
+	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}
+
+project-aws-get-cognito-client-id: # Get AWS cognito client id - mandatory: NAME
+	aws cognito-idp list-user-pool-clients \
+		--user-pool-id $$(make -s aws-cognito-get-userpool-id NAME=$(NAME)) \
+		--region $(AWS_REGION) \
+		--query 'UserPoolClients[].ClientId' \
+		--output text
+
+project-aws-get-cognito-client-secret: # Get AWS secret - mandatory: NAME
+	aws cognito-idp describe-user-pool-client \
+		--user-pool-id $$(make -s aws-cognito-get-userpool-id NAME=$(NAME)) \
+		--client-id $$(make -s project-aws-get-cognito-client-id NAME=$(NAME)) \
+		--region $(AWS_REGION) \
+		--query 'UserPoolClient.ClientSecret' \
+		--output text
 
 prepare-lambda-deployment: # Downloads the required libraries for the Lambda functions
 	cd $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl

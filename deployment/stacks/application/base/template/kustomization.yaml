@@ -43,5 +43,5 @@ configMapGenerator:
       - POSTCODE_MAPPING_SERVICE_URL=POSTCODE_MAPPING_SERVICE_URL_TO_REPLACE
 
 images:
-  - name: AWS_ECR_TO_REPLACE/uec-dos-api/sfs/api
+  - name: DOCKER_REGISTRY_TO_REPLACE/api
     newTag: API_IMAGE_TAG_TO_REPLACE

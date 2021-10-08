@@ -17,7 +17,7 @@ SPLUNK_INDEX := eks_logs_service_finder_nonprod
 APP_URL_PREFIX := $(K8S_APP_NAMESPACE)-$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)
 
 # Elastic search datastore
-DOMAIN := sfs-$(PROFILE)
+DOMAIN := $(TF_VAR_service_prefix)-service
 # ELASTICSEARCH_URL configured in make project-populate-application-variables
 
 API_SERVICE_SEARCH_ENDPOINT := https://$(APP_URL_PREFIX)-service-search.$(TF_VAR_platform_zone)/dosapi/dosservices/v0.0.1/services/byfuzzysearch
@@ -47,10 +47,9 @@ NAME_PUBLIC_PRIORITY := 4
 
 DEPLOYMENT_STACKS = application
 INFRASTRUCTURE_STACKS = elasticsearch,authentication,roles,service_etl
-
+SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 TF_VAR_dynamo_db_postcode_store_table_name = service-finder-nonprod-postcode-location-mapping
-TF_VAR_service_prefix := service-fuzzy-search-$(PROFILE)
-TF_VAR_service_prefix_short := sfs-$(PROFILE)
+TF_VAR_service_prefix := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 
 TF_VAR_es_zone_awareness_enabled := false
 TF_VAR_es_availability_zone_count := null
@@ -58,7 +57,7 @@ TF_VAR_es_instance_count := 2
 TF_VAR_es_instance_type := m4.large.elasticsearch
 TF_VAR_es_snapshot_bucket := $(TF_VAR_service_prefix)-elastic-search-snapshots
 TF_VAR_es_snapshot_role := $(TF_VAR_service_prefix)-elasticsearch-snapshot
-TF_VAR_es_domain_name := sfs-$(PROFILE)
+TF_VAR_es_domain_name := $(TF_VAR_service_prefix)-service
 TF_VAR_service_etl_logging_level := INFO
 TF_VAR_service_etl_sns_logging_level := INFO
 TF_VAR_service_etl_sns_email := service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si.slack.com
@@ -75,7 +74,8 @@ TF_VAR_service_etl_cron_timer_day_of_week := MON-FRI
 TF_VAR_service_etl_cron_timer_year := *
 
 #Cognito user pool details
-COGNITO_USER_POOL = service-fuzzy-search-dev-pool
+COGNITO_USER_POOL := $(TF_VAR_service_prefix)-authentication
+TF_VAR_cognito_user_pool := $(COGNITO_USER_POOL)
 COGNITO_USER_POOL_CLIENT_SECRET := $(or $(COGNITO_USER_POOL_CLIENT_SECRET), )
 COGNITO_USER_POOL_CLIENT_ID := $(or $(COGNITO_USER_POOL_CLIENT_ID), )
 COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
