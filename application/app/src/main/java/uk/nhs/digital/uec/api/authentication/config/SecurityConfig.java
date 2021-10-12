@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import uk.nhs.digital.uec.api.authentication.filter.AccessTokenFilter;
+import uk.nhs.digital.uec.api.authentication.filter.RefreshTokenFilter;
 import uk.nhs.digital.uec.api.authentication.filter.TokenEntryPoint;
 
 /** Configuration class to further secure all the APIs */
@@ -26,14 +27,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public static final String FUZZY_SEARCH_URL = "/dosapi/dosservices/v0.0.1/services/byfuzzysearch";
 
   @Autowired private AccessTokenFilter accessTokenFilter;
+  @Autowired private RefreshTokenFilter refreshTokenFilter;
   @Autowired private TokenEntryPoint tokenEndpoint;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
 
-    List<String> permitAllEndpointList = Arrays.asList(LOGIN_URL, HEALTH_CHECK_READINESS_URL,HEALTH_CHECK_LIVENESS_URL);
+    List<String> permitAllEndpointList =
+        Arrays.asList(LOGIN_URL, HEALTH_CHECK_READINESS_URL, HEALTH_CHECK_LIVENESS_URL);
 
-    http.addFilterBefore(accessTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
+    http.addFilterBefore(refreshTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
+        .addFilterAfter(accessTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
         .cors()
         .and()
         .csrf()

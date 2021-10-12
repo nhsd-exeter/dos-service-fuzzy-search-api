@@ -1,6 +1,7 @@
 package uk.nhs.digital.uec.api.integration.authentication.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,7 @@ import uk.nhs.digital.uec.api.authentication.service.AuthenticationServiceInterf
 @ActiveProfiles("local")
 public class AuthenticationServiceIT {
 
-  @Autowired private AuthenticationServiceInterface authenticationService;
+  @Autowired private AuthenticationService authenticationService;
 
   @MockBean private CognitoIdpService cognitoIdpService;
 
@@ -41,6 +42,15 @@ public class AuthenticationServiceIT {
   public void testAuthenticationService() throws UnauthorisedException {
     doReturn(authToken).when(cognitoIdpService).authenticate(credential);
     AuthToken returnedAuthToken = authenticationService.getAccessToken(credential);
+    assertEquals(accessToken, returnedAuthToken.getAccessToken());
+  }
+
+  @Test
+  public void testAuthenticationServiceForRefreshToken() throws UnauthorisedException {
+    doReturn(authToken)
+        .when(cognitoIdpService)
+        .authenticateWithRefreshToken(anyString(), anyString());
+    AuthToken returnedAuthToken = authenticationService.refreshToken(anyString(), anyString());
     assertEquals(accessToken, returnedAuthToken.getAccessToken());
   }
 }

@@ -1,6 +1,5 @@
 package uk.nhs.digital.uec.api.authentication.localstub;
 
-import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.PASSWORD;
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.USERNAME;
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.COGNITO_GROUP;
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.ROLE_FUZZY;
@@ -32,7 +31,7 @@ public class LocalAmazonCognitoIdentityClientStub extends AbstractAWSCognitoIden
   public InitiateAuthResult initiateAuth(InitiateAuthRequest initiateAuthRequest) {
     Map<String, String> authParameters = initiateAuthRequest.getAuthParameters();
     String inputUserName = authParameters.get(USERNAME);
-    String inputPassword = authParameters.get(PASSWORD);
+    String inputPassword = "password";
     String validPassword = identityProviderIdPasswordMap.get(inputUserName);
     log.info("Login attempted using credentials : " + inputUserName + "/" + inputPassword);
 
@@ -46,7 +45,7 @@ public class LocalAmazonCognitoIdentityClientStub extends AbstractAWSCognitoIden
 
   private InitiateAuthResult initiateAuthRequest(String userName) {
     AuthenticationResultType authenticationResult = new AuthenticationResultType();
-    authenticationResult.setAccessToken(generateAuthToken("id", "issuer", userName, 3600000));
+    authenticationResult.setAccessToken(generateAuthToken("id", "issuer", userName, 360000));
     authenticationResult.setRefreshToken(generateAuthToken("rtid", "issuer", userName, 86400000));
     InitiateAuthResult initiateAuthResult = new InitiateAuthResult();
     initiateAuthResult.setAuthenticationResult(authenticationResult);

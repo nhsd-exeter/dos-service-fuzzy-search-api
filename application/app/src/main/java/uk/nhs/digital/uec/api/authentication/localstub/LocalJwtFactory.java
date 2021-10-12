@@ -1,5 +1,6 @@
 package uk.nhs.digital.uec.api.authentication.localstub;
 
+import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.COGNITO_GROUPS;
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.KEY_STORE;
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.KEY_STORE_ALIAS;
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.KEY_STORE_PASSWORD;
@@ -42,7 +43,7 @@ public class LocalJwtFactory {
       builder.setExpiration(expirationDate);
     }
 
-    builder.claim("cognito:groups", groupNames.toArray());
+    builder.claim(COGNITO_GROUPS, groupNames.toArray());
     return builder.compact();
   }
 }

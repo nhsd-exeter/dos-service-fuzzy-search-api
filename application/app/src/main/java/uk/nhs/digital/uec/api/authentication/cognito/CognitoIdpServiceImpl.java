@@ -1,6 +1,8 @@
 package uk.nhs.digital.uec.api.authentication.cognito;
 
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.PASSWORD;
+import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.REFRESH_TOKEN;
+import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.REFRESH_TOKEN_AUTH;
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.USERNAME;
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.USER_PASSWORD_AUTH;
 import static uk.nhs.digital.uec.api.util.Utils.calculateSecretHash;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.nhs.digital.uec.api.authentication.exception.InvalidAccessTokenException;
 import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
@@ -65,5 +68,25 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
     return new AuthToken(
         authenticationResult.getAuthenticationResult().getAccessToken(),
         authenticationResult.getAuthenticationResult().getRefreshToken());
+  }
+
+  @Override
+  public AuthToken authenticateWithRefreshToken(String refreshToken, String userName) {
+    AuthToken authTokens = null;
+    Map<String, String> authenticationParameters =
+        Map.of(
+            REFRESH_TOKEN,
+            refreshToken,
+            USERNAME,
+            userName,
+            SECRET_HASH,
+            calculateSecretHash(userName, userPoolClientId, userPoolClientSecret));
+    try {
+      authTokens = getAuthenticationTokens(REFRESH_TOKEN_AUTH, authenticationParameters);
+      authTokens.setRefreshToken(refreshToken);
+    } catch (AWSCognitoIdentityProviderException e) {
+      throw new InvalidAccessTokenException(e.getMessage());
+    }
+    return authTokens;
   }
 }
