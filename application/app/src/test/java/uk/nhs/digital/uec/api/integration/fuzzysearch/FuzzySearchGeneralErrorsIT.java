@@ -21,7 +21,7 @@ import uk.nhs.digital.uec.api.util.PropertySourceResolver;
  * be mocked here.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class FuzzySearchGeneralErrorsTest extends AuthServiceTest {
+public class FuzzySearchGeneralErrorsIT extends AuthServiceIT {
 
   @Autowired private PropertySourceResolver propertySourceResolver;
 

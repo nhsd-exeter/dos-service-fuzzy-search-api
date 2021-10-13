@@ -17,13 +17,18 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
+import uk.nhs.digital.uec.api.util.PropertySourceResolver;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthServiceTest {
+public class AuthServiceIT {
 
   @LocalServerPort private int port;
 
   @Autowired public TestRestTemplate restTemplate;
+
+  @Autowired public ObjectMapper mapper;
+
+  @Autowired private PropertySourceResolver propertySourceResolver;
 
   HttpHeaders headers = new HttpHeaders();
 
@@ -55,5 +60,9 @@ public class AuthServiceTest {
     headers.add("Content-Type", "application/json");
     headers.add("Authorization", "Bearer " + authToken.getAccessToken());
     return headers;
+  }
+
+  protected String getEndpointUrl() {
+    return propertySourceResolver.endpointUrl;
   }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import uk.nhs.digital.uec.api.util.PropertySourceResolver;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ElasticSearchTest extends AuthServiceTest {
+public class ElasticSearchIT extends AuthServiceIT {
 
   @Autowired private PropertySourceResolver propertySourceResolver;
   private static String endpointUrl;
