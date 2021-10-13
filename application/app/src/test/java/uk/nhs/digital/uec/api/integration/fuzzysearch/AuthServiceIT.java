@@ -19,7 +19,7 @@ import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthServiceTest {
+public class AuthServiceIT {
 
   @LocalServerPort private int port;
 

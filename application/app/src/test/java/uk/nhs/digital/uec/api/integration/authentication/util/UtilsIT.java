@@ -1,11 +1,11 @@
-package uk.nhs.digital.uec.api.authentication.util;
+package uk.nhs.digital.uec.api.integration.authentication.util;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.nhs.digital.uec.api.util.Utils.calculateSecretHash;
 
 import org.junit.jupiter.api.Test;
 
-public class UtilsTest {
+public class UtilsIT {
 
   @Test
   public void testCalculateSecretHash() {

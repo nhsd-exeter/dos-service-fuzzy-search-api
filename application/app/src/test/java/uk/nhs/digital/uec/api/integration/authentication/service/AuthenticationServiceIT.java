@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.authentication.service;
+package uk.nhs.digital.uec.api.integration.authentication.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
@@ -13,10 +13,11 @@ import uk.nhs.digital.uec.api.authentication.cognito.CognitoIdpService;
 import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
+import uk.nhs.digital.uec.api.authentication.service.AuthenticationServiceInterface;
 
 @SpringBootTest
 @ActiveProfiles("local")
-public class AuthenticationServiceTest {
+public class AuthenticationServiceIT {
 
   @Autowired private AuthenticationServiceInterface authenticationService;
 

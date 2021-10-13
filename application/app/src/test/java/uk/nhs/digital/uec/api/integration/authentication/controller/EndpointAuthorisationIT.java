@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.authentication.controller;
+package uk.nhs.digital.uec.api.integration.authentication.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,7 +31,7 @@ import uk.nhs.digital.uec.api.authentication.util.JwtUtil;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("local")
-public class EndpointAuthorisationTest {
+public class EndpointAuthorisationIT {
 
   @LocalServerPort private int port;
 

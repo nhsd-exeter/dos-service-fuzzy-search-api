@@ -24,7 +24,7 @@ import uk.nhs.digital.uec.api.util.PropertySourceResolver;
  * behavior. Only the model layer will be mocked here.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class FuzzySearchValidationErrorsTest extends AuthServiceTest {
+public class FuzzySearchValidationErrorsIT extends AuthServiceIT {
 
   @Autowired private ObjectMapper mapper;
 

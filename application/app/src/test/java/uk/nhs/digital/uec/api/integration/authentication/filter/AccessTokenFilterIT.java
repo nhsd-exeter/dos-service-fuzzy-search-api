@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.authentication.filter;
+package uk.nhs.digital.uec.api.integration.authentication.filter;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,12 +19,13 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import uk.nhs.digital.uec.api.authentication.exception.AccessTokenExpiredException;
+import uk.nhs.digital.uec.api.authentication.filter.AccessTokenFilter;
 import uk.nhs.digital.uec.api.authentication.util.JwtUtil;
 
 @SpringBootTest
 @ActiveProfiles("local")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AccessTokenFilterTest {
+public class AccessTokenFilterIT {
 
   @Mock private HttpServletRequest httpRequest;
 
