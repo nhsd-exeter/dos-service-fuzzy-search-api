@@ -31,11 +31,8 @@ public class LocalAmazonCognitoIdentityClientStub extends AbstractAWSCognitoIden
   public InitiateAuthResult initiateAuth(InitiateAuthRequest initiateAuthRequest) {
     Map<String, String> authParameters = initiateAuthRequest.getAuthParameters();
     String inputUserName = authParameters.get(USERNAME);
-    String inputPassword = "password";
     String validPassword = identityProviderIdPasswordMap.get(inputUserName);
-    log.info("Login attempted using credentials : " + inputUserName + "/" + inputPassword);
-
-    if (validPassword == null || !validPassword.equals(inputPassword)) {
+    if (validPassword == null) {
       log.info("Attempted to login using invalid credentials");
       throw new AWSCognitoIdentityProviderException("401 - Unauthorised");
     } else {
