@@ -1,7 +1,7 @@
 package uk.nhs.digital.uec.api.integration.fuzzysearch;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,12 +46,12 @@ public class FuzzySearchValidationErrorsIT extends AuthServiceIT {
         restTemplate.exchange(endpointUrl, HttpMethod.GET, request, String.class);
 
     // Assert
-    assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
+    assertSame(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     ApiValidationErrorResponse response =
         mapper.readValue(responseEntity.getBody(), ApiValidationErrorResponse.class);
 
-    assertEquals(response.getValidationCode(), "VAL-001");
+    assertEquals("VAL-001", response.getValidationCode());
   }
 
   /**
@@ -76,12 +76,12 @@ public class FuzzySearchValidationErrorsIT extends AuthServiceIT {
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
     // Assert
-    assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
+    assertSame(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     ApiValidationErrorResponse response =
         mapper.readValue(responseEntity.getBody(), ApiValidationErrorResponse.class);
 
-    assertEquals(response.getValidationCode(), "VAL-002");
+    assertEquals("VAL-002", response.getValidationCode());
   }
 
   /**
@@ -103,11 +103,11 @@ public class FuzzySearchValidationErrorsIT extends AuthServiceIT {
         restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, request, String.class);
 
     // Assert
-    assertTrue(responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST);
+    assertSame(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     ApiValidationErrorResponse response =
         mapper.readValue(responseEntity.getBody(), ApiValidationErrorResponse.class);
 
-    assertEquals(response.getValidationCode(), "VAL-003");
+    assertEquals("VAL-003", response.getValidationCode());
   }
 }

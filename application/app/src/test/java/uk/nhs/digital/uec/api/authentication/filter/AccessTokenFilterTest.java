@@ -21,7 +21,7 @@ import uk.nhs.digital.uec.api.authentication.exception.AccessTokenExpiredExcepti
 import uk.nhs.digital.uec.api.authentication.util.JwtUtil;
 
 @ExtendWith(SpringExtension.class)
-public class RefreshTokenFilterTest {
+public class AccessTokenFilterTest {
 
   @Mock private HttpServletRequest httpRequest;
 
@@ -32,7 +32,7 @@ public class RefreshTokenFilterTest {
   @Mock private HttpServletResponse httpResponse;
   @Mock private FilterChain filterChain;
 
-  @InjectMocks private RefreshTokenFilter filter = new RefreshTokenFilter();
+  @InjectMocks private AccessTokenFilter filter = new AccessTokenFilter();
   private String token;
 
   @BeforeEach
@@ -42,10 +42,9 @@ public class RefreshTokenFilterTest {
   }
 
   @Test
-  public void refreshTokenFilterTest()
+  public void authorisationFilterTest()
       throws ServletException, IOException, AccessTokenExpiredException {
     when(httpRequest.getHeader("Authorization")).thenReturn("Bearer " + token);
-    when(httpRequest.getHeader("REFRESH_TOKEN")).thenReturn("Bearer " + token);
     when(securityContext.getAuthentication()).thenReturn(authentication);
     SecurityContextHolder.setContext(securityContext);
     filter.doFilterInternal(httpRequest, httpResponse, filterChain);
