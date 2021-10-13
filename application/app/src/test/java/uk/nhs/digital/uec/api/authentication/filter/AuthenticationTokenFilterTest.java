@@ -21,7 +21,7 @@ import uk.nhs.digital.uec.api.authentication.exception.AccessTokenExpiredExcepti
 import uk.nhs.digital.uec.api.authentication.util.JwtUtil;
 
 @ExtendWith(SpringExtension.class)
-public class AccessTokenFilterTest {
+public class AuthenticationTokenFilterTest {
 
   @Mock private HttpServletRequest httpRequest;
 
@@ -32,22 +32,33 @@ public class AccessTokenFilterTest {
   @Mock private HttpServletResponse httpResponse;
   @Mock private FilterChain filterChain;
 
-  @InjectMocks private AccessTokenFilter filter = new AccessTokenFilter();
+  @InjectMocks private AccessTokenFilter accessTokenFilter = new AccessTokenFilter();
+  @InjectMocks private RefreshTokenFilter refreshTokenFilter = new RefreshTokenFilter();
   private String token;
 
   @BeforeEach
   public void init() {
     token =
         "eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJpZCIsImlhdCI6MTYyNjc3NTgyMywic3ViIjoiYWRtaW5AbmhzLm5ldCIsImlzcyI6Imlzc3VlciIsImV4cCI6MTYyNjc3OTQyMywiY29nbml0bzpncm91cHMiOlsiQVBJX1VTRVIiXX0.b1Q8Fc8lqiQuHO9tvjQW05MSOdvJ2hy33r-IO5VNUXP-zIwbA7yxl2WMvsoCxKn03CRoDhBQsJlaOhLCtsV_xwfKoLL3hKMZQ_CLQskuBrj4Xus9WmXyrqKyWAUoVAQ3O5NWtWuo8OYmEEcCLdFerv6lKRorIkb_U5ojB0xN1nkEZve0rAMXpDdhMpzNt6e3C_vrtasPAYuvx628gb9Bf9vixA-XMi4xFu2V5N9kKXFRA3w-iHDFUq3kOGtRLLpPRkOOoGo7bEeJGZ_JK2zc4uD-CIJVHIb8Ehf19c9NLk0fnuezWQkXxnbC-sjulJJqGUj_8uHrGM5w_xKWilatEg";
+    when(httpRequest.getHeader("Authorization")).thenReturn("Bearer " + token);
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    when(httpRequest.getHeader("REFRESH_TOKEN")).thenReturn("Bearer " + token);
   }
 
   @Test
   public void authorisationFilterTest()
       throws ServletException, IOException, AccessTokenExpiredException {
-    when(httpRequest.getHeader("Authorization")).thenReturn("Bearer " + token);
+    SecurityContextHolder.setContext(securityContext);
+    accessTokenFilter.doFilterInternal(httpRequest, httpResponse, filterChain);
+    verify(filterChain).doFilter(httpRequest, httpResponse);
+  }
+
+  @Test
+  public void refreshTokenFilterTest()
+      throws ServletException, IOException, AccessTokenExpiredException {
     when(securityContext.getAuthentication()).thenReturn(authentication);
     SecurityContextHolder.setContext(securityContext);
-    filter.doFilterInternal(httpRequest, httpResponse, filterChain);
+    refreshTokenFilter.doFilterInternal(httpRequest, httpResponse, filterChain);
     verify(filterChain).doFilter(httpRequest, httpResponse);
   }
 }
