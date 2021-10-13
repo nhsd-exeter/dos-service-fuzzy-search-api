@@ -3,12 +3,9 @@ package uk.nhs.digital.uec.api.integration.fuzzysearch;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -17,7 +14,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
-import uk.nhs.digital.uec.api.util.PropertySourceResolver;
 
 /**
  * Test class which passes requests through the Fuzzy Search endpoint and asserts desired API
@@ -26,19 +22,13 @@ import uk.nhs.digital.uec.api.util.PropertySourceResolver;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FuzzySearchSuccessIT extends AuthServiceIT {
 
-  @Autowired private ObjectMapper mapper;
-
-  @Autowired private PropertySourceResolver propertySourceResolver;
-
-  @Autowired private TestRestTemplate restTemplate;
-
   private static String endpointUrl;
 
   MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 
   @BeforeEach
   public void configureProperties() throws Exception {
-    endpointUrl = propertySourceResolver.endpointUrl;
+    endpointUrl = getEndpointUrl();
     headers = getAuthorizedHeader();
   }
 
