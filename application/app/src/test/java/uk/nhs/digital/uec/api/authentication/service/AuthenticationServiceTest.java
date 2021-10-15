@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.nhs.digital.uec.api.authentication.cognito.CognitoIdpService;
+import uk.nhs.digital.uec.api.authentication.cognito.CognitoIdpServiceImpl;
 import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
@@ -19,8 +19,7 @@ import uk.nhs.digital.uec.api.authentication.model.Credential;
 public class AuthenticationServiceTest {
 
   @InjectMocks private AuthenticationServiceImpl authenticationService;
-
-  @Mock private CognitoIdpService cognitoIdpService;
+  @Mock private CognitoIdpServiceImpl cognitoIdpService;
 
   private AuthToken authToken;
   private Credential credential;
