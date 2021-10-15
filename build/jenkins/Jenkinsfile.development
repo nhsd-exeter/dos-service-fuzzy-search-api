@@ -46,7 +46,6 @@ pipeline {
         }
       }
     }
-    /*
     stage('Unit Test') {
       steps {
         script {
@@ -54,7 +53,6 @@ pipeline {
         }
       }
     }
-    */
     stage('Run Contract Tests') {
       steps {
         script {
