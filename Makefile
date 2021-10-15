@@ -174,6 +174,9 @@ clean: # Clean up project
 	make stop
 	docker network rm $(DOCKER_NETWORK) 2> /dev/null ||:
 
+test-performance: # Run performance tests - mandatory: NAME
+	sh ../apache-jmeter-5.4.1/bin/jmeter -n -t test/performance-tests/$(NAME) -l $(PROJECT_DIR)test/performance-tests/testresults.jtl
+
 # ==============================================================================
 # Supporting targets
 
@@ -227,8 +230,7 @@ run-functional-test:
 	echo TODO: $(@)
 
 run-performance-test:
-	[ $$(make project-branch-perf-test) != true ] && exit 0
-	echo TODO: $(@)
+	make test-performance NAME=fuzzyPerformanceTest.jmx
 
 run-security-test:
 	[ $$(make project-branch-sec-test) != true ] && exit 0
