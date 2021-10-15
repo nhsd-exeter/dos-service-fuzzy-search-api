@@ -197,7 +197,7 @@ run-static-analisys:
 	echo TODO: $(@)
 
 run-unit-test:
-	echo TODO: $(@)
+	make unit-test
 
 run-smoke-test:
 	echo TODO: $(@)
