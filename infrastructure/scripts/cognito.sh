@@ -3,8 +3,13 @@ set -e
 
 [ -z "$PROFILE" ] && PROFILE="nonprod"
 
-COGNITO_GROUPS=(API_USER)
-COGNITO_ADMIN_USER="service-finder-admin@nhs.net"
+COGNITO_ALL_GROUPS=(FUZZY_API_ACCESS POSTCODE_API_ACCESS)
+COGNITO_FUZZY_GROUP=(FUZZY_API_ACCESS)
+COGNITO_POSTCODE_GROUP=(POSTCODE_API_ACCESS)
+COGNITO_AUTHENTICATION_ADMIN_USER="api-auth-admin@nhs.net"
+COGNITO_SERVICE_FINDER_USER="service-finder-admin@nhs.net"
+COGNITO_FUZZY_SEARCH_USER="fuzzy-search-api@nhs.net"
+
 
 COGNITO_ADMIN_PASSWORD=$(
     aws secretsmanager get-secret-value \
@@ -126,7 +131,10 @@ function calculate_secret_hash {
 function cognito_setup_users_and_groups {
 
     cognito_setup_groups
-    cognito_setup_user $COGNITO_ADMIN_USER "${COGNITO_GROUPS[@]}"
+    cognito_setup_user $COGNITO_AUTHENTICATION_ADMIN_USER "${COGNITO_ALL_GROUPS[@]}"
+    cognito_setup_user $COGNITO_SERVICE_FINDER_USER "${COGNITO_FUZZY_GROUP[@]}"
+    cognito_setup_user $COGNITO_FUZZY_SEARCH_USER "${COGNITO_POSTCODE_GROUP[@]}"
+
 }
 
 function main {
