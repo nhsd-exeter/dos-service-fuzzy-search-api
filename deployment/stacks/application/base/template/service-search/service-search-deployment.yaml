@@ -35,7 +35,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
       containers:
       - name: service-search
-        image: AWS_ECR_TO_REPLACE/uec-dos-api/sfs/api:API_IMAGE_TAG_TO_REPLACE
+        image: AWS_ECR_TO_REPLACE/uec-dos-api/sfsa/api:API_IMAGE_TAG_TO_REPLACE
         envFrom:
         - configMapRef:
             name: service-search-configmap
