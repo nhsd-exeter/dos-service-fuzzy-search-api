@@ -54,8 +54,7 @@ public class LocalAmazonCognitoIdentityClientStub extends AbstractAWSCognitoIden
   }
 
   private String generateAuthToken(String id, String issuer, String userName, long duration) {
-    Set<String> cognitoGroupNames =
-        new HashSet<>(Arrays.asList(COGNITO_GROUP, ROLE_FUZZY, ROLE_POSTCODE));
+    Set<String> cognitoGroupNames = new HashSet<>(Arrays.asList(COGNITO_GROUP, ROLE_FUZZY, ROLE_POSTCODE));
     return new LocalJwtFactory().createToken(id, issuer, userName, duration, cognitoGroupNames);
   }
 }
