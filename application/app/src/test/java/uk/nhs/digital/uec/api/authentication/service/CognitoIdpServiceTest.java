@@ -1,10 +1,13 @@
 package uk.nhs.digital.uec.api.authentication.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
+import com.amazonaws.services.cognitoidp.model.AWSCognitoIdentityProviderException;
 import com.amazonaws.services.cognitoidp.model.AuthenticationResultType;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +18,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.nhs.digital.uec.api.authentication.cognito.CognitoIdpServiceImpl;
+import uk.nhs.digital.uec.api.authentication.exception.InvalidAccessTokenException;
 import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
@@ -64,5 +68,17 @@ public class CognitoIdpServiceTest {
     AuthToken returnedAuthToken =
         cognitoIdpService.authenticateWithRefreshToken(refreshToken, credential.getEmailAddress());
     assertEquals(accessToken, returnedAuthToken.getAccessToken());
+  }
+
+  @Test
+  public void testGetAuthentiocationTokenTest() throws UnauthorisedException {
+    doThrow(new AWSCognitoIdentityProviderException("Cognito error"))
+        .when(cognitoClient)
+        .initiateAuth(any());
+    assertThrows(
+        InvalidAccessTokenException.class,
+        () ->
+            cognitoIdpService.authenticateWithRefreshToken(
+                refreshToken, credential.getEmailAddress()));
   }
 }

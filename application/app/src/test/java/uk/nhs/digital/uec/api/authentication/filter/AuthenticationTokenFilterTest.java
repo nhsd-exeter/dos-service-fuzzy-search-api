@@ -74,14 +74,47 @@ public class AuthenticationTokenFilterTest {
   }
 
   @Test
-  public void refreshTokenTest() throws ServletException, IOException, AccessTokenExpiredException {
+  public void refreshTokenFilterHeaderResetTest()
+      throws ServletException, IOException, AccessTokenExpiredException {
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    refreshTokenFilter.doFilterInternal(request, response, filterChain);
+    verify(filterChain).doFilter(request, response);
+  }
+
+  @Test
+  public void refreshTokenNullResponseTest()
+      throws ServletException, IOException, AccessTokenExpiredException {
     AuthToken authToken = new AuthToken();
-    authToken.setAccessToken("sOme-AccEss-tOkEn");
+    authToken.setAccessToken("GeNaRated-AccEss-tOkEn");
     authToken.setRefreshToken(null);
     when(securityContext.getAuthentication()).thenReturn(authentication);
     when(authenticationService.refreshToken(anyString(), anyString())).thenReturn(authToken);
     assertThrows(
         IllegalStateException.class,
-        () -> refreshTokenFilter.refresh(request, accessToken, "some-reFresh-Token"));
+        () -> refreshTokenFilter.refresh(request, accessToken, "GeNeRated-reFresh-Token"));
+  }
+
+  @Test
+  public void refreshAccessTokenNullResponseTest()
+      throws ServletException, IOException, AccessTokenExpiredException {
+    AuthToken authToken = new AuthToken();
+    authToken.setAccessToken(null);
+    authToken.setRefreshToken("GeNeRated-reFresh-Token");
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    when(authenticationService.refreshToken(anyString(), anyString())).thenReturn(authToken);
+    assertThrows(
+        IllegalStateException.class,
+        () -> refreshTokenFilter.refresh(request, accessToken, "GeNeRated-reFresh-Token"));
+  }
+
+  @Test
+  public void refreshAccessTokenObjectNullResponseTest()
+      throws ServletException, IOException, AccessTokenExpiredException {
+    AuthToken authToken = null;
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    when(authenticationService.refreshToken(anyString(), anyString())).thenReturn(authToken);
+    assertThrows(
+        IllegalStateException.class,
+        () -> refreshTokenFilter.refresh(request, accessToken, "GeNeRated-reFresh-Token"));
   }
 }

@@ -1,5 +1,6 @@
 package uk.nhs.digital.uec.api.authentication.filter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.Collections;
@@ -24,7 +25,7 @@ public class CustomHttpServletRequestWrapperTest {
   @Test
   public void getHeader() {
     String header = customHttpServletRequestWrapper.getHeader("Authorization");
-    assertSame("Bearer xyz-AccessToken-tO-TeSt", header);
+    assertEquals("Bearer xyz-AccessToken-tO-TeSt", header);
   }
 
   @Test

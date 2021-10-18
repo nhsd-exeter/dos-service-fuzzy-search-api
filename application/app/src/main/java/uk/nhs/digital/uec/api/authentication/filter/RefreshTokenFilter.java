@@ -38,7 +38,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         request = refresh(request, accessToken, refreshToken);
       }
     } catch (IllegalStateException | IllegalArgumentException | RestClientException e) {
-      request = resetAuthorizationHeader(request, null);
+      request = jwtUtil.resetAuthorizationHeader(request, null);
     }
     chain.doFilter(request, response);
   }
@@ -53,14 +53,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
       throw new IllegalStateException(
           "Unexpected state: null detected on accessToken / refreshToken");
     }
-    return resetAuthorizationHeader(request, refreshedTokens.getAccessToken());
-  }
-
-  private HttpServletRequest resetAuthorizationHeader(
-      HttpServletRequest request, String newAccessToken) {
-    CustomHttpServletRequestWrapper httpReq = new CustomHttpServletRequestWrapper(request);
-    httpReq.addHeader("Authorization", "Bearer " + newAccessToken);
-    return httpReq;
+    return jwtUtil.resetAuthorizationHeader(request, refreshedTokens.getAccessToken());
   }
 
   private String getSubFromAccessToken(String accessToken) {

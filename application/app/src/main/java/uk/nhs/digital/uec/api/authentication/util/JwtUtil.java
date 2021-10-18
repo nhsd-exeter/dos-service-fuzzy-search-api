@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Component;
 import uk.nhs.digital.uec.api.authentication.exception.AccessTokenExpiredException;
+import uk.nhs.digital.uec.api.authentication.filter.CustomHttpServletRequestWrapper;
 
 @Component
 @Slf4j
@@ -59,5 +60,12 @@ public class JwtUtil {
 
   public String convertObjectToJson(Object object) throws JsonProcessingException {
     return object == null ? null : new ObjectMapper().writeValueAsString(object);
+  }
+
+  public HttpServletRequest resetAuthorizationHeader(
+      HttpServletRequest request, String newAccessToken) {
+    CustomHttpServletRequestWrapper httpReq = new CustomHttpServletRequestWrapper(request);
+    httpReq.addHeader("Authorization", "Bearer " + newAccessToken);
+    return httpReq;
   }
 }
