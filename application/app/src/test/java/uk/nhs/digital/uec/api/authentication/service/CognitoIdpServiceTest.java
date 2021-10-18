@@ -26,7 +26,6 @@ public class CognitoIdpServiceTest {
 
   @Mock private AWSCognitoIdentityProvider cognitoClient;
 
-  private AuthToken authToken;
   private Credential credential;
   private String accessToken;
   private String refreshToken;
@@ -35,14 +34,12 @@ public class CognitoIdpServiceTest {
 
   @BeforeEach
   private void initialize() {
-    authToken = new AuthToken();
-    accessToken = "123452AcEss-ToKen-Sample";
-    authToken.setAccessToken(accessToken);
-    refreshToken = "123452AcEss-Refresh-ToKen-Sample";
-    authToken.setRefreshToken(refreshToken);
+    accessToken =
+        "eyJqdGkiOiJpZCIsImlhdCI6MTYyNjc3NTgyMywic3ViIjoiYWRtaW5AbmhzLm5ldCIsImlzcyI-Access-ToKen";
+    refreshToken = "mlhdCI6MTYyNjc3NTgyMywic3ViIjoiY-RtaW5AbmhzLm5ldCIsImlzcy-Refresh-ToKen";
     credential = new Credential();
-    credential.setEmailAddress("someUser@.xyz.net");
-    credential.setPassword("somePassword");
+    credential.setEmailAddress("xyzUser@.xyz.net");
+    credential.setPassword("xyzPassword");
 
     authenticationResult = new AuthenticationResultType();
     authenticationResult.setAccessToken(accessToken);

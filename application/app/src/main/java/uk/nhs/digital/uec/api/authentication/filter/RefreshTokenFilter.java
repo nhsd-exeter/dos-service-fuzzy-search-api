@@ -43,7 +43,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
     chain.doFilter(request, response);
   }
 
-  private HttpServletRequest refresh(
+  public HttpServletRequest refresh(
       HttpServletRequest request, String accessToken, String refreshToken) {
     AuthToken refreshedTokens =
         authenticationService.refreshToken(refreshToken, getSubFromAccessToken(accessToken));
