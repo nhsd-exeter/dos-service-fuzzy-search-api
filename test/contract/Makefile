@@ -27,7 +27,7 @@ run-smoke: ### Run Postman test suite against deployed application ###
 	make docker-run-postman \
 		DIR="$(APPLICATION_TEST_DIR)/contract" \
 		CMD=" \
-			run FuzzySearchApiSmokeTests_collection.json -e environments/non-prod-deploy_auth.postman_environment.json \
+			run FuzzySearchApiSmokeTests_collection.json -e environments/non-prod-deploy.postman_environment.json \
 		"
 	make stop
 

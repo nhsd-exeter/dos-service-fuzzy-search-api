@@ -46,6 +46,13 @@ pipeline {
         }
       }
     }
+    stage("Populate Cognito Pool"){
+      steps {
+        script {
+          sh "make project-populate-cognito PROFILE=${env.PROFILE}"
+        }
+      }
+    }
     stage("Provision Infrastructure") {
       steps {
         script {

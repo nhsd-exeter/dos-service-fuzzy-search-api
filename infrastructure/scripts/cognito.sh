@@ -3,12 +3,18 @@ set -e
 
 [ -z "$PROFILE" ] && PROFILE="nonprod"
 
-COGNITO_GROUPS=(API_USER)
+COGNITO_GROUPS=(FUZZY_API_ACCESS POSTCODE_API_ACCESS)
+COGNITO_FUZZY_GROUP=(FUZZY_API_ACCESS)
+COGNITO_POSTCODE_GROUP=(POSTCODE_API_ACCESS)
 COGNITO_ADMIN_USER="service-finder-admin@nhs.net"
+COGNITO_AUTHENTICATION_ADMIN_USER="api-auth-admin@nhs.net"
+COGNITO_SERVICE_FINDER_USER="service-finder-api@nhs.net"
+COGNITO_FUZZY_SEARCH_USER="fuzzy-search-api@nhs.net"
+
 
 COGNITO_ADMIN_PASSWORD=$(
     aws secretsmanager get-secret-value \
-        --secret-id $PROJECT_GROUP_SHORT-$PROJECT_NAME_SHORT-$ENVIRONMENT-cognito-admin-password \
+        --secret-id $PROJECT_GROUP_SHORT-$PROJECT_NAME_SHORT-$ENVIRONMENT-cognito-passwords \
         --region $AWS_REGION \
         --query 'SecretString' \
         --output text)
@@ -90,18 +96,34 @@ function cognito_add_user_to_group {
     fi
 }
 
+function cognito_get_user_password {
+
+    case "$1" in
+    "$COGNITO_ADMIN_USER") echo "$COGNITO_ADMIN_PASSWORD" | jq .ADMIN_PASSWORD | tr -d '"'
+    ;;
+    "$COGNITO_AUTHENTICATION_ADMIN_USER") echo "$COGNITO_ADMIN_PASSWORD" | jq .AUTHENTICATION_PASSWORD | tr -d '"'
+    ;;
+    "$COGNITO_SERVICE_FINDER_USER") echo "$COGNITO_ADMIN_PASSWORD" | jq .FUZZY_PASSWORD | tr -d '"'
+    ;;
+    "$COGNITO_FUZZY_SEARCH_USER") echo "$COGNITO_ADMIN_PASSWORD" | jq .POSTCODE_PASSWORD | tr -d '"'
+    ;;
+    esac
+}
+
 function cognito_setup_user {
 
     COGNITO_USER=$1; shift
     COGNITO_GROUPS_SUBSET=("$@")
 
+
     if ! cognito_user_exists $COGNITO_USER; then
         SECRET_HASH=$(calculate_secret_hash $COGNITO_USER)
+        PASSWORD=$(cognito_get_user_password $COGNITO_USER)
         aws cognito-idp sign-up \
         --region $AWS_REGION \
             --client-id $USER_POOL_CLIENT_ID \
             --username $COGNITO_USER \
-            --password $COGNITO_ADMIN_PASSWORD \
+            --password $PASSWORD \
             --secret-hash $SECRET_HASH && \
         aws cognito-idp admin-confirm-sign-up \
         --region $AWS_REGION \
@@ -126,7 +148,11 @@ function calculate_secret_hash {
 function cognito_setup_users_and_groups {
 
     cognito_setup_groups
+    cognito_setup_user $COGNITO_SERVICE_FINDER_USER "${COGNITO_FUZZY_GROUP[@]}"
+    cognito_setup_user $COGNITO_FUZZY_SEARCH_USER "${COGNITO_POSTCODE_GROUP[@]}"
+    cognito_setup_user $COGNITO_AUTHENTICATION_ADMIN_USER "${COGNITO_GROUPS[@]}"
     cognito_setup_user $COGNITO_ADMIN_USER "${COGNITO_GROUPS[@]}"
+
 }
 
 function main {

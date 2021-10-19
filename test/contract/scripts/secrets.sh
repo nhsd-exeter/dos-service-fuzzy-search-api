@@ -1,17 +1,27 @@
 #!/bin/bash
+
 set -e
 
 COGNITO_ADMIN_PASSWORD=$(
     aws secretsmanager get-secret-value \
-        --secret-id $PROJECT_GROUP_SHORT-$PROJECT_NAME_SHORT-$ENVIRONMENT-cognito-admin-password \
+        --secret-id $PROJECT_GROUP_SHORT-$PROJECT_NAME_SHORT-$ENVIRONMENT-cognito-passwords \
         --region $AWS_REGION \
         --query 'SecretString' \
         --output text)
 
-function updatePasswordInEnvFile {
 
-  sed "s/admin_password/$COGNITO_ADMIN_PASSWORD/g" "$@" > "$APPLICATION_TEST_DIR"/contract/environments/non-prod-deploy_auth.postman_environment.json
+function getPassword {
+
+  echo "$COGNITO_ADMIN_PASSWORD" | jq .AUTHENTICATION_PASSWORD
 
 }
 
-updatePasswordInEnvFile "$1"
+function getPasswordFromStore {
+
+  COGNITO=$(getPassword)
+
+  sed -i -e "s/\"admin_password\"/$COGNITO/g" "$@"
+
+}
+
+getPasswordFromStore "$1"
