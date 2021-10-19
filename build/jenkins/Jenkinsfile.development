@@ -46,13 +46,6 @@ pipeline {
         }
       }
     }
-    stage('Push API Image to ECR') {
-      steps {
-        script {
-          sh "make push VERSION=${env.PROJECT_BUILD_TAG}"
-        }
-      }
-    }
     stage('Unit Test') {
       steps {
         script {
@@ -64,6 +57,13 @@ pipeline {
       steps {
         script {
           sh "make run-contract-tests VERSION=${env.PROJECT_BUILD_TAG}"
+        }
+      }
+    }
+    stage('Push API Image to ECR') {
+      steps {
+        script {
+          sh "make push VERSION=${env.PROJECT_BUILD_TAG}"
         }
       }
     }
