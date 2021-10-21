@@ -67,9 +67,7 @@ load-test-postcode-locations:
 
 run-contract-tests:
 	make start PROFILE=local VERSION=$(VERSION)
-	sleep 30
-	make start PROFILE=local VERSION=$(VERSION)
-	sleep 30
+	sleep 60
 	cd test/contract
 	make run
 	cd ../../
@@ -161,6 +159,8 @@ project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,A
 	$(PROJECT_DIR)/infrastructure/scripts/cognito.sh
 
 clean: # Clean up project
+	make stop
+	docker network rm $(DOCKER_NETWORK) 2> /dev/null ||:
 
 # ==============================================================================
 # Supporting targets
@@ -200,12 +200,14 @@ run-unit-test:
 	make unit-test
 
 run-smoke-test:
-	echo TODO: $(@)
+	make start PROFILE=$(PROFILE) VERSION=$(API_IMAGE_TAG)
+	sleep 60
+	cd test/contract
+	make run-smoke
+	cd ../../
+	make stop
 
 run-integration-test:
-	echo TODO: $(@)
-
-run-contract-test:
 	echo TODO: $(@)
 
 run-functional-test:

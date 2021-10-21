@@ -77,13 +77,14 @@ pipeline {
     stage("Smoke Tests") {
       steps {
         script {
-          echo "to do"
+          sh "make run-smoke-test PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG}"
         }
       }
     }
   }
 
   post {
+    always { sh "make clean" }
     success { sh "make pipeline-on-success" }
     failure { sh "make pipeline-on-failure" }
   }

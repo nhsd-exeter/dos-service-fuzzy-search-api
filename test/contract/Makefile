@@ -18,8 +18,18 @@ run: ### Run Postman test suite against the Wiremock mappings
 	make docker-run-postman \
 		DIR="$(APPLICATION_TEST_DIR)/contract" \
 		CMD=" \
-			run FuzzySearchApiContractTests_collection.json -e environment.json --insecure \
+			run FuzzySearchApiContractTests_collection.json -e environments/environment.json --insecure \
 		"
+
+run-smoke: ### Run Postman test suite against deployed application ###
+	eval "$$(make aws-assume-role-export-variables)"
+	$(APPLICATION_TEST_DIR)/contract/scripts/secrets.sh $(APPLICATION_TEST_DIR)/contract/environments/non-prod-deploy.postman_environment.json
+	make docker-run-postman \
+		DIR="$(APPLICATION_TEST_DIR)/contract" \
+		CMD=" \
+			run FuzzySearchApiSmokeTests_collection.json -e environments/non-prod-deploy_auth.postman_environment.json \
+		"
+	make stop
 
 reload: ### Reload the Wiremock mappings
 	curl -d '' http://localhost:8080/__admin/mappings/reset

@@ -14,6 +14,13 @@ pipeline {
     //GIT_TAG = sh(returnStdout: true, script: "git get current ref ...").trim()
     //PROFILE = [get it from the GIT_TAG ...]
   }
+  parameters {
+        string(
+            description: 'Enter image tag to deploy, e.g. 202103111417-e362c87',
+            name: 'IMAGE_TAG',
+            defaultValue: ''
+        )
+  }
   triggers { pollSCM("* * * * *") }
   stages {
     stage("Show Configuration") {
@@ -28,7 +35,7 @@ pipeline {
             sh "make provision-infractructure"
             sh "make deploy-artefact"
             sh "make apply-data-changes"
-            sh "make run-smoke-test"
+            sh "make run-smoke-test PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG}"
             sh "make pipeline-send-notification"
           }
         }

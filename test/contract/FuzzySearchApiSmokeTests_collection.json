@@ -1,0 +1,210 @@
+{
+  "info": {
+    "_postman_id": "833a7ad1-9a75-4cc6-940f-aeb55eb98f80",
+    "name": "FuzzySearchApiSmokeTests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login with incorrect credentials",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code to not return 200\", function() {",
+              "  pm.response.to.not.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Status code to have 401\", function() {",
+              "  pm.response.to.have.status(401);",
+              "});",
+              "",
+              "pm.test(\"No token is returned\", function() {",
+              "    pm.response.to.have.body(\"Incorrect username or password.\")",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let email = 'api-auth-admin@nhs.net';",
+              "pm.environment.set('adminUser', email);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "content-type": true
+        }
+      },
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json;charset=UTF-8",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"emailAddress\": \"{{adminUser}}\",\n    \"password\": \"incorrect\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{authhost}}/authentication/login",
+          "protocol": "https",
+          "host": [
+            "{{authhost}}"
+          ],
+          "path": [
+            "authentication",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login as a user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = JSON.parse(responseBody);",
+              "",
+              "pm.test(\"Login test\", function() {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Save access_token as an environment variable\", function() {",
+              "    postman.setEnvironmentVariable(\"accessToken\", jsonData.accessToken);",
+              "});",
+              "",
+              "pm.test(\"Save refresh_token as an environment variable\", function() {",
+              "    postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let email = 'api-auth-admin@nhs.net';",
+              "pm.environment.set('adminUser', email);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "content-type": true
+        }
+      },
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json;charset=UTF-8",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"emailAddress\": \"{{adminUser}}\",\n    \"password\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{authhost}}/authentication/login",
+          "protocol": "https",
+          "host": [
+            "{{authhost}}"
+          ],
+          "path": [
+            "authentication",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Authenticate user with access token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Search returns success status code\", function() {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test 1&search_location=EX88PR&fuzz_level=2",
+          "protocol": "https",
+          "host": [
+            "{{host}}"
+          ],
+          "path": [
+            "dosapi",
+            "dosservices",
+            "v0.0.1",
+            "services",
+            "byfuzzysearch"
+          ],
+          "query": [
+            {
+              "key": "search_term",
+              "value": "test 1"
+            },
+            {
+              "key": "search_location",
+              "value": "EX88PR"
+            },
+            {
+              "key": "fuzz_level",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
