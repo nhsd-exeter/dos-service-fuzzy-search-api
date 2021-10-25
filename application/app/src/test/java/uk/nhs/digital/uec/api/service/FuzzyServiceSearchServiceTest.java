@@ -62,7 +62,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(2, services.size());
@@ -81,7 +81,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(0, services.size());
@@ -103,7 +103,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -126,7 +126,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -138,7 +138,7 @@ public class FuzzyServiceSearchServiceTest {
     List<String> searchCriteria = new ArrayList<>();
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
     // Assert
     assertEquals(0, services.size());
   }
@@ -164,8 +164,7 @@ public class FuzzyServiceSearchServiceTest {
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(
-            searchLocation, searchCriteria, any());
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchLocation, searchCriteria);
     verify(locationService).getLocationForPostcode(eq(searchLocation), any());
     verify(locationService, times(2))
         .distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class));
@@ -206,8 +205,7 @@ public class FuzzyServiceSearchServiceTest {
         .thenReturn(357.7);
 
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(
-            searchLocation, searchCriteria, any());
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchLocation, searchCriteria);
 
     verify(locationService).getLocationForPostcode(eq(searchLocation), any());
     verify(locationService).getLocationsForPostcodes(eq(postCodes), any());

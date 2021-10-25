@@ -37,3 +37,6 @@ COGNITO_USER_POOL_CLIENT_SECRET := testUserPoolClientSecret
 COGNITO_USER_POOL_ID := testUserPoolId
 
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
+
+AUTH_LOGIN_URL := https://localhost:9025
+AUTH_LOGIN_URI := /authentication/login

@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
+import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
 import uk.nhs.digital.uec.api.service.LocationServiceInterface;
-import uk.nhs.digital.uec.api.util.PostcodeMappingUtil;
 
 @Service
 public class LocationService implements LocationServiceInterface {
 
   @Autowired private ApiUtilsServiceInterface apiUtilsService;
 
-  @Autowired private PostcodeMappingUtil postcodeMappingUtil;
+  @Autowired private ExternalApiHandshakeInterface apiHandshakeService;
 
   /** {@inheritDoc} */
   @Override
@@ -28,7 +28,7 @@ public class LocationService implements LocationServiceInterface {
       return null;
     }
     List<PostcodeLocation> postcodeMappings =
-        postcodeMappingUtil.getPostcodeMappings(
+        apiHandshakeService.getPostcodeMappings(
             apiUtilsService.removeBlankSpacesIn(Stream.of(postcode).toList()), headers);
     Optional<PostcodeLocation> postcodeLocation = postcodeMappings.stream().findFirst();
     return postcodeLocation.isPresent() ? postcodeLocation.get() : null;
@@ -62,7 +62,7 @@ public class LocationService implements LocationServiceInterface {
   @Override
   public List<PostcodeLocation> getLocationsForPostcodes(
       List<String> postCodes, MultiValueMap<String, String> headers) {
-    return postcodeMappingUtil.getPostcodeMappings(
+    return apiHandshakeService.getPostcodeMappings(
         apiUtilsService.removeBlankSpacesIn(postCodes), headers);
   }
 }

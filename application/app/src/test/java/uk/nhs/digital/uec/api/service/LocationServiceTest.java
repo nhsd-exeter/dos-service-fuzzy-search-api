@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.service.impl.LocationService;
-import uk.nhs.digital.uec.api.util.PostcodeMappingUtil;
 
 @ExtendWith(SpringExtension.class)
 public class LocationServiceTest {
@@ -25,7 +24,7 @@ public class LocationServiceTest {
 
   @Mock private ApiUtilsServiceInterface apiUtilsService;
 
-  @Mock private PostcodeMappingUtil postcodeMappingUtil;
+  @Mock private ExternalApiHandshakeInterface apiHandshakeService;
 
   private PostcodeLocation postcodeLocation = null;
 
@@ -49,7 +48,7 @@ public class LocationServiceTest {
     String postcode = "EX88PR";
     List<PostcodeLocation> listLocations = new ArrayList<>();
     listLocations.add(postcodeLocation);
-    when(postcodeMappingUtil.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
+    when(apiHandshakeService.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
     PostcodeLocation returnedLocation = locationService.getLocationForPostcode(postcode, any());
     assertEquals(postcode, returnedLocation.getPostCode());
     assertEquals(297717, returnedLocation.getEasting());
@@ -61,7 +60,7 @@ public class LocationServiceTest {
     String postcode = "EX88PR";
     List<PostcodeLocation> listLocations = new ArrayList<>();
     listLocations.add(postcodeLocation);
-    when(postcodeMappingUtil.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
+    when(apiHandshakeService.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
     PostcodeLocation returnedLocation = locationService.getLocationForPostcode(postcode, any());
     assertEquals(postcode, returnedLocation.getPostCode());
   }

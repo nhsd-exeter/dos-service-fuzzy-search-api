@@ -12,6 +12,7 @@ import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.repository.elasticsearch.CustomServicesRepositoryInterface;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
+import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
 import uk.nhs.digital.uec.api.service.LocationServiceInterface;
 
@@ -26,16 +27,19 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
 
   @Autowired private ApiRequestParams apiRequestParams;
 
+  @Autowired private ExternalApiHandshakeInterface externalApiHandshakeInterface;
+
   /** {@inheritDoc} */
   @Override
   public List<DosService> retrieveServicesByFuzzySearch(
-      final String searchPostcode,
-      final List<String> searchTerms,
-      MultiValueMap<String, String> headers) {
+      final String searchPostcode, final List<String> searchTerms) {
 
     List<DosService> dosServices = new ArrayList<DosService>();
     dosServices.addAll(
         elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms)));
+
+    /** Call the auth service login endpoint from here and get the authenticated headers */
+    MultiValueMap<String, String> headers = externalApiHandshakeInterface.getAccessTokenHeader();
 
     /** Calculate distance to services returned if we have a search location */
     PostcodeLocation searchLocation =

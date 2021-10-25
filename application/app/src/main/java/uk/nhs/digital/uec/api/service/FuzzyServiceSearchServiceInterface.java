@@ -1,7 +1,6 @@
 package uk.nhs.digital.uec.api.service;
 
 import java.util.List;
-import org.springframework.util.MultiValueMap;
 import uk.nhs.digital.uec.api.model.DosService;
 
 /** Interface to encapsulate business logic for the searching of services */
@@ -16,7 +15,5 @@ public interface FuzzyServiceSearchServiceInterface {
    * @return {@link DosService}
    */
   List<DosService> retrieveServicesByFuzzySearch(
-      final String searchPostcode,
-      final List<String> searchTerms,
-      MultiValueMap<String, String> headers);
+      final String searchPostcode, final List<String> searchTerms);
 }
