@@ -65,7 +65,7 @@
           "raw": "https://localhost:8443/authentication/login",
           "protocol": "https",
           "host": [
-            "{{host}}"
+            "localhost"
           ],
           "port": "8443",
           "path": [
@@ -138,7 +138,7 @@
           "raw": "https://localhost:8443/authentication/login",
           "protocol": "https",
           "host": [
-            "{{host}}"
+            "localhost"
           ],
           "port": "8443",
           "path": [
@@ -181,7 +181,7 @@
           "raw": "https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test 1&search_location=EX88PR&fuzz_level=2",
           "protocol": "https",
           "host": [
-            "{{host}}"
+            "localhost"
           ],
           "port": "8443",
           "path": [
