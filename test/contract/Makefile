@@ -3,15 +3,15 @@ include $(abspath $(PROJECT_DIR)/build/automation/init.mk)
 
 # ==============================================================================
 
-config: ### Configure the contaract test environment
+config: ### Configure the contract test environment
 	make project-config
 
-test: start run stop ### Execute the contaract test suite
+test: start run stop ### Execute the contract test suite
 
-start: config ### Start the contaract test project
+start: config ### Start the contract test project
 	make docker-compose-start YML=$(DOCKER_DIR)/mockservice.docker-compose.yml
 
-stop: ### Stop the contaract test project
+stop: ### Stop the contract test project
 	make docker-compose-stop YML=$(DOCKER_DIR)/mockservice.docker-compose.yml
 
 run: ### Run Postman test suite against the Wiremock mappings
