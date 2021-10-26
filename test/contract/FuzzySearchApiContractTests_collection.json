@@ -62,7 +62,7 @@
           }
         },
         "url": {
-          "raw": "https://{{host}}:8443/authentication/login",
+          "raw": "https://localhost:8443/authentication/login",
           "protocol": "https",
           "host": [
             "{{host}}"
@@ -135,7 +135,7 @@
           }
         },
         "url": {
-          "raw": "https://{{host}}:8443/authentication/login",
+          "raw": "https://localhost:8443/authentication/login",
           "protocol": "https",
           "host": [
             "{{host}}"
@@ -178,7 +178,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test 1&search_location=EX88PR&fuzz_level=2",
+          "raw": "https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test 1&search_location=EX88PR&fuzz_level=2",
           "protocol": "https",
           "host": [
             "{{host}}"
