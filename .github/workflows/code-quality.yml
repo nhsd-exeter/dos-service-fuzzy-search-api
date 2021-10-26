@@ -32,7 +32,7 @@ jobs:
           projectBaseDir: ./application/app
           args: >
             -Dsonar.organization=nhsd-exeter
-            -Dsonar.projectKey=uec-dos-api-sfsa
+            -Dsonar.projectKey=uec-dos-api-saa
             -Dsonar.java.binaries=target/classes
             -Dsonar.coverage.exclusions=src/main/java/**/config/*.java,src/test/**/*.*
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco
