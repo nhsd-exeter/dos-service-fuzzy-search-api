@@ -82,3 +82,6 @@ ADD_DEFAULT_COGNITO_USERS := false
 
 
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
+
+AUTH_LOGIN_URL := https://uec-dos-api-sfsa-dev-uec-dos-api-sfs-service.k8s-nonprod.texasplatform.uk
+AUTH_LOGIN_URI := /authentication/login
