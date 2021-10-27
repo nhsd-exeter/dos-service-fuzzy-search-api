@@ -752,7 +752,7 @@ docker-compose-start: ### Start Docker Compose - optional: YML=[docker-compose.y
 	make docker-config
 	yml=$$(make _docker-get-docker-compose-yml YML=$(YML))
 	docker-compose --file $$yml \
-		up --no-build --detach --remove-orphans
+		up --no-build
 
 docker-compose-start-single-service: ### Start Docker Compose - mandatory: NAME=[service name]; optional: YML=[docker-compose.yml, defaults to $(DOCKER_COMPOSE_YML)]
 	make docker-config
