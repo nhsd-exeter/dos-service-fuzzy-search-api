@@ -50,8 +50,8 @@ postcode:
   mapping:
     url: ${POSTCODE_MAPPING_SERVICE_URL}
     uri: /search
-    user: admin@nhs.net
-    password: password
+    user: ${POSTCODE_MAPPING_USER}
+    password: ${POSTCODE_MAPPING_PASSWORD}
 
 auth:
   login:

@@ -40,3 +40,5 @@ POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-dev-uec-dos-api-pc-ingres
 
 AUTH_LOGIN_URL := https://fuzzysearch.sfs.local:8443
 AUTH_LOGIN_URI := /authentication/login
+POSTCODE_MAPPING_USER := admin@nhs.net
+POSTCODE_MAPPING_PASSWORD := password

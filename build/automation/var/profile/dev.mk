@@ -83,5 +83,9 @@ ADD_DEFAULT_COGNITO_USERS := false
 
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
 
-AUTH_LOGIN_URL := https://uec-dos-api-sfsa-dev-uec-dos-api-sfs-service.k8s-nonprod.texasplatform.uk
+#Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
+AUTH_LOGIN_URL := https://uec-dos-api-sfs-dev-uec-dos-api-sfs-service.k8s-nonprod.texasplatform.uk
 AUTH_LOGIN_URI := /authentication/login
+#admin access is set for now and this should be changed accordingly with user who has access to the api
+POSTCODE_MAPPING_USER := service-finder-admin@nhs.net
+POSTCODE_MAPPING_PASSWORD := 3iG2KBssDwiJX0yg
