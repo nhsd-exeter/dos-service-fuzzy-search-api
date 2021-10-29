@@ -23,13 +23,12 @@ import uk.nhs.digital.uec.api.util.WebClientUtil;
 public class ExternalApiHandshakeServiceTest {
 
   @InjectMocks private ExternalApiHandshakeService externalApiHandshakeService;
-
   @Mock private WebClientUtil webClientUtilMock;
+
   private AuthToken authToken;
   private List<PostcodeLocation> postcodeLocations = new ArrayList<>();
-  ;
   private MultiValueMap<String, String> headers;
-  List<String> postCodes;
+  private List<String> postCodes;
 
   @BeforeEach
   public void setup() {
@@ -44,7 +43,7 @@ public class ExternalApiHandshakeServiceTest {
     postcodeLocation.setPostCode("EX1 1PR");
     postcodeLocations.add(postcodeLocation);
 
-    List<String> postCodes = new ArrayList<>();
+    postCodes = new ArrayList<>();
     postCodes.add("EX2 1SR");
 
     headers = new LinkedMultiValueMap<>();

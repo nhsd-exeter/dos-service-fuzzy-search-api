@@ -28,12 +28,15 @@ public class LocationServiceTest {
 
   private PostcodeLocation postcodeLocation = null;
 
+  private String postCode;
+
   @BeforeEach
   public void initialise() {
     postcodeLocation = new PostcodeLocation();
     postcodeLocation.setPostCode("EX88PR");
     postcodeLocation.setEasting(297717);
     postcodeLocation.setNorthing(81762);
+    postCode = "EX88PR";
   }
 
   @Test
@@ -44,8 +47,6 @@ public class LocationServiceTest {
 
   @Test
   public void getPostcodeMappingLocationForValidPostcode() {
-
-    String postCode = "EX88PR";
     List<PostcodeLocation> listLocations = new ArrayList<>();
     listLocations.add(postcodeLocation);
     when(apiHandshakeService.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
@@ -57,7 +58,6 @@ public class LocationServiceTest {
 
   @Test
   public void getLocationForValidPostcode() {
-    String postCode = "EX88PR";
     List<PostcodeLocation> listLocations = new ArrayList<>();
     listLocations.add(postcodeLocation);
     when(apiHandshakeService.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
@@ -67,7 +67,6 @@ public class LocationServiceTest {
 
   @Test
   public void getLocationForValidPostcodes() {
-    String postCode = "EX88PR";
     List<String> postCodes = new ArrayList<>();
     List<PostcodeLocation> listLocations = new ArrayList<>();
     listLocations.add(postcodeLocation);
@@ -88,11 +87,11 @@ public class LocationServiceTest {
   @Test
   public void distanceWithSourceEastingAndNorthingNull() {
     PostcodeLocation source = new PostcodeLocation();
-    source.setPostCode("EX26ER");
+    source.setPostCode("EX21PR");
     source.setEasting(null);
     source.setNorthing(null);
     PostcodeLocation destination = new PostcodeLocation();
-    destination.setPostCode("EX26ER");
+    destination.setPostCode("EX22PR");
     destination.setEasting(237765);
     destination.setNorthing(176543);
     Double distanceReturned = locationService.distanceBetween(source, destination);
@@ -102,13 +101,13 @@ public class LocationServiceTest {
   @Test
   public void distanceWithDestinationEastingAndNorthingNull() {
     PostcodeLocation destination = new PostcodeLocation();
-    destination.setPostCode("EX26ER");
+    destination.setPostCode("EX21SR");
     destination.setEasting(null);
     destination.setNorthing(null);
     PostcodeLocation source = new PostcodeLocation();
-    source.setPostCode("EX26ER");
-    source.setEasting(237765);
-    source.setNorthing(176543);
+    source.setPostCode("EX22SR");
+    source.setEasting(221133);
+    source.setNorthing(298223);
     Double distanceReturned = locationService.distanceBetween(source, destination);
     assertNull(distanceReturned);
   }
@@ -117,25 +116,18 @@ public class LocationServiceTest {
   public void distanceWithNullSource() {
 
     PostcodeLocation destinationLocation = new PostcodeLocation();
-    destinationLocation.setPostCode("EX26ER");
-    destinationLocation.setEasting(12345);
-    destinationLocation.setNorthing(12345);
+    destinationLocation.setPostCode("EX26PR");
+    destinationLocation.setEasting(43212);
+    destinationLocation.setNorthing(87896);
 
     Double distanceReturned = locationService.distanceBetween(null, destinationLocation);
-
     assertNull(distanceReturned);
   }
 
   @Test
   public void distanceWithNullDestination() {
 
-    PostcodeLocation sourceLocation = new PostcodeLocation();
-    sourceLocation.setPostCode("EX26ER");
-    sourceLocation.setEasting(12345);
-    sourceLocation.setNorthing(12345);
-
-    Double distanceReturned = locationService.distanceBetween(sourceLocation, null);
-
+    Double distanceReturned = locationService.distanceBetween(postcodeLocation, null);
     assertNull(distanceReturned);
   }
 
@@ -143,7 +135,7 @@ public class LocationServiceTest {
   public void distanceWithSourceAndDestination() {
 
     PostcodeLocation sourceLocation = new PostcodeLocation();
-    sourceLocation.setPostCode("EX26ER");
+    sourceLocation.setPostCode("EX1QPR");
     sourceLocation.setEasting(12345);
     sourceLocation.setNorthing(12345);
 
