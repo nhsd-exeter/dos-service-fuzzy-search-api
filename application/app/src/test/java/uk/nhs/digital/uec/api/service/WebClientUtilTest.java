@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.net.ssl.SSLException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,29 +49,32 @@ public class WebClientUtilTest {
   private WebClient.RequestHeadersUriSpec requestHeadersUriSpecMock;
 
   @Mock private WebClient.ResponseSpec responseSpecMock;
-  private String loginUri = "/authentication/login";
+
+  private AuthToken authToken;
+
+  @BeforeEach
+  public void setUp() {
+    authToken = new AuthToken();
+    authToken.setAccessToken("MOCK-ACCESS-TOKEN");
+    authToken.setRefreshToken("MOCK-ACCESS-REFRESH-TOKEN");
+  }
 
   @Test
   public void getHeaderTest() throws SSLException {
     List<String> postCodes = new ArrayList<>();
     postCodes.add("EX1 1SR");
-    AuthToken authToken = new AuthToken();
-    authToken.setAccessToken("MOCK-ACCESS-TOKEN");
-    authToken.setRefreshToken("MOCK-ACCESS-REFRESH-TOKEN");
     Credential credential =
         Credential.builder().emailAddress("admin@nhs.net").password("password").build();
     authWebClient = getMockedAuthWebClient(authToken);
-    AuthToken authenticationToken = webClientUtil.getAuthenticationToken(credential, loginUri);
-    assertEquals("MOCK-ACCESS-TOKEN", authenticationToken.getAccessToken());
+    AuthToken responseAuthToken =
+        webClientUtil.getAuthenticationToken(credential, "/authentication/login");
+    assertEquals(authToken.getAccessToken(), responseAuthToken.getAccessToken());
   }
 
   @Test
   public void getPostCodeMappingsTest() throws SSLException {
     List<String> postCodes = new ArrayList<>();
     postCodes.add("EX1 1SR");
-    AuthToken authToken = new AuthToken();
-    authToken.setAccessToken("MOCK-ACCESS-TOKEN");
-    authToken.setRefreshToken("MOCK-ACCESS-REFRESH-TOKEN");
 
     PostcodeLocation postcodeLocation = new PostcodeLocation();
     postcodeLocation.setEasting(123677);
