@@ -88,4 +88,4 @@ AUTH_LOGIN_URL := https://uec-dos-api-sfs-dev-uec-dos-api-sfs-service.k8s-nonpro
 AUTH_LOGIN_URI := /authentication/login
 #admin access is set for now and this should be changed accordingly with user who has access to the api
 POSTCODE_MAPPING_USER := service-finder-admin@nhs.net
-POSTCODE_MAPPING_PASSWORD := 3iG2KBssDwiJX0yg
+POSTCODE_MAPPING_PASSWORD := admin_password
