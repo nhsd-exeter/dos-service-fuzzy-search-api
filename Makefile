@@ -104,7 +104,7 @@ project-populate-application-variables:
 	export COGNITO_USER_POOL_CLIENT_ID=$$(make -s project-aws-get-cognito-client-id NAME=$(COGNITO_USER_POOL))
 	export COGNITO_USER_POOL_ID=$$(make -s aws-cognito-get-userpool-id NAME=$(COGNITO_USER_POOL))
 	export COGNITO_JWT_VERIFICATION_URL=https://cognito-idp.eu-west-2.amazonaws.com/$${COGNITO_USER_POOL_ID}/.well-known/jwks.json
-
+	export COGNITO_ADMIN_PASSWORD=$$(make project-aws-get-admin-secret)
 	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
 	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}
 
@@ -121,6 +121,13 @@ project-aws-get-cognito-client-secret: # Get AWS secret - mandatory: NAME
 		--client-id $$(make -s project-aws-get-cognito-client-id NAME=$(NAME)) \
 		--region $(AWS_REGION) \
 		--query 'UserPoolClient.ClientSecret' \
+		--output text
+
+project-aws-get-admin-secret: #Get AWS Pass
+	aws secretsmanager get-secret-value \
+		--secret-id $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)-cognito-admin-password \
+		--region $(AWS_REGION) \
+		--query 'SecretString' \
 		--output text
 
 prepare-lambda-deployment: # Downloads the required libraries for the Lambda functions
