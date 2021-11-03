@@ -80,8 +80,6 @@ COGNITO_USER_POOL_CLIENT_ID := $(or $(COGNITO_USER_POOL_CLIENT_ID), )
 COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
 ADD_DEFAULT_COGNITO_USERS := false
 
-
-
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
