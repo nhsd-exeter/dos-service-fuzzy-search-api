@@ -50,3 +50,10 @@ postcode:
   mapping:
     url: ${POSTCODE_MAPPING_SERVICE_URL}
     uri: /search
+    user: ${POSTCODE_MAPPING_USER}
+    password: ${POSTCODE_MAPPING_PASSWORD}
+
+auth:
+  login:
+    url: ${AUTH_LOGIN_URL}
+    uri: ${AUTH_LOGIN_URI}

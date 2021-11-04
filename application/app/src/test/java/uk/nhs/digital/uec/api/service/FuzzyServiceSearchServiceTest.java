@@ -18,10 +18,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
+import uk.nhs.digital.uec.api.service.impl.ExternalApiHandshakeService;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
 import uk.nhs.digital.uec.api.service.impl.MockDosServicesUtil;
 
@@ -40,10 +43,18 @@ public class FuzzyServiceSearchServiceTest {
 
   @Mock private LocationServiceInterface locationService;
 
+  @Mock private ExternalApiHandshakeService apiHandshakeService;
+
+  private MultiValueMap<String, String> headers = null;
+
   @BeforeEach
   public void setup() {
     when(apiRequestParams.getMaxNumServicesToReturn()).thenReturn(maxNumServicesToReturn);
     when(locationService.getLocationForPostcode(null, null)).thenReturn(null);
+
+    headers = new LinkedMultiValueMap<>();
+    headers.add("Content-Type", "application/json");
+    headers.add("Authorization", "Bearer " + "Mock accessToken");
   }
 
   @Test
@@ -59,10 +70,11 @@ public class FuzzyServiceSearchServiceTest {
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
     when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
+    when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(2, services.size());
@@ -78,10 +90,11 @@ public class FuzzyServiceSearchServiceTest {
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
     when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
+    when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(0, services.size());
@@ -100,10 +113,11 @@ public class FuzzyServiceSearchServiceTest {
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
     when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
+    when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -123,10 +137,11 @@ public class FuzzyServiceSearchServiceTest {
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
     when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(maxDosServices);
+    when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -138,7 +153,7 @@ public class FuzzyServiceSearchServiceTest {
     List<String> searchCriteria = new ArrayList<>();
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria, null);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
     // Assert
     assertEquals(0, services.size());
   }
@@ -161,11 +176,11 @@ public class FuzzyServiceSearchServiceTest {
         .thenReturn(new PostcodeLocation());
     when(locationService.distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class)))
         .thenReturn(5.0, 10.0);
+    when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(
-            searchLocation, searchCriteria, any());
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchLocation, searchCriteria);
     verify(locationService).getLocationForPostcode(eq(searchLocation), any());
     verify(locationService, times(2))
         .distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class));
@@ -204,10 +219,10 @@ public class FuzzyServiceSearchServiceTest {
     when(apiUtilsService.removeBlankSpaces(anyString())).thenReturn("EX78PR");
     when(locationService.distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class)))
         .thenReturn(357.7);
+    when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
 
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(
-            searchLocation, searchCriteria, any());
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchLocation, searchCriteria);
 
     verify(locationService).getLocationForPostcode(eq(searchLocation), any());
     verify(locationService).getLocationsForPostcodes(eq(postCodes), any());
