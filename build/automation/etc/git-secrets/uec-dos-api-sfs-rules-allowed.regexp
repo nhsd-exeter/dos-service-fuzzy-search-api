@@ -2,4 +2,4 @@
 *PASSWORD[[:blank:]]*:*=[[:blank:]]*[$$][(]
 *SECRET[[:blank:]]*:*=[[:blank:]]*[$$][(]
 *[#A-Za-z0-9_[:blank:]]*(--password|--secret)[-]?[#A-Za-z0-9_[:blank:]]*["]?[$$][(]?
-*--secret-id service-fuzzy-search-$COGNITO_PROFILE-cognito-admin-password
+*--secret-id service-fuzzy-search-$COGNITO_PROFILE-cognito-passwords
