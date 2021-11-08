@@ -79,4 +79,4 @@ COGNITO_USER_POOL_CLIENT_SECRET := $(or $(COGNITO_USER_POOL_CLIENT_SECRET), )
 COGNITO_USER_POOL_CLIENT_ID := $(or $(COGNITO_USER_POOL_CLIENT_ID), )
 COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
 
-POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
+POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
