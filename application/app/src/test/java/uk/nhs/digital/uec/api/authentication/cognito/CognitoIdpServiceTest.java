@@ -31,28 +31,28 @@ public class CognitoIdpServiceTest {
   @Mock AWSCognitoIdentityProvider cognitoClient;
   private String userPoolClientId = "testUserPoolClientId";
   private String userPoolClientSecret = "testUserPoolClientSecret";
-  private static String USER;
-  private static String USERPASS;
-  private static String ACCESS_TOKEN;
-  private static String REFRESH_TOKEN;
+  private String user;
+  private String userPass;
+  private String accessToken;
+  private String refreshToken;
 
   @BeforeEach
   public void setup() {
     ReflectionTestUtils.setField(cognitoService, "userPoolClientId", userPoolClientId);
     ReflectionTestUtils.setField(cognitoService, "userPoolClientSecret", userPoolClientSecret);
-    USER = "admin@nhs.net";
-    USERPASS = "password";
-    ACCESS_TOKEN = "ACCESS_TOKEN_123";
-    REFRESH_TOKEN = "REFRESH_TOKEN_123";
+    user = "admin@nhs.net";
+    userPass = "password";
+    accessToken = "ACCESS_TOKEN_123";
+    refreshToken = "REFRESH_TOKEN_123";
   }
 
   @Test
   public void authenticationPositiveTest() throws UnauthorisedException {
-    Credential cred = new Credential(USER, USERPASS);
+    Credential cred = new Credential(user, userPass);
     InitiateAuthResult authResult = new InitiateAuthResult();
     AuthenticationResultType authenticationResult = new AuthenticationResultType();
-    authenticationResult.setAccessToken(ACCESS_TOKEN);
-    authenticationResult.setRefreshToken(REFRESH_TOKEN);
+    authenticationResult.setAccessToken(accessToken);
+    authenticationResult.setRefreshToken(refreshToken);
     authResult.setAuthenticationResult(authenticationResult);
 
     when(cognitoClient.initiateAuth(any())).thenReturn(authResult);
@@ -63,35 +63,23 @@ public class CognitoIdpServiceTest {
 
   @Test
   public void authenticationInvalidPasswordExceptionTest() throws UnauthorisedException {
-    Credential cred = new Credential(USER, USERPASS);
+    Credential cred = new Credential(user, userPass);
     ;
     when(cognitoClient.initiateAuth(any())).thenThrow(InvalidPasswordException.class);
-    assertThrows(
-        UnauthorisedException.class,
-        () -> {
-          cognitoService.authenticate(cred);
-        });
+    assertThrows(UnauthorisedException.class, () -> cognitoService.authenticate(cred));
   }
 
   @Test
   public void authenticationNotAuthorizedExceptionTest() throws UnauthorisedException {
-    Credential cred = new Credential(USER, USERPASS);
+    Credential cred = new Credential(user, userPass);
     when(cognitoClient.initiateAuth(any())).thenThrow(NotAuthorizedException.class);
-    assertThrows(
-        UnauthorisedException.class,
-        () -> {
-          cognitoService.authenticate(cred);
-        });
+    assertThrows(UnauthorisedException.class, () -> cognitoService.authenticate(cred));
   }
 
   @Test
   public void authenticationAWSCognitoIdentityProviderExceptionTest() throws UnauthorisedException {
-    Credential cred = new Credential(USER, USERPASS);
+    Credential cred = new Credential(user, userPass);
     when(cognitoClient.initiateAuth(any())).thenThrow(AWSCognitoIdentityProviderException.class);
-    assertThrows(
-        UnauthorisedException.class,
-        () -> {
-          cognitoService.authenticate(cred);
-        });
+    assertThrows(UnauthorisedException.class, () -> cognitoService.authenticate(cred));
   }
 }
