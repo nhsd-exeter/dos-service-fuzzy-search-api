@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,7 +29,6 @@ public class LoginControllerTest {
     Credential cred = new Credential("admin@nhs.net", "password");
     authToken.setAccessToken("ACCESS_TOKEN_123");
     authToken.setRefreshToken("REFRESH_TOKEN_123");
-    ObjectMapper mapper = new ObjectMapper();
     when(authenticationService.getAccessToken(cred)).thenReturn(authToken);
 
     ResponseEntity response = loginController.getAccessToken(cred);
@@ -44,7 +42,6 @@ public class LoginControllerTest {
     Credential cred = new Credential("admin@nhs.net", "password");
     authToken.setAccessToken("ACCESS_TOKEN_123");
     authToken.setRefreshToken("REFRESH_TOKEN_123");
-    ObjectMapper mapper = new ObjectMapper();
     when(authenticationService.getAccessToken(cred)).thenThrow(UnauthorisedException.class);
     ResponseEntity response = loginController.getAccessToken(cred);
 

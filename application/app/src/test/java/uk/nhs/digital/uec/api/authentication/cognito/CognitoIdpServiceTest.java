@@ -31,24 +31,28 @@ public class CognitoIdpServiceTest {
   @Mock AWSCognitoIdentityProvider cognitoClient;
   private String userPoolClientId = "testUserPoolClientId";
   private String userPoolClientSecret = "testUserPoolClientSecret";
+  private static String USER;
+  private static String PASSWORD;
+  private static String ACCESS_TOKEN;
+  private static String REFRESH_TOKEN;
 
   @BeforeEach
   public void setup() {
     ReflectionTestUtils.setField(cognitoService, "userPoolClientId", userPoolClientId);
     ReflectionTestUtils.setField(cognitoService, "userPoolClientSecret", userPoolClientSecret);
+    USER = "admin@nhs.net";
+    PASSWORD = "password";
+    ACCESS_TOKEN = "ACCESS_TOKEN_123";
+    REFRESH_TOKEN = "REFRESH_TOKEN_123";
   }
 
   @Test
   public void authenticationPositiveTest() throws UnauthorisedException {
-    AuthToken authToken = new AuthToken();
-    Credential cred = new Credential("admin@nhs.net", "password");
-    authToken.setAccessToken("ACCESS_TOKEN_123");
-    authToken.setRefreshToken("REFRESH_TOKEN_123");
-
+    Credential cred = new Credential(USER, PASSWORD);
     InitiateAuthResult authResult = new InitiateAuthResult();
     AuthenticationResultType authenticationResult = new AuthenticationResultType();
-    authenticationResult.setAccessToken("access-from-cognito");
-    authenticationResult.setRefreshToken("refresh-from-cognito");
+    authenticationResult.setAccessToken(ACCESS_TOKEN);
+    authenticationResult.setRefreshToken(REFRESH_TOKEN);
     authResult.setAuthenticationResult(authenticationResult);
 
     when(cognitoClient.initiateAuth(any())).thenReturn(authResult);
@@ -59,17 +63,8 @@ public class CognitoIdpServiceTest {
 
   @Test
   public void authenticationInvalidPasswordExceptionTest() throws UnauthorisedException {
-    AuthToken authToken = new AuthToken();
-    Credential cred = new Credential("admin@nhs.net", "password");
-    authToken.setAccessToken("ACCESS_TOKEN_123");
-    authToken.setRefreshToken("REFRESH_TOKEN_123");
-
-    InitiateAuthResult authResult = new InitiateAuthResult();
-    AuthenticationResultType authenticationResult = new AuthenticationResultType();
-    authenticationResult.setAccessToken("access-from-cognito");
-    authenticationResult.setRefreshToken("refresh-from-cognito");
-    authResult.setAuthenticationResult(authenticationResult);
-
+    Credential cred = new Credential(USER, PASSWORD);
+    ;
     when(cognitoClient.initiateAuth(any())).thenThrow(InvalidPasswordException.class);
     assertThrows(
         UnauthorisedException.class,
@@ -80,17 +75,7 @@ public class CognitoIdpServiceTest {
 
   @Test
   public void authenticationNotAuthorizedExceptionTest() throws UnauthorisedException {
-    AuthToken authToken = new AuthToken();
-    Credential cred = new Credential("admin@nhs.net", "password");
-    authToken.setAccessToken("ACCESS_TOKEN_123");
-    authToken.setRefreshToken("REFRESH_TOKEN_123");
-
-    InitiateAuthResult authResult = new InitiateAuthResult();
-    AuthenticationResultType authenticationResult = new AuthenticationResultType();
-    authenticationResult.setAccessToken("access-from-cognito");
-    authenticationResult.setRefreshToken("refresh-from-cognito");
-    authResult.setAuthenticationResult(authenticationResult);
-
+    Credential cred = new Credential(USER, PASSWORD);
     when(cognitoClient.initiateAuth(any())).thenThrow(NotAuthorizedException.class);
     assertThrows(
         UnauthorisedException.class,
@@ -101,17 +86,7 @@ public class CognitoIdpServiceTest {
 
   @Test
   public void authenticationAWSCognitoIdentityProviderExceptionTest() throws UnauthorisedException {
-    AuthToken authToken = new AuthToken();
-    Credential cred = new Credential("admin@nhs.net", "password");
-    authToken.setAccessToken("ACCESS_TOKEN_123");
-    authToken.setRefreshToken("REFRESH_TOKEN_123");
-
-    InitiateAuthResult authResult = new InitiateAuthResult();
-    AuthenticationResultType authenticationResult = new AuthenticationResultType();
-    authenticationResult.setAccessToken("access-from-cognito");
-    authenticationResult.setRefreshToken("refresh-from-cognito");
-    authResult.setAuthenticationResult(authenticationResult);
-
+    Credential cred = new Credential(USER, PASSWORD);
     when(cognitoClient.initiateAuth(any())).thenThrow(AWSCognitoIdentityProviderException.class);
     assertThrows(
         UnauthorisedException.class,

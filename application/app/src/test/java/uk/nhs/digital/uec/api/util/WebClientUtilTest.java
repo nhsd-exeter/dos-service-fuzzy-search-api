@@ -52,20 +52,21 @@ public class WebClientUtilTest {
   @Mock private WebClient.ResponseSpec responseSpecMock;
 
   private AuthToken authToken;
+  private static String USER;
+  private static String PASSWORD;
 
   @BeforeEach
   public void setUp() {
     authToken = new AuthToken();
     authToken.setAccessToken("MOCK-ACCESS-TOKEN");
     authToken.setRefreshToken("MOCK-ACCESS-REFRESH-TOKEN");
+    USER = "admin@nhs.net";
+    PASSWORD = "password";
   }
 
   @Test
   public void getHeaderTest() throws SSLException {
-    List<String> postCodes = new ArrayList<>();
-    postCodes.add("EX1 1SR");
-    Credential credential =
-        Credential.builder().emailAddress("admin@nhs.net").password("password").build();
+    Credential credential = Credential.builder().emailAddress(USER).password(PASSWORD).build();
     authWebClient = getMockedAuthWebClient(authToken);
     AuthToken responseAuthToken =
         webClientUtil.getAuthenticationToken(credential, "/authentication/login");
@@ -75,12 +76,12 @@ public class WebClientUtilTest {
   @Test
   public void getPostCodeMappingsTest() throws SSLException {
     List<String> postCodes = new ArrayList<>();
-    postCodes.add("EX1 1SR");
+    postCodes.add("EX1 2SR");
 
     PostcodeLocation postcodeLocation = new PostcodeLocation();
     postcodeLocation.setEasting(123677);
     postcodeLocation.setNorthing(655343);
-    postcodeLocation.setPostCode("EX1 1PR");
+    postcodeLocation.setPostCode("EX1 2PR");
 
     MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
     headers.add("Content-Type", "application/json");
@@ -93,7 +94,7 @@ public class WebClientUtilTest {
     PostcodeLocation returnedLocation = postcodeMappings.get(0);
     assertEquals(655343, returnedLocation.getNorthing());
     assertEquals(123677, returnedLocation.getEasting());
-    assertEquals("EX1 1PR", returnedLocation.getPostCode());
+    assertEquals("EX1 2PR", returnedLocation.getPostCode());
   }
 
   private WebClient getMockedAuthWebClient(final AuthToken resp) {
@@ -123,8 +124,7 @@ public class WebClientUtilTest {
   @Test
   public void getMockedAuthWebClientExceptionTest() {
     when(authWebClient.post()).thenThrow(RuntimeException.class);
-    Credential credential =
-        Credential.builder().emailAddress("admin@nhs.net").password("password").build();
+    Credential credential = Credential.builder().emailAddress(USER).password(PASSWORD).build();
     AuthToken responseAuthToken =
         webClientUtil.getAuthenticationToken(credential, "/authentication/login");
     assertNull(responseAuthToken);
@@ -134,12 +134,7 @@ public class WebClientUtilTest {
   public void getPostCodeMappingsTestExceptionTest() {
     when(postCodeMappingWebClient.get()).thenThrow(RuntimeException.class);
     List<String> postCodes = new ArrayList<>();
-    postCodes.add("EX1 1SR");
-
-    PostcodeLocation postcodeLocation = new PostcodeLocation();
-    postcodeLocation.setEasting(123677);
-    postcodeLocation.setNorthing(655343);
-    postcodeLocation.setPostCode("EX1 1PR");
+    postCodes.add("EX1 3SR");
 
     MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
     headers.add("Content-Type", "application/json");
