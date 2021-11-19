@@ -57,14 +57,12 @@ public class CognitoIdpServiceTest {
 
     when(cognitoClient.initiateAuth(any())).thenReturn(authResult);
     AuthToken accessTokenResponse = cognitoService.authenticate(cred);
-
     assertNotNull(accessTokenResponse.getAccessToken());
   }
 
   @Test
   public void authenticationInvalidPasswordExceptionTest() throws UnauthorisedException {
     Credential cred = new Credential(user, userPass);
-    ;
     when(cognitoClient.initiateAuth(any())).thenThrow(InvalidPasswordException.class);
     assertThrows(UnauthorisedException.class, () -> cognitoService.authenticate(cred));
   }
