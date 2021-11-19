@@ -32,7 +32,7 @@ public class CognitoIdpServiceTest {
   private String userPoolClientId = "testUserPoolClientId";
   private String userPoolClientSecret = "testUserPoolClientSecret";
   private static String USER;
-  private static String PASSWORD;
+  private static String USERPASS;
   private static String ACCESS_TOKEN;
   private static String REFRESH_TOKEN;
 
@@ -41,14 +41,14 @@ public class CognitoIdpServiceTest {
     ReflectionTestUtils.setField(cognitoService, "userPoolClientId", userPoolClientId);
     ReflectionTestUtils.setField(cognitoService, "userPoolClientSecret", userPoolClientSecret);
     USER = "admin@nhs.net";
-    PASSWORD = "password";
+    USERPASS = "password";
     ACCESS_TOKEN = "ACCESS_TOKEN_123";
     REFRESH_TOKEN = "REFRESH_TOKEN_123";
   }
 
   @Test
   public void authenticationPositiveTest() throws UnauthorisedException {
-    Credential cred = new Credential(USER, PASSWORD);
+    Credential cred = new Credential(USER, USERPASS);
     InitiateAuthResult authResult = new InitiateAuthResult();
     AuthenticationResultType authenticationResult = new AuthenticationResultType();
     authenticationResult.setAccessToken(ACCESS_TOKEN);
@@ -63,7 +63,7 @@ public class CognitoIdpServiceTest {
 
   @Test
   public void authenticationInvalidPasswordExceptionTest() throws UnauthorisedException {
-    Credential cred = new Credential(USER, PASSWORD);
+    Credential cred = new Credential(USER, USERPASS);
     ;
     when(cognitoClient.initiateAuth(any())).thenThrow(InvalidPasswordException.class);
     assertThrows(
@@ -75,7 +75,7 @@ public class CognitoIdpServiceTest {
 
   @Test
   public void authenticationNotAuthorizedExceptionTest() throws UnauthorisedException {
-    Credential cred = new Credential(USER, PASSWORD);
+    Credential cred = new Credential(USER, USERPASS);
     when(cognitoClient.initiateAuth(any())).thenThrow(NotAuthorizedException.class);
     assertThrows(
         UnauthorisedException.class,
@@ -86,7 +86,7 @@ public class CognitoIdpServiceTest {
 
   @Test
   public void authenticationAWSCognitoIdentityProviderExceptionTest() throws UnauthorisedException {
-    Credential cred = new Credential(USER, PASSWORD);
+    Credential cred = new Credential(USER, USERPASS);
     when(cognitoClient.initiateAuth(any())).thenThrow(AWSCognitoIdentityProviderException.class);
     assertThrows(
         UnauthorisedException.class,

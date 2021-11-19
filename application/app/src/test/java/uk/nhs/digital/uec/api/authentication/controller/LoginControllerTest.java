@@ -26,7 +26,7 @@ public class LoginControllerTest {
   @Test
   public void loginTest() throws ValidationException, UnauthorisedException {
     AuthToken authToken = new AuthToken();
-    Credential cred = new Credential("admin@nhs.net", "password");
+    Credential cred = new Credential("admin1@nhs.net", "password1");
     authToken.setAccessToken("ACCESS_TOKEN_123");
     authToken.setRefreshToken("REFRESH_TOKEN_123");
     when(authenticationService.getAccessToken(cred)).thenReturn(authToken);
@@ -39,7 +39,7 @@ public class LoginControllerTest {
   @Test
   public void loginExceptionTest() throws ValidationException, UnauthorisedException {
     AuthToken authToken = new AuthToken();
-    Credential cred = new Credential("admin@nhs.net", "password");
+    Credential cred = new Credential("admin2@nhs.net", "password2");
     authToken.setAccessToken("ACCESS_TOKEN_123");
     authToken.setRefreshToken("REFRESH_TOKEN_123");
     when(authenticationService.getAccessToken(cred)).thenThrow(UnauthorisedException.class);

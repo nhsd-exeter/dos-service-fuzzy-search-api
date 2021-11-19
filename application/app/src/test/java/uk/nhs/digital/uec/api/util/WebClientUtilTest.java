@@ -53,7 +53,7 @@ public class WebClientUtilTest {
 
   private AuthToken authToken;
   private static String USER;
-  private static String PASSWORD;
+  private static String USERPASS;
 
   @BeforeEach
   public void setUp() {
@@ -61,12 +61,12 @@ public class WebClientUtilTest {
     authToken.setAccessToken("MOCK-ACCESS-TOKEN");
     authToken.setRefreshToken("MOCK-ACCESS-REFRESH-TOKEN");
     USER = "admin@nhs.net";
-    PASSWORD = "password";
+    USERPASS = "password";
   }
 
   @Test
   public void getHeaderTest() throws SSLException {
-    Credential credential = Credential.builder().emailAddress(USER).password(PASSWORD).build();
+    Credential credential = Credential.builder().emailAddress(USER).password(USERPASS).build();
     authWebClient = getMockedAuthWebClient(authToken);
     AuthToken responseAuthToken =
         webClientUtil.getAuthenticationToken(credential, "/authentication/login");
@@ -124,7 +124,7 @@ public class WebClientUtilTest {
   @Test
   public void getMockedAuthWebClientExceptionTest() {
     when(authWebClient.post()).thenThrow(RuntimeException.class);
-    Credential credential = Credential.builder().emailAddress(USER).password(PASSWORD).build();
+    Credential credential = Credential.builder().emailAddress(USER).password(USERPASS).build();
     AuthToken responseAuthToken =
         webClientUtil.getAuthenticationToken(credential, "/authentication/login");
     assertNull(responseAuthToken);
