@@ -1,6 +1,8 @@
-package uk.nhs.digital.uec.api.service;
+package uk.nhs.digital.uec.api.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +25,6 @@ import reactor.core.publisher.Mono;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
-import uk.nhs.digital.uec.api.util.WebClientUtil;
 
 @ExtendWith(SpringExtension.class)
 public class WebClientUtilTest {
@@ -117,5 +118,35 @@ public class WebClientUtilTest {
     when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
     when(responseSpecMock.bodyToFlux(PostcodeLocation.class)).thenReturn(Flux.just(resp));
     return postCodeMappingWebClient;
+  }
+
+  @Test
+  public void getMockedAuthWebClientExceptionTest() {
+    when(authWebClient.post()).thenThrow(RuntimeException.class);
+    Credential credential =
+        Credential.builder().emailAddress("admin@nhs.net").password("password").build();
+    AuthToken responseAuthToken =
+        webClientUtil.getAuthenticationToken(credential, "/authentication/login");
+    assertNull(responseAuthToken);
+  }
+
+  @Test
+  public void getPostCodeMappingsTestExceptionTest() {
+    when(postCodeMappingWebClient.get()).thenThrow(RuntimeException.class);
+    List<String> postCodes = new ArrayList<>();
+    postCodes.add("EX1 1SR");
+
+    PostcodeLocation postcodeLocation = new PostcodeLocation();
+    postcodeLocation.setEasting(123677);
+    postcodeLocation.setNorthing(655343);
+    postcodeLocation.setPostCode("EX1 1PR");
+
+    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+    headers.add("Content-Type", "application/json");
+    headers.add("Authorization", "Bearer " + authToken.getAccessToken());
+
+    List<PostcodeLocation> postcodeMappings =
+        webClientUtil.getPostcodeMappings(postCodes, headers, "api/search");
+    assertTrue(postcodeMappings.isEmpty());
   }
 }

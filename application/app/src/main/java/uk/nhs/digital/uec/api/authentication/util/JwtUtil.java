@@ -5,8 +5,6 @@ import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationCons
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -55,9 +53,5 @@ public class JwtUtil {
 
   public String getIdentityProviderIdDigest(String identityProviderId) {
     return DigestUtils.sha1Hex(identityProviderId);
-  }
-
-  public String convertObjectToJson(Object object) throws JsonProcessingException {
-    return object == null ? null : new ObjectMapper().writeValueAsString(object);
   }
 }
