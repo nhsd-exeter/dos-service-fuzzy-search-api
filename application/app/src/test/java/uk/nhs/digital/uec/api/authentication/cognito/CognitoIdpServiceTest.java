@@ -56,9 +56,9 @@ public class CognitoIdpServiceTest {
     authResult.setAuthenticationResult(authenticationResult);
 
     when(cognitoClient.initiateAuth(any())).thenReturn(authResult);
-    AuthToken accessToken = cognitoService.authenticate(cred);
+    AuthToken accessTokenResponse = cognitoService.authenticate(cred);
 
-    assertNotNull(accessToken.getAccessToken());
+    assertNotNull(accessTokenResponse.getAccessToken());
   }
 
   @Test

@@ -54,6 +54,7 @@ public class WebClientUtilTest {
   private AuthToken authToken;
   private String user;
   private String userPass;
+  private MultiValueMap<String, String> headers;
 
   @BeforeEach
   public void setUp() {
@@ -62,6 +63,9 @@ public class WebClientUtilTest {
     authToken.setRefreshToken("MOCK-ACCESS-REFRESH-TOKEN");
     user = "admin@nhs.net";
     userPass = "password";
+    headers = new LinkedMultiValueMap<>();
+    headers.add("Content-Type", "application/json");
+    headers.add("Authorization", "Bearer " + authToken.getAccessToken());
   }
 
   @Test
@@ -82,10 +86,6 @@ public class WebClientUtilTest {
     postcodeLocation.setEasting(123677);
     postcodeLocation.setNorthing(655343);
     postcodeLocation.setPostCode("EX1 2PR");
-
-    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-    headers.add("Content-Type", "application/json");
-    headers.add("Authorization", "Bearer " + authToken.getAccessToken());
 
     postCodeMappingWebClient = getPostCodeWebClient(postcodeLocation);
 
@@ -110,9 +110,6 @@ public class WebClientUtilTest {
   }
 
   private WebClient getPostCodeWebClient(final PostcodeLocation resp) {
-    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-    headers.add("Content-Type", "application/json");
-    headers.add("Authorization", "Bearer Access-Token");
     when(postCodeMappingWebClient.get()).thenReturn(requestHeadersUriSpecMock);
     when(requestHeadersUriSpecMock.uri(any(Function.class))).thenReturn(requestHeadersSpecMock);
     when(requestHeadersSpecMock.headers(any(Consumer.class))).thenReturn(requestHeadersSpecMock);
@@ -135,10 +132,6 @@ public class WebClientUtilTest {
     when(postCodeMappingWebClient.get()).thenThrow(RuntimeException.class);
     List<String> postCodes = new ArrayList<>();
     postCodes.add("EX1 3SR");
-
-    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-    headers.add("Content-Type", "application/json");
-    headers.add("Authorization", "Bearer " + authToken.getAccessToken());
 
     List<PostcodeLocation> postcodeMappings =
         webClientUtil.getPostcodeMappings(postCodes, headers, "api/search");
