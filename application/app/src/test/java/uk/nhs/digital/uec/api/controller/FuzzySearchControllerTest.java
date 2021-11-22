@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +19,7 @@ import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import uk.nhs.digital.uec.api.exception.ValidationException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.ApiResponse;
@@ -53,6 +55,18 @@ public class FuzzySearchControllerTest {
   private static final Integer POSTCODE_PRIORITY = 0;
   private static final Integer PUBLIC_NAME_PRIORITY = 0;
   private static final String SEARCH_POSTCODE = "EX2 3SE";
+  private String apiVersion = "v0.0.3";
+
+  @BeforeEach
+  public void setup() {
+    ReflectionTestUtils.setField(fuzzyServiceSearchController, "apiVersion", apiVersion);
+  }
+
+  @Test
+  public void homeEndpointTest() throws ValidationException {
+    String response = fuzzyServiceSearchController.home();
+    assertEquals("This is the DoS Service Fuzzy Search API. Version: " + apiVersion, response);
+  }
 
   @Test
   public void getServicesByFuzzySearchTestSucc() throws ValidationException {

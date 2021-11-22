@@ -1,6 +1,8 @@
-package uk.nhs.digital.uec.api.service;
+package uk.nhs.digital.uec.api.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +25,6 @@ import reactor.core.publisher.Mono;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
-import uk.nhs.digital.uec.api.util.WebClientUtil;
 
 @ExtendWith(SpringExtension.class)
 public class WebClientUtilTest {
@@ -51,20 +52,25 @@ public class WebClientUtilTest {
   @Mock private WebClient.ResponseSpec responseSpecMock;
 
   private AuthToken authToken;
+  private String user;
+  private String userPass;
+  private MultiValueMap<String, String> headers;
 
   @BeforeEach
   public void setUp() {
     authToken = new AuthToken();
     authToken.setAccessToken("MOCK-ACCESS-TOKEN");
     authToken.setRefreshToken("MOCK-ACCESS-REFRESH-TOKEN");
+    user = "admin@nhs.net";
+    userPass = "password";
+    headers = new LinkedMultiValueMap<>();
+    headers.add("Content-Type", "application/json");
+    headers.add("Authorization", "Bearer " + authToken.getAccessToken());
   }
 
   @Test
   public void getHeaderTest() throws SSLException {
-    List<String> postCodes = new ArrayList<>();
-    postCodes.add("EX1 1SR");
-    Credential credential =
-        Credential.builder().emailAddress("admin@nhs.net").password("password").build();
+    Credential credential = Credential.builder().emailAddress(user).password(userPass).build();
     authWebClient = getMockedAuthWebClient(authToken);
     AuthToken responseAuthToken =
         webClientUtil.getAuthenticationToken(credential, "/authentication/login");
@@ -74,16 +80,12 @@ public class WebClientUtilTest {
   @Test
   public void getPostCodeMappingsTest() throws SSLException {
     List<String> postCodes = new ArrayList<>();
-    postCodes.add("EX1 1SR");
+    postCodes.add("EX1 2SR");
 
     PostcodeLocation postcodeLocation = new PostcodeLocation();
     postcodeLocation.setEasting(123677);
     postcodeLocation.setNorthing(655343);
-    postcodeLocation.setPostCode("EX1 1PR");
-
-    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-    headers.add("Content-Type", "application/json");
-    headers.add("Authorization", "Bearer " + authToken.getAccessToken());
+    postcodeLocation.setPostCode("EX1 2PR");
 
     postCodeMappingWebClient = getPostCodeWebClient(postcodeLocation);
 
@@ -92,7 +94,7 @@ public class WebClientUtilTest {
     PostcodeLocation returnedLocation = postcodeMappings.get(0);
     assertEquals(655343, returnedLocation.getNorthing());
     assertEquals(123677, returnedLocation.getEasting());
-    assertEquals("EX1 1PR", returnedLocation.getPostCode());
+    assertEquals("EX1 2PR", returnedLocation.getPostCode());
   }
 
   private WebClient getMockedAuthWebClient(final AuthToken resp) {
@@ -108,14 +110,31 @@ public class WebClientUtilTest {
   }
 
   private WebClient getPostCodeWebClient(final PostcodeLocation resp) {
-    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-    headers.add("Content-Type", "application/json");
-    headers.add("Authorization", "Bearer Access-Token");
     when(postCodeMappingWebClient.get()).thenReturn(requestHeadersUriSpecMock);
     when(requestHeadersUriSpecMock.uri(any(Function.class))).thenReturn(requestHeadersSpecMock);
     when(requestHeadersSpecMock.headers(any(Consumer.class))).thenReturn(requestHeadersSpecMock);
     when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
     when(responseSpecMock.bodyToFlux(PostcodeLocation.class)).thenReturn(Flux.just(resp));
     return postCodeMappingWebClient;
+  }
+
+  @Test
+  public void getMockedAuthWebClientExceptionTest() {
+    when(authWebClient.post()).thenThrow(RuntimeException.class);
+    Credential credential = Credential.builder().emailAddress(user).password(userPass).build();
+    AuthToken responseAuthToken =
+        webClientUtil.getAuthenticationToken(credential, "/authentication/login");
+    assertNull(responseAuthToken);
+  }
+
+  @Test
+  public void getPostCodeMappingsTestExceptionTest() {
+    when(postCodeMappingWebClient.get()).thenThrow(RuntimeException.class);
+    List<String> postCodes = new ArrayList<>();
+    postCodes.add("EX1 3SR");
+
+    List<PostcodeLocation> postcodeMappings =
+        webClientUtil.getPostcodeMappings(postCodes, headers, "api/search");
+    assertTrue(postcodeMappings.isEmpty());
   }
 }

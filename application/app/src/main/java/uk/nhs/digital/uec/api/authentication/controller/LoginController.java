@@ -1,6 +1,5 @@
 package uk.nhs.digital.uec.api.authentication.controller;
 
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,7 @@ public class LoginController {
   @Autowired private AuthenticationServiceInterface authenticationService;
 
   @PostMapping("/authentication/login")
-  public ResponseEntity getAccessToken(
-      @RequestBody Credential credentials, HttpServletResponse response) {
+  public ResponseEntity getAccessToken(@RequestBody Credential credentials) {
     AuthToken resultPayload = null;
     try {
       resultPayload = authenticationService.getAccessToken(credentials);

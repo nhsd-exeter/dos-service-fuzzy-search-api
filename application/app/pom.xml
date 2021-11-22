@@ -155,6 +155,8 @@
             <exclude>**/config/*.*</exclude>
             <exclude>**/model/*.*</exclude>
             <exclude>**/exception/*.class</exclude>
+            <exclude>**/filter/*.class</exclude>
+            <exclude>**/DosServiceFuzzySearchApi.class</exclude>
             <exclude>**/test-classes/**/*.class</exclude>
           </excludes>
         </configuration>
