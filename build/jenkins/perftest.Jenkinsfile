@@ -89,38 +89,40 @@ pipeline {
       }
     }
 
-    
-    def jmeterNamespace = "${env.PROJECT_GROUP_SHORT}-${env.PROJECT_NAME_SHORT}-${env.PROFILE}-jmeter"
-
     stage("Deploy jMeter"){
-      // Prevent concurrent jMeter deployments
-      lock ("${jmeterNamespace}"){
-        // withEnv([ "AWS_ACCESS_KEY_ID=${awsAccessKeyId}",
-        //   "AWS_SECRET_ACCESS_KEY=${awsSecretAccessKey}",
-        //   "AWS_SESSION_TOKEN=${awsSessionToken}",
-        //   "KUBECONFIG=${kubeconfig}"
-        //   ])   
-        // {
-          jMeterNamespaceExists = sh( script: """ kubectl get ns | awk '{print \$1}' | grep '^${jmeterNamespace}\$' || true """, returnStdout: true).trim()
-          if ( jMeterNamespaceExists != "${jmeterNamespace}" ) {
-            echo "namespace ${jmeterNamespace} doesn't exist, creating it..."
-            sh (""" kubectl create ns ${jmeterNamespace} """)
+      steps {
+        script {
+          // Prevent concurrent jMeter deployments
+          lock ("${jmeterNamespace}"){
+            // withEnv([ "AWS_ACCESS_KEY_ID=${awsAccessKeyId}",
+            //   "AWS_SECRET_ACCESS_KEY=${awsSecretAccessKey}",
+            //   "AWS_SESSION_TOKEN=${awsSessionToken}",
+            //   "KUBECONFIG=${kubeconfig}"
+            //   ])
+            // {
+              def jmeterNamespace = "${env.PROJECT_GROUP_SHORT}-${env.PROJECT_NAME_SHORT}-${env.PROFILE}-jmeter"
+              jMeterNamespaceExists = sh( script: """ kubectl get ns | awk '{print \$1}' | grep '^${jmeterNamespace}\$' || true """, returnStdout: true).trim()
+              if ( jMeterNamespaceExists != "${jmeterNamespace}" ) {
+                echo "namespace ${jmeterNamespace} doesn't exist, creating it..."
+                sh (""" kubectl create ns ${jmeterNamespace} """)
+              }
+              else {
+                echo "namespace ${jmeterNamespace} already exists"
+              }
+              // dir ( jMeterK8sDir ){
+              //   sh """kubectl apply -n ${jmeterNamespace} -f jmeter_slaves_deploy.yaml"""
+              //   sh """kubectl apply -n ${jmeterNamespace} -f jmeter_slaves_svc.yaml"""
+              //   sh """kubectl apply -n ${jmeterNamespace} -f jmeter_master_deploy.yaml"""
+              // }
+              // // Wait for jMeter pods to be available
+              // sh """${jenkinsScriptsDir}/check_pods.sh jmeter-master ${jmeterNamespace} 5 30"""
+              // sh """${jenkinsScriptsDir}/check_pods.sh jmeter-slave ${jmeterNamespace} 5 30"""
+            // }
           }
-          else {
-            echo "namespace ${jmeterNamespace} already exists"
-          }
-          // dir ( jMeterK8sDir ){
-          //   sh """kubectl apply -n ${jmeterNamespace} -f jmeter_slaves_deploy.yaml"""
-          //   sh """kubectl apply -n ${jmeterNamespace} -f jmeter_slaves_svc.yaml"""
-          //   sh """kubectl apply -n ${jmeterNamespace} -f jmeter_master_deploy.yaml"""
-          // }
-          // // Wait for jMeter pods to be available
-          // sh """${jenkinsScriptsDir}/check_pods.sh jmeter-master ${jmeterNamespace} 5 30"""
-          // sh """${jenkinsScriptsDir}/check_pods.sh jmeter-slave ${jmeterNamespace} 5 30"""
-        // }
+        }
       }
     }
-    
+
     // stage("Run Jmeter"){
     //   steps {
     //     script {
@@ -130,7 +132,7 @@ pipeline {
     //         //   "AWS_SECRET_ACCESS_KEY=${awsSecretAccessKey}",
     //         //   "AWS_SESSION_TOKEN=${awsSessionToken}",
     //         //   "KUBECONFIG=${kubeconfig}"
-    //         //   ])   
+    //         //   ])
     //         // {
     //           sh ("""sed -i 's|REPLACE_WITH_FQDN|${fqdn}|g' ${jmeterTestDir}/${jmxFile}""")
     //           sh ("""sed -i 's|REPLACE_WITH_PATH|${path}|g' ${jmeterTestDir}/${jmxFile}""")
@@ -146,7 +148,7 @@ pipeline {
     //     }
     //   }
     // }
-    
+
     // stage("Destroy jMeter") {
     //   // Prevent concurrent jMeter destroys
     //   lock ("${jmeterNamespace}"){
@@ -154,15 +156,15 @@ pipeline {
     //       "AWS_SECRET_ACCESS_KEY=${awsSecretAccessKey}",
     //       "AWS_SESSION_TOKEN=${awsSessionToken}",
     //       "KUBECONFIG=${kubeconfig}"
-    //       ])   
+    //       ])
     //     {
     //       sh """kubectl delete ns ${jmeterNamespace}"""
     //     }
     //   }
     // }
-    
 
-    
+
+
   }
 
   post {
