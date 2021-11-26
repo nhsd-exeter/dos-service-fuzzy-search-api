@@ -1,3 +1,5 @@
+def jmeterNamespace
+def jMeterNamespaceExists
 pipeline {
   /*
     Description: Deployment pipeline
