@@ -100,7 +100,7 @@ pipeline {
             //   "KUBECONFIG=${kubeconfig}"
             //   ])
             // {
-              def jmeterNamespace = "${env.PROJECT_GROUP_SHORT}-${env.PROJECT_NAME_SHORT}-${env.PROFILE}-jmeter"
+              jmeterNamespace = "${env.PROJECT_GROUP_SHORT}-${env.PROJECT_NAME_SHORT}-${env.PROFILE}-jmeter"
               jMeterNamespaceExists = sh( script: """ kubectl get ns | awk '{print \$1}' | grep '^${jmeterNamespace}\$' || true """, returnStdout: true).trim()
               if ( jMeterNamespaceExists != "${jmeterNamespace}" ) {
                 echo "namespace ${jmeterNamespace} doesn't exist, creating it..."
