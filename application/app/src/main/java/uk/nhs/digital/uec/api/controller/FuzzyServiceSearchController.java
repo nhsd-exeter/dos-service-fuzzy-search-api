@@ -47,7 +47,7 @@ public class FuzzyServiceSearchController {
   private String apiVersion;
 
   /** Welcome/home page endpoint for the DoS Service Fuzzy Search API. */
-  @RequestMapping(value = "/home")
+  @GetMapping(value = "/home")
   public String home() {
     return "This is the DoS Service Fuzzy Search API. Version: " + apiVersion;
   }
