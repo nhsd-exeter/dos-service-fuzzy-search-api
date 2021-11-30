@@ -1,5 +1,4 @@
-def jmeterNamespace
-def jMeterNamespaceExists
+
 pipeline {
   /*
     Description: Deployment pipeline
@@ -30,7 +29,7 @@ pipeline {
     stage("Deploy jMeter"){
       steps {
         script {
-          sh "make deploy-jmeter-namespace PROFILE=${env.PROJECT_BUILD_TAG}"
+          sh 'make deploy-jmeter-namespace PROFILE=${env.PROFILE}'
           // Wait for jMeter pods to be available
           sh """build/jenkins/scripts/check_pods.sh jmeter-master uec-dos-api-sfsa-dev-jmeter 5 30"""
           sh """build/jenkins/scripts/check_pods.sh jmeter-slave uec-dos-api-sfsa-dev-jmeter 5 30"""
@@ -39,21 +38,22 @@ pipeline {
       }
 
     stage("Run Jmeter"){
-        {
-          sh """kubectl config set-context --current --namespace=${jmeterNamespace}"""
-          sh """${jmeterScriptsDir}/jmeter_stop.sh"""
-          sh """${jmeterScriptsDir}/start_test.sh ${jmeterTestDir} ${jmeterTestDir}/${jmxFile}"""
+      steps {
+        script {
+          sh 'make run-jmeter PROFILE=${env.PROFILE}'
         }
-      }
-      // Make jMeter test report files available as build artifacts
-      dir('test-results') {
-        archiveArtifacts artifacts: '**'
+        // Make jMeter test report files available as build artifacts
+        dir('test-results') {
+          archiveArtifacts artifacts: '**'
+        }
       }
     }
 
     stage("Destroy jMeter") {
-      script {
-        sh "make destroy-jmeter-namespace PROFILE=${env.PROJECT_BUILD_TAG}"
+      steps {
+        script {
+          sh 'make destroy-jmeter-namespace PROFILE=${env.PROFILE}'
+        }
       }
     }
   }
