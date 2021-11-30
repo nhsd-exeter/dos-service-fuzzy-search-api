@@ -30,9 +30,6 @@ pipeline {
       steps {
         script {
           sh "make deploy-jmeter-namespace PROFILE=${env.PROFILE}"
-          // Wait for jMeter pods to be available
-          sh """build/jenkins/scripts/check_pods.sh jmeter-master uec-dos-api-sfsa-dev-jmeter 5 30"""
-          sh """build/jenkins/scripts/check_pods.sh jmeter-slave uec-dos-api-sfsa-dev-jmeter 5 30"""
           }
         }
       }
