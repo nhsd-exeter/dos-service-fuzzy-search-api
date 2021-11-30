@@ -187,10 +187,9 @@ deploy-jmeter-namespace:
 	make k8s-kubeconfig-get
 	eval "$$(make k8s-kubeconfig-export-variables)"
 	kubectl create ns ${PROJECT_ID}-${PROFILE}-jmeter
-	cd deployment/jmeter
-		kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f jmeter_slaves_deploy.yaml
-		kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f jmeter_slaves_svc.yaml
-		kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f jmeter_master_deploy.yaml
+	kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f deployment/jmeter/jmeter_slaves_deploy.yaml
+	kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f deployment/jmeter/jmeter_slaves_svc.yaml
+	kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f deployment/jmeter/jmeter_master_deploy.yaml
 
 destroy-jmeter-namespace:
 	eval "$$(make aws-assume-role-export-variables)"
