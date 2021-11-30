@@ -10,7 +10,7 @@ then
   echo "Test files dir was not found in PATH"
   echo "Kindly check and input the correct path"
   exit 1
-else 
+else
   echo "testdir set to $testdir"
 fi
 testdir_basename="$(basename "$testdir")"
@@ -23,7 +23,7 @@ then
   echo "JMX file not found in PATH"
   echo "Kindly check and input the correct filename"
   exit 1
-else 
+else
   echo "jmxfile set to $jmxfile"
 fi
 jmxfile_basename="$(basename "$jmxfile")"
@@ -69,11 +69,11 @@ fi
 
 # This has only been tested for user.properties which is already enabled in jmeter.properties, other .properties files may require changes to the jmeter-master image/deployment
 if [ $jmproperties ]
-then 
+then
   kubectl cp "$jmproperties" "$master_pod:/jmeter/apache-jmeter-5.4.1/bin/$jmproperties_basename"
 else
   echo "custom properties not set"
-fi 
+fi
 
 ## Removing previous report .csv
 kubectl exec -i $master_pod -- rm -rf jm_report
@@ -82,7 +82,7 @@ echo "removed previous csv report file"
 ## Copy latest JMX file to the master pod
 kubectl cp "$jmxfile" "$master_pod:/${testdir_basename}/${jmxfile_basename}"
 ## Copy load test script to master pod
-kubectl cp "jmeter/scripts/load_test.sh" "$master_pod:/load_test.sh"
+kubectl cp "test/jmeter/scripts/load_test.sh" "$master_pod:/load_test.sh"
 
 ## Echo Starting Jmeter load test
 kubectl exec -i $master_pod -- /bin/bash /load_test.sh "/${testdir_basename}/${jmxfile_basename}"
