@@ -190,6 +190,7 @@ deploy-jmeter-namespace:
 	kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f deployment/jmeter/jmeter_slaves_deploy.yaml
 	kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f deployment/jmeter/jmeter_slaves_svc.yaml
 	kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f deployment/jmeter/jmeter_master_deploy.yaml
+	make k8s-sts K8S_APP_NAMESPACE=${PROJECT_ID}-${PROFILE}-jmeter
 
 destroy-jmeter-namespace:
 	eval "$$(make aws-assume-role-export-variables)"
