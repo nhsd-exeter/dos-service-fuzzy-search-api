@@ -184,6 +184,8 @@ run-jmeter: # Run performance tests - mandatory: NAME
 deploy-jmeter-namespace:
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
+	make k8s-kubeconfig-get
+	eval "$$(make k8s-kubeconfig-export-variables)"
 	kubectl create ns ${PROJECT_ID}-${PROFILE}-jmeter
 	cd deployment/jmeter
 		kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f jmeter_slaves_deploy.yaml
@@ -193,6 +195,8 @@ deploy-jmeter-namespace:
 destroy-jmeter-namespace:
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
+	make k8s-kubeconfig-get
+	eval "$$(make k8s-kubeconfig-export-variables)"
 	kubectl delete ns ${PROJECT_ID}-${PROFILE}-jmeter
 
 
