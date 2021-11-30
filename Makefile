@@ -175,11 +175,11 @@ clean: # Clean up project
 	docker network rm $(DOCKER_NETWORK) 2> /dev/null ||:
 
 run-jmeter: # Run performance tests - mandatory: NAME
-  eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
 	kubectl config set-context --current --namespace=${PROJECT_ID}-${PROFILE}-jmeter
-  test/jmeter/scripts/jmeter_stop.sh
-  test/jmeter/scripts/start_test.sh test/jmeter/tests/performance test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
+	test/jmeter/scripts/jmeter_stop.sh
+	test/jmeter/scripts/start_test.sh test/jmeter/tests/performance test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
 
 deploy-jmeter-namespace:
 	eval "$$(make aws-assume-role-export-variables)"
