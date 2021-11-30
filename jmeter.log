@@ -1,0 +1,42 @@
+2021-11-30 08:47:42,528 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2021-11-30 08:47:42,568 INFO o.a.j.JMeter: Loading user properties from: /Users/gewa2/dev/apache-jmeter-5.4.1/bin/user.properties
+2021-11-30 08:47:42,569 INFO o.a.j.JMeter: Loading system properties from: /Users/gewa2/dev/apache-jmeter-5.4.1/bin/system.properties
+2021-11-30 08:47:42,570 INFO o.a.j.JMeter: Setting JMeter property: jmeter.laf=CrossPlatform
+2021-11-30 08:47:42,578 INFO o.a.j.JMeter: Copyright (c) 1998-2021 The Apache Software Foundation
+2021-11-30 08:47:42,578 INFO o.a.j.JMeter: Version 5.4.1
+2021-11-30 08:47:42,579 INFO o.a.j.JMeter: java.version=11.0.6
+2021-11-30 08:47:42,579 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2021-11-30 08:47:42,579 INFO o.a.j.JMeter: os.name=Mac OS X
+2021-11-30 08:47:42,579 INFO o.a.j.JMeter: os.arch=x86_64
+2021-11-30 08:47:42,579 INFO o.a.j.JMeter: os.version=10.15.6
+2021-11-30 08:47:42,579 INFO o.a.j.JMeter: file.encoding=UTF-8
+2021-11-30 08:47:42,579 INFO o.a.j.JMeter: java.awt.headless=null
+2021-11-30 08:47:42,579 INFO o.a.j.JMeter: Max memory     =1073741824
+2021-11-30 08:47:42,579 INFO o.a.j.JMeter: Available Processors =12
+2021-11-30 08:47:42,590 INFO o.a.j.JMeter: Default Locale=English (EN)
+2021-11-30 08:47:42,591 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2021-11-30 08:47:42,591 INFO o.a.j.JMeter: JMeterHome=/Users/gewa2/dev/apache-jmeter-5.4.1
+2021-11-30 08:47:42,591 INFO o.a.j.JMeter: user.dir  =/Users/gewa2/dev/dos-service-fuzzy-search-api
+2021-11-30 08:47:42,591 INFO o.a.j.JMeter: PWD       =/Users/gewa2/dev/dos-service-fuzzy-search-api
+2021-11-30 08:47:42,613 INFO o.a.j.JMeter: IP: 192.168.68.107 Name: MacBook-Pro.local FullName: 192.168.68.107
+2021-11-30 08:47:43,218 INFO o.a.j.JMeter: Setting LAF to: laf:com.apple.laf.AquaLookAndFeel
+2021-11-30 08:47:44,504 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2021-11-30 08:48:10,552 INFO o.a.j.s.FileServer: Default base='/Users/gewa2/dev/dos-service-fuzzy-search-api'
+2021-11-30 08:48:10,555 INFO o.a.j.g.a.Load: Loading file: /Users/gewa2/dev/dos-service-fuzzy-search-api/test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
+2021-11-30 08:48:10,555 INFO o.a.j.s.FileServer: Set new base='/Users/gewa2/dev/dos-service-fuzzy-search-api/test/jmeter/tests/performance'
+2021-11-30 08:48:10,707 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2021-11-30 08:48:10,731 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2021-11-30 08:48:10,732 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2021-11-30 08:48:10,734 INFO o.a.j.s.SaveService: Loading file: /Users/gewa2/dev/dos-service-fuzzy-search-api/test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
+2021-11-30 08:48:10,762 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2021-11-30 08:48:10,762 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2021-11-30 08:48:10,762 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2021-11-30 08:48:10,762 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2021-11-30 08:48:10,762 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2021-11-30 08:48:10,762 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2021-11-30 08:48:10,915 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2021-11-30 08:48:10,915 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to ISO-8859-1
+2021-11-30 08:48:10,915 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2021-11-30 08:48:10,915 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2021-11-30 08:48:11,076 INFO o.a.j.v.ViewResultsFullVisualizer: Add JavaFX to your Java installation if you want to use renderer: org.apache.jmeter.visualizers.RenderInBrowser
+2021-11-30 08:48:11,172 INFO o.a.j.s.FileServer: Set new base='/Users/gewa2/dev/dos-service-fuzzy-search-api/test/jmeter/tests/performance'

@@ -207,7 +207,7 @@
           <collectionProp name="Arguments.arguments">
             <elementProp name="URL" elementType="Argument">
               <stringProp name="Argument.name">URL</stringProp>
-              <stringProp name="Argument.value">uec-dos-api-sfs-dev-uec-dos-api-sfs-service.k8s-nonprod.texasplatform.uk</stringProp>
+              <stringProp name="Argument.value">uec-dos-api-sfsa-dev-uec-dos-api-sfs-service.k8s-nonprod.texasplatform.uk</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
               <stringProp name="Argument.desc">Main URL</stringProp>
             </elementProp>

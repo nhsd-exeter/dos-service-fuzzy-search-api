@@ -174,8 +174,27 @@ clean: # Clean up project
 	make stop
 	docker network rm $(DOCKER_NETWORK) 2> /dev/null ||:
 
-test-performance: # Run performance tests - mandatory: NAME
-	sh ../apache-jmeter-5.4.1/bin/jmeter -n -t test/performance-tests/$(NAME) -l $(PROJECT_DIR)test/performance-tests/testresults.jtl
+run-jmeter: # Run performance tests - mandatory: NAME
+  eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make project-populate-application-variables)"
+	kubectl config set-context --current --namespace=${PROJECT_ID}-${PROFILE}-jmeter
+  test/jmeter/scripts/jmeter_stop.sh
+  test/jmeter/scripts/start_test.sh test/jmeter/tests/performance test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
+
+deploy-jmeter-namespace:
+	eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make project-populate-application-variables)"
+	kubectl create ns ${PROJECT_ID}-${PROFILE}-jmeter
+	cd deployment/jmeter
+		kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f jmeter_slaves_deploy.yaml
+		kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f jmeter_slaves_svc.yaml
+		kubectl apply -n ${PROJECT_ID}-${PROFILE}-jmeter -f jmeter_master_deploy.yaml
+
+destroy-jmeter-namespace:
+	eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make project-populate-application-variables)"
+	kubectl delete ns ${PROJECT_ID}-${PROFILE}-jmeter
+
 
 # ==============================================================================
 # Supporting targets
