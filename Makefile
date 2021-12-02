@@ -174,14 +174,8 @@ clean: # Clean up project
 	make stop
 	docker network rm $(DOCKER_NETWORK) 2> /dev/null ||:
 
-run-jmeter: # Run performance tests - mandatory: NAME
-	eval "$$(make aws-assume-role-export-variables)"
-	eval "$$(make project-populate-application-variables)"
-	make k8s-kubeconfig-get
-	eval "$$(make k8s-kubeconfig-export-variables)"
-	kubectl config set-context --current --namespace=${PROJECT_ID}-${PROFILE}-jmeter
-	test/jmeter/scripts/jmeter_stop.sh
-	test/jmeter/scripts/start_test.sh test/jmeter/tests/performance test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
+run-jmeter-performance-test:
+	make run-jmeter JMETER_TEST_FILE_PATH=test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
 
 deploy-jmeter-namespace:
 	eval "$$(make aws-assume-role-export-variables)"
@@ -204,6 +198,15 @@ destroy-jmeter-namespace:
 
 # ==============================================================================
 # Supporting targets
+run-jmeter: # Run jmeter tests - mandatory: JMETER_TEST_FILE_PATH - the path of the jmeter tests to run
+	eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make project-populate-application-variables)"
+	make k8s-kubeconfig-get
+	eval "$$(make k8s-kubeconfig-export-variables)"
+	kubectl config set-context --current --namespace=${PROJECT_ID}-${PROFILE}-jmeter
+	test/jmeter/scripts/jmeter_stop.sh
+	test/jmeter/scripts/start_test.sh test/jmeter/tests/performance ${JMETER_TEST_FILE_PATH}
+
 
 trust-certificate: ssl-trust-certificate-project ## Trust the SSL development certificate
 
