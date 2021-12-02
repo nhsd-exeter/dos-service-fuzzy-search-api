@@ -4,6 +4,8 @@ pipeline {
     Description: Deployment pipeline
    */
 
+  agent any
+
   options {
     buildDiscarder(logRotator(daysToKeepStr: "7", numToKeepStr: "13"))
     disableConcurrentBuilds()
