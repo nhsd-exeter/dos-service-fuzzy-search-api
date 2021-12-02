@@ -177,6 +177,12 @@ clean: # Clean up project
 run-jmeter-performance-test:
 	make run-jmeter JMETER_TEST_FILE_PATH=test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
 
+run-jmeter-load-test:
+	make run-jmeter JMETER_TEST_FILE_PATH=test/jmeter/tests/performance/fuzzyLoadTest.jmx
+
+run-jmeter-stress-test:
+	make run-jmeter JMETER_TEST_FILE_PATH=test/jmeter/tests/performance/fuzzyStressTest.jmx
+
 deploy-jmeter-namespace:
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
