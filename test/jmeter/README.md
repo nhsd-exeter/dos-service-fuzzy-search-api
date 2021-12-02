@@ -22,7 +22,7 @@ You can adapt the load_test.sh script as required if you need jMeter to be
 called wih different flags. It will get copied onto the master/slave pods by
 start_test.sh.
 
-start_test.sh is (currently) invoked with 3 arguments, the last one being 
+start_test.sh is (currently) invoked with 3 arguments, the last one being
 optional:
 
 e.g. ./start_test.sh ../tests/loadtest1 ../tests/loadtest1/example.jmx ../properties/user.properties
