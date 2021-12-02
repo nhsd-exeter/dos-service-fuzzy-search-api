@@ -4,8 +4,6 @@ pipeline {
     Description: Deployment pipeline
    */
 
-  agent { label "jenkins-slave" }
-
   options {
     buildDiscarder(logRotator(daysToKeepStr: "7", numToKeepStr: "13"))
     disableConcurrentBuilds()
@@ -41,7 +39,7 @@ pipeline {
         }
         // Make jMeter test report files available as build artifacts
         dir('performance-test-results') {
-          archiveArtifacts artifacts: '**'
+          archiveArtifacts artifacts: './performance-test-results/**'
         }
       }
     }
@@ -53,7 +51,7 @@ pipeline {
         }
         // Make jMeter test report files available as build artifacts
         dir('load-test-results') {
-          archiveArtifacts artifacts: '**'
+          archiveArtifacts artifacts: './load-test-results/**'
         }
       }
     }
@@ -65,7 +63,7 @@ pipeline {
         }
         // Make jMeter test report files available as build artifacts
         dir('stress-test-results') {
-          archiveArtifacts artifacts: '**'
+          archiveArtifacts artifacts: './stress-test-results/**'
         }
       }
     }
