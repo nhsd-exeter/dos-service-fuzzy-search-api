@@ -82,7 +82,10 @@ pipeline {
   post {
     always { sh "make clean" }
     success { sh "make pipeline-on-success" }
-    failure { sh "make pipeline-on-failure" }
+    failure {
+      sh "make destroy-jmeter-namespace PROFILE=${env.PROFILE}"
+      sh "make pipeline-on-failure"
+    }
   }
 
 }
