@@ -97,9 +97,9 @@ kubectl exec -i $master_pod -- jmeter -g jm_report.csv -o jm_report
 echo "generated new HTML report file"
 
 ## Copying HTML report from pod to Jenkins workspace
-kubectl cp "$master_pod:/jm_report" ./test-results/jm_report
+kubectl cp "$master_pod:/jm_report" ./"${testdir_basename}"-test-results/jm_report
 echo "copied HTML report files to workspace"
 
 ## Copying .csv report from pod to Jenkins workspace
-kubectl cp "$master_pod:/jm_report.csv" ./test-results/jm_report/jm_report.csv
+kubectl cp "$master_pod:/jm_report.csv" ./"${testdir_basename}"-test-results/jm_report/jm_report.csv
 echo "Copied CSV report file to workspace"

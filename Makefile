@@ -175,13 +175,13 @@ clean: # Clean up project
 	docker network rm $(DOCKER_NETWORK) 2> /dev/null ||:
 
 run-jmeter-performance-test:
-	make run-jmeter JMETER_TEST_FILE_PATH=test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
+	make run-jmeter JMETER_TEST_FOLDER_PATH=test/jmeter/tests/performance JMETER_TEST_FILE_PATH=test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
 
 run-jmeter-load-test:
-	make run-jmeter JMETER_TEST_FILE_PATH=test/jmeter/tests/performance/fuzzyLoadTest.jmx
+	make run-jmeter JMETER_TEST_FOLDER_PATH=test/jmeter/tests/load JMETER_TEST_FILE_PATH=test/jmeter/tests/load/fuzzyLoadTest.jmx
 
 run-jmeter-stress-test:
-	make run-jmeter JMETER_TEST_FILE_PATH=test/jmeter/tests/performance/fuzzyStressTest.jmx
+	make run-jmeter JMETER_TEST_FOLDER_PATH=test/jmeter/tests/stress JMETER_TEST_FILE_PATH=test/jmeter/tests/stress/fuzzyStressTest.jmx
 
 deploy-jmeter-namespace:
 	eval "$$(make aws-assume-role-export-variables)"
@@ -204,14 +204,14 @@ destroy-jmeter-namespace:
 
 # ==============================================================================
 # Supporting targets
-run-jmeter: # Run jmeter tests - mandatory: JMETER_TEST_FILE_PATH - the path of the jmeter tests to run
+run-jmeter: # Run jmeter tests - mandatory: JMETER_TEST_FOLDER_PATH - test directory JMETER_TEST_FILE_PATH - the path of the jmeter tests to run
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
 	make k8s-kubeconfig-get
 	eval "$$(make k8s-kubeconfig-export-variables)"
 	kubectl config set-context --current --namespace=${PROJECT_ID}-${PROFILE}-jmeter
 	test/jmeter/scripts/jmeter_stop.sh
-	test/jmeter/scripts/start_test.sh test/jmeter/tests/performance ${JMETER_TEST_FILE_PATH}
+	test/jmeter/scripts/start_test.sh ${JMETER_TEST_FOLDER_PATH} ${JMETER_TEST_FILE_PATH}
 
 
 trust-certificate: ssl-trust-certificate-project ## Trust the SSL development certificate
