@@ -22,7 +22,9 @@ import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FuzzySearchSuccessIT extends AuthServiceIT {
 
-  private static String endpointUrl;
+  private String endpointUrl;
+  private static final String searchTerms = "search_term";
+  private static final String service1 = "service1";
 
   MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 
@@ -43,9 +45,9 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
   @Test
   public void oneSearchCriteriaGiven() throws Exception {
     // Arrange
-    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    HttpEntity<String> request = new HttpEntity<>(null, headers);
     UriComponentsBuilder uriBuilder =
-        UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam("search_term", "service1");
+        UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam(searchTerms, service1);
 
     // Act
     ResponseEntity<String> responseEntity =
@@ -58,7 +60,7 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
     assertEquals(1, response.getSearchResults().getNumberOfServicesFound());
-    assertEquals("service1", response.getSearchResults().getServices().get(0).getName());
+    assertEquals(service1, response.getSearchResults().getServices().get(0).getName());
   }
 
   /**
@@ -73,9 +75,9 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
-            .queryParam("search_term", "a")
-            .queryParam("search_term", "ab")
-            .queryParam("search_term", "service1");
+            .queryParam(searchTerms, "a")
+            .queryParam(searchTerms, "ab")
+            .queryParam(searchTerms, service1);
 
     // Act
     ResponseEntity<String> responseEntity =
@@ -88,7 +90,7 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
     assertEquals(1, response.getSearchResults().getNumberOfServicesFound());
-    assertEquals("service1", response.getSearchResults().getServices().get(0).getName());
+    assertEquals(service1, response.getSearchResults().getServices().get(0).getName());
   }
 
   /**
@@ -102,8 +104,7 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
     // Arrange
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
-        UriComponentsBuilder.fromHttpUrl(endpointUrl)
-            .queryParam("search_term", "Expect No Results");
+        UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam(searchTerms, "Expect No Results");
 
     // Act
     ResponseEntity<String> responseEntity =
@@ -125,7 +126,7 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
     HttpEntity<String> request = new HttpEntity<String>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
-            .queryParam("search_term", "service")
+            .queryParam(searchTerms, "service")
             .queryParam("fuzz_level", 1);
 
     // Act
