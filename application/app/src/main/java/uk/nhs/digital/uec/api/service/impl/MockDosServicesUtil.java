@@ -9,7 +9,9 @@ import uk.nhs.digital.uec.api.model.DosService;
 /** Class to encapsulate testing service data. */
 public class MockDosServicesUtil {
 
-  public static Map<Integer, DosService> mockDosServices = new HashMap<>();
+  private MockDosServicesUtil() {}
+
+  public static final Map<Integer, DosService> mockDosServices = new HashMap<>();
 
   static {
     mockDosServices.put(1, buildMockService1(1));

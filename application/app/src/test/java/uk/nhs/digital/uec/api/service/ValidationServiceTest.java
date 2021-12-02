@@ -23,10 +23,20 @@ public class ValidationServiceTest {
 
   private int maxSearchCriteria = 10;
 
+  private String validationMessage;
+
+  private String searchCriteriaEmptyMessage;
+
+  private String codeVal1;
+
   @BeforeEach
   public void setup() {
     ReflectionTestUtils.setField(validationService, "minSearchTermLength", minSearchTermLength);
     ReflectionTestUtils.setField(validationService, "maxSearchCriteria", maxSearchCriteria);
+    validationMessage = "Validation error not expected: ";
+    searchCriteriaEmptyMessage =
+        "No validation exception raised when expected because the search criteria is empty.";
+    codeVal1 = "VAL-001";
   }
 
   @Test
@@ -39,7 +49,7 @@ public class ValidationServiceTest {
     try {
       validationService.validateSearchCriteria(searchCriteria);
     } catch (ValidationException ve) {
-      fail("Validation error not expected: " + ve.getMessage());
+      fail(validationMessage + ve.getMessage());
     }
   }
 
@@ -55,7 +65,7 @@ public class ValidationServiceTest {
     try {
       validationService.validateSearchCriteria(searchCriteria);
     } catch (ValidationException ve) {
-      fail("Validation error not expected: " + ve.getMessage());
+      fail(validationMessage + ve.getMessage());
     }
   }
 
@@ -71,7 +81,7 @@ public class ValidationServiceTest {
     try {
       validationService.validateSearchCriteria(searchCriteria);
     } catch (ValidationException ve) {
-      fail("Validation error not expected: " + ve.getMessage());
+      fail(validationMessage + ve.getMessage());
     }
   }
 
@@ -83,9 +93,9 @@ public class ValidationServiceTest {
     // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
-      fail("No validation exception raised when expected because the search criteria is empty.");
+      fail(searchCriteriaEmptyMessage);
     } catch (ValidationException ve) {
-      assertEquals("VAL-001", ve.getValidationCode());
+      assertEquals(codeVal1, ve.getValidationCode());
     } catch (Exception e) {
       fail("Unexpected exception thrown: " + e.getMessage());
     }
@@ -96,9 +106,9 @@ public class ValidationServiceTest {
     // Act and Assert
     try {
       validationService.validateSearchCriteria(null);
-      fail("No validation exception raised when expected because the search criteria is empty.");
+      fail(searchCriteriaEmptyMessage);
     } catch (ValidationException ve) {
-      assertEquals("VAL-001", ve.getValidationCode());
+      assertEquals(codeVal1, ve.getValidationCode());
     } catch (Exception e) {
       fail("Unexpected exception thrown: " + e.getMessage());
     }
@@ -136,7 +146,7 @@ public class ValidationServiceTest {
     try {
       validationService.validateMinSearchCriteriaLength(searchCriteria);
     } catch (ValidationException ve) {
-      fail("Validation error not expected: " + ve.getMessage());
+      fail(validationMessage + ve.getMessage());
     }
   }
 
@@ -152,7 +162,7 @@ public class ValidationServiceTest {
     try {
       validationService.validateMinSearchCriteriaLength(searchCriteria);
     } catch (ValidationException ve) {
-      fail("Validation error not expected: " + ve.getMessage());
+      fail(validationMessage + ve.getMessage());
     }
   }
 
@@ -164,9 +174,9 @@ public class ValidationServiceTest {
     // Act and Assert
     try {
       validationService.validateMinSearchCriteriaLength(searchCriteria);
-      fail("No validation exception raised when expected because the search criteria is empty.");
+      fail(searchCriteriaEmptyMessage);
     } catch (ValidationException ve) {
-      assertEquals("VAL-001", ve.getValidationCode());
+      assertEquals(codeVal1, ve.getValidationCode());
     } catch (Exception e) {
       fail("Unexpected exception thrown: " + e.getMessage());
     }
@@ -177,9 +187,9 @@ public class ValidationServiceTest {
     // Act and Assert
     try {
       validationService.validateMinSearchCriteriaLength(null);
-      fail("No validation exception raised when expected because the search criteria is empty.");
+      fail(searchCriteriaEmptyMessage);
     } catch (ValidationException ve) {
-      assertEquals("VAL-001", ve.getValidationCode());
+      assertEquals(codeVal1, ve.getValidationCode());
     } catch (Exception e) {
       fail("Unexpected exception thrown: " + e.getMessage());
     }

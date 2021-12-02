@@ -56,10 +56,14 @@ public class FuzzySearchControllerTest {
   private static final Integer PUBLIC_NAME_PRIORITY = 0;
   private static final String SEARCH_POSTCODE = "EX2 3SE";
   private String apiVersion = "v0.0.3";
+  List<String> searchCriteria;
 
   @BeforeEach
   public void setup() {
     ReflectionTestUtils.setField(fuzzyServiceSearchController, "apiVersion", apiVersion);
+    searchCriteria = new ArrayList<>();
+    searchCriteria.add("term1");
+    searchCriteria.add("term2");
   }
 
   @Test
@@ -70,10 +74,6 @@ public class FuzzySearchControllerTest {
 
   @Test
   public void getServicesByFuzzySearchTestSucc() throws ValidationException {
-    // Arrange
-    List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("term1");
-    searchCriteria.add("term2");
 
     when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
     when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);
@@ -118,10 +118,6 @@ public class FuzzySearchControllerTest {
 
   @Test
   public void getServicesByFuzzySearchTestValidationError() throws ValidationException {
-    // Arrange
-    List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("term1");
-    searchCriteria.add("term2");
 
     when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
     when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);

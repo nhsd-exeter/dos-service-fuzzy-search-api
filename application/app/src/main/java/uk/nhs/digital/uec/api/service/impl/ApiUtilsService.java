@@ -3,7 +3,6 @@ package uk.nhs.digital.uec.api.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -41,8 +40,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
   @Override
   public List<String> sanitiseSearchTerms(final List<String> searchCriteria) {
 
-    List<String> listFromString = new ArrayList<>();
-    listFromString = searchCriteria.stream().map(String::trim).collect(Collectors.toList());
+    List<String> listFromString = searchCriteria.stream().map(String::trim).toList();
 
     List<String> sanitisedSearchTerms = new ArrayList<>();
 
@@ -52,7 +50,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
         String searchTermToAdd = searchTerm.replaceAll("\\s+", " ");
 
         // Remove weird characters
-        searchTermToAdd.replaceAll("[^a-zA-Z0-9:;.?! ]", "");
+        searchTermToAdd = searchTermToAdd.replaceAll("[^a-zA-Z0-9:;.?! ]", "");
 
         sanitisedSearchTerms.add(searchTermToAdd);
 
@@ -75,9 +73,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
 
   @Override
   public List<String> removeBlankSpacesIn(final List<String> fields) {
-    List<String> collect =
-        fields.stream().map(this::removeBlankSpaces).collect(Collectors.toList());
-    return collect;
+    return fields.stream().map(this::removeBlankSpaces).toList();
   }
 
   /**
