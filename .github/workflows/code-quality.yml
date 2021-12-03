@@ -36,4 +36,4 @@ jobs:
             -Dsonar.java.binaries=target/classes
             -Dsonar.coverage.exclusions=src/main/java/**/config/*.*,src/main/java/**/model/*.*,src/main/java/**/exception/*.*,src/test/**/*.*,src/main/java/**/filter/*.*,src/main/java/**/DosServiceFuzzySearchApi.*
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco
-            -Dsonar.exclusions=wrapper/MavenWrapperDownloader.*, src/main/java/**/model/*.*"
+            -Dsonar.exclusions=wrapper/*.*,src/main/java/**/model/*.*"
