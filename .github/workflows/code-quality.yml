@@ -33,6 +33,7 @@ jobs:
           args: >
             -Dsonar.organization=nhsd-exeter
             -Dsonar.projectKey=uec-dos-api-sfsa
-            -Dsonar.java.binaries=target/classes
+            -Dsonar.java.binaries=target/classes -Dsonar.java.libraries=target/lib/*.jar
             -Dsonar.coverage.exclusions=src/main/java/**/config/*.*,src/main/java/**/model/*.*,src/main/java/**/exception/*.*,src/test/**/*.*,src/main/java/**/filter/*.*,src/main/java/**/DosServiceFuzzySearchApi.*
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco
+            -Dsonar.exclusions=wrapper/MavenWrapperDownloader.*"
