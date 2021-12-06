@@ -2,7 +2,10 @@ package uk.nhs.digital.uec.api.integration.fuzzysearch;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.MalformedURLException;
 import java.net.URL;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -30,8 +32,6 @@ public class AuthServiceIT {
 
   @Autowired private PropertySourceResolver propertySourceResolver;
 
-  HttpHeaders headers = new HttpHeaders();
-
   @Value("${local.host}")
   private String host;
 
@@ -47,8 +47,8 @@ public class AuthServiceIT {
     assertNotNull(authorizedHeader);
   }
 
-  protected MultiValueMap<String, String> getAuthorizedHeader() throws Exception {
-    ObjectMapper mapper = new ObjectMapper();
+  protected MultiValueMap<String, String> getAuthorizedHeader()
+      throws MalformedURLException, JsonMappingException, JsonProcessingException {
     Credential cred = new Credential("admin@nhs.net", "password");
     HttpEntity<Credential> request = new HttpEntity<>(cred);
     ResponseEntity<String> loginResponse =

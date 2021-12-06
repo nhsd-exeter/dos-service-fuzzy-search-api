@@ -47,6 +47,8 @@ public class FuzzyServiceSearchServiceTest {
 
   private MultiValueMap<String, String> headers = null;
 
+  private List<String> searchCriteria;
+
   @BeforeEach
   public void setup() {
     when(apiRequestParams.getMaxNumServicesToReturn()).thenReturn(maxNumServicesToReturn);
@@ -55,15 +57,15 @@ public class FuzzyServiceSearchServiceTest {
     headers = new LinkedMultiValueMap<>();
     headers.add("Content-Type", "application/json");
     headers.add("Authorization", "Bearer " + "Mock accessToken");
+
+    searchCriteria = new ArrayList<>();
+    searchCriteria.add("term1");
+    searchCriteria.add("term2");
   }
 
   @Test
   public void retrieveServicesByFuzzySearchSuccess() {
     // Arrange
-    List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("term1");
-    searchCriteria.add("term2");
-
     List<DosService> dosServices = new ArrayList<>();
     dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
     dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
@@ -83,18 +85,19 @@ public class FuzzyServiceSearchServiceTest {
   @Test
   public void retrieveServicesByFuzzySearchNoResults() {
     // Arrange
-    List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("term0");
+    List<String> searchCriteriaLocal = new ArrayList<>();
+    searchCriteriaLocal.add("term0");
 
     List<DosService> dosServices = new ArrayList<>();
 
-    when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
-    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
+    when(apiUtilsService.sanitiseSearchTerms(searchCriteriaLocal)).thenReturn(searchCriteriaLocal);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteriaLocal)))
+        .thenReturn(dosServices);
     when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteriaLocal);
 
     // Assert
     assertEquals(0, services.size());
@@ -103,21 +106,22 @@ public class FuzzyServiceSearchServiceTest {
   @Test
   public void retrieveServicesByFuzzySearchTooManyResults() {
     // Arrange
-    List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("All");
+    List<String> searchCriteriaLocal = new ArrayList<>();
+    searchCriteriaLocal.add("All");
 
     List<DosService> dosServices = new ArrayList<>();
     for (Map.Entry<Integer, DosService> entry : MockDosServicesUtil.mockDosServices.entrySet()) {
       dosServices.add(entry.getValue());
     }
 
-    when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
-    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
+    when(apiUtilsService.sanitiseSearchTerms(searchCriteriaLocal)).thenReturn(searchCriteriaLocal);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteriaLocal)))
+        .thenReturn(dosServices);
     when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteriaLocal);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -126,8 +130,8 @@ public class FuzzyServiceSearchServiceTest {
   @Test
   public void retrieveServicesByFuzzySearchMaxReturn() {
     // Arrange
-    List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("Max");
+    List<String> searchCriteriaLocal = new ArrayList<>();
+    searchCriteriaLocal.add("Max");
 
     List<DosService> dosServices = new ArrayList<>();
     for (Map.Entry<Integer, DosService> entry : MockDosServicesUtil.mockDosServices.entrySet()) {
@@ -135,13 +139,14 @@ public class FuzzyServiceSearchServiceTest {
     }
     List<DosService> maxDosServices = dosServices.subList(0, maxNumServicesToReturn);
 
-    when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
-    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(maxDosServices);
+    when(apiUtilsService.sanitiseSearchTerms(searchCriteriaLocal)).thenReturn(searchCriteriaLocal);
+    when(serviceRepository.findServiceBySearchTerms(eq(searchCriteriaLocal)))
+        .thenReturn(maxDosServices);
     when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
 
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteriaLocal);
 
     // Assert
     assertEquals(maxNumServicesToReturn, services.size());
@@ -150,19 +155,16 @@ public class FuzzyServiceSearchServiceTest {
   @Test
   public void retrieveServicesByFuzzySearchNullReturn() {
     // Arrange
-    List<String> searchCriteria = new ArrayList<>();
+    List<String> searchCriteriaBlank = new ArrayList<>();
     // Act
     List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteria);
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(null, searchCriteriaBlank);
     // Assert
     assertEquals(0, services.size());
   }
 
   @Test
   public void retrieveServicesWithSearchLocation() {
-    List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("term1");
-    searchCriteria.add("term2");
 
     String searchLocation = "EX8 5SE";
 
@@ -191,7 +193,6 @@ public class FuzzyServiceSearchServiceTest {
 
   @Test
   public void retrieveServicesWithNoSearchLocationFromDos() {
-    List<String> searchCriteria = new ArrayList<>();
     PostcodeLocation dynamoPostCodeLocation = new PostcodeLocation();
     dynamoPostCodeLocation.setEasting(558439);
     dynamoPostCodeLocation.setNorthing(140222);
@@ -201,9 +202,6 @@ public class FuzzyServiceSearchServiceTest {
     List<String> postCodes = new ArrayList<>();
     postCodes.add("EX7 8PR");
     postCodes.add("EX7 8PR");
-
-    searchCriteria.add("term1");
-    searchCriteria.add("term2");
 
     String searchLocation = "EX8 5SE";
 

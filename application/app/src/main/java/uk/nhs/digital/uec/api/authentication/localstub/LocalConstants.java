@@ -10,7 +10,7 @@ public class LocalConstants {
 
   public static final String KEY_STORE = "integTest.jks";
 
-  public static final String KEY_STORE_PASSWORD = "mypass";
+  public static final String KEY_STORE_PSWD = "mypass";
 
   public static final String KEY_STORE_ALIAS = "mytest";
 
