@@ -34,7 +34,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
   public List<DosService> retrieveServicesByFuzzySearch(
       final String searchPostcode, final List<String> searchTerms) {
 
-    List<DosService> dosServices = new ArrayList<DosService>();
+    List<DosService> dosServices = new ArrayList<>();
     dosServices.addAll(
         elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms)));
 

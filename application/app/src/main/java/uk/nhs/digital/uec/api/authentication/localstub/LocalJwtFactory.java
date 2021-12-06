@@ -2,7 +2,7 @@ package uk.nhs.digital.uec.api.authentication.localstub;
 
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.KEY_STORE;
 import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.KEY_STORE_ALIAS;
-import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.KEY_STORE_PASSWORD;
+import static uk.nhs.digital.uec.api.authentication.localstub.LocalConstants.KEY_STORE_PSWD;
 
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -24,7 +24,7 @@ public class LocalJwtFactory {
     Date nowDate = new Date(nowMs);
 
     KeyStoreKeyFactory keyStoreKeyFactory =
-        new KeyStoreKeyFactory(new ClassPathResource(KEY_STORE), KEY_STORE_PASSWORD.toCharArray());
+        new KeyStoreKeyFactory(new ClassPathResource(KEY_STORE), KEY_STORE_PSWD.toCharArray());
 
     PrivateKey privateKey = keyStoreKeyFactory.getKeyPair(KEY_STORE_ALIAS).getPrivate();
 
