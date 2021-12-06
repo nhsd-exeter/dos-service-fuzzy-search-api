@@ -41,7 +41,7 @@ pipeline {
         }
         // Make jMeter test report files available as build artifacts
         dir('performance-test-results') {
-          archiveArtifacts artifacts: './performance-test-results/**'
+          archiveArtifacts artifacts: '**'
         }
       }
     }
@@ -53,7 +53,7 @@ pipeline {
         }
         // Make jMeter test report files available as build artifacts
         dir('load-test-results') {
-          archiveArtifacts artifacts: './load-test-results/**'
+          archiveArtifacts artifacts: '**'
         }
       }
     }
@@ -65,7 +65,7 @@ pipeline {
         }
         // Make jMeter test report files available as build artifacts
         dir('stress-test-results') {
-          archiveArtifacts artifacts: './stress-test-results/**'
+          archiveArtifacts artifacts: '**'
         }
       }
     }
