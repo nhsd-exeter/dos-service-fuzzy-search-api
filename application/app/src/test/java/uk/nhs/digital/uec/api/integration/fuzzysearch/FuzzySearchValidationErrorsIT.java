@@ -22,9 +22,11 @@ import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FuzzySearchValidationErrorsIT extends AuthServiceIT {
 
-  private static String endpointUrl;
+  private String endpointUrl;
 
   MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+
+  private final String SEARCH_TERM = "search_term";
 
   @BeforeEach
   public void configureProperties() throws Exception {
@@ -39,7 +41,7 @@ public class FuzzySearchValidationErrorsIT extends AuthServiceIT {
   @Test
   public void noSearchCriteriaGiven() throws Exception {
     // Arrange
-    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    HttpEntity<String> request = new HttpEntity<>(null, headers);
 
     // Act
     ResponseEntity<String> responseEntity =
@@ -61,15 +63,15 @@ public class FuzzySearchValidationErrorsIT extends AuthServiceIT {
   @Test
   public void tooManySearchCriteriaGiven() throws Exception {
     // Arrange
-    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    HttpEntity<String> request = new HttpEntity<>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
-            .queryParam("search_term", "Term1")
-            .queryParam("search_term", "Term2")
-            .queryParam("search_term", "Term3")
-            .queryParam("search_term", "Term4")
-            .queryParam("search_term", "Term5")
-            .queryParam("search_term", "Term6");
+            .queryParam(SEARCH_TERM, "Term1")
+            .queryParam(SEARCH_TERM, "Term2")
+            .queryParam(SEARCH_TERM, "Term3")
+            .queryParam(SEARCH_TERM, "Term4")
+            .queryParam(SEARCH_TERM, "Term5")
+            .queryParam(SEARCH_TERM, "Term6");
 
     // Act
     ResponseEntity<String> responseEntity =
@@ -91,12 +93,12 @@ public class FuzzySearchValidationErrorsIT extends AuthServiceIT {
   @Test
   public void noSearchTermMeetsRequirements() throws Exception {
     // Arrange
-    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    HttpEntity<String> request = new HttpEntity<>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
-            .queryParam("search_term", "1")
-            .queryParam("search_term", "ab")
-            .queryParam("search_term", "z");
+            .queryParam(SEARCH_TERM, "1")
+            .queryParam(SEARCH_TERM, "ab")
+            .queryParam(SEARCH_TERM, "z");
 
     // Act
     ResponseEntity<String> responseEntity =

@@ -23,8 +23,8 @@ import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 public class FuzzySearchSuccessIT extends AuthServiceIT {
 
   private String endpointUrl;
-  private static final String searchTerms = "search_term";
-  private static final String service1 = "service1";
+  private static final String SEARCH_TERM = "search_term";
+  private static final String SERVICE_1 = "service1";
 
   MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 
@@ -47,7 +47,7 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
     // Arrange
     HttpEntity<String> request = new HttpEntity<>(null, headers);
     UriComponentsBuilder uriBuilder =
-        UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam(searchTerms, service1);
+        UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam(SEARCH_TERM, SERVICE_1);
 
     // Act
     ResponseEntity<String> responseEntity =
@@ -60,7 +60,7 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
     assertEquals(1, response.getSearchResults().getNumberOfServicesFound());
-    assertEquals(service1, response.getSearchResults().getServices().get(0).getName());
+    assertEquals(SERVICE_1, response.getSearchResults().getServices().get(0).getName());
   }
 
   /**
@@ -72,12 +72,12 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
   @Test
   public void atLeastOneValidSearchTermGiven() throws Exception {
     // Arrange
-    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    HttpEntity<String> request = new HttpEntity<>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
-            .queryParam(searchTerms, "a")
-            .queryParam(searchTerms, "ab")
-            .queryParam(searchTerms, service1);
+            .queryParam(SEARCH_TERM, "a")
+            .queryParam(SEARCH_TERM, "ab")
+            .queryParam(SEARCH_TERM, SERVICE_1);
 
     // Act
     ResponseEntity<String> responseEntity =
@@ -90,7 +90,7 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
         mapper.readValue(responseEntity.getBody(), ApiSuccessResponse.class);
 
     assertEquals(1, response.getSearchResults().getNumberOfServicesFound());
-    assertEquals(service1, response.getSearchResults().getServices().get(0).getName());
+    assertEquals(SERVICE_1, response.getSearchResults().getServices().get(0).getName());
   }
 
   /**
@@ -102,9 +102,9 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
   @Test
   public void oneSearchCriteriaGivenNoResults() throws Exception {
     // Arrange
-    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    HttpEntity<String> request = new HttpEntity<>(null, headers);
     UriComponentsBuilder uriBuilder =
-        UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam(searchTerms, "Expect No Results");
+        UriComponentsBuilder.fromHttpUrl(endpointUrl).queryParam(SEARCH_TERM, "Expect No Results");
 
     // Act
     ResponseEntity<String> responseEntity =
@@ -123,10 +123,10 @@ public class FuzzySearchSuccessIT extends AuthServiceIT {
   @Test
   public void allSearchCriteriaGivenResults() throws Exception {
     // Arrange
-    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    HttpEntity<String> request = new HttpEntity<>(null, headers);
     UriComponentsBuilder uriBuilder =
         UriComponentsBuilder.fromHttpUrl(endpointUrl)
-            .queryParam(searchTerms, "service")
+            .queryParam(SEARCH_TERM, "service")
             .queryParam("fuzz_level", 1);
 
     // Act

@@ -25,7 +25,7 @@ public class FuzzySearchGeneralErrorsIT extends AuthServiceIT {
 
   @Autowired private PropertySourceResolver propertySourceResolver;
 
-  private static String endpointUrl;
+  private String endpointUrl;
 
   MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 
@@ -39,7 +39,7 @@ public class FuzzySearchGeneralErrorsIT extends AuthServiceIT {
   @Test
   public void postCallOnEndpoint() throws Exception {
     // Arrange
-    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    HttpEntity<String> request = new HttpEntity<>(null, headers);
 
     // Act
     ResponseEntity<String> response =
@@ -53,7 +53,7 @@ public class FuzzySearchGeneralErrorsIT extends AuthServiceIT {
   @Test
   public void patchCallOnEndpoint() throws Exception {
     // Arrange
-    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    HttpEntity<String> request = new HttpEntity<>(null, headers);
 
     // Act
     ResponseEntity<String> response =
@@ -67,7 +67,7 @@ public class FuzzySearchGeneralErrorsIT extends AuthServiceIT {
   @Test
   public void putCallOnEndpoint() throws Exception {
     // Arrange
-    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    HttpEntity<String> request = new HttpEntity<>(null, headers);
 
     // Act
     ResponseEntity<String> response =
@@ -81,7 +81,7 @@ public class FuzzySearchGeneralErrorsIT extends AuthServiceIT {
   @Test
   public void deleteCallOnEndpoint() throws Exception {
     // Arrange
-    HttpEntity<String> request = new HttpEntity<String>(null, headers);
+    HttpEntity<String> request = new HttpEntity<>(null, headers);
 
     // Act
     ResponseEntity<String> response =
