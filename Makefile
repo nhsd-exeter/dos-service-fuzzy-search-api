@@ -175,12 +175,21 @@ clean: # Clean up project
 	docker network rm $(DOCKER_NETWORK) 2> /dev/null ||:
 
 run-jmeter-performance-test:
+	eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make project-populate-application-variables)"
+	test/jmeter/scripts/secrets.sh test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
 	make run-jmeter JMETER_TEST_FOLDER_PATH=test/jmeter/tests/performance JMETER_TEST_FILE_PATH=test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
 
 run-jmeter-load-test:
+	eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make project-populate-application-variables)"
+	test/jmeter/scripts/secrets.sh test/jmeter/tests/performance/fuzzyLoadTest.jmx
 	make run-jmeter JMETER_TEST_FOLDER_PATH=test/jmeter/tests/load JMETER_TEST_FILE_PATH=test/jmeter/tests/load/fuzzyLoadTest.jmx
 
 run-jmeter-stress-test:
+	eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make project-populate-application-variables)"
+	test/jmeter/scripts/secrets.sh test/jmeter/tests/performance/fuzzyStressTest.jmx
 	make run-jmeter JMETER_TEST_FOLDER_PATH=test/jmeter/tests/stress JMETER_TEST_FILE_PATH=test/jmeter/tests/stress/fuzzyStressTest.jmx
 
 deploy-jmeter-namespace:
@@ -204,15 +213,9 @@ destroy-jmeter-namespace:
 
 # ==============================================================================
 # Supporting targets
-get-auth-password:
-	export AUTH_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .ADMIN_PASSWORD | tr -d '"')
-
-
 run-jmeter: # Run jmeter tests - mandatory: JMETER_TEST_FOLDER_PATH - test directory JMETER_TEST_FILE_PATH - the path of the jmeter tests to run
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
-	eval "$$(make get-auth-password)"
-	sed -i 's|PASSWORD_TO_REPLACE|${COGNITO_ADMIN_AUTH_PASSWORD}|g' ${JMETER_TEST_FILE_PATH}
 	make k8s-kubeconfig-get
 	eval "$$(make k8s-kubeconfig-export-variables)"
 	kubectl config set-context --current --namespace=${PROJECT_ID}-${PROFILE}-jmeter
