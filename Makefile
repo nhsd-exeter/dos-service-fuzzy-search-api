@@ -193,7 +193,7 @@ run-jmeter-stress-test:
 	make run-jmeter JMETER_TEST_FOLDER_PATH=test/jmeter/tests/stress JMETER_TEST_FILE_PATH=test/jmeter/tests/stress/fuzzyStressTest.jmx
 
 deploy-jmeter-namespace:
-	eval$$ "(make aws-assume-role-export-variables)"
+	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
 	make k8s-kubeconfig-get
 	eval "$$(make k8s-kubeconfig-export-variables)"
