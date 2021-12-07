@@ -40,9 +40,7 @@ pipeline {
           sh "make run-jmeter-performance-test PROFILE=${env.PROFILE}"
         }
         // Make jMeter test report files available as build artifacts
-        dir('performance-test-results') {
-          archiveArtifacts artifacts: '**'
-        }
+          archiveArtifacts artifacts: './performance-test-results/**'
       }
     }
 
@@ -52,9 +50,7 @@ pipeline {
           sh "make run-jmeter-load-test PROFILE=${env.PROFILE}"
         }
         // Make jMeter test report files available as build artifacts
-        dir('load-test-results') {
-          archiveArtifacts artifacts: '**'
-        }
+          archiveArtifacts artifacts: './load-test-results/**'
       }
     }
 
@@ -64,9 +60,7 @@ pipeline {
           sh "make run-jmeter-stress-test PROFILE=${env.PROFILE}"
         }
         // Make jMeter test report files available as build artifacts
-        dir('stress-test-results') {
-          archiveArtifacts artifacts: '**'
-        }
+          archiveArtifacts artifacts: './stress-test-results/**'
       }
     }
 
