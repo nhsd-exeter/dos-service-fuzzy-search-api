@@ -183,13 +183,13 @@ run-jmeter-performance-test:
 run-jmeter-load-test:
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
-	test/jmeter/scripts/secrets.sh test/jmeter/tests/performance/fuzzyLoadTest.jmx
+	test/jmeter/scripts/secrets.sh test/jmeter/tests/load/fuzzyLoadTest.jmx
 	make run-jmeter JMETER_TEST_FOLDER_PATH=test/jmeter/tests/load JMETER_TEST_FILE_PATH=test/jmeter/tests/load/fuzzyLoadTest.jmx
 
 run-jmeter-stress-test:
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
-	test/jmeter/scripts/secrets.sh test/jmeter/tests/performance/fuzzyStressTest.jmx
+	test/jmeter/scripts/secrets.sh test/jmeter/tests/stress/fuzzyStressTest.jmx
 	make run-jmeter JMETER_TEST_FOLDER_PATH=test/jmeter/tests/stress JMETER_TEST_FILE_PATH=test/jmeter/tests/stress/fuzzyStressTest.jmx
 
 deploy-jmeter-namespace:

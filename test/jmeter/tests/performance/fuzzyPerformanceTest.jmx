@@ -32,7 +32,7 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&#xd;	&quot;emailAddress&quot;: &quot;service-finder-admin@nhs.net&quot;,&#xd;	&quot;password&quot;: &quot;PASSWORD_TO_REPLACE&quot;&#xd;}</stringProp>
+                <stringProp name="Argument.value">{&#xd;	&quot;emailAddress&quot;: &quot;service-finder-admin@nhs.net&quot;,&#xd;	&quot;password&quot;: &quot;m1LZxxBCUXzvyJ0a&quot;&#xd;}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
