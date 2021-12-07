@@ -204,10 +204,15 @@ destroy-jmeter-namespace:
 
 # ==============================================================================
 # Supporting targets
+get-auth-password:
+	export AUTH_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .ADMIN_PASSWORD | tr -d '"')
+
+
 run-jmeter: # Run jmeter tests - mandatory: JMETER_TEST_FOLDER_PATH - test directory JMETER_TEST_FILE_PATH - the path of the jmeter tests to run
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
-	sed -i 's|PASSWORD_TO_REPLACE|"$$(make -s project-aws-get-admin-secret | jq .ADMIN_PASSWORD | tr -d '"')"|g' ${JMETER_TEST_FILE_PATH}
+	eval "$$(make get-auth-password)"
+	sed -i 's|PASSWORD_TO_REPLACE|${AUTH_PASSWORD}|g' ${JMETER_TEST_FILE_PATH}
 	make k8s-kubeconfig-get
 	eval "$$(make k8s-kubeconfig-export-variables)"
 	kubectl config set-context --current --namespace=${PROJECT_ID}-${PROFILE}-jmeter
