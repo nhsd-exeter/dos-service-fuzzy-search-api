@@ -46,7 +46,7 @@ else
 fi
 
 #Get Master pod details
-master_pod=`kubectl get po | grep jmeter-master | awk '{print $1}'`
+master_pod=$(kubectl get po | grep jmeter-master | awk '{print $1}')
 echo "master_pod set to $master_pod"
 echo ""
 
@@ -59,7 +59,7 @@ if [ -f $testdir/*.xlsx ]
 then
   echo "Found Excel file in $testdir, copying file to slave"
   #Get slave pod details - assumes one slave for now
-  slave_pod=`kubectl get po | grep jmeter-slave | awk '{print $1}'`
+  slave_pod=$(kubectl get po | grep jmeter-slave | awk '{print $1}')
   echo "slave_pod set to $slave_pod"
   echo ""
   kubectl cp $testdir/*.xlsx "$slave_pod:/"
@@ -98,8 +98,8 @@ echo "generated new HTML report file"
 
 ## Copying HTML report from pod to Jenkins workspace
 kubectl cp "$master_pod:/jm_report" ./${testdir_basename}-test-results/jm_report
-echo "copied HTML report files to workspace"
+echo "copied HTML report files to workspace ./${testdir_basename}-test-results/jm_report"
 
 ## Copying .csv report from pod to Jenkins workspace
 kubectl cp "$master_pod:/jm_report.csv" ./${testdir_basename}-test-results/jm_report/jm_report.csv
-echo "Copied CSV report file to workspace"
+echo "Copied CSV report file to workspace ./${testdir_basename}-test-results/jm_report/jm_report.csv"
