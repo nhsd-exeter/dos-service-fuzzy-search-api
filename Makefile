@@ -212,7 +212,7 @@ run-jmeter: # Run jmeter tests - mandatory: JMETER_TEST_FOLDER_PATH - test direc
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
 	eval "$$(make get-auth-password)"
-	sed -i 's|PASSWORD_TO_REPLACE|${AUTH_PASSWORD}|g' ${JMETER_TEST_FILE_PATH}
+	sed -i 's|PASSWORD_TO_REPLACE|${COGNITO_ADMIN_AUTH_PASSWORD}|g' ${JMETER_TEST_FILE_PATH}
 	make k8s-kubeconfig-get
 	eval "$$(make k8s-kubeconfig-export-variables)"
 	kubectl config set-context --current --namespace=${PROJECT_ID}-${PROFILE}-jmeter
