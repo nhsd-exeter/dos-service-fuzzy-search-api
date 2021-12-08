@@ -30,7 +30,6 @@ pipeline {
     stage('Prepare') {
       steps {
         script {
-          sh ("aws sts get-caller-identity")
           sh 'make prepare'
         }
       }
