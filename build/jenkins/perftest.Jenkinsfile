@@ -20,11 +20,11 @@ pipeline {
   stages {
 
     stage('Show Variables') {
-        steps {
-            script {
-                sh 'make devops-print-variables'
-            }
+      steps {
+        script {
+          sh 'make devops-print-variables'
         }
+      }
     }
 
     stage('Prepare') {
