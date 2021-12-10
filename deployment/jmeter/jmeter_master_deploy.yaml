@@ -1,0 +1,34 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: jmeter-master
+  labels:
+    jmeter_mode: master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      jmeter_mode: master
+  template:
+    metadata:
+      labels:
+        jmeter_mode: master
+    spec:
+      affinity: # This can all be removed it was created for chaos testing so that the chaos tests would not destroy the jmeter containers
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: topology.kubernetes.io/zone
+                operator: In
+                values:
+                - eu-west-2a
+            topologyKey: "kubernetes.io/zone"
+      containers:
+      - name: jmmaster
+        image: 730319765130.dkr.ecr.eu-west-2.amazonaws.com/texas/jmeter-master:5.4.1
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]
+        ports:
+        - containerPort: 60000

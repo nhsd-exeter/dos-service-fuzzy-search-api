@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jmeter-slaves
+  labels:
+    jmeter_mode: slave
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      jmeter_mode: slave
+  template:
+    metadata:
+      labels:
+        jmeter_mode: slave
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: topology.kubernetes.io/zone
+                operator: In
+                values:
+                - eu-west-2a
+            topologyKey: "kubernetes.io/zone"
+      containers:
+      - name: jmslave
+        image: 730319765130.dkr.ecr.eu-west-2.amazonaws.com/texas/jmeter-slave:5.4.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 1099
+        - containerPort: 50000
