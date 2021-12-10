@@ -177,17 +177,17 @@ clean: # Clean up project
 run-jmeter-performance-test:
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
-	make run-jmeter ADMIN_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .ADMIN_PASSWORD | tr -d '"') JMETER_TEST_FOLDER_PATH=test/jmeter/tests/performance JMETER_TEST_FILE_PATH=test/jmeter/tests/performance/fuzzyPerformanceTest.jmx
+	make run-jmeter ADMIN_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .ADMIN_PASSWORD | tr -d '"') JMETER_TEST_FOLDER_PATH=test/jmeter/tests/performance JMETER_TEST_FILE_PATH=test/jmeter/tests/performance/performanceTest.jmx
 
 run-jmeter-load-test:
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
-	make run-jmeter ADMIN_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .ADMIN_PASSWORD | tr -d '"') JMETER_TEST_FOLDER_PATH=test/jmeter/tests/load JMETER_TEST_FILE_PATH=test/jmeter/tests/load/fuzzyLoadTest.jmx
+	make run-jmeter ADMIN_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .ADMIN_PASSWORD | tr -d '"') JMETER_TEST_FOLDER_PATH=test/jmeter/tests/load JMETER_TEST_FILE_PATH=test/jmeter/tests/load/loadTest.jmx
 
 run-jmeter-stress-test:
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
-	make run-jmeter ADMIN_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .ADMIN_PASSWORD | tr -d '"') JMETER_TEST_FOLDER_PATH=test/jmeter/tests/stress JMETER_TEST_FILE_PATH=test/jmeter/tests/stress/fuzzyStressTest.jmx
+	make run-jmeter ADMIN_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .ADMIN_PASSWORD | tr -d '"') JMETER_TEST_FOLDER_PATH=test/jmeter/tests/stress JMETER_TEST_FILE_PATH=test/jmeter/tests/stress/stressTest.jmx
 
 deploy-jmeter-namespace:
 	eval "$$(make aws-assume-role-export-variables)"
