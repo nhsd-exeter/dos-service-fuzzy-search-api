@@ -17,6 +17,7 @@
     <sonar.organization>nhsd-exeter</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <java.version>16</java.version>
+    <log4j2.version>2.16.0</log4j2.version> <!-- Springboot does not use Log4J, this is here to force other dependencies to use the latest version -->
   </properties>
 
   <dependencies>
