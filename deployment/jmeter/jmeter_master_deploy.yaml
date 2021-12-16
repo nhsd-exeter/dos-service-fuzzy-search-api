@@ -26,7 +26,7 @@ spec:
             topologyKey: "kubernetes.io/zone"
       containers:
       - name: jmmaster
-        image: 730319765130.dkr.ecr.eu-west-2.amazonaws.com/texas/jmeter-master:5.4.1
+        image: 730319765130.dkr.ecr.eu-west-2.amazonaws.com/texas/jmeter-master:5.4.1-log4j2-patch
         imagePullPolicy: IfNotPresent
         command: [ "/bin/bash", "-c", "--" ]
         args: [ "while true; do sleep 30; done;" ]
