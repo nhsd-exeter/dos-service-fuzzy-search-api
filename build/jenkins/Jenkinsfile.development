@@ -49,7 +49,7 @@ pipeline {
     stage('Unit Test') {
       steps {
         script {
-          sh "make run-unit-test"
+          sh "make run-unit-test PROFILE=test"
         }
       }
     }
