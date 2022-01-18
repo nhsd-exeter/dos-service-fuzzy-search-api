@@ -43,15 +43,6 @@ public class FuzzyServiceSearchController {
   @Value("${configuration.search_parameters.fuzz_level}")
   private String defaultFuzzLevel;
 
-  @Value("${configuration.version}")
-  private String apiVersion;
-
-  /** Welcome/home page endpoint for the DoS Service Fuzzy Search API. */
-  @GetMapping(value = "/home")
-  public String home() {
-    return "This is the DoS Service Fuzzy Search API. Version: " + apiVersion;
-  }
-
   /**
    * Endpoint for retrieving services with attributes that match the search criteria provided.
    *
@@ -60,7 +51,7 @@ public class FuzzyServiceSearchController {
    *     provided.
    * @return {@link ApiResponse}
    */
-  @GetMapping("services/byfuzzysearch")
+  @GetMapping("/services/byfuzzysearch")
   @CrossOrigin(origins = "*")
   @PreAuthorize("hasAnyRole('FUZZY_API_ACCESS')")
   public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
