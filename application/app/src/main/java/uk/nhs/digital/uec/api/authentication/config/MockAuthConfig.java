@@ -22,7 +22,7 @@ public class MockAuthConfig extends WebSecurityConfigurerAdapter {
   public static final String LOGIN_URL = "/authentication/login";
   public static final String HEALTH_CHECK_READINESS_URL = "/actuator/health/readiness";
   public static final String HEALTH_CHECK_LIVENESS_URL = "/actuator/health/liveness";
-  public static final String WELCOME_URL = "/dosapi/dosservices/v0.0.1/home";
+  public static final String WELCOME_URL = "/api/home";
 
   public static final String SWAGGER_URL = "/swagger-ui.html";
   public static final String SWAGGER_API_DOCS = "/v2/api-docs";
