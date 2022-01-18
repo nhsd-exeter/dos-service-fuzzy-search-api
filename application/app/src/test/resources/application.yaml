@@ -55,4 +55,4 @@ local:
   host: https://localhost
   uri: authentication/login
   welcome:
-    uri: /dosapi/dosservices/v0.0.1/home
+    uri: /api/home
