@@ -3,6 +3,7 @@ include $(VAR_DIR)/platform-texas/v1/account-live-k8s-nonprod.mk
 # ==============================================================================
 # Service variables
 AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/c0718115-4e22-4f48-a4aa-8c16ea86c5e6
+ECR_TEXAS_URL_NONPROD = $(AWS_ECR_NON_PROD)/texas
 
 PROFILE := dev
 ENVIRONMENT := dev
@@ -24,6 +25,8 @@ API_SERVICE_SEARCH_ENDPOINT := https://$(APP_URL_PREFIX)-service-search.$(TF_VAR
 
 SERVER_PORT := 8443
 VERSION := v0.0.3
+JMETER_MASTER_IMAGE := jmeter-master:5.4.1-log4j2-patch
+JMETER_SLAVE_IMAGE := jmeter-slave:5.4.1-log4j2-patch
 
 SERVICE_SEARCH_REPLICAS := 3
 
@@ -83,8 +86,13 @@ ADD_DEFAULT_COGNITO_USERS := false
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
-AUTH_LOGIN_URL := https://uec-dos-api-sfsa-dev-uec-dos-api-sfs-service.k8s-nonprod.texasplatform.uk
+AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
 AUTH_LOGIN_URI := /authentication/login
+AUTHENTICATION_ENDPOINT = $(AUTH_LOGIN_URL)$(AUTH_LOGIN_URI)
+FUZZY_SEARCH_DOMAIN = $(PROJECT_ID)-$(PROFILE)-uec-dos-api-sfs-ingress.$(TEXAS_HOSTED_ZONE)
+FUZZY_SEARCH_ENDPOINT = https://$(FUZZY_SEARCH_DOMAIN)
+
+
 #admin access is set for now and this should be changed accordingly with user who has access to the api
 POSTCODE_MAPPING_USER := service-finder-admin@nhs.net
 POSTCODE_MAPPING_PASSWORD := $(COGNITO_ADMIN_AUTH_PASSWORD)
