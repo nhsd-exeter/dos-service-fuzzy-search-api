@@ -82,15 +82,13 @@ public class FuzzySearchControllerTest {
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
             SEARCH_POSTCODE,
-            FILTER_REFERRAL_ROLE,
             MAX_SERVICES_TO_RETURN_FROM_ES,
             MAX_SERVICES_TO_RETURN,
             FUZZ_LEVEL,
             NAME_PRIORITY,
             ADDRESS_PRIORITY,
             POSTCODE_PRIORITY,
-            PUBLIC_NAME_PRIORITY,
-            null);
+            PUBLIC_NAME_PRIORITY);
 
     // Assert
     final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.getBody();
@@ -127,15 +125,13 @@ public class FuzzySearchControllerTest {
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
             SEARCH_POSTCODE,
-            FILTER_REFERRAL_ROLE,
             MAX_SERVICES_TO_RETURN_FROM_ES,
             MAX_SERVICES_TO_RETURN,
             FUZZ_LEVEL,
             NAME_PRIORITY,
             ADDRESS_PRIORITY,
             POSTCODE_PRIORITY,
-            PUBLIC_NAME_PRIORITY,
-            null);
+            PUBLIC_NAME_PRIORITY);
 
     // Assert
     final ApiValidationErrorResponse response =
