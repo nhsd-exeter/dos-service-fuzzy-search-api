@@ -19,7 +19,6 @@ import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.nhs.digital.uec.api.exception.ValidationException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.ApiResponse;
@@ -55,22 +54,15 @@ public class FuzzySearchControllerTest {
   private static final Integer POSTCODE_PRIORITY = 0;
   private static final Integer PUBLIC_NAME_PRIORITY = 0;
   private static final String SEARCH_POSTCODE = "EX2 3SE";
-  private String apiVersion = "v0.0.3";
   List<String> searchCriteria;
 
   @BeforeEach
   public void setup() {
-    ReflectionTestUtils.setField(fuzzyServiceSearchController, "apiVersion", apiVersion);
     searchCriteria = new ArrayList<>();
     searchCriteria.add("term1");
     searchCriteria.add("term2");
   }
 
-  @Test
-  public void homeEndpointTest() throws ValidationException {
-    String response = fuzzyServiceSearchController.home();
-    assertEquals("This is the DoS Service Fuzzy Search API. Version: " + apiVersion, response);
-  }
 
   @Test
   public void getServicesByFuzzySearchTestSucc() throws ValidationException {
@@ -90,15 +82,13 @@ public class FuzzySearchControllerTest {
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
             SEARCH_POSTCODE,
-            FILTER_REFERRAL_ROLE,
             MAX_SERVICES_TO_RETURN_FROM_ES,
             MAX_SERVICES_TO_RETURN,
             FUZZ_LEVEL,
             NAME_PRIORITY,
             ADDRESS_PRIORITY,
             POSTCODE_PRIORITY,
-            PUBLIC_NAME_PRIORITY,
-            null);
+            PUBLIC_NAME_PRIORITY);
 
     // Assert
     final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.getBody();
@@ -135,15 +125,13 @@ public class FuzzySearchControllerTest {
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
             SEARCH_POSTCODE,
-            FILTER_REFERRAL_ROLE,
             MAX_SERVICES_TO_RETURN_FROM_ES,
             MAX_SERVICES_TO_RETURN,
             FUZZ_LEVEL,
             NAME_PRIORITY,
             ADDRESS_PRIORITY,
             POSTCODE_PRIORITY,
-            PUBLIC_NAME_PRIORITY,
-            null);
+            PUBLIC_NAME_PRIORITY);
 
     // Assert
     final ApiValidationErrorResponse response =

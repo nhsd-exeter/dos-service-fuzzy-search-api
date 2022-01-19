@@ -25,8 +25,8 @@ api:
     service_search: ${API_SERVICE_SEARCH_ENDPOINT}
   cors:
     allowedorigins: ${ALLOWED_ORIGINS}
-  version: 1.0
-  title: NHS Fuzzy Search Application Interface
+  version: 1.0.0
+  title: Service Fuzzy Search API
   description: NHS Fuzzy search APIs provide NHS Services information to the users
 
 configuration:
