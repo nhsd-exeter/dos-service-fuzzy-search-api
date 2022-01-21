@@ -183,6 +183,15 @@ trust-certificate: ssl-trust-certificate-project ## Trust the SSL development ce
 create-artefact-repositories: ## Create ECR repositories to store the artefacts
 	make docker-create-repository NAME=api
 
+k8s-get-replica-sets-not-yet-updated:
+	echo -e
+	kubectl get deployments -n $(K8S_APP_NAMESPACE) \
+	-o=jsonpath='{range .items[?(@.spec.replicas!=@.status.updatedReplicas)]}{.metadata.name}{"("}{.status.updatedReplicas}{"/"}{.spec.replicas}{")"}{" "}{end}'
+
+k8s-get-pod-status:
+	echo -e
+	kubectl get pods -n $(K8S_APP_NAMESPACE)
+
 # ==============================================================================
 # Pipeline targets
 
@@ -202,7 +211,75 @@ deploy-artefact:
 	echo TODO: $(@)
 
 apply-data-changes:
-	echo TODO: $(@)
+	eval "$$(make aws-assume-role-export-variables)"
+	http_result=$$(aws lambda invoke --function-name $(PROJECT_ID)-$(PROFILE)-service-etl out.json --log-type Tail | jq .StatusCode)
+	if [[ ! $$http_result -eq 200 ]]; then
+		cat out.json
+		rm -r out.json
+		exit 1
+	fi
+	echo $$http_result
+	rm -r out.json
+
+monitor-r53-connection:
+	attempt_counter=0
+	max_attempts=5
+	http_status_code=0
+
+	until [[ $$http_status_code -eq 200 ]]; do
+		if [[ $$attempt_counter -eq $$max_attempts ]]; then
+			echo "Maximum attempts reached unable to connect to deployed instance"
+			exit 0
+		fi
+
+		echo 'Pinging deployed instance'
+		attempt_counter=$$(($$attempt_counter+1))
+		http_status_code=$$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 $(FUZZY_ENDPOINT)/dosapi/dosservices/v0.0.1/api/home)
+		echo Status code is: $$http_status_code
+		sleep 10
+	done
+
+k8s-check-deployment-of-replica-sets:
+	eval "$$(make aws-assume-role-export-variables)"
+	make k8s-kubeconfig-get
+	eval "$$(make k8s-kubeconfig-export-variables)"
+	sleep 10
+	elaspedtime=10
+	until [ $$elaspedtime -gt $(CHECK_DEPLOYMENT_TIME_LIMIT) ]; do
+		replicasNotYetUpdated=$$(make -s k8s-get-replica-sets-not-yet-updated)
+		if [ -z "$$replicasNotYetUpdated" ]
+		then
+			echo "Success - all replica sets in the deployment have been updated."
+			exit 0
+		else
+			echo "Waiting for all replicas to be updated: " $$replicasNotYetUpdated
+
+			echo "----------------------"
+			echo "Pod status: "
+			make k8s-get-pod-status
+			podStatus=$$(make -s k8s-get-pod-status)
+			echo "-------"
+
+			#Check failure conditions
+			if [[ $$podStatus = *"ErrImagePull"*
+					|| $$podStatus = *"ImagePullBackOff"* ]]; then
+				echo "Failure: Error pulling Image"
+				exit 1
+			elif [[ $$podStatus = *"Error"*
+								|| $$podStatus = *"error"*
+								|| $$podStatus = *"ERROR"* ]]; then
+				echo "Failure: Error with deployment"
+				exit 1
+			fi
+
+		fi
+		sleep 10
+		((elaspedtime=elaspedtime+$(CHECK_DEPLOYMENT_POLL_INTERVAL)))
+		echo "Elapsed time: " $$elaspedtime
+	done
+
+	echo "Conditional Success: The deployment has not completed within the timescales, but carrying on anyway"
+	exit 0
 
 # --------------------------------------
 

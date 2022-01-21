@@ -7,7 +7,7 @@ ECR_TEXAS_URL_NONPROD = $(AWS_ECR_NON_PROD)/texas
 
 PROFILE := dev
 ENVIRONMENT := dev
-SPRING_PROFILES_ACTIVE := dev
+SPRING_PROFILES_ACTIVE := dev, mock-auth
 API_IMAGE_TAG := v0.0.3
 
 CERTIFICATE_DOMAIN := localhost
@@ -44,6 +44,9 @@ ADDRESS_PRIORITY := 2
 POSTCODE_PRIORITY := 0
 NAME_PUBLIC_PRIORITY := 4
 
+# Monitor deployment VARS
+CHECK_DEPLOYMENT_TIME_LIMIT := 600
+CHECK_DEPLOYMENT_POLL_INTERVAL := 10
 
 # ==============================================================================
 # Infrastructure variables
