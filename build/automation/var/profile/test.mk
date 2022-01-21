@@ -30,3 +30,7 @@ NAME_PUBLIC_PRIORITY := 0
 # Service Data files
 SERVICE_DATA_FILE := create_all_services_local.sh
 LOCATIONS_DATA_FILE := load_locations_test.sh
+
+# Monitor deployment VARS
+CHECK_DEPLOYMENT_TIME_LIMIT := 600
+CHECK_DEPLOYMENT_POLL_INTERVAL := 10

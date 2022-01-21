@@ -77,7 +77,21 @@ pipeline {
     stage("Monitor Deployment") {
       steps {
         script {
-          echo "to do"
+          sh "make k8s-check-deployment-of-replica-sets"
+        }
+      }
+    }
+    stage("Monitor Route53 Connection") {
+      steps {
+        script {
+          sh "make monitor-r53-connection"
+        }
+      }
+    }
+    stage("Run Service ETL") {
+      steps {
+        script {
+          sh "make apply-data-changes"
         }
       }
     }

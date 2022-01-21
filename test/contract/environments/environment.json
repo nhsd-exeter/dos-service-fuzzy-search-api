@@ -14,12 +14,12 @@
     },
     {
       "key": "accessToken",
-      "value": "",
+      "value": "MOCK_FUZZY_API_ACCESS_TOKEN",
       "enabled": true
     },
     {
       "key": "refreshToken",
-      "value": "",
+      "value": "MOCK_FUZZY_API_ACCESS_TOKEN",
       "enabled": true
     }
   ],
