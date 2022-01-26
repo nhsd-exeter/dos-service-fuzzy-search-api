@@ -17,6 +17,9 @@
   - [Pull request (merge request)](#pull-request-merge-request)
   - [Code review](#code-review)
   - [Unit tests](#unit-tests)
+  - [Java Code quality:](#java-code-quality)
+  - [Code Formatting checks:](#code-formatting-checks)
+  - [Code Coverage:](#code-coverage)
 
 ## Development Environment
 
@@ -132,36 +135,40 @@ Upload the public key to your GitHub and GitLab accounts using the links below.
 - A direct merge to the canonical branch is not allowed and can only be done by creating a pull request (merge request)
 - If not stated otherwise the only long-lived branch is master, i.e. canonical branch
 - Any new branch should be created from master
-- The preferred short-lived branch name format is `task/JIRA-XXX_Descriptive_name`
-- The preferred hotfix branch name format is `bugfix/JIRA-XXX_Descriptive_name`
+- The preferred short-lived branch name format is `task/SFD-XXXX_Descriptive_name` with XXXX being the ticket number
+- The preferred hotfix branch name format is `bugfix/SFD-XXXX_Descriptive_name`
 - All commits must be cryptographically signed
 - Commits should be made often and pushed to the remote
 - Use rebase to get the latest commits from the master while working with a short-lived or a bugfix branch
 - Squash commits when appropriate
 - Merge commits are not allowed
 
+Commit messages are checked upon commit and branch merging stages, and must conform to the following:
+
+`SFD-XXXX Aaaa aaaa aaaaa` - Needs at least 3 words after SFD-XXXX
+
 Working on a new task
 
-    git checkout -b task/JIRA-XXX_Descriptive_name
+    git checkout -b task/SFD-XXXX_Descriptive_name
     # Make your changes here...
     git add .
-    git commit -S -m "Description of the change"
-    git push --set-upstream origin task/JIRA-XXX_Descriptive_name
+    git commit -S -m "SFD-XXXX Description of the change"
+    git push --set-upstream origin task/SFD-XXXX_Descriptive_name
 
 Branch naming convention should follow the pattern of `^(task|bugfix)/[A-Za-z]{2,5}-[0-9]{1,5}_[A-Za-z0-9_]{4,64}$`.
 
 Contributing to an already existing branch
 
-    git checkout task/JIRA-XXX_Descriptive_name
+    git checkout task/SFD-XXXX_Descriptive_name
     git pull
     # Make your changes here...
     git add .
-    git commit -S -m "Description of the change"
+    git commit -S -m "SFD-XXXX Description of the change"
     git push
 
 Rebasing a branch onto master
 
-    git checkout task/JIRA-XXX_Descriptive_name
+    git checkout task/SFD-XXXX_Descriptive_name
     git rebase -i HEAD~X                                # Squash X number of commits, all into one
     # When prompted change commit type to `squash` for all the commits except the top one
     # On the following screen replace pre-inserted comments by a single summary
@@ -169,7 +176,7 @@ Rebasing a branch onto master
 
     git checkout master
     git pull
-    git checkout task/JIRA-XXX_Descriptive_name
+    git checkout task/SFD-XXXX_Descriptive_name
     git rebase master
     # Resolve conflicts
     git add .
@@ -189,11 +196,11 @@ Merging a branch to master - this should be done only in an exceptional circumst
 
     git rebase master                                   # Rebase the task branch on top of master
     git checkout master                                 # Switch to master branch
-    git merge -ff task/JIRA-XXX_Descriptive_name        # Fast-forward merge
+    git merge -ff task/SFD-XXXX_Descriptive_name        # Fast-forward merge
     git push                                            # Push master to remote
 
-    git push -d origin task/JIRA-XXX_Descriptive_name   # Remove remote branch
-    git branch -d task/JIRA-XXX_Descriptive_name        # Remove local branch
+    git push -d origin task/SFD-XXXX_Descriptive_name   # Remove remote branch
+    git branch -d task/SFD-XXXX_Descriptive_name        # Remove local branch
 
 If JIRA is currently not in use to track project changes, please drop any reference to it and omit `JIRA-XXX` in your commands.
 
@@ -240,7 +247,7 @@ Aim at driving more complex deployment workflows by tags with an exception of th
 
 ## Pull request (merge request)
 
-- Set the title to `JIRA-XXX Descriptive name`, where `JIRA-XXX` is the ticket reference number
+- Set the title to `task/SFD-XXXX Descriptive name`, where `SFD-XXXX` is the ticket reference number
 - Ensure all commits will be squashed and the source branch will be removed once the request is accepted
 - Notify the team on Slack to give your colleagues opportunity to review changes and share the knowledge
 - If the change has not been pair or mob programmed it must follow the code review process and be approved by at least one peer, all discussions must be resolved
@@ -268,3 +275,12 @@ When writing or updating unit tests (whether you use Python, Java, Go or shell),
       // Assert
       assertEquals(0, list.size());
     }
+
+## Java Code quality:
+At branch merge stage, sonarqube is run against any code that has been modified and a report will be generated. All reported code issues should be resolved unless there is a compelling reason not to make the suggested changes. The coding rules that are applied are defined here: https://sonarcloud.io/organizations/nhsd-exeter/rules?languages=java
+
+## Code Formatting checks:
+At the commit and branch merging stages, code formatting checks are performed. Again, all reported issues should be resolved unless there is a good reason not to make the changes. The formatting rules are encapsulated within the 'docker-edit' make target.
+
+## Code Coverage:
+At the branch merge stage, a code coverage check is performed against all modified code. When the PR is created for the merge request this check will run and a report will be generated. The modified code must meet the minimum requirement of 80% unit test coverage. The overall project code coverage report can be found here: https://sonarcloud.io/summary/overall?id=uec-dos-api-sfsa
