@@ -17,8 +17,8 @@ SPLUNK_INDEX := eks_logs_service_finder_prod
 
 APP_URL_PREFIX := $(K8S_APP_NAMESPACE)-$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)
 
-# Elastic search datastore
-DOMAIN := $(TF_VAR_service_prefix)-service
+# Elastic search datastore. N.B This name cannot be longer than 28 chars!
+DOMAIN := $(TF_VAR_service_prefix)-serv
 # ELASTICSEARCH_URL configured in make project-populate-application-variables
 
 API_SERVICE_SEARCH_ENDPOINT := https://$(APP_URL_PREFIX)-service-search.$(TF_VAR_platform_zone)/dosapi/dosservices/v0.0.1/services/byfuzzysearch
