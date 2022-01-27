@@ -223,6 +223,7 @@ prepare-lambda-deployment: # Downloads the required libraries for the Lambda fun
 plan: # Plan environment - mandatory: PROFILE=[name]
 	make prepare-lambda-deployment
 	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
+	sleep $(SLEEP_AFTER_PLAN)
 
 provision: # Provision environment - mandatory: PROFILE=[name]
 	make prepare-lambda-deployment
@@ -230,6 +231,7 @@ provision: # Provision environment - mandatory: PROFILE=[name]
 
 plan_auth: # Plan environment - mandatory: PROFILE=[name]
 	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE)
+	sleep $(SLEEP_AFTER_PLAN)
 
 provision_auth: # Provision environment - mandatory: PROFILE=[name]
 	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE)
