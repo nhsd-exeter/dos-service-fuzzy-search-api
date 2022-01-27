@@ -27,7 +27,6 @@ locals {
 
   service_etl_policy_name = "${var.service_prefix}-service-etl"
 
-  rds_data_read_only_access_policy_arn = "arn:aws:iam::aws:policy/AmazonRDSReadOnlyAccess"
 
   service_etl_cloudwatch_event_name            = "${var.service_prefix}-service-etl-rule"
   service_etl_cloudwatch_event_description     = "Timer to run the service-etl every 4 minutes"

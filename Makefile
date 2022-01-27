@@ -162,6 +162,12 @@ provision: # Provision environment - mandatory: PROFILE=[name]
 	make prepare-lambda-deployment
 	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
 
+plan_auth: # Plan environment - mandatory: PROFILE=[name]
+	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE)
+
+provision_auth: # Provision environment - mandatory: PROFILE=[name]
+	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE)
+
 project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,AWS_ROLE=Developer
 	if $(ADD_DEFAULT_COGNITO_USERS); then \
 		eval "$$(make aws-assume-role-export-variables)"

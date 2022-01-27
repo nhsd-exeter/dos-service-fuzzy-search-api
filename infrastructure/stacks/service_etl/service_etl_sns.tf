@@ -81,24 +81,39 @@ resource "aws_lambda_function" "service_etl_sns_lambda" {
       data.terraform_remote_state.vpc.outputs.private_subnets[2]
     ]
     security_group_ids = [
-      local.dos_sf_replica_db_sg,
-      aws_security_group.service_etl_security_group.id
+      aws_security_group.service_etl_sns_security_group.id
     ]
   }
 }
 
+resource "aws_security_group" "service_etl_sns_security_group" {
+  name        = "uec-sf-${var.profile}-service-etl-sns-sg"
+  description = "Security group for Service ETL SNS lambda"
+  vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
+}
+
+resource "aws_security_group_rule" "service_sns_lambda_egress_443" {
+  type              = "egress"
+  from_port         = "443"
+  to_port           = "443"
+  protocol          = "tcp"
+  security_group_id = aws_security_group.service_etl_sns_security_group.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "A rule to allow outgoing connections to AWS APIs from the lambda Security Group"
+}
+
 resource "aws_lambda_permission" "allow_cloudwatch" {
-  statement_id  = "AllowExecutionFromCloudWatch"
+  statement_id  = aws_lambda_function.service_etl_sns_lambda.function_name
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.service_etl_sns_lambda.function_name
   principal     = "logs.${var.aws_region}.amazonaws.com"
-  source_arn    = "${data.aws_cloudwatch_log_group.service_etl_log_group.arn}"
+  source_arn    = "${aws_cloudwatch_log_group.service_etl_log_group.arn}:*"
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "service_etl_sns_cloudwatch_log_trigger" {
   depends_on      = [aws_lambda_permission.allow_cloudwatch]
   name            = local.service_etl_sns_cloudwatch_event_name
-  log_group_name  = data.aws_cloudwatch_log_group.service_etl_log_group.name
+  log_group_name  = aws_cloudwatch_log_group.service_etl_log_group.name
   filter_pattern  = "?ERROR ?WARN ?5xx"
   destination_arn = aws_lambda_function.service_etl_sns_lambda.arn
 }

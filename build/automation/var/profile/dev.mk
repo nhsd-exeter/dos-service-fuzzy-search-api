@@ -52,7 +52,9 @@ CHECK_DEPLOYMENT_POLL_INTERVAL := 10
 # Infrastructure variables
 
 DEPLOYMENT_STACKS = application
-INFRASTRUCTURE_STACKS = elasticsearch,authentication,service_etl
+INFRASTRUCTURE_STACKS = elasticsearch,service_etl
+INFRASTRUCTURE_STACKS_DESTROY = service_etl,elasticsearch
+INFRASTRUCTURE_STACKS_AUTH = authentication
 SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 TF_VAR_service_prefix := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 

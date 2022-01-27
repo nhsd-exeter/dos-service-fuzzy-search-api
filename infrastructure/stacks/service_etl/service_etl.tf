@@ -31,40 +31,74 @@ resource "aws_lambda_function" "service_etl_lambda" {
       data.terraform_remote_state.vpc.outputs.private_subnets[2]
     ]
     security_group_ids = [
-      local.dos_sf_replica_db_sg,
       aws_security_group.service_etl_security_group.id
     ]
   }
 }
 
 resource "aws_security_group" "service_etl_security_group" {
-  name        = "uec-sf-${var.profile}-service-etl_sg"
-  description = "Allows outbound traffic from ETL lambda"
+  name        = "uec-sf-${var.profile}-service-etl-sg"
+  description = "Security group for Service ETL lambda"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
-
-  egress = [
-    {
-      from_port        = 0
-      to_port          = 0
-      protocol         = "-1"
-      cidr_blocks      = ["0.0.0.0/0"]
-      ipv6_cidr_blocks = null
-      description      = null
-      prefix_list_ids  = null
-      security_groups  = null
-      self             = null
-    }
-  ]
 }
 
+resource "aws_security_group_rule" "service_lambda_egress_443" {
+  type              = "egress"
+  from_port         = "443"
+  to_port           = "443"
+  protocol          = "tcp"
+  security_group_id = aws_security_group.service_etl_security_group.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "A rule to allow outgoing connections AWS APIs from the  lambda Security Group"
+}
 resource "aws_security_group_rule" "service_etl_security_group_rule" {
   type                     = "ingress"
   from_port                = 443
   to_port                  = 443
   protocol                 = "tcp"
-  description              = "allows lambda etl process to insert data into ES"
+  description              = "Allows service ETL lambda process to update service data into ES"
   security_group_id        = local.es_domain_security_group_id
   source_security_group_id = aws_security_group.service_etl_security_group.id
+}
+
+resource "aws_security_group_rule" "service_lambda_sg_egress" {
+  type                     = "egress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.service_etl_security_group.id
+  source_security_group_id = local.dos_sf_replica_db_sg
+  description              = "A rule to allow outgoing connections from the SF service lambda SG to the SF read replica SG"
+}
+
+resource "aws_security_group_rule" "sf_replica_db_sg_ingress" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = local.dos_sf_replica_db_sg
+  source_security_group_id = aws_security_group.service_etl_security_group.id
+  description              = "A rule to allow incoming connections to the SF read replica SG from the SF service lambda SG"
+}
+
+resource "aws_security_group_rule" "sf_replica_db_sg_egress" {
+  type                     = "egress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = local.dos_sf_replica_db_sg
+  source_security_group_id = aws_security_group.service_etl_security_group.id
+  description              = "A rule to allow outgoing connections from the SF read replica SG to the SF service lambda SG"
+}
+
+resource "aws_security_group_rule" "service_lambda_sg_ingress" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.service_etl_security_group.id
+  source_security_group_id = local.dos_sf_replica_db_sg
+  description              = "A rule to allow incoming connections to the SF service lambda SG from the SF read replica SG"
 }
 
 
@@ -120,9 +154,8 @@ resource "aws_iam_role_policy_attachment" "AWSLambdaVPCAccessExecutionRole" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
-resource "aws_iam_role_policy_attachment" "rdsDataReadOnlyAccessExtract" {
-  role       = aws_iam_role.service_etl_lambda_role.name
-  policy_arn = local.rds_data_read_only_access_policy_arn
+resource "aws_cloudwatch_log_group" "service_etl_log_group" {
+  name = "/aws/lambda/${aws_lambda_function.service_etl_lambda.function_name}"
 }
 
 resource "aws_cloudwatch_event_rule" "service_etl_cloudwatch_event" {
@@ -138,9 +171,9 @@ resource "aws_cloudwatch_event_target" "daily_service_etl_job" {
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_service_etl" {
-  statement_id  = local.service_etl_cloudwatch_event_statement
+  statement_id  = aws_lambda_function.service_etl_lambda.function_name
   action        = local.service_etl_cloudwatch_event_action
-  function_name = local.service_etl_function_name
+  function_name = aws_lambda_function.service_etl_lambda.function_name
   principal     = local.service_etl_cloudwatch_event_princinple
   source_arn    = aws_cloudwatch_event_rule.service_etl_cloudwatch_event.arn
 }

@@ -3,7 +3,7 @@ resource "aws_elasticsearch_domain" "elasticsearch_service" {
   elasticsearch_version = var.elasticsearch_version
 
   vpc_options {
-    subnet_ids         = [var.public_subnets_ids[0]]
+    subnet_ids         = [var.private_subnets_ids[0]]
     security_group_ids = [aws_security_group.elasticsearch.id]
   }
 
@@ -20,6 +20,11 @@ resource "aws_elasticsearch_domain" "elasticsearch_service" {
     }
   }
 
+  domain_endpoint_options {
+    enforce_https       = true
+    tls_security_policy = "Policy-Min-TLS-1-2-2019-07"
+  }
+
   ebs_options {
     ebs_enabled = true
     volume_size = var.volume_size_gb
@@ -34,7 +39,8 @@ resource "aws_elasticsearch_domain" "elasticsearch_service" {
   }
 
   advanced_options = {
-    "rest.action.multi.allow_explicit_index" = true
+    "override_main_response_version"         = "false"
+    "rest.action.multi.allow_explicit_index" = "true"
   }
 
   log_publishing_options {

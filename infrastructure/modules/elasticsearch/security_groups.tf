@@ -28,13 +28,3 @@ resource "aws_security_group_rule" "allow_in_from_eks_worker" {
   security_group_id        = aws_security_group.elasticsearch.id
   description              = "Allow access in from Eks-worker to elasticsearch"
 }
-
-resource "aws_security_group_rule" "allow_in_from_vpn" {
-  type                     = "ingress"
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "tcp"
-  source_security_group_id = var.vpn_security_group_id
-  security_group_id        = aws_security_group.elasticsearch.id
-  description              = "Allow access in from VPN to elasticsearch"
-}
