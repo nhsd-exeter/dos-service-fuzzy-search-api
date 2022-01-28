@@ -86,7 +86,7 @@ TF_VAR_service_finder_replica_sg := uec-core-dos-put-db-12-replica-sf-sg
 TF_VAR_dos_read_replica_secret_name := core-dos-uet-database-upgrade/deployment
 TF_VAR_dos_read_replica_secret_key := DB_SF_READONLY_PASSWORD
 TF_VAR_service_etl_db_user := dos_sf_readonly
-TF_VAR_service_etl_source_db := core-dos-uet-database-upgrade/deployment
+TF_VAR_service_etl_source_db := pathwaysdos_ut
 
 #Cognito user pool details
 COGNITO_USER_POOL := $(TF_VAR_service_prefix)-authentication
