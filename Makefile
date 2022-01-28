@@ -172,6 +172,7 @@ project-populate-application-variables:
 	export COGNITO_USER_POOL_ID=$$(make -s aws-cognito-get-userpool-id NAME=$(COGNITO_USER_POOL))
 	export COGNITO_JWT_VERIFICATION_URL=https://cognito-idp.eu-west-2.amazonaws.com/$${COGNITO_USER_POOL_ID}/.well-known/jwks.json
 	export COGNITO_ADMIN_AUTH_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .AUTHENTICATION_PASSWORD | tr -d '"')
+
 	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
 	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}
 
@@ -221,21 +222,21 @@ prepare-lambda-deployment: # Downloads the required libraries for the Lambda fun
 		$(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
 
 plan: # Plan environment - mandatory: PROFILE=[name]
-	make prepare-lambda-deployment
-	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
+	make plan-base
+	make plan-etl
 	sleep $(SLEEP_AFTER_PLAN)
 
 provision: # Provision environment - mandatory: PROFILE=[name]
-	make prepare-lambda-deployment
-	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
+	make provision-base
+	make provision-etl
 
 plan-base: # Plan environment - mandatory: PROFILE=[name]
-	make prepare-lambda-deployment
+	eval "$$(make project-populate-application-variables)"
 	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS_BASE) PROFILE=$(PROFILE)
 	sleep $(SLEEP_AFTER_PLAN)
 
 provision-base: # Provision environment - mandatory: PROFILE=[name]
-	make prepare-lambda-deployment
+	eval "$$(make project-populate-application-variables)"
 	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS_BASE) PROFILE=$(PROFILE)
 
 plan-etl: # Plan environment - mandatory: PROFILE=[name]
