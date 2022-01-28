@@ -16,6 +16,14 @@ pipeline {
     PROFILE = "dev"
   }
 
+  parameters {
+        string(
+            description: 'Add default users to the user pool?',
+            name: 'ADD_DEFAULT_USERS',
+            defaultValue: 'false'
+        )
+  }
+
   stages {
     stage('Show Variables') {
       steps {
@@ -48,7 +56,7 @@ pipeline {
     stage("Populate Cognito Pool"){
       steps {
         script {
-          sh "make project-populate-cognito PROFILE=${env.PROFILE}"
+          sh "make project-populate-cognito PROFILE=${env.PROFILE} ADD_DEFAULT_COGNITO_USERS=${ADD_DEFAULT_USERS}"
         }
       }
     }
