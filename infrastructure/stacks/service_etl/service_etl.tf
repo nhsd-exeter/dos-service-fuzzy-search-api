@@ -8,7 +8,7 @@ resource "aws_lambda_function" "service_etl_lambda" {
   runtime          = local.service_etl_runtime
   timeout          = local.service_etl_timeout
   memory_size      = local.service_etl_memory_size
-  publish          = true
+  publish          = false
   tags             = local.standard_tags
   layers           = [local.service_etl_core_dos_python_libs_arn]
   environment {
