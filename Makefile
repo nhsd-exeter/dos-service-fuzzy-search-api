@@ -29,6 +29,9 @@ compile: # Compile the project to make the target class (binary) files
 		CMD="compile"
 
 build: project-config # Build project
+	cp \
+		$(PROJECT_DIR)/build/automation/etc/certificate/* \
+		$(PROJECT_DIR)/application/src/main/resources/certificate
 	make docker-run-mvn \
 		DIR="application/app" \
 		CMD="-Dmaven.test.skip=true clean install" \
