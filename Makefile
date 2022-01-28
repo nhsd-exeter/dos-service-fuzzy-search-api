@@ -229,6 +229,24 @@ provision: # Provision environment - mandatory: PROFILE=[name]
 	make prepare-lambda-deployment
 	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
 
+plan-base: # Plan environment - mandatory: PROFILE=[name]
+	make prepare-lambda-deployment
+	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS_BASE) PROFILE=$(PROFILE)
+	sleep $(SLEEP_AFTER_PLAN)
+
+provision-base: # Provision environment - mandatory: PROFILE=[name]
+	make prepare-lambda-deployment
+	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS_BASE) PROFILE=$(PROFILE)
+
+plan-etl: # Plan environment - mandatory: PROFILE=[name]
+	make prepare-lambda-deployment
+	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS_ETL) PROFILE=$(PROFILE)
+	sleep $(SLEEP_AFTER_PLAN)
+
+provision-etl: # Provision environment - mandatory: PROFILE=[name]
+	make prepare-lambda-deployment
+	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS_ETL) PROFILE=$(PROFILE)
+
 plan_auth: # Plan environment - mandatory: PROFILE=[name]
 	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE)
 	sleep $(SLEEP_AFTER_PLAN)

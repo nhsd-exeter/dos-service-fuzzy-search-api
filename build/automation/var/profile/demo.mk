@@ -47,9 +47,13 @@ NAME_PUBLIC_PRIORITY := 4
 # Infrastructure variables
 
 DEPLOYMENT_STACKS = application
-INFRASTRUCTURE_STACKS = elasticsearch,service_etl
-INFRASTRUCTURE_STACKS_DESTROY = service_etl,elasticsearch
+
+INFRASTRUCTURE_STACKS = $(INFRASTRUCTURE_STACKS_BASE),$(INFRASTRUCTURE_STACKS_ETL)
+INFRASTRUCTURE_STACKS_DESTROY = $(INFRASTRUCTURE_STACKS_ETL),$(INFRASTRUCTURE_STACKS_BASE)
+INFRASTRUCTURE_STACKS_BASE = elasticsearch
+INFRASTRUCTURE_STACKS_ETL = service_etl
 INFRASTRUCTURE_STACKS_AUTH = authentication
+
 SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 TF_VAR_service_prefix := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 
@@ -59,7 +63,7 @@ TF_VAR_es_instance_count := 4
 TF_VAR_es_instance_type := m6g.8xlarge.search
 TF_VAR_es_snapshot_bucket := $(TF_VAR_service_prefix)-elastic-search-snapshots
 TF_VAR_es_snapshot_role := $(TF_VAR_service_prefix)-elasticsearch-snapshot
-TF_VAR_es_domain_name := $(TF_VAR_service_prefix)-serv
+TF_VAR_es_domain_name := $(DOMAIN)
 TF_VAR_service_etl_logging_level := INFO
 TF_VAR_service_etl_sns_logging_level := INFO
 TF_VAR_service_etl_sns_email := service-etl-alerts-de-aaaafqkcxkkecdxfimtohq46zu@a2si.slack.com
