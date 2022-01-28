@@ -46,24 +46,10 @@ pipeline {
         }
       }
     }
-    stage("Populate Cognito Pool"){
-      steps {
-        script {
-          sh "make project-populate-cognito PROFILE=${env.PROFILE}"
-        }
-      }
-    }
     stage("Provision Infrastructure") {
       steps {
         script {
           sh "make provision PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-    stage("Populate Search DB") {
-      steps {
-        script {
-          echo "to do"
         }
       }
     }
@@ -103,11 +89,9 @@ pipeline {
       }
     }
   }
-
   post {
     always { sh "make clean" }
     success { sh "make pipeline-on-success" }
     failure { sh "make pipeline-on-failure" }
   }
-
 }

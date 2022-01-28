@@ -31,10 +31,6 @@ variable "terraform_platform_state_store" { description = "Name of the S3 bucket
 
 variable "vpc_terraform_state_key" { description = "The VPC key in the terraform state bucket" }
 
-variable "route53_terraform_state_key" { description = "The Route53 key in the terraform state bucket" }
-
-variable "security_groups_terraform_state_key" { description = "The security groups key in the terraform state bucket" }
-
 variable "security_groups_k8s_terraform_state_key" { description = "The k8s security groups key in the terraform state bucket" }
 
 variable "programme" { description = "The programme tag" }

@@ -8,7 +8,7 @@ locals {
   }
 
   sf_cognito = {
-    cognito_pool_name = "${var.cognito_user_pool}"
+    cognito_pool_name = var.cognito_user_pool
   }
 
 }

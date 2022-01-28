@@ -20,17 +20,13 @@ variable "vpc_id" {
   description = "VPC identifier."
 }
 
-variable "public_subnets_ids" {
+variable "private_subnets_ids" {
   default     = []
-  description = "List of public subnet ids for the VPC."
+  description = "List of private subnet ids for the VPC."
 }
 
 variable "eks_security_group_id" {
   description = "Id of the EKS security group identifier."
-}
-
-variable "vpn_security_group_id" {
-  description = "Id of the VPN security group identifier."
 }
 
 # Elasticsearch variables
