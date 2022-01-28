@@ -332,7 +332,7 @@ monitor-r53-connection:
 
 		echo 'Pinging deployed instance'
 		attempt_counter=$$(($$attempt_counter+1))
-		http_status_code=$$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 $(FUZZY_ENDPOINT)/api/home)
+		http_status_code=$$(curl -s -o /dev/null -k -w "%{http_code}" --max-time 10 $(FUZZY_ENDPOINT)/api/home)
 		echo Status code is: $$http_status_code
 		sleep 10
 	done
