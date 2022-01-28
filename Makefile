@@ -38,11 +38,20 @@ build: project-config # Build project
 		$(PROJECT_DIR)/build/docker/api/assets/application/dos-service-fuzzy-search-api.jar
 	make docker-build NAME=api
 
-start: project-start # Start project
+quick-start: project-start # Start project
+
+start: # Start project and load data in to elastic search
+	make project-start
+	echo "Waiting for elastic search to be fully initalised"
+	sleep 30
+	make load-all-services
+	make load-test-services
 
 stop: project-stop # Stop project
 
 restart: stop start
+
+quick-restart: stop quick-start
 
 log: project-log # Show project logs
 
@@ -81,6 +90,56 @@ test: load-test-services # Test project
 		LIB_VOLUME_MOUNT="true" \
 		PROFILE=local \
 		VARS_FILE=$(VAR_DIR)/profile/local.mk
+
+debug:
+	make start 2> /dev/null ||:
+	docker rm --force fuzzysearch 2> /dev/null ||:
+	make docker-run-mvn-lib-mount \
+		NAME=fuzzysearch \
+		DIR=application/app \
+		CMD="spring-boot:run \
+			-Dspring-boot.run.jvmArguments=' \
+			-Xdebug \
+			-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:9999 \
+			' \
+		" \
+		ARGS=" \
+		--env SPRING_PROFILES_ACTIVE='$(SPRING_PROFILES_ACTIVE)' \
+		--env  CERTIFICATE_DOMAIN='$(CERTIFICATE_DOMAIN)' \
+		--env  ALLOWED_ORIGINS='$(ALLOWED_ORIGINS)' \
+		--env  API_SERVICE_SEARCH_ENDPOINT='$(API_SERVICE_SEARCH_ENDPOINT)' \
+		--env  SERVER_PORT='$(SERVER_PORT)' \
+		--env  VERSION='$(VERSION)' \
+		--env  ELASTICSEARCH_URL='$(ELASTICSEARCH_URL)' \
+		--env  MIN_SEARCH_TERM_LENGTH='$(MIN_SEARCH_TERM_LENGTH)' \
+		--env  MAX_SEARCH_CRITERIA='$(MAX_SEARCH_CRITERIA)' \
+		--env  MAX_NUM_SERVICES_TO_RETURN='$(MAX_NUM_SERVICES_TO_RETURN)' \
+		--env  MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH='$(MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH)' \
+		--env  MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH_3_SEARCH_TERMS='$(MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH_3_SEARCH_TERMS)' \
+		--env  FUZZ_LEVEL='$(FUZZ_LEVEL)' \
+		--env  NAME_PRIORITY='$(NAME_PRIORITY)' \
+		--env  ADDRESS_PRIORITY='$(ADDRESS_PRIORITY)' \
+		--env  POSTCODE_PRIORITY='$(POSTCODE_PRIORITY)' \
+		--env  PUBLIC_NAME_PRIORITY='$(NAME_PUBLIC_PRIORITY)' \
+		--env  AWS_ACCESS_KEY_ID='dummy' \
+		--env  AWS_SECRET_ACCESS_KEY='dummy'\
+		--env  COGNITO_USER_POOL_CLIENT_ID='$(COGNITO_USER_POOL_CLIENT_ID)' \
+		--env  COGNITO_USER_POOL_CLIENT_SECRET='$(COGNITO_USER_POOL_CLIENT_SECRET)' \
+		--env  COGNITO_USER_POOL_ID='$(COGNITO_USER_POOL_ID)' \
+		--env  POSTCODE_MAPPING_SERVICE_URL='$(POSTCODE_MAPPING_SERVICE_URL)' \
+		--env  AUTH_LOGIN_URL='$(AUTH_LOGIN_URL)' \
+		--env  AUTH_LOGIN_URI='$(AUTH_LOGIN_URI)' \
+		--env  POSTCODE_MAPPING_USER='$(POSTCODE_MAPPING_USER)' \
+		--env  POSTCODE_MAPPING_PASSWORD='$(POSTCODE_MAPPING_PASSWORD)' \
+		--publish 9999:9999 \
+		--publish 8443:8443 \
+		"
+		make start
+
+docker-run-mvn-lib-mount: ### Build Docker image mounting library volume - mandatory: DIR, CMD
+	make docker-run-mvn LIB_VOLUME_MOUNT=true \
+		DIR="$(DIR)" \
+		CMD="$(CMD)"
 
 push: # Push project artefacts to the registry
 	make docker-push NAME=api

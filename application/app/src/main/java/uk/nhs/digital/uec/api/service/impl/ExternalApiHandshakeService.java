@@ -1,6 +1,7 @@
 package uk.nhs.digital.uec.api.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,13 +43,14 @@ public class ExternalApiHandshakeService implements ExternalApiHandshakeInterfac
             .password(postcodeMappingPassword)
             .build();
     AuthToken authToken = webClientUtil.getAuthenticationToken(credential, loginUri);
-    return authToken != null ? createAuthenticationHeader(authToken) : null;
+    return createAuthenticationHeader(authToken);
   }
 
   private MultiValueMap<String, String> createAuthenticationHeader(AuthToken authToken) {
+    String token = Objects.nonNull(authToken) ? authToken.getAccessToken() : null;
     MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
     headers.add("Content-Type", "application/json");
-    headers.add("Authorization", "Bearer " + authToken.getAccessToken());
+    headers.add("Authorization", "Bearer " + token);
     return headers;
   }
 }

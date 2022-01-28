@@ -89,6 +89,8 @@ COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
 ADD_DEFAULT_COGNITO_USERS := false
 
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
+#Once wiremock is deployed to dev environment calls to postcode api will be mocked
+# POSTCODE_MAPPING_SERVICE_URL := http://mockservice.sfs.test:8080/api
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
@@ -96,8 +98,3 @@ AUTH_LOGIN_URI := /authentication/login
 AUTHENTICATION_ENDPOINT = $(AUTH_LOGIN_URL)$(AUTH_LOGIN_URI)
 FUZZY_SEARCH_DOMAIN = $(PROJECT_ID)-$(PROFILE)-uec-dos-api-sfs-ingress.$(TEXAS_HOSTED_ZONE)
 FUZZY_SEARCH_ENDPOINT = https://$(FUZZY_SEARCH_DOMAIN)
-
-
-#admin access is set for now and this should be changed accordingly with user who has access to the api
-POSTCODE_MAPPING_USER := service-finder-admin@nhs.net
-POSTCODE_MAPPING_PASSWORD := $(COGNITO_ADMIN_AUTH_PASSWORD)

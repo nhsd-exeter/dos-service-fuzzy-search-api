@@ -2,7 +2,6 @@ package uk.nhs.digital.uec.api.authentication.config;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -10,10 +9,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-
-import uk.nhs.digital.uec.api.authentication.filter.TokenEntryPoint;
-import uk.nhs.digital.uec.api.authentication.filter.MockAccessTokenFilter;
-
+import uk.nhs.digital.uec.api.filter.MockAccessTokenFilter;
+import uk.nhs.digital.uec.api.filter.TokenEntryPoint;
 
 @Profile("mock-auth")
 @Configuration

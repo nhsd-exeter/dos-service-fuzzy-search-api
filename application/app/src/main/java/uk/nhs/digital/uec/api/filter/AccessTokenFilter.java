@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.authentication.filter;
+package uk.nhs.digital.uec.api.filter;
 
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.COGNITO_GROUPS;
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.IDENTITY_PROVIDER_ID;

@@ -107,8 +107,7 @@ public class FuzzyServiceSearchController {
       validationService.validateSearchLocation(searchPostcode);
       validationService.validateMinSearchCriteriaLength(searchCriteria);
 
-      final List<DosService> dosServices =
-          fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchPostcode, searchCriteria);
+      final List<DosService> dosServices = fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchPostcode, searchCriteria);
       searchResultsResponse.setServices(dosServices);
       response.setSearchParameters(searchParamsResponse);
       response.setSearchResults(searchResultsResponse);

@@ -11,8 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-import uk.nhs.digital.uec.api.authentication.filter.AccessTokenFilter;
-import uk.nhs.digital.uec.api.authentication.filter.TokenEntryPoint;
+import uk.nhs.digital.uec.api.filter.AccessTokenFilter;
+import uk.nhs.digital.uec.api.filter.TokenEntryPoint;
 
 /** Configuration class to further secure all the APIs */
 @Configuration

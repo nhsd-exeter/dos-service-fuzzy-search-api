@@ -37,7 +37,12 @@ services:
       - 8443:8443
     depends_on:
       - elasticsearch
-    command: ["java", "-jar", "/application/dos-service-fuzzy-search-api.jar"]
+    command:
+      [
+        "java",
+        "-jar",
+        "/application/dos-service-fuzzy-search-api.jar"
+      ]
     networks:
       default:
         aliases:
@@ -48,13 +53,24 @@ services:
     container_name: elasticsearch
     hostname: elasticsearch
     ports:
-      - "19200:9200"
-    command: ["elasticsearch"]
+      - "9200:9200"
+    command: [ "elasticsearch" ]
     networks:
       default:
         aliases:
           - elasticsearch.sfs.local
-
+  mock_postcode_api:
+    image: rodolpheche/wiremock
+    container_name: mock_postcode_api
+    volumes:
+      - $PROJECT_DIR/test/wiremock_mappings:/home/wiremock/mappings/
+    ports:
+      - "8090:8080"
+    command: [ "--verbose"]
+    networks:
+      default:
+        aliases:
+          - mock.postcodeapi.sfs
   # kibana:
   #   image: docker.elastic.co/kibana/kibana:7.9.2
   #   container_name: kibana
