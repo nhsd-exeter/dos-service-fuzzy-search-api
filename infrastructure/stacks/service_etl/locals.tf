@@ -44,6 +44,8 @@ locals {
   service_etl_sns_cloudwatch_event_description = "Log event watcher to send an SNS event whenever an error log event is recorded"
   service_etl_sns_logging_level                = var.service_etl_sns_logging_level
 
+  service_etl_alarm_name = "${var.service_prefix}-service-etl-alarm"
+
   standard_tags = {
     "Programme"   = "uec"
     "Service"     = "service-finder"

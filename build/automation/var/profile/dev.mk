@@ -80,6 +80,8 @@ TF_VAR_service_etl_cron_timer_month := *
 TF_VAR_service_etl_cron_timer_day_of_week := MON-FRI
 TF_VAR_service_etl_cron_timer_year := *
 
+TF_VAR_service_etl_alarm_period := 86400
+
 #Cognito user pool details
 COGNITO_USER_POOL := $(TF_VAR_service_prefix)-authentication
 TF_VAR_cognito_user_pool := $(COGNITO_USER_POOL)

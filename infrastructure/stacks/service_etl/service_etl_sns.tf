@@ -117,3 +117,20 @@ resource "aws_cloudwatch_log_subscription_filter" "service_etl_sns_cloudwatch_lo
   filter_pattern  = "?ERROR ?WARN ?5xx"
   destination_arn = aws_lambda_function.service_etl_sns_lambda.arn
 }
+
+resource "aws_cloudwatch_metric_alarm" "postcode_insert_alarm" {
+  alarm_name                = local.service_etl_alarm_name
+  comparison_operator       = "LessThanThreshold"
+  evaluation_periods        = "1"
+  metric_name               = "Invocations"
+  namespace                 = "AWS/Lambda"
+  period                    = var.service_etl_alarm_period
+  statistic                 = "Average"
+  threshold                 = "1"
+  alarm_description         = "This metric monitors the service etl lambda and sends an alert to a slack channel if it hasnt triggered in the given period"
+  insufficient_data_actions = []
+  alarm_actions             = [aws_sns_topic.service_etl_sns_topic.arn]
+  dimensions = {
+    FunctionName = local.service_etl_function_name
+  }
+}
