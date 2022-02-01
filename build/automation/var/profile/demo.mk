@@ -57,7 +57,7 @@ INFRASTRUCTURE_STACKS_AUTH = authentication
 SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 TF_VAR_service_prefix := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 
-TF_VAR_es_zone_awareness_enabled := false
+TF_VAR_es_zone_awareness_enabled := true
 TF_VAR_es_availability_zone_count := 2
 TF_VAR_es_instance_count := 4
 TF_VAR_es_instance_type := m6g.8xlarge.elasticsearch
