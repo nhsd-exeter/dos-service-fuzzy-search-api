@@ -118,7 +118,7 @@ resource "aws_cloudwatch_log_subscription_filter" "service_etl_sns_cloudwatch_lo
   destination_arn = aws_lambda_function.service_etl_sns_lambda.arn
 }
 
-resource "aws_cloudwatch_metric_alarm" "postcode_insert_alarm" {
+resource "aws_cloudwatch_metric_alarm" "service_insert_alarm" {
   alarm_name                = local.service_etl_alarm_name
   comparison_operator       = "LessThanThreshold"
   evaluation_periods        = "1"
@@ -133,4 +133,6 @@ resource "aws_cloudwatch_metric_alarm" "postcode_insert_alarm" {
   dimensions = {
     FunctionName = local.service_etl_function_name
   }
+
+  tags = local.standard_tags
 }
