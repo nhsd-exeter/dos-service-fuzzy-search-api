@@ -7,7 +7,7 @@ CERTIFICATE_DOMAIN := localhost
 ALLOWED_ORIGINS := *
 
 # Datastore URLs
-ELASTICSEARCH_URL := elasticsearch.sfs.local:9200
+ELASTICSEARCH_URL := http://elasticsearch.sfs.local:9200
 API_SERVICE_SEARCH_ENDPOINT := https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch
 
 SERVER_PORT := 8443
@@ -36,7 +36,7 @@ COGNITO_USER_POOL_CLIENT_ID := testUserPoolClientId
 COGNITO_USER_POOL_CLIENT_SECRET := testUserPoolClientSecret
 COGNITO_USER_POOL_ID := testUserPoolId
 
-POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
+POSTCODE_MAPPING_SERVICE_URL := http://mock.postcodeapi.sfs:8080/api
 
 AUTH_LOGIN_URL := https://fuzzysearch.sfs.local:8443
 AUTH_LOGIN_URI := /authentication/login

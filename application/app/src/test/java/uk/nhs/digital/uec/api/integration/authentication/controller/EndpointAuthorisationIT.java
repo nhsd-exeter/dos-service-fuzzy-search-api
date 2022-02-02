@@ -33,10 +33,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import uk.nhs.digital.uec.api.authentication.exception.AccessTokenExpiredException;
-import uk.nhs.digital.uec.api.authentication.filter.AccessTokenFilter;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 import uk.nhs.digital.uec.api.authentication.util.JwtUtil;
+import uk.nhs.digital.uec.api.filter.AccessTokenFilter;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("local")

@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.authentication.filter;
+package uk.nhs.digital.uec.api.filter;
 
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.ROLE_PREFIX;
 import static uk.nhs.digital.uec.api.authentication.constants.MockAuthenticationConstants.MOCK_ACCESS_TOKEN;

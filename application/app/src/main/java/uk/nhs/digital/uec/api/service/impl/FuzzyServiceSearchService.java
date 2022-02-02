@@ -42,8 +42,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     MultiValueMap<String, String> headers = externalApiHandshakeInterface.getAccessTokenHeader();
 
     /** Calculate distance to services returned if we have a search location */
-    PostcodeLocation searchLocation =
-        locationService.getLocationForPostcode(searchPostcode, headers);
+    PostcodeLocation searchLocation = locationService.getLocationForPostcode(searchPostcode, headers);
     /**
      * if dos services returns empty locations populate postcode from service finder - postcode
      * mapping API

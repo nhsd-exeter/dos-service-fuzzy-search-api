@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.authentication.filter;
+package uk.nhs.digital.uec.api.filter;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
