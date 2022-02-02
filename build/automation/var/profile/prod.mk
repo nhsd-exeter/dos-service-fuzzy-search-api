@@ -65,12 +65,15 @@ TF_VAR_service_etl_sns_email := service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si
 # Config for the cron job trigger for the service etl set to be:
 # 6am Monday - Friday (This is because we dont want the service to be running every 4 minutes in non prod)
 # For prod we need to set cron(0/4 * * * ? *) (Every 4 minutes)
-TF_VAR_service_etl_cron_timer_minutes := 0
-TF_VAR_service_etl_cron_timer_hours := 6
-TF_VAR_service_etl_cron_timer_day_of_month := ?
+TF_VAR_service_etl_cron_timer_minutes := 0/4
+TF_VAR_service_etl_cron_timer_hours := *
+TF_VAR_service_etl_cron_timer_day_of_month := *
 TF_VAR_service_etl_cron_timer_month := *
-TF_VAR_service_etl_cron_timer_day_of_week := MON-FRI
+TF_VAR_service_etl_cron_timer_day_of_week := ?
 TF_VAR_service_etl_cron_timer_year := *
+
+#Every 4 minutes
+TF_VAR_service_etl_alarm_period := 240
 
 #Cognito user pool details
 COGNITO_USER_POOL := $(TF_VAR_service_prefix)-authentication

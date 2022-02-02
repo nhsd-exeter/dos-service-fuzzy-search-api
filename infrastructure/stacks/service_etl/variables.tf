@@ -43,3 +43,5 @@ variable "service_etl_cron_timer_day_of_month" { description = "cron timer for t
 variable "service_etl_cron_timer_month" { description = "cron timer for the month service etl should trigger" }
 variable "service_etl_cron_timer_day_of_week" { description = "cron timer for the day of the week service etl should trigger" }
 variable "service_etl_cron_timer_year" { description = "cron timer for the year service etl should trigger" }
+
+variable "service_etl_alarm_period" { description = "The period in seconds that the alarm will check to make sure the etl process has been triggered" }
