@@ -60,44 +60,44 @@ services:
         aliases:
           - elasticsearch.sfs.local
   mock_postcode_api:
-    image: rodolpheche/wiremock
-    container_name: mock_postcode_api
+    image: $DOCKER_REGISTRY/mock-postcode-api:$VERSION
+    container_name: mock-postcode-api
     volumes:
       - $PROJECT_DIR/test/wiremock_mappings:/home/wiremock/mappings/
     ports:
       - "8090:8080"
-    command: [ "--verbose"]
+    command: [ "--verbose" ]
     networks:
       default:
         aliases:
           - mock.postcodeapi.sfs
-  # kibana:
-  #   image: docker.elastic.co/kibana/kibana:7.9.2
-  #   container_name: kibana
-  #   environment:
-  #     SERVER_HOST: "0.0.0.0"
-  #     SERVER_PORT: 5601
-  #     SERVER_NAME: kibana
-  #     ELASTICSEARCH_HOSTS: http://elasticsearch.sfs.local:9200
-  #   ports:
-  #     - "5601:5601"
-  #   depends_on:
-  #     - elasticsearch
-  #   networks:
-  #     default:
-  #       aliases:
-  #         - kibana.sfs.local
+    # kibana:
+    #   image: docker.elastic.co/kibana/kibana:7.9.2
+    #   container_name: kibana
+    #   environment:
+    #     SERVER_HOST: "0.0.0.0"
+    #     SERVER_PORT: 5601
+    #     SERVER_NAME: kibana
+    #     ELASTICSEARCH_HOSTS: http://elasticsearch.sfs.local:9200
+    #   ports:
+    #     - "5601:5601"
+    #   depends_on:
+    #     - elasticsearch
+    #   networks:
+    #     default:
+    #       aliases:
+    #         - kibana.sfs.local
 
-  # db-dos:
-  #   image: $AWS_ECR/uec-tools/dtdb/database:latest
-  #   hostname: db-dos
-  #   container_name: db-dos
-  #   ports:
-  #     - 5432:5432
-  #   networks:
-  #     default:
-  #       aliases:
-  #         - db-dos.sfs.local
+    # db-dos:
+    #   image: $AWS_ECR/uec-tools/dtdb/database:latest
+    #   hostname: db-dos
+    #   container_name: db-dos
+    #   ports:
+    #     - 5432:5432
+    #   networks:
+    #     default:
+    #       aliases:
+    #         - db-dos.sfs.local
 
 networks:
   default:

@@ -38,6 +38,11 @@ build: project-config # Build project
 		$(PROJECT_DIR)/build/docker/api/assets/application/dos-service-fuzzy-search-api.jar
 	make docker-build NAME=api
 
+	cp $(PROJECT_DIR)/test/wiremock_mappings/*.json \
+	$(PROJECT_DIR)build/docker/mock-postcode-api/assets/wiremock_mappings/
+	make docker-build NAME=mock-postcode-api
+
+
 quick-start: project-start # Start project
 
 start: # Start project and load data in to elastic search
@@ -76,7 +81,7 @@ load-test-postcode-locations:
 	sh ./data/locations/$(LOCATIONS_DATA_FILE)
 
 run-contract-tests:
-	make start PROFILE=local VERSION=$(VERSION)
+	make quick-start PROFILE=local VERSION=$(VERSION)
 	sleep 60
 	cd test/contract
 	make run
@@ -143,6 +148,8 @@ docker-run-mvn-lib-mount: ### Build Docker image mounting library volume - manda
 
 push: # Push project artefacts to the registry
 	make docker-push NAME=api
+	make docker-push NAME=mock-postcode-api
+
 
 tag-release: # Create the release tag - mandatory DEV_TAG RELEASE_TAG
 	make docker-login
@@ -355,7 +362,8 @@ run-unit-test:
 	make unit-test
 
 run-smoke-test:
-	make start PROFILE=$(PROFILE) VERSION=$(API_IMAGE_TAG)
+	make stop
+	make quick-start PROFILE=$(PROFILE) VERSION=$(API_IMAGE_TAG)
 	sleep 60
 	cd test/contract
 	make run-smoke
