@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: uec-dos-api-sfs-mock-postcode-ingress
+  namespace: K8S_APP_NAMESPACE_TO_REPLACE
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/healthcheck-path: /mock-postcode-api/health
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/listen-port: '[{"HTTPS":8080}]'
+    alb.ingress.kubernetes.io/ssl-policy: AWS_ALB_SSL_TLS_POLICY_TO_REPLACE
+    alb.ingress.kubernetes.io/waf-acl-id: TEXAS_WAF_ACL_ID_TO_REPLACE
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:AWS_REGION_TO_REPLACE:AWS_ACCOUNT_ID_TO_REPLACE:certificate/TEXAS_CERTIFICATE_ID_TO_REPLACE
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/tags: Service=service-finder
+  labels:
+    app: mock-postcode-service
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: uec-dos-api-sfs-mock-postcode-service
+              servicePort: 8080

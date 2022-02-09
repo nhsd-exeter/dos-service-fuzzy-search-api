@@ -1,6 +1,18 @@
 bases:
   - ../../base
 
+commonLabels:
+  env: PROFILE_TO_REPLACE
+
 resources:
   - rbac/rbac-role.yaml
   - rbac/rbac-binding.yaml
+  - mock-postcode-api/mock-postcode-ingress.yaml
+  - mock-postcode-api/mock-postcode-deployment.yaml
+  - mock-postcode-api/mock-postcode-service.yaml
+
+
+
+images:
+  - name: DOCKER_REGISTRY_TO_REPLACE/mock-postcode-api
+    newTag: MOCK_POSTCODE_IMAGE_TAG_TO_REPLACE

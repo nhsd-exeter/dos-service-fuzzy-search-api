@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: K8S_APP_NAMESPACE_TO_REPLACE
+  name: mock-postcode-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mock-postcode-service
+      env: PROFILE_TO_REPLACE
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1        # how many pods we can add at a time
+      maxUnavailable: 0  # maxUnavailable define how many pods can be unavailable during the rolling update
+  template:
+    metadata:
+      labels:
+        app: mock-postcode-service
+    spec:
+      serviceAccountName: uec-dos-api-sfs-service-account
+      serviceAccount: uec-dos-api-sfs-service-account
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - mock-postcode-service
+                topologyKey: kubernetes.io/hostname
+      containers:
+      - name: mock-postcode-service
+        image: DOCKER_REGISTRY_TO_REPLACE/mock-postcode-api:MOCK_POSTCODE_IMAGE_TAG_TO_REPLACE
+        readinessProbe:
+          httpGet:
+            path: /mock-postcode-api/health
+            port: 8080
+            scheme: HTTPS
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /mock-postcode-api/health
+            port: 8080
+            scheme: HTTPS
+          initialDelaySeconds: 120
+          failureThreshold: 3
+          periodSeconds: 5
+        ports:
+        - containerPort: 8090
+          protocol: TCP
+        resources:
+          requests:
+            memory: "0Mi"
+            cpu: "0m"
+          limits:
+            memory: "1024Mi"
+            cpu: "500m"
+        imagePullPolicy: Always
