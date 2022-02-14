@@ -1,12 +1,12 @@
 {
   "info": {
-    "_postman_id": "833a7ad1-9a75-4cc6-940f-aeb55eb98f80",
-    "name": "FuzzySearchApiSmokeTests",
+    "_postman_id": "fd70d0a5-c142-4554-b6f0-a85459ed04c8",
+    "name": "FuzzySearchApiSmokeTests_nonAuth",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Authenticate user with access token",
+      "name": "Perform search - mock authentication",
       "event": [
         {
           "listen": "test",
@@ -63,6 +63,36 @@
         }
       },
       "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
     }
   ]
 }
