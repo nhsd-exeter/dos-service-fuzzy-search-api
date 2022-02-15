@@ -72,21 +72,21 @@ TF_VAR_service_etl_sns_email := service-etl-alerts-de-aaaafqkcxkkecdxfimtohq46zu
 # Config for the cron job trigger for the service etl set to be:
 # 6am Monday - Friday (This is because we dont want the service to be running every 4 minutes in non prod)
 # For prod we need to set cron(0/4 * * * ? *) (Every 4 minutes)
-TF_VAR_service_etl_cron_timer_minutes := 0/4
-TF_VAR_service_etl_cron_timer_hours := *
-TF_VAR_service_etl_cron_timer_day_of_month := *
+TF_VAR_service_etl_cron_timer_minutes := 0
+TF_VAR_service_etl_cron_timer_hours := 6
+TF_VAR_service_etl_cron_timer_day_of_month := ?
 TF_VAR_service_etl_cron_timer_month := *
-TF_VAR_service_etl_cron_timer_day_of_week := ?
+TF_VAR_service_etl_cron_timer_day_of_week := MON-FRI
 TF_VAR_service_etl_cron_timer_year := *
 
 TF_VAR_service_etl_alarm_period := 86400
-# Connection to DoS Read Replica for extraction Lambdas
-TF_VAR_dos_sf_replica_db := uec-core-dos-put-db-replica-sf.dos-db-put
-TF_VAR_service_finder_replica_sg := uec-core-dos-put-db-12-replica-sf-sg
-TF_VAR_dos_read_replica_secret_name := core-dos-uet-database-upgrade/deployment
+# Connection to DoS Read Replica for extraction Lambdas. For the Demo env we point to the live read replica
+TF_VAR_dos_sf_replica_db := uec-core-dos-live-db-replica-sf.dos-db-sync-rds
+TF_VAR_service_finder_replica_sg := uec-core-dos-live-db-12-replica-sf-sg
+TF_VAR_dos_read_replica_secret_name := core-dos/deployment
 TF_VAR_dos_read_replica_secret_key := DB_SF_READONLY_PASSWORD
 TF_VAR_service_etl_db_user := dos_sf_readonly
-TF_VAR_service_etl_source_db := pathwaysdos_ut
+TF_VAR_service_etl_source_db := pathwaysdos
 
 #Cognito user pool details
 COGNITO_USER_POOL := $(TF_VAR_service_prefix)-authentication
