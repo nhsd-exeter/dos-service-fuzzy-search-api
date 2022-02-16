@@ -33,6 +33,8 @@ public class ValidationServiceTest {
 
   private String codeVal1;
 
+  private List<String> searchCriteria = null;
+
   @BeforeEach
   public void setup() {
     ReflectionTestUtils.setField(validationService, "minSearchTermLength", minSearchTermLength);
@@ -41,15 +43,14 @@ public class ValidationServiceTest {
     searchCriteriaEmptyMessage =
         "No validation exception raised when expected because the search criteria is empty.";
     codeVal1 = "VAL-001";
+    searchCriteria = new ArrayList<>();
+    searchCriteria.add("term1");
+    searchCriteria.add("term2");
+    searchCriteria.add("term3");
   }
 
   @Test
   public void validateSearchCriteriaMinSuccess() {
-    // Arrange
-    final List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("term1");
-
-    // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
     } catch (NotFoundException ve) {
@@ -59,13 +60,6 @@ public class ValidationServiceTest {
 
   @Test
   public void validateSearchCriteriaSuccess() {
-    // Arrange
-    final List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("term1");
-    searchCriteria.add("term2");
-    searchCriteria.add("term3");
-
-    // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
     } catch (NotFoundException ve) {
@@ -76,14 +70,13 @@ public class ValidationServiceTest {
   @Test
   public void validateSearchCriteriaLimitSuccess() {
     // Arrange
-    final List<String> searchCriteria = new ArrayList<>();
+    final List<String> searchCriteriaLimit = new ArrayList<>();
     for (int i = 0; i < maxSearchCriteria; i++) {
-      searchCriteria.add("term" + i);
+      searchCriteriaLimit.add("term" + i);
     }
-
     // Act and Assert
     try {
-      validationService.validateSearchCriteria(searchCriteria);
+      validationService.validateSearchCriteria(searchCriteriaLimit);
     } catch (NotFoundException ve) {
       fail(validationMessage + ve.getMessage());
     }
@@ -92,11 +85,11 @@ public class ValidationServiceTest {
   @Test
   public void validateSearchCriteriaEmpty() {
     // Arrange
-    final List<String> searchCriteria = new ArrayList<>();
+    final List<String> searchCriteriaEmpty = new ArrayList<>();
 
     // Act and Assert
     try {
-      validationService.validateSearchCriteria(searchCriteria);
+      validationService.validateSearchCriteria(searchCriteriaEmpty);
       fail(searchCriteriaEmptyMessage);
     } catch (NotFoundException ve) {
       assertEquals(codeVal1, getValidationCodeForErrorMessage(ve.getMessage()));
@@ -107,7 +100,6 @@ public class ValidationServiceTest {
 
   @Test
   public void validateSearchCriteriaNull() {
-    // Act and Assert
     try {
       validationService.validateSearchCriteria(null);
       fail(searchCriteriaEmptyMessage);
@@ -120,18 +112,17 @@ public class ValidationServiceTest {
 
   @Test
   public void validateSearchCriteriaTooManyTerms() {
-
     String validationCode = null;
     // Arrange
-    final List<String> searchCriteria = new ArrayList<>();
+    final List<String> searchCriteriaMaxTerms = new ArrayList<>();
 
     for (int i = 0; i < maxSearchCriteria + 1; i++) {
-      searchCriteria.add("term" + i);
+      searchCriteriaMaxTerms.add("term" + i);
     }
 
     // Act and Assert
     try {
-      validationService.validateSearchCriteria(searchCriteria);
+      validationService.validateSearchCriteria(searchCriteriaMaxTerms);
       fail(
           "No validation exception raised when expected because the number of search criteria is"
               + " greater than the max amount.");
@@ -146,11 +137,6 @@ public class ValidationServiceTest {
 
   @Test
   public void validateMinSearchTermLengthSuccess() {
-    // Arrange
-    final List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("123");
-
-    // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
     } catch (NotFoundException ve) {
@@ -160,33 +146,10 @@ public class ValidationServiceTest {
 
   @Test
   public void validateMinSearchTermLengthOneTermValidSuccess() {
-    // Arrange
-    final List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("1");
-    searchCriteria.add("12");
-    searchCriteria.add("123");
-
-    // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
     } catch (NotFoundException ve) {
       fail(validationMessage + ve.getMessage());
-    }
-  }
-
-  @Test
-  public void validateSearchCriteriaLengthEmpty() {
-    // Arrange
-    final List<String> searchCriteria = new ArrayList<>();
-
-    // Act and Assert
-    try {
-      validationService.validateSearchCriteria(searchCriteria);
-      fail(searchCriteriaEmptyMessage);
-    } catch (NotFoundException ve) {
-      assertEquals(codeVal1, getValidationCodeForErrorMessage(ve.getMessage()));
-    } catch (Exception e) {
-      fail("Unexpected exception thrown: " + e.getMessage());
     }
   }
 
@@ -206,12 +169,12 @@ public class ValidationServiceTest {
   @Test
   public void validateMinSearchTermLengthTooSmallError() {
     // Arrange
-    final List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("12");
+    final List<String> searchCriteriaLessThanMinLength = new ArrayList<>();
+    searchCriteriaLessThanMinLength.add("te");
 
     // Act and Assert
     try {
-      validationService.validateSearchCriteria(searchCriteria);
+      validationService.validateSearchCriteria(searchCriteriaLessThanMinLength);
       fail(
           "No validation exception raised when expected because no search term is greater than the"
               + " min number of required characters.");
@@ -224,11 +187,6 @@ public class ValidationServiceTest {
 
   @Test
   public void validateDosSearchList() {
-    // Arrange
-    final List<String> searchCriteria = new ArrayList<>();
-    searchCriteria.add("term1");
-
-    // Act and Assert
     try {
       validationService.validateDosService(new ArrayList<>());
     } catch (NotFoundException ve) {

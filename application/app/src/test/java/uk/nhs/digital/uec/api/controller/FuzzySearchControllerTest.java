@@ -35,14 +35,8 @@ public class FuzzySearchControllerTest {
   @Spy ApiRequestParams mockRequestParams;
   @Mock ApiUtilsService mockUtilService;
 
-  // @Mock ValidationService mockValidationService;
   @Mock FuzzyServiceSearchService mockFuzzyServiceSearchService;
 
-  private static final String VALIDATION_ERROR_MSG = "A validation error has occurred";
-
-  private static final String VALIDATION_ERROR_CODE = "VAL-001";
-
-  private static final String FILTER_REFERRAL_ROLE = null;
   private static final Integer MAX_SERVICES_TO_RETURN_FROM_ES = 10;
   private static final Integer MAX_SERVICES_TO_RETURN = 5;
   private static final Integer FUZZ_LEVEL = 0;

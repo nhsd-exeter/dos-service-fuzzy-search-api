@@ -59,6 +59,8 @@ public class WebClientUtilTest {
   private String user;
   private String userPass;
   private MultiValueMap<String, String> headers;
+  private static final String URI = "api/search";
+  private static final String AUTH_URI = "/authentication/login";
 
   @BeforeEach
   public void setUp() {
@@ -76,8 +78,7 @@ public class WebClientUtilTest {
   public void getHeaderTest() throws SSLException {
     Credential credential = Credential.builder().emailAddress(user).password(userPass).build();
     authWebClient = getMockedAuthWebClient(authToken);
-    AuthToken responseAuthToken =
-        webClientUtil.getAuthenticationToken(credential, "/authentication/login");
+    AuthToken responseAuthToken = webClientUtil.getAuthenticationToken(credential, URI);
     assertEquals(authToken.getAccessToken(), responseAuthToken.getAccessToken());
   }
 
@@ -94,7 +95,7 @@ public class WebClientUtilTest {
     postCodeMappingWebClient = getPostCodeWebClient(postcodeLocation);
 
     List<PostcodeLocation> postcodeMappings =
-        webClientUtil.getPostcodeMappings(postCodes, headers, "api/search");
+        webClientUtil.getPostcodeMappings(postCodes, headers, URI);
     PostcodeLocation returnedLocation = postcodeMappings.get(0);
     assertEquals(655343, returnedLocation.getNorthing());
     assertEquals(123677, returnedLocation.getEasting());
@@ -126,8 +127,7 @@ public class WebClientUtilTest {
   public void getMockedAuthWebClientExceptionTest() {
     when(authWebClient.post()).thenThrow(RuntimeException.class);
     Credential credential = Credential.builder().emailAddress(user).password(userPass).build();
-    AuthToken responseAuthToken =
-        webClientUtil.getAuthenticationToken(credential, "/authentication/login");
+    AuthToken responseAuthToken = webClientUtil.getAuthenticationToken(credential, URI);
     assertNull(responseAuthToken);
   }
 
@@ -146,7 +146,7 @@ public class WebClientUtilTest {
     postCodes.add("EX1 3SR");
     assertThrows(
         InvalidParameterException.class,
-        () -> webClientUtil.getPostcodeMappings(postCodes, headers, "api/search"));
+        () -> webClientUtil.getPostcodeMappings(postCodes, headers, URI));
   }
 
   @Test
@@ -164,7 +164,7 @@ public class WebClientUtilTest {
     postCodes.add("EX1 3SR");
 
     List<PostcodeLocation> postcodeMappings =
-        webClientUtil.getPostcodeMappings(postCodes, headers, "api/search");
+        webClientUtil.getPostcodeMappings(postCodes, headers, URI);
     assertTrue(postcodeMappings.isEmpty());
   }
 }
