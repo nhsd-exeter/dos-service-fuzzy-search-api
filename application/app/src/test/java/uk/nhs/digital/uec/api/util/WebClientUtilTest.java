@@ -78,7 +78,7 @@ public class WebClientUtilTest {
   public void getHeaderTest() throws SSLException {
     Credential credential = Credential.builder().emailAddress(user).password(userPass).build();
     authWebClient = getMockedAuthWebClient(authToken);
-    AuthToken responseAuthToken = webClientUtil.getAuthenticationToken(credential, URI);
+    AuthToken responseAuthToken = webClientUtil.getAuthenticationToken(credential, AUTH_URI);
     assertEquals(authToken.getAccessToken(), responseAuthToken.getAccessToken());
   }
 
@@ -127,7 +127,7 @@ public class WebClientUtilTest {
   public void getMockedAuthWebClientExceptionTest() {
     when(authWebClient.post()).thenThrow(RuntimeException.class);
     Credential credential = Credential.builder().emailAddress(user).password(userPass).build();
-    AuthToken responseAuthToken = webClientUtil.getAuthenticationToken(credential, URI);
+    AuthToken responseAuthToken = webClientUtil.getAuthenticationToken(credential, AUTH_URI);
     assertNull(responseAuthToken);
   }
 
