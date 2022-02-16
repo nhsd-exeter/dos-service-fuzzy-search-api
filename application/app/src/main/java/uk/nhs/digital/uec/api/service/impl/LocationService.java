@@ -8,10 +8,13 @@ import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
+import uk.nhs.digital.uec.api.exception.InvalidParameterException;
+import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
 import uk.nhs.digital.uec.api.service.LocationServiceInterface;
+import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 
 @Service
 public class LocationService implements LocationServiceInterface {
@@ -20,10 +23,18 @@ public class LocationService implements LocationServiceInterface {
 
   @Autowired private ExternalApiHandshakeInterface apiHandshakeService;
 
-  /** {@inheritDoc} */
+  @Autowired private ValidationServiceInterface validationService;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @throws NotFoundException
+   * @throws InvalidParameterException
+   */
   @Override
   public PostcodeLocation getLocationForPostcode(
-      final String postcode, MultiValueMap<String, String> headers) {
+      final String postcode, MultiValueMap<String, String> headers)
+      throws NotFoundException, InvalidParameterException {
     if (StringUtils.isBlank(postcode)) {
       return null;
     }
@@ -61,7 +72,8 @@ public class LocationService implements LocationServiceInterface {
 
   @Override
   public List<PostcodeLocation> getLocationsForPostcodes(
-      List<String> postCodes, MultiValueMap<String, String> headers) {
+      List<String> postCodes, MultiValueMap<String, String> headers)
+      throws InvalidParameterException {
     return apiHandshakeService.getPostcodeMappings(
         apiUtilsService.removeBlankSpacesIn(postCodes), headers);
   }

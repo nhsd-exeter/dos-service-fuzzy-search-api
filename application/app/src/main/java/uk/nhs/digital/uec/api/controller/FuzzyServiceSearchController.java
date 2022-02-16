@@ -9,8 +9,8 @@ import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.P
 import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.SEARCH_CRITERIA_DESC;
 import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.SEARCH_POSTCODE_DESC;
 
+import io.swagger.annotations.ApiParam;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +20,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.annotations.ApiParam;
-import uk.nhs.digital.uec.api.exception.ValidationException;
+import uk.nhs.digital.uec.api.exception.InvalidParameterException;
+import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.ApiResponse;
 import uk.nhs.digital.uec.api.model.ApiSearchParamsResponse;
 import uk.nhs.digital.uec.api.model.ApiSearchResultsResponse;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
-import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
@@ -60,26 +58,39 @@ public class FuzzyServiceSearchController {
    * @param filterReferralRole if passed through, results will be filtered by the referral role
    *     provided.
    * @return {@link ApiResponse}
+   * @throws NotFoundException
+   * @throws InvalidParameterException
    */
   @GetMapping("/services/byfuzzysearch")
   @CrossOrigin(origins = "*")
   @PreAuthorize("hasAnyRole('FUZZY_API_ACCESS')")
   public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
-      @ApiParam(SEARCH_CRITERIA_DESC) @RequestParam(name = "search_term", required = false) List<String> searchCriteria,
-      @ApiParam(SEARCH_POSTCODE_DESC) @RequestParam(name = "search_location", required = false) String searchPostcode,
-      @ApiParam(hidden = true) @RequestParam(name = "max_num_services_to_return_from_es", required = false)
+      @ApiParam(SEARCH_CRITERIA_DESC) @RequestParam(name = "search_term", required = false)
+          List<String> searchCriteria,
+      @ApiParam(SEARCH_POSTCODE_DESC) @RequestParam(name = "search_location", required = false)
+          String searchPostcode,
+      @ApiParam(hidden = true)
+          @RequestParam(name = "max_num_services_to_return_from_es", required = false)
           Integer maxNumServicesToReturnFromEs,
-      @ApiParam(MAX_NUM_SERVICES_DESC) @RequestParam(name = "max_number_of_services_to_return", required = false)
+      @ApiParam(MAX_NUM_SERVICES_DESC)
+          @RequestParam(name = "max_number_of_services_to_return", required = false)
           Integer maxNumServicesToReturn,
-      @ApiParam(FUZZ_LEVEL_DESC) @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel,
-      @ApiParam(NAME_PRIORITY_DESC) @RequestParam(name = "name_priority", required = false) Integer namePriority,
-      @ApiParam(ADDRESS_PRIORITY_DESC) @RequestParam(name = "address_priority", required = false) Integer addressPriority,
-      @ApiParam(POSTCODE_PRIORITY_DESC) @RequestParam(name = "postcode_priority", required = false) Integer postcodePriority,
-      @ApiParam(PUBLIC_NAME_PRIORITY_DESC) @RequestParam(name = "public_name_priority", required = false) Integer publicNamePriority) {
+      @ApiParam(FUZZ_LEVEL_DESC) @RequestParam(name = "fuzz_level", required = false)
+          Integer fuzzLevel,
+      @ApiParam(NAME_PRIORITY_DESC) @RequestParam(name = "name_priority", required = false)
+          Integer namePriority,
+      @ApiParam(ADDRESS_PRIORITY_DESC) @RequestParam(name = "address_priority", required = false)
+          Integer addressPriority,
+      @ApiParam(POSTCODE_PRIORITY_DESC) @RequestParam(name = "postcode_priority", required = false)
+          Integer postcodePriority,
+      @ApiParam(PUBLIC_NAME_PRIORITY_DESC)
+          @RequestParam(name = "public_name_priority", required = false)
+          Integer publicNamePriority)
+      throws NotFoundException, InvalidParameterException {
 
     utils.configureApiRequestParams(
         fuzzLevel,
-        null, //filterReferralRole will be implemented in future
+        null, // filterReferralRole will be implemented in future
         maxNumServicesToReturnFromEs,
         maxNumServicesToReturn,
         namePriority,
@@ -102,20 +113,11 @@ public class FuzzyServiceSearchController {
     final ApiSuccessResponse response = new ApiSuccessResponse();
     final ApiSearchResultsResponse searchResultsResponse = new ApiSearchResultsResponse();
 
-    try {
-      validationService.validateSearchCriteria(searchCriteria);
-      validationService.validateSearchLocation(searchPostcode);
-      validationService.validateMinSearchCriteriaLength(searchCriteria);
-
-      final List<DosService> dosServices = fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchPostcode, searchCriteria);
-      searchResultsResponse.setServices(dosServices);
-      response.setSearchParameters(searchParamsResponse);
-      response.setSearchResults(searchResultsResponse);
-    } catch (final ValidationException ex) {
-      final ApiValidationErrorResponse valResponse =
-          new ApiValidationErrorResponse(ex.getValidationCode(), ex.getMessage());
-      return ResponseEntity.badRequest().body(valResponse);
-    }
+    final List<DosService> dosServices =
+        fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchPostcode, searchCriteria);
+    searchResultsResponse.setServices(dosServices);
+    response.setSearchParameters(searchParamsResponse);
+    response.setSearchResults(searchResultsResponse);
 
     return ResponseEntity.ok(response);
   }

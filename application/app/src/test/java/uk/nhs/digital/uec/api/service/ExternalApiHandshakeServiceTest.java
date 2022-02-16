@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
+import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.service.impl.ExternalApiHandshakeService;
 import uk.nhs.digital.uec.api.util.WebClientUtil;
@@ -61,7 +62,7 @@ public class ExternalApiHandshakeServiceTest {
   }
 
   @Test
-  public void getPostcodeMappingsTest() {
+  public void getPostcodeMappingsTest() throws InvalidParameterException {
     when(webClientUtilMock.getPostcodeMappings(any(), any(), any())).thenReturn(postcodeLocations);
 
     List<PostcodeLocation> postcodeMappings =

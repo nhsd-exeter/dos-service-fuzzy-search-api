@@ -5,13 +5,17 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import uk.nhs.digital.uec.api.exception.ValidationException;
+import uk.nhs.digital.uec.api.exception.ErrorMappingEnum;
+import uk.nhs.digital.uec.api.exception.ErrorMappingEnum.ValidationCodes;
+import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.service.impl.ValidationService;
 
 @ExtendWith(SpringExtension.class)
@@ -48,7 +52,7 @@ public class ValidationServiceTest {
     // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
-    } catch (ValidationException ve) {
+    } catch (NotFoundException ve) {
       fail(validationMessage + ve.getMessage());
     }
   }
@@ -64,7 +68,7 @@ public class ValidationServiceTest {
     // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
-    } catch (ValidationException ve) {
+    } catch (NotFoundException ve) {
       fail(validationMessage + ve.getMessage());
     }
   }
@@ -80,7 +84,7 @@ public class ValidationServiceTest {
     // Act and Assert
     try {
       validationService.validateSearchCriteria(searchCriteria);
-    } catch (ValidationException ve) {
+    } catch (NotFoundException ve) {
       fail(validationMessage + ve.getMessage());
     }
   }
@@ -94,8 +98,8 @@ public class ValidationServiceTest {
     try {
       validationService.validateSearchCriteria(searchCriteria);
       fail(searchCriteriaEmptyMessage);
-    } catch (ValidationException ve) {
-      assertEquals(codeVal1, ve.getValidationCode());
+    } catch (NotFoundException ve) {
+      assertEquals(codeVal1, getValidationCodeForErrorMessage(ve.getMessage()));
     } catch (Exception e) {
       fail("Unexpected exception thrown: " + e.getMessage());
     }
@@ -107,8 +111,8 @@ public class ValidationServiceTest {
     try {
       validationService.validateSearchCriteria(null);
       fail(searchCriteriaEmptyMessage);
-    } catch (ValidationException ve) {
-      assertEquals(codeVal1, ve.getValidationCode());
+    } catch (NotFoundException ve) {
+      assertEquals(codeVal1, getValidationCodeForErrorMessage(ve.getMessage()));
     } catch (Exception e) {
       fail("Unexpected exception thrown: " + e.getMessage());
     }
@@ -116,6 +120,8 @@ public class ValidationServiceTest {
 
   @Test
   public void validateSearchCriteriaTooManyTerms() {
+
+    String validationCode = null;
     // Arrange
     final List<String> searchCriteria = new ArrayList<>();
 
@@ -129,11 +135,13 @@ public class ValidationServiceTest {
       fail(
           "No validation exception raised when expected because the number of search criteria is"
               + " greater than the max amount.");
-    } catch (ValidationException ve) {
-      assertEquals("VAL-002", ve.getValidationCode());
-    } catch (Exception e) {
-      fail("Unexpected exception thrown: " + e.getMessage());
+    } catch (NotFoundException ve) {
+      if (getValidationCodeForErrorMessage(ve.getMessage()) == null
+          && ve.getMessage().contains(String.valueOf(maxSearchCriteria))) {
+        validationCode = ValidationCodes.VAL002.getValidationCode();
+      }
     }
+    assertEquals("VAL-002", validationCode);
   }
 
   @Test
@@ -144,8 +152,8 @@ public class ValidationServiceTest {
 
     // Act and Assert
     try {
-      validationService.validateMinSearchCriteriaLength(searchCriteria);
-    } catch (ValidationException ve) {
+      validationService.validateSearchCriteria(searchCriteria);
+    } catch (NotFoundException ve) {
       fail(validationMessage + ve.getMessage());
     }
   }
@@ -160,8 +168,8 @@ public class ValidationServiceTest {
 
     // Act and Assert
     try {
-      validationService.validateMinSearchCriteriaLength(searchCriteria);
-    } catch (ValidationException ve) {
+      validationService.validateSearchCriteria(searchCriteria);
+    } catch (NotFoundException ve) {
       fail(validationMessage + ve.getMessage());
     }
   }
@@ -173,10 +181,10 @@ public class ValidationServiceTest {
 
     // Act and Assert
     try {
-      validationService.validateMinSearchCriteriaLength(searchCriteria);
+      validationService.validateSearchCriteria(searchCriteria);
       fail(searchCriteriaEmptyMessage);
-    } catch (ValidationException ve) {
-      assertEquals(codeVal1, ve.getValidationCode());
+    } catch (NotFoundException ve) {
+      assertEquals(codeVal1, getValidationCodeForErrorMessage(ve.getMessage()));
     } catch (Exception e) {
       fail("Unexpected exception thrown: " + e.getMessage());
     }
@@ -186,10 +194,10 @@ public class ValidationServiceTest {
   public void validateSearchCriteriaLengthNull() {
     // Act and Assert
     try {
-      validationService.validateMinSearchCriteriaLength(null);
+      validationService.validateSearchCriteria(null);
       fail(searchCriteriaEmptyMessage);
-    } catch (ValidationException ve) {
-      assertEquals(codeVal1, ve.getValidationCode());
+    } catch (NotFoundException ve) {
+      assertEquals(codeVal1, getValidationCodeForErrorMessage(ve.getMessage()));
     } catch (Exception e) {
       fail("Unexpected exception thrown: " + e.getMessage());
     }
@@ -203,14 +211,39 @@ public class ValidationServiceTest {
 
     // Act and Assert
     try {
-      validationService.validateMinSearchCriteriaLength(searchCriteria);
+      validationService.validateSearchCriteria(searchCriteria);
       fail(
           "No validation exception raised when expected because no search term is greater than the"
               + " min number of required characters.");
-    } catch (ValidationException ve) {
-      assertEquals("VAL-003", ve.getValidationCode());
+    } catch (NotFoundException ve) {
+      assertEquals("VAL-003", getValidationCodeForErrorMessage(ve.getMessage()));
     } catch (Exception e) {
       fail("Unexpected exception thrown: " + e.getMessage());
     }
+  }
+
+  @Test
+  public void validateDosSearchList() {
+    // Arrange
+    final List<String> searchCriteria = new ArrayList<>();
+    searchCriteria.add("term1");
+
+    // Act and Assert
+    try {
+      validationService.validateDosService(new ArrayList<>());
+    } catch (NotFoundException ve) {
+      assertEquals("No services found for the given name or postcode", ve.getMessage());
+    }
+  }
+
+  private String getValidationCodeForErrorMessage(String errorMessage) {
+    Optional<ValidationCodes> validationCodesOptional =
+        ErrorMappingEnum.getValidationEnum().entrySet().stream()
+            .filter(entry -> errorMessage.startsWith(entry.getValue()))
+            .map(Map.Entry::getKey)
+            .findFirst();
+    return validationCodesOptional.isPresent()
+        ? validationCodesOptional.get().getValidationCode()
+        : null;
   }
 }

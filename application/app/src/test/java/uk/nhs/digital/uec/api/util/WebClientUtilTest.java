@@ -2,10 +2,12 @@ package uk.nhs.digital.uec.api.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -20,10 +22,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
+import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 
 @ExtendWith(SpringExtension.class)
@@ -78,7 +82,7 @@ public class WebClientUtilTest {
   }
 
   @Test
-  public void getPostCodeMappingsTest() throws SSLException {
+  public void getPostCodeMappingsTest() throws SSLException, InvalidParameterException {
     List<String> postCodes = new ArrayList<>();
     postCodes.add("EX1 2SR");
 
@@ -128,8 +132,34 @@ public class WebClientUtilTest {
   }
 
   @Test
-  public void getPostCodeMappingsTestExceptionTest() {
-    when(postCodeMappingWebClient.get()).thenThrow(RuntimeException.class);
+  public void getPostCodeMappingsStatus400ExceptionTest() throws InvalidParameterException {
+    String body =
+        "{\r\n"
+            + "    \"validationCode\": \"VAL-002\",\r\n"
+            + "    \"message\": \"Postcode is provided but it is invalid\"\r\n"
+            + "}";
+    byte[] b = body.getBytes(StandardCharsets.UTF_8);
+    WebClientResponseException clientResponseException =
+        new WebClientResponseException(400, null, null, b, null, null);
+    when(postCodeMappingWebClient.get()).thenThrow(clientResponseException);
+    List<String> postCodes = new ArrayList<>();
+    postCodes.add("EX1 3SR");
+    assertThrows(
+        InvalidParameterException.class,
+        () -> webClientUtil.getPostcodeMappings(postCodes, headers, "api/search"));
+  }
+
+  @Test
+  public void getPostCodeMappingsNon400ExceptionTest() throws InvalidParameterException {
+    String body =
+        "{\r\n"
+            + "    \"validationCode\": \"VAL-001\",\r\n"
+            + "    \"message\": \"No services found for the given name or postcode\"\r\n"
+            + "}";
+    byte[] b = body.getBytes(StandardCharsets.UTF_8);
+    WebClientResponseException clientResponseException =
+        new WebClientResponseException(404, null, null, b, null, null);
+    when(postCodeMappingWebClient.get()).thenThrow(clientResponseException);
     List<String> postCodes = new ArrayList<>();
     postCodes.add("EX1 3SR");
 

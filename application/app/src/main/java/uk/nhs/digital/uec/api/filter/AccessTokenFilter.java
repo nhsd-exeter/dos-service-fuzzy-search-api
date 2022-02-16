@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +31,7 @@ import uk.nhs.digital.uec.api.authentication.util.JwtUtil;
 
 @Component
 @Slf4j
+@Profile("!mock-auth")
 public class AccessTokenFilter extends OncePerRequestFilter {
 
   @Autowired private JwtUtil jwtUtil;
