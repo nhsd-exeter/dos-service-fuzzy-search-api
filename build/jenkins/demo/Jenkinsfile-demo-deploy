@@ -39,6 +39,7 @@ pipeline {
         }
       }
     }
+    // TODO: Backup elastic search
     stage('Plan Base Infrastructure') {
       steps {
         script {
