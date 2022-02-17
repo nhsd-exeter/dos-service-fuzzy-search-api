@@ -1,6 +1,6 @@
 pipeline {
   /*
-    Description: Deployment pipeline
+    Description: Deployment pipeline to deploy the Service Search module into the Demo environment
    */
 
   agent { label 'jenkins-slave' }

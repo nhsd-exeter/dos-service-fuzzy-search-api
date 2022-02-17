@@ -1,19 +1,19 @@
 pipeline {
   /*
-    Description: Deployment pipeline
+    Description: Deployment pipeline to deploy the Service Search module into the Development environment.
    */
 
-  agent { label "jenkins-slave" }
+  agent { label 'jenkins-slave' }
 
   options {
-    buildDiscarder(logRotator(daysToKeepStr: "7", numToKeepStr: "13"))
+    buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
-    timeout(time: 30, unit: "MINUTES")
+    timeout(time: 30, unit: 'MINUTES')
   }
 
   environment {
-    PROFILE = "dev"
+    PROFILE = 'dev'
   }
 
   parameters {
@@ -35,7 +35,7 @@ pipeline {
     stage('Prepare') {
       steps {
         script {
-          sh "make prepare"
+          sh 'make prepare'
         }
       }
     }
@@ -67,35 +67,35 @@ pipeline {
         }
       }
     }
-    stage("Deploy API") {
+    stage('Deploy API') {
       steps {
         script {
           sh "make deploy PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG} MOCK_POSTCODE_IMAGE_TAG=${IMAGE_TAG}"
         }
       }
     }
-    stage("Monitor Deployment") {
+    stage('Monitor Deployment') {
       steps {
         script {
-          sh "make k8s-check-deployment-of-replica-sets"
+          sh 'make k8s-check-deployment-of-replica-sets'
         }
       }
     }
-    stage("Monitor Route53 Connection") {
+    stage('Monitor Route53 Connection') {
       steps {
         script {
-          sh "make monitor-r53-connection"
+          sh 'make monitor-r53-connection'
         }
       }
     }
-    stage("Run Service ETL") {
+    stage('Run Service ETL') {
       steps {
         script {
-          sh "make apply-data-changes"
+          sh 'make apply-data-changes'
         }
       }
     }
-    stage("Smoke Tests") {
+    stage('Smoke Tests') {
       steps {
         script {
           sh "make run-smoke-test PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG}"
@@ -104,8 +104,8 @@ pipeline {
     }
   }
   post {
-    always { sh "make clean" }
-    success { sh "make pipeline-on-success" }
-    failure { sh "make pipeline-on-failure" }
+    always { sh 'make clean' }
+    success { sh 'make pipeline-on-success' }
+    failure { sh 'make pipeline-on-failure' }
   }
 }

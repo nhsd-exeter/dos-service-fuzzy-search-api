@@ -1,19 +1,19 @@
 pipeline {
   /*
-    Description: Deployment pipeline
+    Description: Deployment pipeline to deploy the API Authentication module into the Development environment
    */
 
-  agent { label "jenkins-slave" }
+  agent { label 'jenkins-slave' }
 
   options {
-    buildDiscarder(logRotator(daysToKeepStr: "7", numToKeepStr: "13"))
+    buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
-    timeout(time: 30, unit: "MINUTES")
+    timeout(time: 30, unit: 'MINUTES')
   }
 
   environment {
-    PROFILE = "dev"
+    PROFILE = 'dev'
   }
 
   parameters {
@@ -35,25 +35,25 @@ pipeline {
     stage('Prepare') {
       steps {
         script {
-          sh "make prepare"
+          sh 'make prepare'
         }
       }
     }
-    stage("Plan Infrastructure") {
+    stage('Plan Infrastructure') {
       steps {
         script {
           sh "make plan_auth PROFILE=${env.PROFILE}"
         }
       }
     }
-    stage("Provision Infrastructure") {
+    stage('Provision Infrastructure') {
       steps {
         script {
           sh "make provision_auth PROFILE=${env.PROFILE}"
         }
       }
     }
-    stage("Populate Cognito Pool"){
+    stage('Populate Cognito Pool') {
       steps {
         script {
           sh "make project-populate-cognito PROFILE=${env.PROFILE} ADD_DEFAULT_COGNITO_USERS=${ADD_DEFAULT_USERS}"
@@ -63,9 +63,8 @@ pipeline {
   }
 
   post {
-    always { sh "make clean" }
-    success { sh "make pipeline-on-success" }
-    failure { sh "make pipeline-on-failure" }
+    always { sh 'make clean' }
+    success { sh 'make pipeline-on-success' }
+    failure { sh 'make pipeline-on-failure' }
   }
-
 }

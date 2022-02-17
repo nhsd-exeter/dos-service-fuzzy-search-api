@@ -1,6 +1,7 @@
 pipeline {
   /*
-    Description: Deployment pipeline
+    Description: Deployment pipeline to deploy the infrastructure of the API Authentication module
+    into the Demo environment.
    */
 
   agent { label 'jenkins-slave' }

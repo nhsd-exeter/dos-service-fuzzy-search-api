@@ -1,21 +1,21 @@
 pipeline {
   /*
-    Description: Development pipeline to build test push and deploy to nonprod
+    Description: Development pipeline to build test push and deploy to the development environment.
    */
-  agent { label "jenkins-slave" }
+  agent { label 'jenkins-slave' }
 
   environment {
-    PROFILE = "dev"
+    PROFILE = 'dev'
   }
 
   options {
-    buildDiscarder(logRotator(daysToKeepStr: "7", numToKeepStr: "13"))
+    buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
-    timeout(time: 30, unit: "MINUTES")
+    timeout(time: 30, unit: 'MINUTES')
   }
 
-  triggers { pollSCM("* * * * *") }
+  triggers { pollSCM('* * * * *') }
 
   stages {
     stage('Show Variables') {
@@ -28,7 +28,7 @@ pipeline {
     stage('Prepare') {
       steps {
         script {
-          sh "make prepare"
+          sh 'make prepare'
         }
       }
     }
@@ -49,7 +49,7 @@ pipeline {
     stage('Unit Test') {
       steps {
         script {
-          sh "make run-unit-test PROFILE=test"
+          sh 'make run-unit-test PROFILE=test'
         }
       }
     }
@@ -67,9 +67,9 @@ pipeline {
         }
       }
     }
-    stage('Image Build Tag'){
-      steps{
-        script{
+    stage('Image Build Tag') {
+      steps {
+        script {
           sh "echo 'Image Build Tag: '${env.PROJECT_BUILD_TAG}"
         }
       }
@@ -77,9 +77,8 @@ pipeline {
   }
 
   post {
-    always { sh "make clean" }
-    success { sh "make pipeline-on-success" }
-    failure { sh "make pipeline-on-failure" }
+    always { sh 'make clean' }
+    success { sh 'make pipeline-on-success' }
+    failure { sh 'make pipeline-on-failure' }
   }
-
 }
