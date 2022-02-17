@@ -66,7 +66,7 @@ resource "aws_lambda_function" "service_etl_sns_lambda" {
   handler          = "service_etl_sns.lambda_handler"
   source_code_hash = data.archive_file.service_etl_sns_function.output_base64sha256
   runtime          = local.service_etl_runtime
-  publish          = true
+  publish          = false
   tags             = local.standard_tags
   environment {
     variables = {
