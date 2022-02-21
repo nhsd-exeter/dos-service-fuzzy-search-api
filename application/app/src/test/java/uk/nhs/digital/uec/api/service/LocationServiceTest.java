@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.nhs.digital.uec.api.exception.InvalidParameterException;
+import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.service.impl.LocationService;
 
@@ -40,13 +42,14 @@ public class LocationServiceTest {
   }
 
   @Test
-  public void getLocationForNullPostcode() {
+  public void getLocationForNullPostcode() throws NotFoundException, InvalidParameterException {
     PostcodeLocation location = locationService.getLocationForPostcode(null, null);
     assertNull(location);
   }
 
   @Test
-  public void getPostcodeMappingLocationForValidPostcode() {
+  public void getPostcodeMappingLocationForValidPostcode()
+      throws NotFoundException, InvalidParameterException {
     List<PostcodeLocation> listLocations = new ArrayList<>();
     listLocations.add(postcodeLocation);
     when(apiHandshakeService.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
@@ -57,7 +60,7 @@ public class LocationServiceTest {
   }
 
   @Test
-  public void getLocationForValidPostcode() {
+  public void getLocationForValidPostcode() throws NotFoundException, InvalidParameterException {
     List<PostcodeLocation> listLocations = new ArrayList<>();
     listLocations.add(postcodeLocation);
     when(apiHandshakeService.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
@@ -66,7 +69,7 @@ public class LocationServiceTest {
   }
 
   @Test
-  public void getLocationForValidPostcodes() {
+  public void getLocationForValidPostcodes() throws InvalidParameterException {
     List<String> postCodes = new ArrayList<>();
     List<PostcodeLocation> listLocations = new ArrayList<>();
     listLocations.add(postcodeLocation);

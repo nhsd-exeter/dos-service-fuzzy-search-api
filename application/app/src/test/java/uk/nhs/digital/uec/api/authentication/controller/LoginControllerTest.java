@@ -15,7 +15,7 @@ import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 import uk.nhs.digital.uec.api.authentication.service.AuthenticationService;
-import uk.nhs.digital.uec.api.exception.ValidationException;
+import uk.nhs.digital.uec.api.exception.NotFoundException;
 
 @ExtendWith(SpringExtension.class)
 public class LoginControllerTest {
@@ -24,7 +24,7 @@ public class LoginControllerTest {
   @Mock AuthenticationService authenticationService;
 
   @Test
-  public void loginTest() throws ValidationException, UnauthorisedException {
+  public void loginTest() throws NotFoundException, UnauthorisedException {
     AuthToken authToken = new AuthToken();
     Credential cred = new Credential("admin1@nhs.net", "password1");
     authToken.setAccessToken("ACCESS_TOKEN_123");
@@ -37,7 +37,7 @@ public class LoginControllerTest {
   }
 
   @Test
-  public void loginExceptionTest() throws ValidationException, UnauthorisedException {
+  public void loginExceptionTest() throws NotFoundException, UnauthorisedException {
     AuthToken authToken = new AuthToken();
     Credential cred = new Credential("admin2@nhs.net", "password2");
     authToken.setAccessToken("ACCESS_TOKEN_123");

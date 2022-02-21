@@ -9,6 +9,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
+import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
 import uk.nhs.digital.uec.api.util.WebClientUtil;
@@ -31,7 +32,8 @@ public class ExternalApiHandshakeService implements ExternalApiHandshakeInterfac
   @Autowired private WebClientUtil webClientUtil;
 
   public List<PostcodeLocation> getPostcodeMappings(
-      List<String> postCodes, MultiValueMap<String, String> headers) {
+      List<String> postCodes, MultiValueMap<String, String> headers)
+      throws InvalidParameterException {
     return webClientUtil.getPostcodeMappings(postCodes, headers, psmUri);
   }
 

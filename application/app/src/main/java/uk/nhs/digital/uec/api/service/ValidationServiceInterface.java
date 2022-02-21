@@ -1,7 +1,8 @@
 package uk.nhs.digital.uec.api.service;
 
 import java.util.List;
-import uk.nhs.digital.uec.api.exception.ValidationException;
+import uk.nhs.digital.uec.api.exception.NotFoundException;
+import uk.nhs.digital.uec.api.model.DosService;
 
 /** Interface encapsulating validation processes used by the API. */
 public interface ValidationServiceInterface {
@@ -12,25 +13,15 @@ public interface ValidationServiceInterface {
    * defined value.
    *
    * @param searchCriteria the searchCriteria list to validate.
-   * @throws ValidationException when business requirements are not met.
+   * @throws NotFoundException when business requirements are not met.
    */
-  public void validateSearchCriteria(final List<String> searchCriteria) throws ValidationException;
+  public void validateSearchCriteria(final List<String> searchCriteria) throws NotFoundException;
 
   /**
-   * Validates that the search location is of the correct format.
+   * Validates if there are any dos services returned
    *
-   * @param searchLocation the search location to validate.
-   * @throws ValidationException when the search location is not valid.
+   * @param dosService the searchCriteria string to validate.
+   * @throws NotFoundException when none of the dos search results are returned
    */
-  public void validateSearchLocation(final String searchLocation) throws ValidationException;
-
-  /**
-   * Validates that at least one of the search criteria terms meets the minimum length required.
-   *
-   * @param searchCriteria the searchCriteria string to validate.
-   * @throws ValidationException when none of the search criteria terms meet the minimum length
-   *     required.
-   */
-  public void validateMinSearchCriteriaLength(final List<String> searchCriteria)
-      throws ValidationException;
+  public void validateDosService(List<DosService> dosServices) throws NotFoundException;
 }

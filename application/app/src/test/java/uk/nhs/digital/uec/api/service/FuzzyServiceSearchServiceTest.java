@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,6 +21,8 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import uk.nhs.digital.uec.api.exception.InvalidParameterException;
+import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
@@ -27,6 +30,7 @@ import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
 import uk.nhs.digital.uec.api.service.impl.ExternalApiHandshakeService;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
 import uk.nhs.digital.uec.api.service.impl.MockDosServicesUtil;
+import uk.nhs.digital.uec.api.service.impl.ValidationService;
 
 @ExtendWith(SpringExtension.class)
 public class FuzzyServiceSearchServiceTest {
@@ -45,12 +49,14 @@ public class FuzzyServiceSearchServiceTest {
 
   @Mock private ExternalApiHandshakeService apiHandshakeService;
 
+  @Mock private ValidationService mockValidationService;
+
   private MultiValueMap<String, String> headers = null;
 
   private List<String> searchCriteria;
 
   @BeforeEach
-  public void setup() {
+  public void setup() throws NotFoundException, InvalidParameterException {
     when(apiRequestParams.getMaxNumServicesToReturn()).thenReturn(maxNumServicesToReturn);
     when(locationService.getLocationForPostcode(null, null)).thenReturn(null);
 
@@ -64,7 +70,8 @@ public class FuzzyServiceSearchServiceTest {
   }
 
   @Test
-  public void retrieveServicesByFuzzySearchSuccess() {
+  public void retrieveServicesByFuzzySearchSuccess()
+      throws NotFoundException, InvalidParameterException {
     // Arrange
     List<DosService> dosServices = new ArrayList<>();
     dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
@@ -73,6 +80,7 @@ public class FuzzyServiceSearchServiceTest {
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
     when(serviceRepository.findServiceBySearchTerms(eq(searchCriteria))).thenReturn(dosServices);
     when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
+    doNothing().when(mockValidationService).validateSearchCriteria(searchCriteria);
 
     // Act
     List<DosService> services =
@@ -83,7 +91,8 @@ public class FuzzyServiceSearchServiceTest {
   }
 
   @Test
-  public void retrieveServicesByFuzzySearchNoResults() {
+  public void retrieveServicesByFuzzySearchNoResults()
+      throws NotFoundException, InvalidParameterException {
     // Arrange
     List<String> searchCriteriaLocal = new ArrayList<>();
     searchCriteriaLocal.add("term0");
@@ -94,6 +103,7 @@ public class FuzzyServiceSearchServiceTest {
     when(serviceRepository.findServiceBySearchTerms(eq(searchCriteriaLocal)))
         .thenReturn(dosServices);
     when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
+    doNothing().when(mockValidationService).validateSearchCriteria(searchCriteriaLocal);
 
     // Act
     List<DosService> services =
@@ -104,7 +114,8 @@ public class FuzzyServiceSearchServiceTest {
   }
 
   @Test
-  public void retrieveServicesByFuzzySearchTooManyResults() {
+  public void retrieveServicesByFuzzySearchTooManyResults()
+      throws NotFoundException, InvalidParameterException {
     // Arrange
     List<String> searchCriteriaLocal = new ArrayList<>();
     searchCriteriaLocal.add("All");
@@ -118,6 +129,7 @@ public class FuzzyServiceSearchServiceTest {
     when(serviceRepository.findServiceBySearchTerms(eq(searchCriteriaLocal)))
         .thenReturn(dosServices);
     when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
+    doNothing().when(mockValidationService).validateSearchCriteria(searchCriteriaLocal);
 
     // Act
     List<DosService> services =
@@ -128,7 +140,8 @@ public class FuzzyServiceSearchServiceTest {
   }
 
   @Test
-  public void retrieveServicesByFuzzySearchMaxReturn() {
+  public void retrieveServicesByFuzzySearchMaxReturn()
+      throws NotFoundException, InvalidParameterException {
     // Arrange
     List<String> searchCriteriaLocal = new ArrayList<>();
     searchCriteriaLocal.add("Max");
@@ -140,6 +153,7 @@ public class FuzzyServiceSearchServiceTest {
     List<DosService> maxDosServices = dosServices.subList(0, maxNumServicesToReturn);
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteriaLocal)).thenReturn(searchCriteriaLocal);
+    doNothing().when(mockValidationService).validateSearchCriteria(searchCriteriaLocal);
     when(serviceRepository.findServiceBySearchTerms(eq(searchCriteriaLocal)))
         .thenReturn(maxDosServices);
     when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
@@ -153,7 +167,9 @@ public class FuzzyServiceSearchServiceTest {
   }
 
   @Test
-  public void retrieveServicesByFuzzySearchNullReturn() {
+  public void retrieveServicesByFuzzySearchNullReturn()
+      throws NotFoundException, InvalidParameterException {
+    doNothing().when(mockValidationService).validateSearchCriteria(searchCriteria);
     // Arrange
     List<String> searchCriteriaBlank = new ArrayList<>();
     // Act
@@ -164,7 +180,8 @@ public class FuzzyServiceSearchServiceTest {
   }
 
   @Test
-  public void retrieveServicesWithSearchLocation() {
+  public void retrieveServicesWithSearchLocation()
+      throws NotFoundException, InvalidParameterException {
 
     String searchLocation = "EX8 5SE";
 
@@ -179,6 +196,7 @@ public class FuzzyServiceSearchServiceTest {
     when(locationService.distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class)))
         .thenReturn(5.0, 10.0);
     when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
+    doNothing().when(mockValidationService).validateSearchCriteria(searchCriteria);
 
     // Act
     List<DosService> services =
@@ -192,7 +210,8 @@ public class FuzzyServiceSearchServiceTest {
   }
 
   @Test
-  public void retrieveServicesWithNoSearchLocationFromDos() {
+  public void retrieveServicesWithNoSearchLocationFromDos()
+      throws NotFoundException, InvalidParameterException {
     PostcodeLocation dynamoPostCodeLocation = new PostcodeLocation();
     dynamoPostCodeLocation.setEasting(558439);
     dynamoPostCodeLocation.setNorthing(140222);
@@ -218,6 +237,7 @@ public class FuzzyServiceSearchServiceTest {
     when(locationService.distanceBetween(any(PostcodeLocation.class), any(PostcodeLocation.class)))
         .thenReturn(357.7);
     when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
+    doNothing().when(mockValidationService).validateSearchCriteria(searchCriteria);
 
     List<DosService> services =
         fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchLocation, searchCriteria);

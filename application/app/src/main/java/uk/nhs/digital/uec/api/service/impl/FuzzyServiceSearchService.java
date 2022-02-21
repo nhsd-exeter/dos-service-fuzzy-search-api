@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import software.amazon.awssdk.utils.CollectionUtils;
+import uk.nhs.digital.uec.api.exception.InvalidParameterException;
+import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
@@ -15,6 +17,7 @@ import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
 import uk.nhs.digital.uec.api.service.LocationServiceInterface;
+import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 
 @Service
 public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInterface {
@@ -29,22 +32,35 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
 
   @Autowired private ExternalApiHandshakeInterface externalApiHandshakeInterface;
 
-  /** {@inheritDoc} */
+  @Autowired private ValidationServiceInterface validationService;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @throws NotFoundException
+   * @throws InvalidParameterException
+   */
   @Override
   public List<DosService> retrieveServicesByFuzzySearch(
-      final String searchPostcode, final List<String> searchTerms) {
+      final String searchPostcode, final List<String> searchTerms)
+      throws NotFoundException, InvalidParameterException {
+
+    validationService.validateSearchCriteria(searchTerms);
 
     List<DosService> dosServices = new ArrayList<>();
     dosServices.addAll(
         elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms)));
 
+    validationService.validateDosService(dosServices);
+
     /** Call the auth service login endpoint from here and get the authenticated headers */
     MultiValueMap<String, String> headers = externalApiHandshakeInterface.getAccessTokenHeader();
 
     /** Calculate distance to services returned if we have a search location */
-    PostcodeLocation searchLocation = locationService.getLocationForPostcode(searchPostcode, headers);
+    PostcodeLocation searchLocation =
+        locationService.getLocationForPostcode(searchPostcode, headers);
     /**
-     * if dos services returns empty locations populate postcode from service finder - postcode
+     * if dos services returns empty locations populate location based on postcodes from postcode
      * mapping API
      */
     List<PostcodeLocation> dosServicePostCodeLocation = populateEmptyLocation(dosServices, headers);
@@ -64,12 +80,12 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     }
     Collections.sort(dosServices);
 
-    // return up to the max number of services, or the number of services returned. Which ever is
-    // the least.
+    // return max number of services, or the number of services returned. Which ever is the least.
     int serviceResultLimit = apiRequestParams.getMaxNumServicesToReturn();
     if (apiRequestParams.getMaxNumServicesToReturn() > dosServices.size()) {
       serviceResultLimit = dosServices.size();
     }
+
     return dosServices.subList(0, serviceResultLimit);
   }
 
@@ -94,7 +110,8 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
   }
 
   private List<PostcodeLocation> populateEmptyLocation(
-      List<DosService> dosServices, MultiValueMap<String, String> headers) {
+      List<DosService> dosServices, MultiValueMap<String, String> headers)
+      throws InvalidParameterException {
     List<String> postCodes =
         dosServices.stream()
             .filter(t -> t.getEasting() == null && t.getNorthing() == null)

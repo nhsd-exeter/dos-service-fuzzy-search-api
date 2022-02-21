@@ -1,9 +1,12 @@
 package uk.nhs.digital.uec.api.service.impl;
 
+import java.text.MessageFormat;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.nhs.digital.uec.api.exception.ValidationException;
+import uk.nhs.digital.uec.api.exception.ErrorMessageEnum;
+import uk.nhs.digital.uec.api.exception.NotFoundException;
+import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 
 @Service
@@ -17,60 +20,33 @@ public class ValidationService implements ValidationServiceInterface {
 
   /** {@inheritDoc} */
   @Override
-  public void validateSearchCriteria(final List<String> searchCriteria) throws ValidationException {
-
-    if (searchCriteria == null || searchCriteria.isEmpty()) {
-      throw new ValidationException(
-          "No search criteria has been given. Please pass through at least one search term.",
-          "VAL-001");
-    }
-
-    if (searchCriteria.size() > maxSearchCriteria) {
-      throw new ValidationException(
-          "The number of search terms given ("
-              + searchCriteria.size()
-              + ") given exceeds the maximum number of terms that can be applied. The maximum"
-              + " number of terms that can be applied is "
-              + maxSearchCriteria,
-          "VAL-002");
-    }
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void validateSearchLocation(final String searchLocation) throws ValidationException {
-
-    // TBC
-
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void validateMinSearchCriteriaLength(final List<String> searchCriteria)
-      throws ValidationException {
-
-    if (searchCriteria == null || searchCriteria.isEmpty()) {
-      throw new ValidationException(
-          "No search criteria has been given. Please pass through at least one search term.",
-          "VAL-001");
-    }
-
-    // Check that at least one of the search criteria provided meets the min search criteria length
-    // requirement.
+  public void validateSearchCriteria(final List<String> searchCriteria) throws NotFoundException {
 
     boolean minSearchCriteriaLthMet = false;
 
+    if (searchCriteria == null || searchCriteria.isEmpty()) {
+      throw new NotFoundException(ErrorMessageEnum.NO_SEARCH_CRITERIA.getMessage());
+    }
+    if (searchCriteria.size() > maxSearchCriteria) {
+      throw new NotFoundException(
+          MessageFormat.format(
+              ErrorMessageEnum.MAXIMUM_PARAMS_EXCEEDED.getMessage(), maxSearchCriteria));
+    }
     for (final String searchCriteriaStr : searchCriteria) {
       if (searchCriteriaStr.length() >= minSearchTermLength) {
         minSearchCriteriaLthMet = true;
         break;
       }
     }
-
     if (!minSearchCriteriaLthMet) {
-      throw new ValidationException(
-          "None of the search criteria given meets the minimum required search criteria length.",
-          "VAL-003");
+      throw new NotFoundException(ErrorMessageEnum.MINIMUM_PARAMS_NOT_PASSED.getMessage());
+    }
+  }
+
+  @Override
+  public void validateDosService(List<DosService> dosServices) throws NotFoundException {
+    if (dosServices.isEmpty()) {
+      throw new NotFoundException(ErrorMessageEnum.SERVICE_NOT_FOUND.getMessage());
     }
   }
 }
