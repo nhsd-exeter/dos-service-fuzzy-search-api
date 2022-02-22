@@ -84,8 +84,7 @@ load-test-postcode-locations:
 	sh ./data/locations/$(LOCATIONS_DATA_FILE)
 
 run-contract-tests:
-	make quick-start PROFILE=local VERSION=$(VERSION)
-	sleep 60
+	make start PROFILE=local VERSION=$(VERSION)
 	cd test/contract
 	make run
 	cd ../../
