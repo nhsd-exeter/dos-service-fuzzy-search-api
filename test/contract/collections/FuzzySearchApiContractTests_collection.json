@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "833a7ad1-9a75-4cc6-940f-aeb55eb98f80",
+    "_postman_id": "a3c99dcb-aa2f-47cd-b5e6-44f2352944cb",
     "name": "FuzzySearchApiContractTests",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -36,9 +36,7 @@
         "url": {
           "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test 1&search_location=EX88PR&fuzz_level=2",
           "protocol": "https",
-          "host": [
-            "{{host}}"
-          ],
+          "host": ["{{host}}"],
           "port": "8443",
           "path": [
             "dosapi",
@@ -59,6 +57,111 @@
             {
               "key": "fuzz_level",
               "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "No-query-parameter-passed-test",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch",
+          "protocol": "https",
+          "host": ["{{host}}"],
+          "port": "8443",
+          "path": [
+            "dosapi",
+            "dosservices",
+            "v0.0.1",
+            "services",
+            "byfuzzysearch"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Maximum-search-terms-test",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test1,test2,test3,test4, test5, test6",
+          "protocol": "https",
+          "host": ["{{host}}"],
+          "port": "8443",
+          "path": [
+            "dosapi",
+            "dosservices",
+            "v0.0.1",
+            "services",
+            "byfuzzysearch"
+          ],
+          "query": [
+            {
+              "key": "search_term",
+              "value": "test1,test2,test3,test4, test5, test6"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Minimum-search-terms-length-test",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=z",
+          "protocol": "https",
+          "host": ["{{host}}"],
+          "port": "8443",
+          "path": [
+            "dosapi",
+            "dosservices",
+            "v0.0.1",
+            "services",
+            "byfuzzysearch"
+          ],
+          "query": [
+            {
+              "key": "search_term",
+              "value": "z"
             }
           ]
         }

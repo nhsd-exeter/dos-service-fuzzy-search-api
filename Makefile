@@ -50,7 +50,7 @@ quick-start: project-start # Start project
 
 start: # Start project and load data in to elastic search
 	make project-start
-	echo "Waiting for elastic search to be fully initalised"
+	echo "Waiting for elastic search to be fully initialised"
 	sleep 30
 	make load-all-services
 	make load-test-services
