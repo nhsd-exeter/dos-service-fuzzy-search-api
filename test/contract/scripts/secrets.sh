@@ -20,7 +20,7 @@ function getPasswordFromStore {
 
   COGNITO=$(getPassword)
 
-  sed -i -e "s/\"admin_password\"/$COGNITO/g" "$@"
+  sed -i -e "s/\"REPLACE_PASS\"/$COGNITO/g" "$@"
 
 }
 

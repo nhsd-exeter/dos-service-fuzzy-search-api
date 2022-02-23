@@ -389,7 +389,7 @@ run-unit-test:
 run-smoke-test:
 	make stop
 	make quick-start PROFILE=$(PROFILE) VERSION=$(API_IMAGE_TAG)
-	sleep 60
+	sleep 20
 	cd test/contract
 	make run-smoke
 	cd ../../
