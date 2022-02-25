@@ -227,6 +227,7 @@
             </execution>
           </executions>
           <configuration>
+            <cveStartYear>2015</cveStartYear>
             <failBuildOnCVSS>10</failBuildOnCVSS>
           </configuration>
         </plugin>
