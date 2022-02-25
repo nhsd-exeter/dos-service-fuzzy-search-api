@@ -45,6 +45,17 @@ build: project-config # Build project
 	$(PROJECT_DIR)build/docker/mock-postcode-api/assets/wiremock_mappings/
 	make docker-build NAME=mock-postcode-api
 
+scan:
+	if [ ! -d $(PROJECT_DIR)/reports ]; then
+		mkdir $(PROJECT_DIR)/reports
+	fi
+
+	make docker-run-mvn \
+		DIR="application/app" \
+		CMD="dependency-check:check"
+	mv \
+		$(PROJECT_DIR)/application/app/target/dependency-check-report.html \
+		$(PROJECT_DIR)/reports/fuzzy-search-dependency-report.html
 
 quick-start: project-start # Start project
 

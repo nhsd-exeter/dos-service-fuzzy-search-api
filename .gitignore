@@ -14,3 +14,4 @@ infrastructure/stacks/elasticsearch/errored.tfstate
 
 test/jmeter/tests/*/*.jtl
 jmeter.log
+reports/
