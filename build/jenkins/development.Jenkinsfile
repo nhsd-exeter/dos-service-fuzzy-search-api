@@ -39,6 +39,14 @@ pipeline {
         }
       }
     }
+    stage('Scan Dependencies'){
+      steps {
+        script {
+          sh "make scan"
+        }
+        archiveArtifacts artifacts: 'reports/**'
+      }
+    }
     stage('Build API') {
       steps {
         script {
