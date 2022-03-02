@@ -3,6 +3,7 @@ include $(abspath $(PROJECT_DIR)/build/automation/init.mk)
 include $(abspath $(PROJECT_DIR)/test/jmeter/jMeter.mk)
 
 DOCKER_REGISTRY_LIVE = $(DOCKER_REGISTRY)/prod
+K8S_JOB_ELASTIC_SEARCH_NAMESPACE = $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-job-es-$(PROFILE)
 # ==============================================================================
 # Development workflow targets
 
@@ -280,6 +281,21 @@ project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,A
 		echo 'Default users already added to pool';
 	fi
 
+project-deploy-job-es-snapshot: ## Deploy the es snaphot job - optional: PROFILE=nonprod|prod
+	eval "$$(make aws-assume-role-export-variables)"
+	make k8s-kubeconfig-get
+	eval "$$(make k8s-kubeconfig-export)"
+	eval "$$(make project-populate-job-es-snapshot-variables)"
+	make k8s-deploy-job STACK=jobs/elasticsearch K8S_JOB_NAMESPACE=$(K8S_JOB_ELASTIC_SEARCH_NAMESPACE) K8S_NAMESPACE=$(K8S_JOB_ELASTIC_SEARCH_NAMESPACE)
+
+project-snapshot-elasticsearch-job:
+	make project-build-and-push-es-job
+	make project-deploy-job-es-snapshot
+
+project-build-and-push-es-job: ## Build and push the es snaphot job
+	make build-es-snapshot-job
+	make docker-login
+	make docker-push NAME=job/elasticsearch/snapshot
 
 clean: # Clean up project
 	make stop

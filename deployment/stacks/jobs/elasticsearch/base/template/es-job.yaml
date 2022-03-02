@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: uec-sf-jobs
+  name: es-backup
+  labels:
+    app: service-finder
+spec:
+  template:
+    metadata:
+      labels:
+        name: es-backup
+    spec:
+      # ttlSecondsAfterFinished: 120
+      containers:
+      - name: back-up
+        image: 461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec/service-finder/job/elasticsearch/snapshot:IMAGE_TAG
+        command: ["/sbin/entrypoint.sh"]
+        envFrom:
+        - configMapRef:
+            name: es-configmap
+        resources:
+          requests:
+            memory: "0Mi"
+            cpu: "0m"
+          limits:
+            memory: "2048Mi"
+            cpu: "1000m"
+      restartPolicy: Never
+  backoffLimit: 0

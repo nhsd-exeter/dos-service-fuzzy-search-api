@@ -1,0 +1,22 @@
+namespace: K8S_JOB_ELASTIC_SEARCH_NAMESPACE_TO_REPLACE
+
+commonLabels:
+  env: PROFILE_TO_REPLACE
+
+resources:
+- namespace.yaml
+- es-job.yaml
+- network-policy/uec-sf-default-deny-ingress.yaml
+
+configMapGenerator:
+- name: es-configmap
+  literals:
+    - PROFILE=PROFILE_TO_REPLACE
+    - AWS_ACCOUNT_ID=AWS_ACCOUNT_ID_TO_REPLACE
+    - TF_VAR_es_snapshot_bucket=TF_VAR_es_snapshot_bucket_TO_REPLACE
+    - TF_VAR_es_snapshot_role=TF_VAR_es_snapshot_role_TO_REPLACE
+    - ES_ENDPOINT=ES_ENDPOINT_TO_REPLACE
+
+images:
+- name: 461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec/service-finder/job/elasticsearch/snapshot
+  newTag: JOB_IMAGE_TAG_TO_REPLACE

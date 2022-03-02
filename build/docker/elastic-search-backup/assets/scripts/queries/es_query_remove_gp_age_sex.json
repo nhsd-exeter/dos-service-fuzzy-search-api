@@ -1,0 +1,14 @@
+{
+    "script": {
+        "lang": "painless",
+        "inline": """
+ctx._source.remove('gpId');
+ctx._source.remove('gpName');
+ctx._source.remove('ageGroup');
+ctx._source.remove('gender');
+"""
+    },
+    "query": {
+        "match_all": {}
+    }
+}
