@@ -304,6 +304,9 @@ clean: # Clean up project
 # ==============================================================================
 # Supporting targets
 
+build-es-snapshot-job: ## Build the ES snapshot job image
+	make docker-image NAME=job/elasticsearch/snapshot
+
 trust-certificate: ssl-trust-certificate-project ## Trust the SSL development certificate
 
 create-artefact-repositories: ## Create ECR repositories to store the artefacts
