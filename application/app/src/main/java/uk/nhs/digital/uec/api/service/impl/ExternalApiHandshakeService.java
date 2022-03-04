@@ -66,19 +66,19 @@ public class ExternalApiHandshakeService implements ExternalApiHandshakeInterfac
     return createAuthenticationHeader(authToken);
   }
 
+  public boolean isMockAuthenticationForProfile() {
+    if (environment == null) return true;
+    return Arrays.stream(environment.getActiveProfiles())
+        .filter(Objects::nonNull)
+        .anyMatch(
+            env -> (env.equalsIgnoreCase(profileMockAuth) || env.equalsIgnoreCase(profileLocal)));
+  }
+
   private MultiValueMap<String, String> createAuthenticationHeader(AuthToken authToken) {
     String token = Objects.nonNull(authToken) ? authToken.getAccessToken() : null;
     MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
     headers.add("Content-Type", "application/json");
     headers.add("Authorization", "Bearer " + token);
     return headers;
-  }
-
-  private boolean isMockAuthenticationForProfile() {
-    if (environment == null) return true;
-    return Arrays.stream(environment.getActiveProfiles())
-        .filter(Objects::nonNull)
-        .anyMatch(
-            env -> (env.equalsIgnoreCase(profileMockAuth) || env.equalsIgnoreCase(profileLocal)));
   }
 }
