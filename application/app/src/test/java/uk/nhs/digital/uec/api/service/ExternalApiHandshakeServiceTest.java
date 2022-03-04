@@ -58,7 +58,7 @@ public class ExternalApiHandshakeServiceTest {
     MultiValueMap<String, String> accessTokenHeader =
         externalApiHandshakeService.getAccessTokenHeader();
     List<String> list = accessTokenHeader.get("Authorization");
-    assertEquals("Bearer MOCK-ACCESS-TOKEN", list.get(0));
+    assertEquals("Bearer MOCK_POSTCODE_API_ACCESS_TOKEN", list.get(0));
   }
 
   @Test
