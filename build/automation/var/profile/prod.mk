@@ -83,7 +83,17 @@ COGNITO_USER_POOL_CLIENT_SECRET := $(or $(COGNITO_USER_POOL_CLIENT_SECRET), )
 COGNITO_USER_POOL_CLIENT_ID := $(or $(COGNITO_USER_POOL_CLIENT_ID), )
 COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
 
-POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
+POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-$(PROFILE)-uec-dos-api-pc-ingress.$(TEXAS_HOSTED_ZONE)/api
+POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
+POSTCODE_MAPPING_PASSWORD := $(FUZZY_API_COGNIGTO_USER_PASSWORD)
+
+#Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
+AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
+AUTH_LOGIN_URI := /authentication/login
+AUTHENTICATION_ENDPOINT = $(AUTH_LOGIN_URL)$(AUTH_LOGIN_URI)
+FUZZY_SEARCH_DOMAIN = $(PROJECT_ID)-$(PROFILE)-uec-dos-api-sfs-ingress.$(TEXAS_HOSTED_ZONE)
+FUZZY_SEARCH_ENDPOINT = https://$(FUZZY_SEARCH_DOMAIN)
+
 
 
 # Monitor deployment VARS
