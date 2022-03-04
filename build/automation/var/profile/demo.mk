@@ -109,9 +109,8 @@ FUZZY_SEARCH_DOMAIN = $(PROJECT_ID)-$(PROFILE)-uec-dos-api-sfs-ingress.$(TEXAS_H
 FUZZY_SEARCH_ENDPOINT = https://$(FUZZY_SEARCH_DOMAIN)
 
 
-#admin access is set for now and this should be changed accordingly with user who has access to the api
-POSTCODE_MAPPING_USER := service-finder-admin@nhs.net
-POSTCODE_MAPPING_PASSWORD := $(COGNITO_ADMIN_AUTH_PASSWORD)
+POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
+POSTCODE_MAPPING_PASSWORD := $(FUZZY_API_COGNIGTO_USER_PASSWORD)
 
 # Monitor deployment VARS
 CHECK_DEPLOYMENT_TIME_LIMIT := 600

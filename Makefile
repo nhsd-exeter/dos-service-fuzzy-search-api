@@ -185,6 +185,8 @@ project-populate-application-variables:
 	export COGNITO_USER_POOL_ID=$$(make -s aws-cognito-get-userpool-id NAME=$(COGNITO_USER_POOL))
 	export COGNITO_JWT_VERIFICATION_URL=https://cognito-idp.eu-west-2.amazonaws.com/$${COGNITO_USER_POOL_ID}/.well-known/jwks.json
 	export COGNITO_ADMIN_AUTH_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .AUTHENTICATION_PASSWORD | tr -d '"')
+	export FUZZY_API_COGNIGTO_USER_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .POSTCODE_PASSWORD | tr -d '"')
+
 
 	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
 	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}

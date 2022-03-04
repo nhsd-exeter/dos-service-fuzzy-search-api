@@ -1,0 +1,40 @@
+FROM 461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec/service-finder/docker-tools:latest
+
+COPY assets/ /
+
+RUN set -ex && \
+    pip install requests-aws4auth && \
+    find /scripts -type f -exec chmod 666 {} \; && \
+    find /scripts -type d -exec chmod 777 {} \;
+
+WORKDIR /scripts
+ENTRYPOINT [ "/sbin/entrypoint.sh" ]
+
+### METADATA ###################################################################
+
+ARG IMAGE
+ARG VERSION
+ARG BUILD_ID
+ARG BUILD_DATE
+ARG BUILD_REPO
+ARG BUILD_BRANCH
+ARG BUILD_COMMIT_HASH
+ARG BUILD_COMMIT_DATE
+LABEL \
+    name=461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/sfsa/job/elasticsearch/snapshot \
+    version=v0.0.3 \
+    build-id=0 \
+    build-date=2022-03-03T07:53:08+0000 \
+    build-repo=https://github.com/nhsd-ddce/dos-service-fuzzy-search-api \
+    build-branch=task/SFD-4185_Snapshot_Elasticsearch_Pipeline_Stage \
+    build-commit-hash=05e9333 \
+    build-commit-date=2022-03-02T07:28:11+0000
+ENV \
+    IMAGE_NAME=461183108257.dkr.ecr.eu-west-2.amazonaws.com/uec-dos-api/sfsa/job/elasticsearch/snapshot \
+    IMAGE_VERSION=v0.0.3 \
+    BUILD_ID=0 \
+    BUILD_DATE=2022-03-03T07:53:08+0000 \
+    BUILD_REPO=https://github.com/nhsd-ddce/dos-service-fuzzy-search-api \
+    BUILD_BRANCH=task/SFD-4185_Snapshot_Elasticsearch_Pipeline_Stage \
+    BUILD_COMMIT_HASH=05e9333 \
+    BUILD_COMMIT_DATE=2022-03-02T07:28:11+0000
