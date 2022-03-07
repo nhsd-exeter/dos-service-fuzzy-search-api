@@ -60,3 +60,7 @@ auth:
   login:
     url: ${AUTH_LOGIN_URL}
     uri: ${AUTH_LOGIN_URI}
+
+profile:
+  local: local
+  mock_auth: mock_auth

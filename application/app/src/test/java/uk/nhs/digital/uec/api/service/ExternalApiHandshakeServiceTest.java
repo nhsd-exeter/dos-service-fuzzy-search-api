@@ -11,7 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
@@ -25,11 +27,18 @@ public class ExternalApiHandshakeServiceTest {
 
   @InjectMocks private ExternalApiHandshakeService externalApiHandshakeService;
   @Mock private WebClientUtil webClientUtilMock;
+  @Mock Environment environment;
 
   private AuthToken authToken;
   private List<PostcodeLocation> postcodeLocations = new ArrayList<>();
   private MultiValueMap<String, String> headers;
   private List<String> postCodes;
+  private String profileLocal = "local";
+  private String profileMockAuth = "mock_auth";
+  private static final String LOCAL_PROFILE = "profileLocal";
+  private static final String MOCK_AUTH_PROFILE = "profileMockAuth";
+  private static final String MOCK_ACCESS_TOKEN = "Bearer MOCK_POSTCODE_API_ACCESS_TOKEN";
+  private static final String AUTHORIZATION = "Authorization";
 
   @BeforeEach
   public void setup() {
@@ -50,15 +59,60 @@ public class ExternalApiHandshakeServiceTest {
     headers = new LinkedMultiValueMap<>();
     headers.add("Content-Type", "application/json");
     headers.add("Authorization", "Bearer " + authToken.getAccessToken());
+    String[] stringList = {"local", "mock_auth"};
+    when(this.environment.getActiveProfiles()).thenReturn(stringList);
   }
 
   @Test
-  public void getHeaderTest() {
+  public void getHeaderTestForNonDevProfiles() {
     when(webClientUtilMock.getAuthenticationToken(any(), any())).thenReturn(authToken);
     MultiValueMap<String, String> accessTokenHeader =
         externalApiHandshakeService.getAccessTokenHeader();
-    List<String> list = accessTokenHeader.get("Authorization");
+    List<String> list = accessTokenHeader.get(AUTHORIZATION);
     assertEquals("Bearer MOCK-ACCESS-TOKEN", list.get(0));
+  }
+
+  @Test
+  public void getHeaderForDevLocalProfile() {
+    ReflectionTestUtils.setField(externalApiHandshakeService, LOCAL_PROFILE, profileLocal);
+    MultiValueMap<String, String> accessTokenHeader =
+        externalApiHandshakeService.getAccessTokenHeader();
+    List<String> list = accessTokenHeader.get(AUTHORIZATION);
+    assertEquals(MOCK_ACCESS_TOKEN, list.get(0));
+  }
+
+  @Test
+  public void getHeaderForDevMockAuthProfile() {
+    ReflectionTestUtils.setField(externalApiHandshakeService, MOCK_AUTH_PROFILE, profileMockAuth);
+    MultiValueMap<String, String> accessTokenHeader =
+        externalApiHandshakeService.getAccessTokenHeader();
+    List<String> list = accessTokenHeader.get(AUTHORIZATION);
+    assertEquals(MOCK_ACCESS_TOKEN, list.get(0));
+  }
+
+  @Test
+  public void testIsMockAuthenticationForLocalProfile() {
+    ReflectionTestUtils.setField(externalApiHandshakeService, LOCAL_PROFILE, profileLocal);
+    boolean mockAuthenticationForProfile =
+        externalApiHandshakeService.isMockAuthenticationForProfile();
+    assertEquals(true, mockAuthenticationForProfile);
+  }
+
+  @Test
+  public void testIsMockAuthenticationForMockAuthProfile() {
+    ReflectionTestUtils.setField(externalApiHandshakeService, MOCK_AUTH_PROFILE, profileMockAuth);
+    boolean mockAuthenticationForProfile =
+        externalApiHandshakeService.isMockAuthenticationForProfile();
+    assertEquals(true, mockAuthenticationForProfile);
+  }
+
+  @Test
+  public void testIsMockAuthenticationForDevProfile() {
+    profileLocal = "xyz";
+    ReflectionTestUtils.setField(externalApiHandshakeService, LOCAL_PROFILE, profileLocal);
+    boolean mockAuthenticationForProfile =
+        externalApiHandshakeService.isMockAuthenticationForProfile();
+    assertEquals(false, mockAuthenticationForProfile);
   }
 
   @Test

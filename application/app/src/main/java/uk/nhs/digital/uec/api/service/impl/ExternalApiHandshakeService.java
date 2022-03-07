@@ -1,9 +1,13 @@
 package uk.nhs.digital.uec.api.service.impl;
 
+import static uk.nhs.digital.uec.api.authentication.constants.MockAuthenticationConstants.MOCK_PCA_ACCESS_TOKEN;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -29,7 +33,15 @@ public class ExternalApiHandshakeService implements ExternalApiHandshakeInterfac
   @Value("${postcode.mapping.password}")
   private String postcodeMappingPassword;
 
+  @Value("${profile.local}")
+  private String profileLocal;
+
+  @Value("${profile.mock_auth}")
+  private String profileMockAuth;
+
   @Autowired private WebClientUtil webClientUtil;
+
+  @Autowired private Environment environment;
 
   public List<PostcodeLocation> getPostcodeMappings(
       List<String> postCodes, MultiValueMap<String, String> headers)
@@ -39,13 +51,27 @@ public class ExternalApiHandshakeService implements ExternalApiHandshakeInterfac
 
   @Override
   public MultiValueMap<String, String> getAccessTokenHeader() {
+    AuthToken authToken = null;
     Credential credential =
         Credential.builder()
             .emailAddress(postcodeMappingUser)
             .password(postcodeMappingPassword)
             .build();
-    AuthToken authToken = webClientUtil.getAuthenticationToken(credential, loginUri);
+    if (isMockAuthenticationForProfile()) {
+      authToken = new AuthToken();
+      authToken.setAccessToken(MOCK_PCA_ACCESS_TOKEN);
+    } else {
+      authToken = webClientUtil.getAuthenticationToken(credential, loginUri);
+    }
     return createAuthenticationHeader(authToken);
+  }
+
+  public boolean isMockAuthenticationForProfile() {
+    if (environment == null) return true;
+    return Arrays.stream(environment.getActiveProfiles())
+        .filter(Objects::nonNull)
+        .anyMatch(
+            env -> (env.equalsIgnoreCase(profileMockAuth) || env.equalsIgnoreCase(profileLocal)));
   }
 
   private MultiValueMap<String, String> createAuthenticationHeader(AuthToken authToken) {
