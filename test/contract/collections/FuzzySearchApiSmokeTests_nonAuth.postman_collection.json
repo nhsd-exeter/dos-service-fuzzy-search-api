@@ -49,7 +49,7 @@
           "query": [
             {
               "key": "search_term",
-              "value": "test 1"
+              "value": "test%201"
             },
             {
               "key": "search_location",
