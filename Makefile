@@ -336,6 +336,7 @@ monitor-r53-connection:
 	max_attempts=10
 	sleep 30
 	http_status_code=0
+
 	until [[ $$http_status_code -eq 200 ]]; do
 		sleep 20
 		if [[ $$attempt_counter -eq $$max_attempts ]]; then

@@ -7,11 +7,11 @@ echo ""
 
 if [ ! -d "$testdir" ];
 then
-  echo "Test files dir was not found in PATH"
-  echo "Kindly check and input the correct path"
-  exit 1
+    echo "Test files dir was not found in PATH"
+    echo "Kindly check and input the correct path"
+    exit 1
 else
-  echo "testdir set to $testdir"
+    echo "testdir set to $testdir"
 fi
 testdir_basename="$(basename "$testdir")"
 echo "testdir_basename set to $testdir_basename"
@@ -20,11 +20,11 @@ echo ""
 jmxfile="$2"
 if [ ! -f "$jmxfile" ];
 then
-  echo "JMX file not found in PATH"
-  echo "Kindly check and input the correct filename"
-  exit 1
+    echo "JMX file not found in PATH"
+    echo "Kindly check and input the correct filename"
+    exit 1
 else
-  echo "jmxfile set to $jmxfile"
+    echo "jmxfile set to $jmxfile"
 fi
 jmxfile_basename="$(basename "$jmxfile")"
 echo "jmxfile_basename set to $jmxfile_basename"
@@ -32,17 +32,17 @@ echo ""
 
 if [ $3 ]
 then
-  echo "Setting jmeter properties file to $3"
-  jmproperties="$3"
-  jmproperties_basename="$(basename "$jmproperties")"
-  if [ ! -f "$jmproperties" ];
-  then
-    echo "jMeter properties file $3 was not found in PATH"
-    echo "Kindly check and input the correct file path"
-    exit 1
-  fi
+    echo "Setting jmeter properties file to $3"
+    jmproperties="$3"
+    jmproperties_basename="$(basename "$jmproperties")"
+    if [ ! -f "$jmproperties" ];
+    then
+        echo "jMeter properties file $3 was not found in PATH"
+        echo "Kindly check and input the correct file path"
+        exit 1
+    fi
 else
-  echo "No custom properties file specifed"
+    echo "No custom properties file specifed"
 fi
 
 #Get Master pod details
@@ -54,25 +54,25 @@ echo ""
 kubectl cp "$testdir" "$master_pod:/$testdir_basename"
 echo "Copied performance test files to pod"
 
-# Assumes input data for test will be in Excel format as opposed to CSV
-if [ -f $testdir/*.xlsx ]
+# Assumes input data for test will be in csv format
+if [ -f $testdir/*.csv ]
 then
-  echo "Found Excel file in $testdir, copying file to slave"
-  #Get slave pod details - assumes one slave for now
-  slave_pod=$(kubectl get po | grep jmeter-slave | awk '{print $1}')
-  echo "slave_pod set to $slave_pod"
-  echo ""
-  kubectl cp $testdir/*.xlsx "$slave_pod:/"
+    echo "Found CSV file in $testdir, copying file to slave"
+    #Get slave pod details - assumes one slave for now
+    slave_pod=$(kubectl get po | grep jmeter-slave | awk '{print $1}')
+    echo "slave_pod set to $slave_pod"
+    echo ""
+    kubectl cp $testdir/*.csv "$slave_pod:/"
 else
-  echo "Excel test data file(s) not found"
+    echo "csv test data file(s) not found"
 fi
 
 # This has only been tested for user.properties which is already enabled in jmeter.properties, other .properties files may require changes to the jmeter-master image/deployment
 if [ $jmproperties ]
 then
-  kubectl cp "$jmproperties" "$master_pod:/jmeter/apache-jmeter-5.4.1/bin/$jmproperties_basename"
+    kubectl cp "$jmproperties" "$master_pod:/jmeter/apache-jmeter-5.4.1/bin/$jmproperties_basename"
 else
-  echo "custom properties not set"
+    echo "custom properties not set"
 fi
 
 ## Removing previous report .csv
