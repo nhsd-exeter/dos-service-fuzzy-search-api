@@ -16,9 +16,7 @@ pipeline {
     PROFILE = "perf"
   }
 
-  stages {
-
-parameters {
+  parameters {
         string(
             description: 'Enter image tag to deploy, e.g. 202103111417-e362c87',
             name: 'IMAGE_TAG',
@@ -94,13 +92,6 @@ parameters {
       steps {
         script {
           sh 'make apply-data-changes'
-        }
-      }
-    }
-    stage('Smoke Tests') {
-      steps {
-        script {
-          sh "make run-smoke-test PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG}"
         }
       }
     }
