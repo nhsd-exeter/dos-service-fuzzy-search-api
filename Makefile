@@ -34,7 +34,7 @@ build: project-config # Build project
 		$(PROJECT_DIR)/application/app/src/main/resources/certificate
 	make docker-run-mvn \
 		DIR="application/app" \
-		CMD="-Dmaven.test.skip=true clean install" \
+		CMD="-Dmaven.test.skip=true -Ddependency-check.skip=true clean install" \
 		LIB_VOLUME_MOUNT="true"
 	mv \
 		$(PROJECT_DIR)/application/app/target/dos-service-fuzzy-search-api-*.jar \
