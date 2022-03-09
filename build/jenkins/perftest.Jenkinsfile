@@ -13,7 +13,7 @@ pipeline {
   }
 
   environment {
-    PROFILE = "perf"
+    PROFILE = "pt"
   }
 
   parameters {
@@ -190,13 +190,6 @@ pipeline {
       post {
         always {
           archiveArtifacts artifacts: 'burstdoublepeak-test-results/**'
-        }
-      }
-    }
-    stage("Destroy jMeter") {
-      steps {
-        script {
-          sh "make destroy-jmeter-namespace PROFILE=${env.PROFILE}"
         }
       }
     }
