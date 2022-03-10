@@ -40,19 +40,19 @@ spec:
           httpGet:
             path: /mock-postcode-api/health
             port: 8080
-            scheme: HTTPS
+            scheme: HTTP
           initialDelaySeconds: 20
           periodSeconds: 10
         livenessProbe:
           httpGet:
             path: /mock-postcode-api/health
             port: 8080
-            scheme: HTTPS
+            scheme: HTTP
           initialDelaySeconds: 120
           failureThreshold: 3
           periodSeconds: 5
         ports:
-        - containerPort: 8090
+        - containerPort: 8080
           protocol: TCP
         resources:
           requests:
