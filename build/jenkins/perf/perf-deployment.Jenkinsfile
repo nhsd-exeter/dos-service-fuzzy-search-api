@@ -39,6 +39,27 @@ pipeline {
         }
       }
     }
+    stage('Plan Infrastructure') {
+      steps {
+        script {
+          sh "make plan_auth PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+    stage('Provision Infrastructure') {
+      steps {
+        script {
+          sh "make provision_auth PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+    stage('Populate Cognito Pool') {
+      steps {
+        script {
+          sh "make project-populate-cognito PROFILE=${env.PROFILE} ADD_DEFAULT_COGNITO_USERS=${ADD_DEFAULT_USERS}"
+        }
+      }
+    }
     stage('Plan Base Infrastructure') {
       steps {
         script {
@@ -70,7 +91,7 @@ pipeline {
     stage('Deploy API') {
       steps {
         script {
-          sh "make deploy-pt PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG} MOCK_POSTCODE_IMAGE_TAG=${IMAGE_TAG}"
+          sh "make deploy PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG} MOCK_POSTCODE_IMAGE_TAG=${IMAGE_TAG}"
         }
       }
     }
