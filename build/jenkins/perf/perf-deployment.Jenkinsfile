@@ -53,13 +53,13 @@ pipeline {
         }
       }
     }
-    stage('Populate Cognito Pool') {
-      steps {
-        script {
-          sh "make project-populate-cognito PROFILE=${env.PROFILE} ADD_DEFAULT_COGNITO_USERS=${ADD_DEFAULT_USERS}"
-        }
-      }
-    }
+    // stage('Populate Cognito Pool') {
+    //   steps {
+    //     script {
+    //       sh "make project-populate-cognito PROFILE=${env.PROFILE} ADD_DEFAULT_COGNITO_USERS=${ADD_DEFAULT_USERS}"
+    //     }
+    //   }
+    // }
     stage('Plan Base Infrastructure') {
       steps {
         script {
