@@ -278,6 +278,18 @@ project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,A
 		echo 'Default users already added to pool';
 	fi
 
+delete-namespace: # Delete namespace - mandatory: PROFILE=[name]
+	make k8s-undeploy PROFILE=$(PROFILE)
+
+destroy-infrastructure:  # Destroy environment - mandatory: PROFILE=[name]
+	make destroy-auth-infrastructure PROFILE=$(PROFILE)
+	make destroy-api-infractructure PROFILE=$(PROFILE)
+
+destroy-auth-infrastructure:  # Destroy authentication environment - mandatory: PROFILE=[name]
+	make terraform-destroy-auto-approve STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE)
+
+destroy-api-infractructure: # Destroy fuzzy environment - mandatory: PROFILE=[name]
+	make terraform-destroy-auto-approve STACK=$(INFRASTRUCTURE_STACKS_DESTROY) PROFILE=$(PROFILE)
 
 clean: # Clean up project
 	make stop
