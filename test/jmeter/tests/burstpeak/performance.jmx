@@ -30,7 +30,7 @@
           <collectionProp name="Arguments.arguments">
             <elementProp name="URL" elementType="Argument">
               <stringProp name="Argument.name">URL</stringProp>
-              <stringProp name="Argument.value">POSTCODE_DOMAIN_TO_REPLACE</stringProp>
+              <stringProp name="Argument.value">FUZZY_SEARCH_DOMAIN_TO_REPLACE</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
               <stringProp name="Argument.desc">Main URL</stringProp>
             </elementProp>
