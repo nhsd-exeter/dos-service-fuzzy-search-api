@@ -343,7 +343,7 @@ apply-data-changes:
 
 monitor-r53-connection:
 	attempt_counter=1
-	max_attempts=10
+	max_attempts=100
 	sleep 30
 	http_status_code=0
 
