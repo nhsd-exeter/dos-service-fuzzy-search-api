@@ -63,7 +63,7 @@ get-authentication-access-token:
 			--data-raw '{"emailAddress": "service-finder-admin@nhs.net","password": "${ADMIN_PASSWORD}"}'
 
 run-jmeter: # Run jmeter tests - mandatory: JMETER_TEST_FOLDER_PATH - test directory JMETER_TEST_FILE_PATH - the path of the jmeter tests to run
-	sed -i 's|FUZZY_SEARCH_DOMAIN_TO_REPLACE|$(FUZZY_SEARCH_DOMAIN)|g' ${JMETER_TEST_FILE_PATH}
+	sed -i 's|FUZZY_SEARCH_DOMAIN_TO_REPLACE|$(FUZZY_DOMAIN)|g' ${JMETER_TEST_FILE_PATH}
 	sed -i 's|THROUGHPUT_TO_REPLACE|$(THROUGHPUT)|g' ${JMETER_TEST_FILE_PATH}
 	sed -i 's|DURATION_TO_REPLACE|$(DURATION)|g' ${JMETER_TEST_FILE_PATH}
 	make k8s-kubeconfig-get
