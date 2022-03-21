@@ -55,17 +55,22 @@ kubectl cp "$testdir" "$master_pod:/$testdir_basename"
 echo "Copied performance test files to pod"
 
 # Assumes input data for test will be in csv format
-if [ -f $testdir/*.csv ]
-then
-    echo "Found CSV file in $testdir, copying file to slave"
-    #Get slave pod details - assumes one slave for now
-    slave_pod=$(kubectl get po | grep jmeter-slave | awk '{print $1}')
-    echo "slave_pod set to $slave_pod"
-    echo ""
-    kubectl cp $testdir/*.csv "$slave_pod:/"
-else
-    echo "csv test data file(s) not found"
-fi
+
+for f in $testdir/*.csv
+do
+    if [ -f "$f" ]
+    then
+        echo "Found CSV file(s) in $testdir, copying file to slave"
+        #Get slave pod details - assumes one slave for now
+        slave_pod=$(kubectl get po | grep jmeter-slave | awk '{print $1}')
+        echo "slave_pod set to $slave_pod"
+        echo ""
+        kubectl cp "$f" "$slave_pod:/"
+    else
+        echo "CSV test data file(s) not found"
+    fi
+
+done
 
 # This has only been tested for user.properties which is already enabled in jmeter.properties, other .properties files may require changes to the jmeter-master image/deployment
 if [ $jmproperties ]
