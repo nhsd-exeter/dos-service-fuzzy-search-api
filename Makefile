@@ -290,7 +290,6 @@ project-deploy-job-es-snapshot: ## Deploy the es snaphot job - optional: PROFILE
 
 project-snapshot-elasticsearch-job:
 	make project-build-and-push-es-job
-	make project-deploy-job-es-snapshot
 
 project-build-and-push-es-job: ## Build and push the es snaphot job
 	make build-es-snapshot-job
