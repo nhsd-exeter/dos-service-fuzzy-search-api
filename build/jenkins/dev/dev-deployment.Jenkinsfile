@@ -39,6 +39,14 @@ pipeline {
         }
       }
     }
+    stage("Snapshot Search Terms ElasticSearch") {
+      steps {
+        script {
+          sh 'make project-snapshot-elasticsearch-job JOB_IMAGE_TAG=latest'
+          sh 'make k8s-job-has-completed'
+        }
+      }
+    }
     stage('Plan Base Infrastructure') {
       steps {
         script {
