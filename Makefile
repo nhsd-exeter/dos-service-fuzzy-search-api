@@ -288,8 +288,12 @@ project-deploy-job-es-snapshot: ## Deploy the es snaphot job - optional: PROFILE
 	eval "$$(make project-populate-job-es-snapshot-variables)"
 	make k8s-deploy-job STACK=jobs/elasticsearch K8S_JOB_NAMESPACE=$(K8S_JOB_ELASTIC_SEARCH_NAMESPACE) K8S_NAMESPACE=$(K8S_JOB_ELASTIC_SEARCH_NAMESPACE)
 
+project-take-es-snapshot:
+	make aws-elasticsearch-create-snapshot DOMAIN=$(ES_DOMAIN_NAME)
+
 project-snapshot-elasticsearch-job:
 	make project-build-and-push-es-job
+	make project-deploy-job-es-snapshot
 
 project-build-and-push-es-job: ## Build and push the es snaphot job
 	make build-es-snapshot-job

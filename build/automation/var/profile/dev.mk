@@ -63,13 +63,15 @@ INFRASTRUCTURE_STACKS_AUTH = authentication
 SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 TF_VAR_service_prefix := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 
+ES_DOMAIN_NAME := $(TF_VAR_service_prefix)-service
+
 TF_VAR_es_zone_awareness_enabled := true
 TF_VAR_es_availability_zone_count := 2
 TF_VAR_es_instance_count := 2
 TF_VAR_es_instance_type := m4.large.elasticsearch
 TF_VAR_es_snapshot_bucket := $(TF_VAR_service_prefix)-elastic-search-snapshots
 TF_VAR_es_snapshot_role := $(TF_VAR_service_prefix)-elasticsearch-snapshot
-TF_VAR_es_domain_name := $(TF_VAR_service_prefix)-service
+TF_VAR_es_domain_name := $(ES_DOMAIN_NAME)
 TF_VAR_service_etl_logging_level := INFO
 TF_VAR_service_etl_sns_logging_level := INFO
 TF_VAR_service_etl_sns_email := service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si.slack.com
