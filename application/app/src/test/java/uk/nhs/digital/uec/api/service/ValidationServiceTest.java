@@ -185,15 +185,6 @@ public class ValidationServiceTest {
     }
   }
 
-  @Test
-  public void validateDosSearchList() {
-    try {
-      validationService.validateDosService(new ArrayList<>());
-    } catch (NotFoundException ve) {
-      assertEquals("No services found for the given name or postcode", ve.getMessage());
-    }
-  }
-
   private String getValidationCodeForErrorMessage(String errorMessage) {
     Optional<ValidationCodes> validationCodesOptional =
         ErrorMappingEnum.getValidationEnum().entrySet().stream()

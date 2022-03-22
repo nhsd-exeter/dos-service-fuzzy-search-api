@@ -14,7 +14,6 @@ import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
 import uk.nhs.digital.uec.api.service.LocationServiceInterface;
-import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 
 @Service
 public class LocationService implements LocationServiceInterface {
@@ -22,8 +21,6 @@ public class LocationService implements LocationServiceInterface {
   @Autowired private ApiUtilsServiceInterface apiUtilsService;
 
   @Autowired private ExternalApiHandshakeInterface apiHandshakeService;
-
-  @Autowired private ValidationServiceInterface validationService;
 
   /**
    * {@inheritDoc}

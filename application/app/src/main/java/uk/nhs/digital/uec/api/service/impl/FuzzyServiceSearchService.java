@@ -51,8 +51,6 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     dosServices.addAll(
         elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms)));
 
-    validationService.validateDosService(dosServices);
-
     /** Call the auth service login endpoint from here and get the authenticated headers */
     MultiValueMap<String, String> headers = externalApiHandshakeInterface.getAccessTokenHeader();
 

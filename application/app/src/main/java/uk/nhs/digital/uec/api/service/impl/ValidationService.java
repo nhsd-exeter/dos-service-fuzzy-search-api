@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.nhs.digital.uec.api.exception.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
-import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 
 @Service
@@ -40,13 +39,6 @@ public class ValidationService implements ValidationServiceInterface {
     }
     if (!minSearchCriteriaLthMet) {
       throw new NotFoundException(ErrorMessageEnum.MINIMUM_PARAMS_NOT_PASSED.getMessage());
-    }
-  }
-
-  @Override
-  public void validateDosService(List<DosService> dosServices) throws NotFoundException {
-    if (dosServices.isEmpty()) {
-      throw new NotFoundException(ErrorMessageEnum.SERVICE_NOT_FOUND.getMessage());
     }
   }
 }
