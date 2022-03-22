@@ -96,7 +96,7 @@ COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
 ADD_DEFAULT_COGNITO_USERS := false
 
 #Once wiremock is deployed to dev environment calls to postcode api will be mocked
-POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-$(PROFILE)-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
+POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-mock-postcode-ingress.k8s-nonprod.texasplatform.uk/api
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
