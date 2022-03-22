@@ -1,19 +1,19 @@
+
 pipeline {
   /*
-    Description: Deployment pipeline to deploy the Service Search module into the Demo environment
+    Description: Deployment pipeline
    */
 
-  agent { label 'jenkins-slave' }
+  agent any
 
   options {
-    buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
+    buildDiscarder(logRotator(daysToKeepStr: "7", numToKeepStr: "13"))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
-    timeout(time: 30, unit: 'MINUTES')
   }
 
   environment {
-    PROFILE = 'perf'
+    PROFILE = "pt"
   }
 
   parameters {
@@ -39,7 +39,20 @@ pipeline {
         }
       }
     }
-    // TODO: Backup elastic search
+    stage('Plan Infrastructure') {
+      steps {
+        script {
+          sh "make plan_auth PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+    stage('Provision Infrastructure') {
+      steps {
+        script {
+          sh "make provision_auth PROFILE=${env.PROFILE}"
+        }
+      }
+    }
     stage('Plan Base Infrastructure') {
       steps {
         script {
@@ -71,7 +84,7 @@ pipeline {
     stage('Deploy API') {
       steps {
         script {
-          sh "make deploy PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG}"
+          sh "make deploy PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG} MOCK_POSTCODE_IMAGE_TAG=${IMAGE_TAG}"
         }
       }
     }
@@ -96,53 +109,136 @@ pipeline {
         }
       }
     }
-    stage('Deploy jMeter') {
+    stage('Smoke Tests') {
+      steps {
+        script {
+          sh "make run-smoke-test PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG}"
+        }
+      }
+    }
+    stage("Deploy jMeter"){
       steps {
         script {
           sh "make deploy-jmeter-namespace PROFILE=${env.PROFILE}"
+          }
         }
       }
-    }
 
-    stage('Run Performance Tests') {
+    stage('Nominal Peak Test') {
+      agent {
+        label 'jenkins-slave'
+      }
       steps {
         script {
-          sh "make run-jmeter-performance-test PROFILE=${env.PROFILE}"
+          sh "make run-jmeter-nominal-test PROFILE=${env.PROFILE}"
         }
-          // Make jMeter test report files available as build artifacts
-          archiveArtifacts artifacts: 'performance-test-results/**'
+      }
+      post {
+        always {
+          archiveArtifacts artifacts: 'nominal-test-results/**'
+        }
       }
     }
-    stage('Run Load Tests') {
+    stage('Peak Test') {
+      agent {
+        label 'jenkins-slave'
+      }
       steps {
         script {
-          sh "make run-jmeter-load-test PROFILE=${env.PROFILE}"
+          sh "make run-jmeter-peak-test PROFILE=${env.PROFILE}"
         }
-          // Make jMeter test report files available as build artifacts
-          archiveArtifacts artifacts: 'load-test-results/**'
+      }
+      post {
+        always {
+          archiveArtifacts artifacts: 'peak-test-results/**'
+        }
       }
     }
-
-    stage('Run Stress Tests') {
+    stage('Double Peak Test') {
+      agent {
+        label 'jenkins-slave'
+      }
       steps {
         script {
-          sh "make run-jmeter-stress-test PROFILE=${env.PROFILE}"
+          sh "make run-jmeter-double-peak-test PROFILE=${env.PROFILE}"
         }
-          // Make jMeter test report files available as build artifacts
-          archiveArtifacts artifacts: 'stress-test-results/**'
+      }
+      post {
+        always {
+          archiveArtifacts artifacts: 'doublepeak-test-results/**'
+        }
       }
     }
-      stage('Destroy jMeter') {
+    stage('Burst Norminal Test') {
+      agent {
+        label 'jenkins-slave'
+      }
       steps {
         script {
-          sh "make destroy-jmeter-namespace PROFILE=${env.PROFILE}"
+          sh "make run-jmeter-burst-nominal-test PROFILE=${env.PROFILE}"
         }
       }
+      post {
+        always {
+          archiveArtifacts artifacts: 'burstnominal-test-results/**'
+        }
       }
+    }
+    stage('Burst Peak Test') {
+      agent {
+        label 'jenkins-slave'
+      }
+      steps {
+        script {
+          sh "make run-jmeter-burst-peak-test PROFILE=${env.PROFILE}"
+        }
+      }
+      post {
+        always {
+          archiveArtifacts artifacts: 'burstpeak-test-results/**'
+        }
+      }
+    }
+    stage('Burst Double Peak Test') {
+      agent {
+        label 'jenkins-slave'
+      }
+      steps {
+        script {
+          sh "make run-jmeter-burst-double-peak-test PROFILE=${env.PROFILE}"
+        }
+      }
+      post {
+        always {
+          archiveArtifacts artifacts: 'burstdoublepeak-test-results/**'
+        }
+      }
+    }
   }
   post {
-    always { sh 'make clean' }
-    success { sh 'make pipeline-on-success' }
-    failure { sh 'make pipeline-on-failure' }
+    always {
+      script {
+        try {
+            sh "make destroy-jmeter-namespace PROFILE=${env.PROFILE}"
+        } catch (error) {
+              println "Error happened while trying to destroy jmeter namespace, continuing"
+        }
+        try {
+            sh "make delete-namespace PROFILE=${env.PROFILE}"
+        } catch (error) {
+              println "Error happened while trying to destroy profile namespace, continuing"
+        }
+        try {
+            sh "make destroy-infrastructure PROFILE=${env.PROFILE}"
+        } catch (error) {
+              println "Error happened while tearing down profile infrastructure, continuing"
+        }
+      }
+    }
+    success { sh "make pipeline-on-success" }
+    failure {
+      sh "make pipeline-on-failure"
+    }
   }
+
 }

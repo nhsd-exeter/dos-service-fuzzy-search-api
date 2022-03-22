@@ -5,9 +5,9 @@ include $(VAR_DIR)/platform-texas/v1/account-live-k8s-nonprod.mk
 AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/c0718115-4e22-4f48-a4aa-8c16ea86c5e6
 ECR_TEXAS_URL_NONPROD = $(AWS_ECR_NON_PROD)/texas
 
-PROFILE := dev
-ENVIRONMENT := dev
-SPRING_PROFILES_ACTIVE := dev, mock-auth
+PROFILE := pt
+ENVIRONMENT := $(PROFILE)
+SPRING_PROFILES_ACTIVE := $(PROFILE),mock-auth
 API_IMAGE_TAG := v0.0.3
 MOCK_POSTCODE_IMAGE_TAG := latest
 
@@ -42,10 +42,10 @@ MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH := 3000
 MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH_3_SEARCH_TERMS := 100
 MAX_NUM_SERVICES_TO_RETURN := 5
 FUZZ_LEVEL := 2
-NAME_PRIORITY := 100
-ADDRESS_PRIORITY := 75
-POSTCODE_PRIORITY := 75
-NAME_PUBLIC_PRIORITY := 100
+NAME_PRIORITY := 4
+ADDRESS_PRIORITY := 2
+POSTCODE_PRIORITY := 0
+NAME_PUBLIC_PRIORITY := 4
 
 # Monitor deployment VARS
 CHECK_DEPLOYMENT_TIME_LIMIT := 600
@@ -75,14 +75,11 @@ TF_VAR_service_etl_sns_logging_level := INFO
 TF_VAR_service_etl_sns_email := service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si.slack.com
 
 # See : https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html
-# Config for the cron job trigger for the service etl set to be:
-# 6am Monday - Friday (This is because we dont want the service to be running every 4 minutes in non prod)
-# For prod we need to set cron(0/4 * * * ? *) (Every 4 minutes)
-TF_VAR_service_etl_cron_timer_minutes := 0
-TF_VAR_service_etl_cron_timer_hours := 6
-TF_VAR_service_etl_cron_timer_day_of_month := ?
+TF_VAR_service_etl_cron_timer_minutes := 0/4
+TF_VAR_service_etl_cron_timer_hours := *
+TF_VAR_service_etl_cron_timer_day_of_month := *
 TF_VAR_service_etl_cron_timer_month := *
-TF_VAR_service_etl_cron_timer_day_of_week := MON-FRI
+TF_VAR_service_etl_cron_timer_day_of_week := ?
 TF_VAR_service_etl_cron_timer_year := *
 
 TF_VAR_service_etl_alarm_period := 86400
@@ -95,8 +92,9 @@ COGNITO_USER_POOL_CLIENT_ID := $(or $(COGNITO_USER_POOL_CLIENT_ID), )
 COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
 ADD_DEFAULT_COGNITO_USERS := false
 
+POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
 #Once wiremock is deployed to dev environment calls to postcode api will be mocked
-POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-$(PROFILE)-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
+# POSTCODE_MAPPING_SERVICE_URL := http://mockservice.sfs.test:8080/api
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)

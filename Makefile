@@ -186,8 +186,6 @@ project-populate-application-variables:
 	export COGNITO_JWT_VERIFICATION_URL=https://cognito-idp.eu-west-2.amazonaws.com/$${COGNITO_USER_POOL_ID}/.well-known/jwks.json
 	export COGNITO_ADMIN_AUTH_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .AUTHENTICATION_PASSWORD | tr -d '"')
 	export FUZZY_API_COGNIGTO_USER_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .POSTCODE_PASSWORD | tr -d '"')
-
-
 	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
 	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}
 
@@ -280,6 +278,18 @@ project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,A
 		echo 'Default users already added to pool';
 	fi
 
+delete-namespace: # Delete namespace - mandatory: PROFILE=[name]
+	make k8s-undeploy PROFILE=$(PROFILE)
+
+destroy-infrastructure:  # Destroy environment - mandatory: PROFILE=[name]
+	make destroy-auth-infrastructure PROFILE=$(PROFILE)
+	make destroy-api-infractructure PROFILE=$(PROFILE)
+
+destroy-auth-infrastructure:  # Destroy authentication environment - mandatory: PROFILE=[name]
+	make terraform-destroy-auto-approve STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE)
+
+destroy-api-infractructure: # Destroy fuzzy environment - mandatory: PROFILE=[name]
+	make terraform-destroy-auto-approve STACK=$(INFRASTRUCTURE_STACKS_DESTROY) PROFILE=$(PROFILE)
 
 clean: # Clean up project
 	make stop
@@ -333,9 +343,10 @@ apply-data-changes:
 
 monitor-r53-connection:
 	attempt_counter=1
-	max_attempts=10
+	max_attempts=100
 	sleep 30
 	http_status_code=0
+
 	until [[ $$http_status_code -eq 200 ]]; do
 		sleep 20
 		if [[ $$attempt_counter -eq $$max_attempts ]]; then
