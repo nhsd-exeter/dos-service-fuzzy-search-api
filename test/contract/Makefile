@@ -25,13 +25,13 @@ run-smoke: ### Run Postman test suite against deployed application ###
 	sed -i -e "s/REPLACE_AUTH_HOST/$(FUZZY_DOMAIN)/g" $(APPLICATION_TEST_DIR)/contract/environments/Fuzzy_Smoke_Tests_Env.postman_environment.json
 	sed -i -e "s/REPLACE_HOST/$(FUZZY_DOMAIN)/g" $(APPLICATION_TEST_DIR)/contract/environments/Fuzzy_Smoke_Tests_Env.postman_environment.json
 
-	if [ $(PROFILE) == dev ]
+	if [ $(PROFILE) == dev|pt ]
 	then
 		echo "Profile: $(PROFILE). Executing mock token test"
 		sed -i -e "s/REPLACE_ACCESS_TOKEN/MOCK_FUZZY_API_ACCESS_TOKEN/g" $(APPLICATION_TEST_DIR)/contract/environments/Fuzzy_Smoke_Tests_Env.postman_environment.json
 		make docker-run-postman DIR="$(APPLICATION_TEST_DIR)/contract" CMD="run collections/FuzzySearchApiSmokeTests_nonAuth.postman_collection.json -e environments/Fuzzy_Smoke_Tests_Env.postman_environment.json"
 
-	elif [ $(PROFILE) == prod|test|demo|perf ]
+	elif [ $(PROFILE) == prod|test|demo ]
 	then
 		echo "Profile: $(PROFILE). Executing real token test"
 		eval "$$(make aws-assume-role-export-variables)"
