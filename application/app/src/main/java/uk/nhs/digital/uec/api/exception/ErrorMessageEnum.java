@@ -12,8 +12,7 @@ public enum ErrorMessageEnum {
           + " applied. The maximum number of terms that can be applied is {0}"),
   MINIMUM_PARAMS_NOT_PASSED(
       "None of the search criteria given meets the minimum required search criteria length."),
-  INVALID_LOCATION("Invalid search location"),
-  SERVICE_NOT_FOUND("No services found for the given name or postcode");
+  INVALID_LOCATION("Invalid search location");
 
   private String message;
 
