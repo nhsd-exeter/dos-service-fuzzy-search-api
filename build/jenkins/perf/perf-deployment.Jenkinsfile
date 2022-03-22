@@ -109,6 +109,13 @@ pipeline {
         }
       }
     }
+    stage('Smoke Tests') {
+      steps {
+        script {
+          sh "make run-smoke-test PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG}"
+        }
+      }
+    }
     stage("Deploy jMeter"){
       steps {
         script {
