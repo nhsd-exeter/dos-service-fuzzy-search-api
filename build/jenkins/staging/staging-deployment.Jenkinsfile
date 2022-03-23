@@ -1,19 +1,19 @@
+
 pipeline {
   /*
-    Description: Deployment pipeline to deploy the Service Search module into the Development environment.
+    Description: Deployment pipeline
    */
 
-  agent { label 'jenkins-slave' }
+  agent any
 
   options {
     buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
-    timeout(time: 30, unit: 'MINUTES')
   }
 
   environment {
-    PROFILE = 'staging'
+    PROFILE = 'sg'
   }
 
   parameters {
@@ -36,6 +36,20 @@ pipeline {
       steps {
         script {
           sh 'make prepare'
+        }
+      }
+    }
+    stage('Plan Infrastructure') {
+      steps {
+        script {
+          sh "make plan_auth PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+    stage('Provision Infrastructure') {
+      steps {
+        script {
+          sh "make provision_auth PROFILE=${env.PROFILE}"
         }
       }
     }
@@ -92,6 +106,13 @@ pipeline {
       steps {
         script {
           sh 'make apply-data-changes'
+        }
+      }
+    }
+    stage('Populate Cognito Store'){
+      steps {
+        script {
+          sh 'make project-populate-cognito'
         }
       }
     }

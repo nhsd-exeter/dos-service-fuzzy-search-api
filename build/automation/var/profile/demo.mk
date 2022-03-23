@@ -5,12 +5,12 @@ include $(VAR_DIR)/platform-texas/v1/account-live-k8s-prod.mk
 AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/$(TEXAS_CERTIFICATE_ID)
 
 PROFILE := demo
-ENVIRONMENT := demo
-SPRING_PROFILES_ACTIVE := demo
+ENVIRONMENT := $(PROFILE)
+SPRING_PROFILES_ACTIVE := $(PROFILE)
 API_IMAGE_TAG := v0.0.3
 SLEEP_AFTER_PLAN := 2m
 
-CERTIFICATE_DOMAIN := certificate
+CERTIFICATE_DOMAIN := localhost
 ALLOWED_ORIGINS := *
 
 SPLUNK_INDEX := eks_logs_service_finder_prod
@@ -100,6 +100,8 @@ COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
 ADD_DEFAULT_COGNITO_USERS := false
 
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-$(PROFILE)-uec-dos-api-pc-ingress.$(TEXAS_HOSTED_ZONE)/api
+POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
+POSTCODE_MAPPING_PASSWORD := $$(make secret-fetch NAME=uec-dos-api-sfsa-$(PROFILE)-cognito-passwords | jq .POSTCODE_PASSWORD | tr -d '"' )
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
@@ -108,10 +110,8 @@ AUTHENTICATION_ENDPOINT = $(AUTH_LOGIN_URL)$(AUTH_LOGIN_URI)
 FUZZY_SEARCH_DOMAIN = $(PROJECT_ID)-$(PROFILE)-uec-dos-api-sfs-ingress.$(TEXAS_HOSTED_ZONE)
 FUZZY_SEARCH_ENDPOINT = https://$(FUZZY_SEARCH_DOMAIN)
 
-
-POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
-POSTCODE_MAPPING_PASSWORD := $(FUZZY_API_COGNIGTO_USER_PASSWORD)
-
 # Monitor deployment VARS
 CHECK_DEPLOYMENT_TIME_LIMIT := 600
 CHECK_DEPLOYMENT_POLL_INTERVAL := 10
+
+ADD_DEFAULT_COGNITO_USERS := false

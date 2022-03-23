@@ -8,7 +8,7 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/healthcheck-path: /mock-postcode-api/health
     alb.ingress.kubernetes.io/backend-protocol: HTTPS
-    alb.ingress.kubernetes.io/listen-port: '[{"HTTPS":8443}]'
+    alb.ingress.kubernetes.io/listen-port: '[{"HTTPS":8080}]'
     alb.ingress.kubernetes.io/ssl-policy: AWS_ALB_SSL_TLS_POLICY_TO_REPLACE
     alb.ingress.kubernetes.io/waf-acl-id: TEXAS_WAF_ACL_ID_TO_REPLACE
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:AWS_REGION_TO_REPLACE:AWS_ACCOUNT_ID_TO_REPLACE:certificate/TEXAS_CERTIFICATE_ID_TO_REPLACE
@@ -23,4 +23,4 @@ spec:
           - path: /*
             backend:
               serviceName: uec-dos-api-sfs-mock-postcode-service
-              servicePort: 8443
+              servicePort: 8080

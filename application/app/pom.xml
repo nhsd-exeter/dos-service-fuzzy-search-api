@@ -224,7 +224,7 @@
           </execution>
         </executions>
         <configuration>
-          <cveStartYear>2020</cveStartYear>
+          <cveStartYear>2021</cveStartYear>
           <failBuildOnCVSS>10</failBuildOnCVSS>
         </configuration>
       </plugin>

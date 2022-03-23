@@ -39,6 +39,20 @@ pipeline {
         }
       }
     }
+    stage('Plan Infrastructure') {
+      steps {
+        script {
+          sh "make plan_auth PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+    stage('Provision Infrastructure') {
+      steps {
+        script {
+          sh "make provision_auth PROFILE=${env.PROFILE}"
+        }
+      }
+    }
     // TODO: Backup elastic search
     stage('Plan Base Infrastructure') {
       steps {
@@ -71,7 +85,7 @@ pipeline {
     stage('Deploy API') {
       steps {
         script {
-          sh "make deploy PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG}"
+          sh "make deploy PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG} MOCK_POSTCODE_IMAGE_TAG=${IMAGE_TAG}"
         }
       }
     }
@@ -93,6 +107,13 @@ pipeline {
       steps {
         script {
           sh 'make apply-data-changes'
+        }
+      }
+    }
+    stage('Populate Cognito Store'){
+      steps {
+        script {
+          sh 'make project-populate-cognito'
         }
       }
     }
