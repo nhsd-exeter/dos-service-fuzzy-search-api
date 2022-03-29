@@ -342,19 +342,8 @@ apply-data-changes:
 	rm -r out.json
 
 monitor-r53-connection:
-	attempt_counter=1
-	max_attempts=2
-	http_status_code=0
-	until [[ $$http_status_code -eq 200 ]]; do
-		if [[ $$attempt_counter -eq $$max_attempts ]]; then
-			echo "Maximum attempts reached unable to connect to deployed instance"
-			exit 0
-		fi
-		echo Pinging deployed instance count: $$attempt_counter
-		http_status_code=$$(curl --retry-all-errors --retry-delay 30 --retry 100 -s -k -o /dev/null -w "%{http_code}" --max-time 30 $(FUZZY_ENDPOINT)/api/home)
-		echo Status code is: $$http_status_code
-		attempt_counter=$$(($$attempt_counter+1))
-	done
+	make docker-run-tools CMD="python build/jenkins/monitor-r53-connection.py $(FUZZY_ENDPOINT)/api/home 5"
+
 
 k8s-check-deployment-of-replica-sets:
 	eval "$$(make aws-assume-role-export-variables)"
