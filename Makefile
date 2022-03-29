@@ -342,7 +342,7 @@ apply-data-changes:
 	rm -r out.json
 
 monitor-r53-connection:
-	make docker-run-tools CMD="python build/jenkins/monitor-r53-connection.py $(FUZZY_ENDPOINT)/api/home 5"
+	make docker-run-tools CMD="python build/jenkins/monitor-r53-connection.py $(FUZZY_ENDPOINT)/api/home 100"
 
 
 k8s-check-deployment-of-replica-sets:
