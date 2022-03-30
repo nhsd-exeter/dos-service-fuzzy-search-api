@@ -110,7 +110,7 @@ test: load-test-services # Test project
 		VARS_FILE=$(VAR_DIR)/profile/local.mk
 
 debug:
-	make start 2> /dev/null ||:
+	make quick-restart 2> /dev/null ||:
 	docker rm --force fuzzysearch 2> /dev/null ||:
 	make docker-run-mvn-lib-mount \
 		NAME=fuzzysearch \
@@ -152,7 +152,7 @@ debug:
 		--publish 9999:9999 \
 		--publish 8443:8443 \
 		"
-		make start
+		make quick-start
 
 docker-run-mvn-lib-mount: ### Build Docker image mounting library volume - mandatory: DIR, CMD
 	make docker-run-mvn LIB_VOLUME_MOUNT=true \
