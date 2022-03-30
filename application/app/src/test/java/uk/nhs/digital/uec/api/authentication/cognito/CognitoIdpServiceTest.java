@@ -64,6 +64,20 @@ public class CognitoIdpServiceTest {
   }
 
   @Test
+  public void authenticationWithMockToken() throws UnauthorisedException {
+    Credential cred = new Credential("service-finder-admin@nhs.net", "mock-auth-pass");
+    when(environment.getActiveProfiles()).thenReturn(new String[]{"dev","mock-auth"});
+    InitiateAuthResult authResult = new InitiateAuthResult();
+    AuthenticationResultType authenticationResult = new AuthenticationResultType();
+    authenticationResult.setAccessToken(accessToken);
+    authenticationResult.setRefreshToken(refreshToken);
+    authResult.setAuthenticationResult(authenticationResult);
+    AuthToken accessTokenResponse = cognitoService.authenticate(cred);
+    assertNotNull(accessTokenResponse.getAccessToken());
+
+  }
+
+  @Test
   public void authenticationInvalidPasswordExceptionTest() throws UnauthorisedException {
     Credential cred = new Credential(user, userPass);
     when(environment.getActiveProfiles()).thenReturn(new String[1]);
@@ -86,4 +100,6 @@ public class CognitoIdpServiceTest {
     when(cognitoClient.initiateAuth(any())).thenThrow(AWSCognitoIdentityProviderException.class);
     assertThrows(UnauthorisedException.class, () -> cognitoService.authenticate(cred));
   }
+
+
 }
