@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -29,6 +30,7 @@ public class CognitoIdpServiceTest {
 
   @InjectMocks CognitoIdpServiceImpl cognitoService;
   @Mock AWSCognitoIdentityProvider cognitoClient;
+  @Mock Environment environment;
   private String userPoolClientId = "testUserPoolClientId";
   private String userPoolClientSecret = "testUserPoolClientSecret";
   private String user;
@@ -55,6 +57,7 @@ public class CognitoIdpServiceTest {
     authenticationResult.setRefreshToken(refreshToken);
     authResult.setAuthenticationResult(authenticationResult);
 
+    when(environment.getActiveProfiles()).thenReturn(new String[1]);
     when(cognitoClient.initiateAuth(any())).thenReturn(authResult);
     AuthToken accessTokenResponse = cognitoService.authenticate(cred);
     assertNotNull(accessTokenResponse.getAccessToken());
@@ -63,6 +66,7 @@ public class CognitoIdpServiceTest {
   @Test
   public void authenticationInvalidPasswordExceptionTest() throws UnauthorisedException {
     Credential cred = new Credential(user, userPass);
+    when(environment.getActiveProfiles()).thenReturn(new String[1]);
     when(cognitoClient.initiateAuth(any())).thenThrow(InvalidPasswordException.class);
     assertThrows(UnauthorisedException.class, () -> cognitoService.authenticate(cred));
   }
@@ -70,6 +74,7 @@ public class CognitoIdpServiceTest {
   @Test
   public void authenticationNotAuthorizedExceptionTest() throws UnauthorisedException {
     Credential cred = new Credential(user, userPass);
+    when(environment.getActiveProfiles()).thenReturn(new String[1]);
     when(cognitoClient.initiateAuth(any())).thenThrow(NotAuthorizedException.class);
     assertThrows(UnauthorisedException.class, () -> cognitoService.authenticate(cred));
   }
@@ -77,6 +82,7 @@ public class CognitoIdpServiceTest {
   @Test
   public void authenticationAWSCognitoIdentityProviderExceptionTest() throws UnauthorisedException {
     Credential cred = new Credential(user, userPass);
+    when(environment.getActiveProfiles()).thenReturn(new String[1]);
     when(cognitoClient.initiateAuth(any())).thenThrow(AWSCognitoIdentityProviderException.class);
     assertThrows(UnauthorisedException.class, () -> cognitoService.authenticate(cred));
   }
