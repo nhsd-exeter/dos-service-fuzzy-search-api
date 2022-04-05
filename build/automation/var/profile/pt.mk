@@ -52,7 +52,7 @@ CHECK_DEPLOYMENT_TIME_LIMIT := 600
 CHECK_DEPLOYMENT_POLL_INTERVAL := 10
 
 # ==============================================================================
-# Infrastructure variables
+# #Infrastructure variables
 
 DEPLOYMENT_STACKS = application
 INFRASTRUCTURE_STACKS = $(INFRASTRUCTURE_STACKS_BASE),$(INFRASTRUCTURE_STACKS_ETL)
