@@ -101,7 +101,6 @@ ADD_DEFAULT_COGNITO_USERS := false
 
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-$(PROFILE)-uec-dos-api-pc-ingress.$(TEXAS_HOSTED_ZONE)/api
 POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
-POSTCODE_MAPPING_PASSWORD := $$(make secret-fetch NAME=uec-dos-api-sfsa-$(PROFILE)-cognito-passwords | jq .POSTCODE_PASSWORD | tr -d '"' )
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
@@ -114,4 +113,5 @@ FUZZY_SEARCH_ENDPOINT = https://$(FUZZY_SEARCH_DOMAIN)
 CHECK_DEPLOYMENT_TIME_LIMIT := 600
 CHECK_DEPLOYMENT_POLL_INTERVAL := 10
 
-ADD_DEFAULT_COGNITO_USERS := false
+# Change to false after deployment
+ADD_DEFAULT_COGNITO_USERS := true

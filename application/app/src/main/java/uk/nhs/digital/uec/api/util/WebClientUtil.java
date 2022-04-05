@@ -1,6 +1,5 @@
 package uk.nhs.digital.uec.api.util;
 
-import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -65,9 +64,8 @@ public class WebClientUtil {
           "Error while connecting Postcode mapping location service from Fuzzy search service: "
               + e.getMessage());
       return Collections.emptyList();
-    } catch (Exception e){
+    } catch (Exception e) {
       log.error("Error from Postcode Mapping API: " + e.getCause());
-
     }
     return postcodeMappingLocationList;
   }
