@@ -91,7 +91,7 @@ TF_VAR_dos_read_replica_secret_key := DB_SF_READONLY_PASSWORD
 TF_VAR_service_etl_db_user := dos_sf_readonly
 TF_VAR_service_etl_source_db := pathwaysdos
 
-#Cognito user pool details
+####Cognito user pool details
 COGNITO_USER_POOL := $(TF_VAR_service_prefix)-authentication
 TF_VAR_cognito_user_pool := $(COGNITO_USER_POOL)
 COGNITO_USER_POOL_CLIENT_SECRET := $(or $(COGNITO_USER_POOL_CLIENT_SECRET), )
