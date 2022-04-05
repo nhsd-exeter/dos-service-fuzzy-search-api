@@ -75,10 +75,10 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
   }
 
   private AuthToken getMockAuthenticationToken(Credential credential) {
-    String pass_word = credential.getPassword();
+    String credentialPassword = credential.getPassword();
     String userName = credential.getEmailAddress();
     if (userName.equalsIgnoreCase("service-finder-admin@nhs.net")
-        && pass_word.equalsIgnoreCase("mock-auth-pass")) {
+        && credentialPassword.equalsIgnoreCase("mock-auth-pass")) {
       log.info("Returning Mock Token");
       return new AuthToken(
           MockAuthenticationConstants.MOCK_ACCESS_TOKEN,

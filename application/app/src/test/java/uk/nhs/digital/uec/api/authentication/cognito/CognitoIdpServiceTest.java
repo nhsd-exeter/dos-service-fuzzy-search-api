@@ -77,6 +77,14 @@ public class CognitoIdpServiceTest {
   }
 
   @Test
+  public void authenticationWithMockToken_WrongCreds() throws UnauthorisedException {
+    Credential cred = new Credential("wrong@nhs.net", "mock-auth");
+    when(environment.getActiveProfiles()).thenReturn(new String[] {"dev", "mock-auth"});
+    when(cognitoClient.initiateAuth(any())).thenThrow(NotAuthorizedException.class);
+    assertThrows(UnauthorisedException.class, () -> cognitoService.authenticate(cred));
+  }
+
+  @Test
   public void authenticationInvalidPasswordExceptionTest() throws UnauthorisedException {
     Credential cred = new Credential(user, userPass);
     when(environment.getActiveProfiles()).thenReturn(new String[1]);
