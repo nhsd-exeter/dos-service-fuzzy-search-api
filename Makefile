@@ -234,7 +234,17 @@ prepare-lambda-deployment: # Downloads the required libraries for the Lambda fun
 	rm -f LICENSE
 	cp $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/service_etl.py \
 		$(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
-
+create-lambda-deploy-dir:
+	if [ ! -d $(PROJECT_DIR)infrastructure/stacks/postcode_etl/functions/uec-sf-postcode-extract/deploy ]
+	then
+		mkdir $(PROJECT_DIR)infrastructure/stacks/postcode_etl/functions/uec-sf-postcode-extract/deploy
+		touch $(PROJECT_DIR)infrastructure/stacks/postcode_etl/functions/uec-sf-postcode-extract/deploy/test.txt
+	fi
+	if [ ! -d $(PROJECT_DIR)infrastructure/stacks/postcode_etl/functions/uec-sf-postcode-insert/deploy ]
+	then
+		mkdir $(PROJECT_DIR)infrastructure/stacks/postcode_etl/functions/uec-sf-postcode-insert/deploy
+		touch $(PROJECT_DIR)infrastructure/stacks/postcode_etl/functions/uec-sf-postcode-insert/deploy/test.txt
+	fi
 plan: # Plan environment - mandatory: PROFILE=[name]
 	make plan-base
 	make plan-etl

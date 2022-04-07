@@ -39,6 +39,13 @@ pipeline {
         }
       }
     }
+    stage('Check Py Lib Folder') {
+      steps {
+        script {
+          sh 'make create-lambda-deploy-dir'
+        }
+      }
+    }
     stage('Plan Infrastructure') {
       steps {
         script {
@@ -60,13 +67,6 @@ pipeline {
         }
       }
     }
-    stage('Provision Base Infrastructure') {
-      steps {
-        script {
-          sh "make provision-base PROFILE=${env.PROFILE}"
-        }
-      }
-    }
     stage('Plan ETL Infrastructure') {
       steps {
         script {
@@ -74,6 +74,14 @@ pipeline {
         }
       }
     }
+    stage('Provision Base Infrastructure') {
+      steps {
+        script {
+          sh "make provision-base PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+
     stage('Provision ETL Infrastructure') {
       steps {
         script {
