@@ -43,22 +43,22 @@ or simply run it as a single command
 The smoke tests are configured to run in different ways dependent on the environment they are run in.
 
 Environments:
-  - dev (Non-Production)
-  - pt (Performance Tests)
-  - sg (Staging)
-  - prod (Production)
-  - test
-  - demo
+    - dev (Non-Production)
+    - pt (Performance Tests)
+    - sg (Staging)
+    - prod (Production)
+    - test
+    - demo
 
 From within the project directory we can do the following to execute the test suite
 
-  make stop
-	make quick-start PROFILE=$(PROFILE) VERSION=$(API_IMAGE_TAG)
-	sleep 20
-	cd test/contract
-	make run-smoke
-	cd ../../
-	make stop
+    make stop
+    make quick-start PROFILE=$(PROFILE) VERSION=$(API_IMAGE_TAG)
+    sleep 20
+    cd test/contract
+    make run-smoke
+    cd ../../
+    make stop
 
 Alternatively the pipeline calls the `make run smoke-tests`
 
