@@ -97,7 +97,7 @@ load-test-postcode-locations:
 run-contract-tests:
 	make start PROFILE=local VERSION=$(VERSION)
 	cd test/contract
-	make run
+	make run-contract
 	cd ../../
 	make stop
 

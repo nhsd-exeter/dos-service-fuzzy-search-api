@@ -14,7 +14,7 @@ start: config ### Start the contract test project
 stop: ### Stop the contract test project
 	make docker-compose-stop YML=$(DOCKER_DIR)/mockservice.docker-compose.yml
 
-run: ### Run Postman test suite against the Wiremock mappings
+run-contract:
 	make docker-run-postman \
 		DIR="$(APPLICATION_TEST_DIR)/contract" \
 		CMD=" \
@@ -27,12 +27,12 @@ run-smoke: ### Run Postman test suite against deployed application ###
 	sed -i -e "s/REPLACE_HOST/$(FUZZY_DOMAIN)/g" $(APPLICATION_TEST_DIR)/contract/environments/Fuzzy_Smoke_Tests_Env.postman_environment.json
 
 	case $(PROFILE) in
-		dev|pt)
+		dev|pt|test)
 			echo Profile: $(PROFILE) Executing mock token test
 			sed -i -e "s/REPLACE_ACCESS_TOKEN/MOCK_FUZZY_API_ACCESS_TOKEN/g" $(APPLICATION_TEST_DIR)/contract/environments/Fuzzy_Smoke_Tests_Env.postman_environment.json
 			make docker-run-postman DIR="$(APPLICATION_TEST_DIR)/contract" CMD="run collections/FuzzySearchApiSmokeTests_nonAuth.postman_collection.json -e environments/Fuzzy_Smoke_Tests_Env.postman_environment.json"
 			;;
-		prod|test|demo|sg)
+		prod|demo|sg)
 			echo Profile: $(PROFILE) Executing real token test
 			eval "$$(make aws-assume-role-export-variables)"
 			$(APPLICATION_TEST_DIR)/contract/scripts/secrets.sh $(APPLICATION_TEST_DIR)/contract/environments/Fuzzy_Smoke_Tests_Env.postman_environment.json
