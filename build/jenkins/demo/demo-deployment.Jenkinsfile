@@ -119,7 +119,7 @@ pipeline {
         }
       }
     }
-    stage('Populate Cognito Store'){
+    stage('Populate Cognito Store') {
       steps {
         script {
           sh 'make project-populate-cognito'

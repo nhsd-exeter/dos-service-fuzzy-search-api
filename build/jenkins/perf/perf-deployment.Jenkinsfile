@@ -7,13 +7,13 @@ pipeline {
   agent any
 
   options {
-    buildDiscarder(logRotator(daysToKeepStr: "7", numToKeepStr: "13"))
+    buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
   }
 
   environment {
-    PROFILE = "pt"
+    PROFILE = 'pt'
   }
 
   parameters {
@@ -124,13 +124,13 @@ pipeline {
         }
       }
     }
-    stage("Deploy jMeter"){
+    stage('Deploy jMeter') {
       steps {
         script {
           sh "make deploy-jmeter-namespace PROFILE=${env.PROFILE}"
-          }
         }
       }
+    }
 
     stage('Nominal Peak Test') {
       agent {
@@ -227,26 +227,25 @@ pipeline {
     always {
       script {
         try {
-            sh "make destroy-jmeter-namespace PROFILE=${env.PROFILE}"
+          sh "make destroy-jmeter-namespace PROFILE=${env.PROFILE}"
         } catch (error) {
-              println "Error happened while trying to destroy jmeter namespace, continuing"
+          println 'Error happened while trying to destroy jmeter namespace, continuing'
         }
         try {
-            sh "make delete-namespace PROFILE=${env.PROFILE}"
+          sh "make delete-namespace PROFILE=${env.PROFILE}"
         } catch (error) {
-              println "Error happened while trying to destroy profile namespace, continuing"
+          println 'Error happened while trying to destroy profile namespace, continuing'
         }
         try {
-            sh "make destroy-infrastructure PROFILE=${env.PROFILE}"
+          sh "make destroy-infrastructure PROFILE=${env.PROFILE}"
         } catch (error) {
-              println "Error happened while tearing down profile infrastructure, continuing"
+          println 'Error happened while tearing down profile infrastructure, continuing'
         }
       }
     }
-    success { sh "make pipeline-on-success" }
+    success { sh 'make pipeline-on-success' }
     failure {
-      sh "make pipeline-on-failure"
+      sh 'make pipeline-on-failure'
     }
   }
-
 }
