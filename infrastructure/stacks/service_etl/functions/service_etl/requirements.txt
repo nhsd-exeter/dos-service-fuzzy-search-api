@@ -4,4 +4,3 @@ elasticsearch==7.13.4
 idna==2.10
 requests==2.24.0
 requests_aws4auth==1.1.1
-libpq-dev==9.4.3
