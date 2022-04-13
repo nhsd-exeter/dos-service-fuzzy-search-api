@@ -33,7 +33,6 @@
     - [Diagrams](#diagrams)
       - [System Context Diagram](#system-context-diagram)
       - [Container Diagram](#container-diagram)
-      - [Component Diagram](#component-diagram)
       - [Infrastructure / Networking](#infrastructure--networking)
     - [Integration](#integration)
       - [Interfaces](#interfaces)
@@ -279,15 +278,11 @@ MFA to the right AWS account using the following command
 
 #### System Context Diagram
 
-<img src="./documentation/diagrams/C4model-SystemContext.png" width="1024" /><br /><br />
+<img src="./documentation/c4 models/Level 1 - System Context.png" width="1024" /><br /><br />
 
 #### Container Diagram
 
-<img src="./documentation/diagrams/C4model-Container.png" width="1024" /><br /><br />
-
-#### Component Diagram
-
-<img src="./documentation/diagrams/C4model-Component.png" width="1024" /><br /><br />
+<img src="./documentation/c4 models/Level 2 - Container Context.png" width="1024" /><br /><br />
 
 #### Infrastructure / Networking
 
