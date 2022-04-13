@@ -1,4 +1,4 @@
-resource "aws_lambda_function" "service_etl_lambda" {
+/*resource "aws_lambda_function" "service_etl_lambda" {
   filename         = data.archive_file.service_etl_function.output_path
   function_name    = local.service_etl_function_name
   description      = local.service_etl_description
@@ -143,7 +143,6 @@ resource "aws_iam_role_policy" "uec-sf-dos-extract" {
         "es:*"
       ],
       "Resource": "${local.es_domain_arn}"
-    }
   ]
 }
 EOF
@@ -177,3 +176,4 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_service_etl" {
   principal     = local.service_etl_cloudwatch_event_princinple
   source_arn    = aws_cloudwatch_event_rule.service_etl_cloudwatch_event.arn
 }
+*/

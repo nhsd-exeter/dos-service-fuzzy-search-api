@@ -19,8 +19,8 @@ locals {
   service_etl_db_secret_arn  = data.aws_secretsmanager_secret.dos_read_replica_secret_name.arn
   service_etl_logging_level  = var.service_etl_logging_level
 
-  es_domain_arn               = data.aws_elasticsearch_domain.elasticsearch.arn
-  es_domain_endpoint          = data.aws_elasticsearch_domain.elasticsearch.endpoint
+  //es_domain_arn               = data.aws_elasticsearch_domain.elasticsearch.arn
+  //es_domain_endpoint          = data.aws_elasticsearch_domain.elasticsearch.endpoint
   es_domain_security_group_id = data.aws_security_group.elasticsearch_security_group.id
 
   service_etl_iam_name = "${var.service_prefix}-service-etl-lambda"
