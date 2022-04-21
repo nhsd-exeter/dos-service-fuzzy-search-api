@@ -3,14 +3,18 @@ package uk.nhs.digital.uec.api.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-/** Defines the structure and attributes that are returned for each service. */
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Defines the structure and attributes that are returned for each service.
+ */
 @Document(indexName = "service")
 @Getter
 @Setter
@@ -18,6 +22,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @JsonPropertyOrder({
   "_score",
   "id",
+  "u_id",
   "u_identifier",
   "name",
   "public_name",
@@ -30,7 +35,14 @@ import org.springframework.data.elasticsearch.annotations.Document;
   "postcode",
   "easting",
   "northing",
-  "referral_roles"
+  "referral_roles",
+  "public_referral_instructions",
+  "public_phone_number",
+  "non_public_phone_number",
+  "email",
+  "web",
+  "is_national",
+  "updated"
 })
 public class DosService implements Comparable<DosService> {
 
@@ -40,6 +52,9 @@ public class DosService implements Comparable<DosService> {
   @JsonProperty("id")
   @Id
   private int id;
+
+  @JsonProperty("u_id")
+  private int uid;
 
   @JsonProperty("u_identifier")
   private int uIdentifier;
@@ -80,6 +95,27 @@ public class DosService implements Comparable<DosService> {
   @JsonProperty("distance_in_miles")
   private Double distance;
 
+  @JsonProperty("public_phone_number")
+  private int publicPhoneNumber;
+
+  @JsonProperty("non_public_phone_number")
+  private int nonPublicPhoneNumber;
+
+  @JsonProperty("email")
+  private String email;
+
+  @JsonProperty("web")
+  private String website;
+
+  @JsonProperty("is_national")
+  private String isNational;
+
+  @JsonProperty("updated")
+  private String updated;
+
+  @JsonProperty("public_referral_instructions")
+  private String publicReferralInstructions;
+
   private DosService(DosServiceBuilder builder) {
     this.id = builder.id;
     this.uIdentifier = builder.uIdentifier;
@@ -94,58 +130,42 @@ public class DosService implements Comparable<DosService> {
     this.easting = builder.easting;
     this.northing = builder.northing;
     this.referralRoles = builder.referralRoles;
+    this.uid = builder.uid;
+    this.publicReferralInstructions = builder.publicReferralInstructions;
+    this.updated = builder.updated;
+    this.isNational = builder.isNational;
+    this.website = builder.website;
+    this.email = builder.email;
+    this.nonPublicPhoneNumber = builder.nonPublicPhoneNumber;
+    this.publicPhoneNumber = builder.publicPhoneNumber;
   }
 
-  public DosService() {}
+  public DosService() {
+  }
 
   @Override
-  public boolean equals(Object obj) {
-
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (this.getClass() != obj.getClass()) return false;
-    DosService that = (DosService) obj;
-
-    if (this.id == that.id
-        && this.name.equals(that.name)
-        && this.odsCode.equals(that.odsCode)
-        && this.address.containsAll(that.address)
-        && this.address.size() == that.address.size()
-        && this.capacityStatus.equals(that.capacityStatus)
-        && this.postcode.equals(that.postcode)
-        && this.easting.equals(that.easting)
-        && this.northing.equals(that.northing)
-        && this.publicName.equals(that.publicName)
-        && this.referralRoles.size() == that.referralRoles.size()
-        && this.referralRoles.containsAll(that.referralRoles)
-        && this.type.equals(that.type)
-        && this.typeId == that.typeId
-        && this.uIdentifier == that.uIdentifier) {
-      return true;
-    }
-
-    return false;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof DosService)) return false;
+    DosService that = (DosService) o;
+    return id == that.id && uid == that.uid && uIdentifier == that.uIdentifier && typeId == that.typeId && publicPhoneNumber == that.publicPhoneNumber && nonPublicPhoneNumber == that.nonPublicPhoneNumber && Objects.equals(_score, that._score) && Objects.equals(name, that.name) && Objects.equals(publicName, that.publicName) && Objects.equals(capacityStatus, that.capacityStatus) && Objects.equals(type, that.type) && Objects.equals(odsCode, that.odsCode) && Objects.equals(address, that.address) && Objects.equals(postcode, that.postcode) && Objects.equals(easting, that.easting) && Objects.equals(northing, that.northing) && Objects.equals(referralRoles, that.referralRoles) && Objects.equals(distance, that.distance) && Objects.equals(email, that.email) && Objects.equals(website, that.website) && Objects.equals(isNational, that.isNational) && Objects.equals(updated, that.updated) && Objects.equals(publicReferralInstructions, that.publicReferralInstructions);
   }
 
   @Override
   public int hashCode() {
+    return Objects.hash(_score, id, uid, uIdentifier, name, publicName, capacityStatus, typeId, type, odsCode, address, postcode, easting, northing, referralRoles, distance, publicPhoneNumber, nonPublicPhoneNumber, email, website, isNational, updated, publicReferralInstructions);
+  }
 
-    int hash = 7;
-    hash = 31 * hash + this.id;
-    hash = 31 * hash + this.typeId;
-    hash = 31 * hash + this.uIdentifier;
-    hash = 31 * hash + (null == this.address ? 0 : this.address.hashCode());
-    hash = 31 * hash + (null == this.capacityStatus ? 0 : this.capacityStatus.hashCode());
-    hash = 31 * hash + (null == this.name ? 0 : this.name.hashCode());
-    hash = 31 * hash + (null == this.odsCode ? 0 : this.odsCode.hashCode());
-    hash = 31 * hash + (null == this.postcode ? 0 : this.postcode.hashCode());
-    hash = 31 * hash + (null == this.easting ? 0 : this.easting.hashCode());
-    hash = 31 * hash + (null == this.northing ? 0 : this.northing.hashCode());
-    hash = 31 * hash + (null == this.publicName ? 0 : this.publicName.hashCode());
-    hash = 31 * hash + (null == this.referralRoles ? 0 : this.referralRoles.hashCode());
-    hash = 31 * hash + (null == this.type ? 0 : this.type.hashCode());
+  public Double getDistance() {
+    if (this.distance == null) {
+      return Double.valueOf(999.9);
+    }
+    return DoubleRounder.round(this.distance, 1);
+  }
 
-    return hash;
+  @Override
+  public int compareTo(DosService ds) {
+    return this.getDistance().compareTo(ds.getDistance());
   }
 
   public static class DosServiceBuilder {
@@ -163,6 +183,52 @@ public class DosService implements Comparable<DosService> {
     private Integer easting;
     private Integer northing;
     private List<String> referralRoles;
+
+    private int uid;
+    private String publicReferralInstructions;
+    private String updated;
+    private String isNational;
+    private String website;
+    private String email;
+    private int nonPublicPhoneNumber;
+    private int publicPhoneNumber;
+
+    public DosServiceBuilder updated(String updated) {
+      this.updated = updated;
+      return this;
+    }
+
+    public DosServiceBuilder isNational(String isNational) {
+      this.isNational = isNational;
+      return this;
+    }
+    public DosServiceBuilder website(String website) {
+      this.website = website;
+      return this;
+    }
+    public DosServiceBuilder email(String email) {
+      this.email = email;
+      return this;
+    }
+
+    public DosServiceBuilder nonPublicPhoneNumber(int nonPublicPhoneNumber) {
+      this.nonPublicPhoneNumber = nonPublicPhoneNumber;
+      return this;
+    }
+
+    public DosServiceBuilder publicPhoneNumber(int publicPhoneNumber) {
+      this.publicPhoneNumber = publicPhoneNumber;
+      return this;
+    }
+    public DosServiceBuilder uid(int uid) {
+      this.uid = uid;
+      return this;
+    }
+
+    public DosServiceBuilder publicReferralInstructions(String publicReferralInstructions) {
+      this.publicReferralInstructions = publicReferralInstructions;
+      return this;
+    }
 
     public DosServiceBuilder id(int id) {
       this.id = id;
@@ -232,17 +298,5 @@ public class DosService implements Comparable<DosService> {
     public DosService build() {
       return new DosService(this);
     }
-  }
-
-  public Double getDistance() {
-    if (this.distance == null) {
-      return Double.valueOf(999.9);
-    }
-    return DoubleRounder.round(this.distance, 1);
-  }
-
-  @Override
-  public int compareTo(DosService ds) {
-    return this.getDistance().compareTo(ds.getDistance());
   }
 }
