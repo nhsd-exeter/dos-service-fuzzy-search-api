@@ -69,7 +69,7 @@ public class DosService implements Comparable<DosService> {
   private String capacityStatus;
 
   @JsonProperty("type_id")
-  private String typeId;
+  private int typeId;
 
   @JsonProperty("type")
   private String type;
@@ -175,7 +175,7 @@ public class DosService implements Comparable<DosService> {
     private String name;
     private String publicName;
     private String capacityStatus;
-    private String typeId;
+    private int typeId;
     private String type;
     private String odsCode;
     private List<String> address;
@@ -255,7 +255,7 @@ public class DosService implements Comparable<DosService> {
       return this;
     }
 
-    public DosServiceBuilder typeId(String typeId) {
+    public DosServiceBuilder typeId(int typeId) {
       this.typeId = typeId;
       return this;
     }
