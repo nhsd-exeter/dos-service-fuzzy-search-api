@@ -54,10 +54,10 @@ public class DosService implements Comparable<DosService> {
   private int id;
 
   @JsonProperty("u_id")
-  private int uid;
+  private String uid;
 
   @JsonProperty("u_identifier")
-  private int uIdentifier;
+  private String uIdentifier;
 
   @JsonProperty("name")
   private String name;
@@ -69,7 +69,7 @@ public class DosService implements Comparable<DosService> {
   private String capacityStatus;
 
   @JsonProperty("type_id")
-  private int typeId;
+  private String typeId;
 
   @JsonProperty("type")
   private String type;
@@ -96,10 +96,10 @@ public class DosService implements Comparable<DosService> {
   private Double distance;
 
   @JsonProperty("public_phone_number")
-  private int publicPhoneNumber;
+  private String publicPhoneNumber;
 
   @JsonProperty("non_public_phone_number")
-  private int nonPublicPhoneNumber;
+  private String nonPublicPhoneNumber;
 
   @JsonProperty("email")
   private String email;
@@ -171,11 +171,11 @@ public class DosService implements Comparable<DosService> {
   public static class DosServiceBuilder {
 
     private int id;
-    private int uIdentifier;
+    private String uIdentifier;
     private String name;
     private String publicName;
     private String capacityStatus;
-    private int typeId;
+    private String typeId;
     private String type;
     private String odsCode;
     private List<String> address;
@@ -184,14 +184,14 @@ public class DosService implements Comparable<DosService> {
     private Integer northing;
     private List<String> referralRoles;
 
-    private int uid;
+    private String uid;
     private String publicReferralInstructions;
     private String updated;
     private String isNational;
     private String website;
     private String email;
-    private int nonPublicPhoneNumber;
-    private int publicPhoneNumber;
+    private String nonPublicPhoneNumber;
+    private String publicPhoneNumber;
 
     public DosServiceBuilder updated(String updated) {
       this.updated = updated;
@@ -211,16 +211,16 @@ public class DosService implements Comparable<DosService> {
       return this;
     }
 
-    public DosServiceBuilder nonPublicPhoneNumber(int nonPublicPhoneNumber) {
+    public DosServiceBuilder nonPublicPhoneNumber(String nonPublicPhoneNumber) {
       this.nonPublicPhoneNumber = nonPublicPhoneNumber;
       return this;
     }
 
-    public DosServiceBuilder publicPhoneNumber(int publicPhoneNumber) {
+    public DosServiceBuilder publicPhoneNumber(String publicPhoneNumber) {
       this.publicPhoneNumber = publicPhoneNumber;
       return this;
     }
-    public DosServiceBuilder uid(int uid) {
+    public DosServiceBuilder uid(String uid) {
       this.uid = uid;
       return this;
     }
@@ -235,7 +235,7 @@ public class DosService implements Comparable<DosService> {
       return this;
     }
 
-    public DosServiceBuilder uIdentifier(int uIdentifier) {
+    public DosServiceBuilder uIdentifier(String uIdentifier) {
       this.uIdentifier = uIdentifier;
       return this;
     }
@@ -255,7 +255,7 @@ public class DosService implements Comparable<DosService> {
       return this;
     }
 
-    public DosServiceBuilder typeId(int typeId) {
+    public DosServiceBuilder typeId(String typeId) {
       this.typeId = typeId;
       return this;
     }
