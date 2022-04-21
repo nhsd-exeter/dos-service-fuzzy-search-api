@@ -11,11 +11,14 @@ import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
 import com.amazonaws.services.cognitoidp.model.InvalidPasswordException;
 import com.amazonaws.services.cognitoidp.model.NotAuthorizedException;
+import java.util.Arrays;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import uk.nhs.digital.uec.api.authentication.constants.MockAuthenticationConstants;
 import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
@@ -25,6 +28,7 @@ import uk.nhs.digital.uec.api.authentication.model.Credential;
 public class CognitoIdpServiceImpl implements CognitoIdpService {
 
   @Autowired private AWSCognitoIdentityProvider cognitoClient;
+  @Autowired private Environment environment;
 
   @Value("${cognito.userPool.clientId}")
   private String userPoolClientId;
@@ -34,6 +38,9 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
 
   @Override
   public AuthToken authenticate(Credential credential) throws UnauthorisedException {
+    if (Arrays.asList(environment.getActiveProfiles()).contains(("mock-auth"))) {
+      return getMockAuthenticationToken(credential);
+    }
     Map<String, String> authenticationParameters =
         Map.of(
             USERNAME,
@@ -65,5 +72,20 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
     return new AuthToken(
         authenticationResult.getAuthenticationResult().getAccessToken(),
         authenticationResult.getAuthenticationResult().getRefreshToken());
+  }
+
+  private AuthToken getMockAuthenticationToken(Credential credential) {
+    String credentialPassword = credential.getPassword();
+    String userName = credential.getEmailAddress();
+    if (userName.equalsIgnoreCase("service-finder-admin@nhs.net")
+        && credentialPassword.equalsIgnoreCase("mock-auth-pass")) {
+      log.info("Returning Mock Token");
+      return new AuthToken(
+          MockAuthenticationConstants.MOCK_ACCESS_TOKEN,
+          MockAuthenticationConstants.MOCK_ACCESS_TOKEN);
+    } else {
+      log.error("Attempted to login using invalid credentials");
+      throw new AWSCognitoIdentityProviderException("401 - Unauthorised");
+    }
   }
 }

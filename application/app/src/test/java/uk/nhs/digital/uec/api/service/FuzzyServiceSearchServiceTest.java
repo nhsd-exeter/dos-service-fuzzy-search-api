@@ -29,8 +29,8 @@ import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
 import uk.nhs.digital.uec.api.service.impl.ExternalApiHandshakeService;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
-import uk.nhs.digital.uec.api.service.impl.MockDosServicesUtil;
 import uk.nhs.digital.uec.api.service.impl.ValidationService;
+import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 
 @ExtendWith(SpringExtension.class)
 public class FuzzyServiceSearchServiceTest {

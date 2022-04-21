@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "f5736ccc-4f7a-44a4-9c16-9174549614db",
+    "_postman_id": "08fe6898-f365-4177-a14e-f69f16786961",
     "name": "FuzzySearchSmokeTest",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -106,7 +106,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test%201&search_location=EX88PR&fuzz_level=2",
+          "raw": "https://{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test 1&search_location=EX88PR&fuzz_level=2",
           "protocol": "https",
           "host": [
             "{{host}}"

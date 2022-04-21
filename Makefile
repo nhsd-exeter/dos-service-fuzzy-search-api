@@ -97,7 +97,7 @@ load-test-postcode-locations:
 run-contract-tests:
 	make start PROFILE=local VERSION=$(VERSION)
 	cd test/contract
-	make run
+	make run-contract
 	cd ../../
 	make stop
 
@@ -110,7 +110,7 @@ test: load-test-services # Test project
 		VARS_FILE=$(VAR_DIR)/profile/local.mk
 
 debug:
-	make start 2> /dev/null ||:
+	make quick-restart 2> /dev/null ||:
 	docker rm --force fuzzysearch 2> /dev/null ||:
 	make docker-run-mvn-lib-mount \
 		NAME=fuzzysearch \
@@ -152,7 +152,7 @@ debug:
 		--publish 9999:9999 \
 		--publish 8443:8443 \
 		"
-		make start
+		make quick-start
 
 docker-run-mvn-lib-mount: ### Build Docker image mounting library volume - mandatory: DIR, CMD
 	make docker-run-mvn LIB_VOLUME_MOUNT=true \
@@ -185,6 +185,7 @@ project-populate-application-variables:
 	export COGNITO_USER_POOL_ID=$$(make -s aws-cognito-get-userpool-id NAME=$(COGNITO_USER_POOL))
 	export COGNITO_JWT_VERIFICATION_URL=https://cognito-idp.eu-west-2.amazonaws.com/$${COGNITO_USER_POOL_ID}/.well-known/jwks.json
 	export COGNITO_ADMIN_AUTH_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .AUTHENTICATION_PASSWORD | tr -d '"')
+	export POSTCODE_MAPPING_PASSWORD=$$(make secret-fetch NAME=uec-dos-api-sfsa-$(PROFILE)-cognito-passwords | jq .POSTCODE_PASSWORD | tr -d '"' )
 	export FUZZY_API_COGNIGTO_USER_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .POSTCODE_PASSWORD | tr -d '"')
 	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
 	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}
@@ -233,6 +234,14 @@ prepare-lambda-deployment: # Downloads the required libraries for the Lambda fun
 	rm -f LICENSE
 	cp $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/service_etl.py \
 		$(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
+	cp -R $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/psycopg2 \
+		$(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
+create-lambda-deploy-dir:
+	if [ ! -d $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy ]
+	then
+		mkdir $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
+		touch $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy/test.txt
+	fi
 
 plan: # Plan environment - mandatory: PROFILE=[name]
 	make plan-base
@@ -346,7 +355,6 @@ monitor-r53-connection:
 	max_attempts=20
 	sleep 30
 	http_status_code=0
-
 	until [[ $$http_status_code -eq 200 ]]; do
 		sleep 20
 		if [[ $$attempt_counter -eq $$max_attempts ]]; then

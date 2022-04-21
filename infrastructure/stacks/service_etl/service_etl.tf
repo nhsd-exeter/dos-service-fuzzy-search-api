@@ -10,7 +10,7 @@ resource "aws_lambda_function" "service_etl_lambda" {
   memory_size      = local.service_etl_memory_size
   publish          = false
   tags             = local.standard_tags
-  layers           = [local.service_etl_core_dos_python_libs_arn]
+  //layers           = [local.service_etl_core_dos_python_libs_arn]
   environment {
     variables = {
       USR                = local.service_etl_db_user

@@ -7,9 +7,9 @@ ECR_TEXAS_URL_NONPROD = $(AWS_ECR_NON_PROD)/texas
 
 PROFILE := dev
 ENVIRONMENT := dev
-SPRING_PROFILES_ACTIVE := dev, mock-auth
+SPRING_PROFILES_ACTIVE := $(PROFILE), mock-auth
 API_IMAGE_TAG := v0.0.3
-MOCK_POSTCODE_IMAGE_TAG := latest
+
 
 SLEEP_AFTER_PLAN := 30s
 
@@ -97,6 +97,7 @@ ADD_DEFAULT_COGNITO_USERS := false
 
 #Once wiremock is deployed to dev environment calls to postcode api will be mocked
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-mock-postcode-ingress.k8s-nonprod.texasplatform.uk/api
+POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)

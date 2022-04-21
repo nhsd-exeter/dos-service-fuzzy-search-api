@@ -7,17 +7,17 @@ locals {
   service_etl_timeout     = 239
   service_etl_memory_size = 10240
 
-  service_etl_core_dos_python_libs_arn = data.aws_lambda_layer_version.dos_python_libs.arn
-  dos_sf_replica_db_sg                 = data.aws_security_group.service_finder_replica_sg.id
-  service_etl_db_user                  = var.service_etl_db_user
-  service_etl_source_db                = var.service_etl_source_db
-  service_etl_db_endpoint              = var.dos_sf_replica_db
-  service_etl_db_port                  = "5432"
-  service_etl_db_region                = "eu-west-2"
-  service_etl_db_secret_name           = var.dos_read_replica_secret_name
-  service_etl_db_secret_key            = var.dos_read_replica_secret_key
-  service_etl_db_secret_arn            = data.aws_secretsmanager_secret.dos_read_replica_secret_name.arn
-  service_etl_logging_level            = var.service_etl_logging_level
+  //service_etl_core_dos_python_libs_arn = data.aws_lambda_layer_version.dos_python_libs.arn
+  dos_sf_replica_db_sg       = data.aws_security_group.service_finder_replica_sg.id
+  service_etl_db_user        = var.service_etl_db_user
+  service_etl_source_db      = var.service_etl_source_db
+  service_etl_db_endpoint    = var.dos_sf_replica_db
+  service_etl_db_port        = "5432"
+  service_etl_db_region      = "eu-west-2"
+  service_etl_db_secret_name = var.dos_read_replica_secret_name
+  service_etl_db_secret_key  = var.dos_read_replica_secret_key
+  service_etl_db_secret_arn  = data.aws_secretsmanager_secret.dos_read_replica_secret_name.arn
+  service_etl_logging_level  = var.service_etl_logging_level
 
   es_domain_arn               = data.aws_elasticsearch_domain.elasticsearch.arn
   es_domain_endpoint          = data.aws_elasticsearch_domain.elasticsearch.endpoint

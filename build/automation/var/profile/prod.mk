@@ -1,4 +1,4 @@
-include $(VAR_DIR)/platform-texas/v1/account-live-k8s-nonprod.mk
+include $(VAR_DIR)/platform-texas/v1/account-live-k8s-prod.mk
 
 # ==============================================================================
 # Service variables
@@ -94,8 +94,10 @@ AUTHENTICATION_ENDPOINT = $(AUTH_LOGIN_URL)$(AUTH_LOGIN_URI)
 FUZZY_SEARCH_DOMAIN = $(PROJECT_ID)-$(PROFILE)-uec-dos-api-sfs-ingress.$(TEXAS_HOSTED_ZONE)
 FUZZY_SEARCH_ENDPOINT = https://$(FUZZY_SEARCH_DOMAIN)
 
-
-
 # Monitor deployment VARS
 CHECK_DEPLOYMENT_TIME_LIMIT := 600
 CHECK_DEPLOYMENT_POLL_INTERVAL := 10
+
+
+# Change to false after deployment
+ADD_DEFAULT_COGNITO_USERS := true

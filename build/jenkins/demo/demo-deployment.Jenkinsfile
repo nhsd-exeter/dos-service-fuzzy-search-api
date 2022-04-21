@@ -39,18 +39,33 @@ pipeline {
         }
       }
     }
+    stage('Check Py Lib Folder') {
+      steps {
+        script {
+          sh 'make create-lambda-deploy-dir'
+        }
+      }
+    }
+
+    stage('Plan Infrastructure') {
+      steps {
+        script {
+          sh "make plan_auth PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+    stage('Provision Infrastructure') {
+      steps {
+        script {
+          sh "make provision_auth PROFILE=${env.PROFILE}"
+        }
+      }
+    }
     // TODO: Backup elastic search
     stage('Plan Base Infrastructure') {
       steps {
         script {
           sh "make plan-base PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-    stage('Provision Base Infrastructure') {
-      steps {
-        script {
-          sh "make provision-base PROFILE=${env.PROFILE}"
         }
       }
     }
@@ -61,6 +76,14 @@ pipeline {
         }
       }
     }
+    stage('Provision Base Infrastructure') {
+      steps {
+        script {
+          sh "make provision-base PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+
     stage('Provision ETL Infrastructure') {
       steps {
         script {
@@ -93,6 +116,13 @@ pipeline {
       steps {
         script {
           sh 'make apply-data-changes'
+        }
+      }
+    }
+    stage('Populate Cognito Store') {
+      steps {
+        script {
+          sh 'make project-populate-cognito'
         }
       }
     }

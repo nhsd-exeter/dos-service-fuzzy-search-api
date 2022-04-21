@@ -14,18 +14,18 @@ public class MockDosServicesUtil {
   public static Map<Integer, DosService> mockDosServices = new HashMap<>();
 
   static {
-    mockDosServices.put(1, buildMockService1(1));
-    mockDosServices.put(2, buildMockService2());
+//    mockDosServices.put(1, buildMockService1("1"));
+//    mockDosServices.put(2, buildMockService1("2"));
     addMockServices(20);
   }
 
-  public static void addMockServices(int numberToAdd) {
+  private static void addMockServices(int numberToAdd) {
     for (int i = mockDosServices.size() + 1; i <= numberToAdd; i++) {
-      mockDosServices.put(i, buildMockService1(i));
+      mockDosServices.put(i, buildMockService1(String.valueOf(i)));
     }
   }
 
-  private static DosService buildMockService1(int identifier) {
+  private static DosService buildMockService1(String identifier) {
 
     List<String> address = new ArrayList<>();
     address.add(identifier + " Service Street");
@@ -37,43 +37,17 @@ public class MockDosServicesUtil {
     referralRoles.add("Role 2");
 
     return new DosService.DosServiceBuilder()
-        .id(identifier)
+        .id(Integer.valueOf(identifier))
         .uIdentifier(identifier)
         .name("service" + identifier)
         .publicName("Public Service Name " + identifier)
         .type("Type 1")
-        .typeId(1)
+        .typeId(Integer.parseInt(identifier))
         .odsCode("odscode" + identifier)
         .capacityStatus("GREEN")
         .address(address)
         .postcode("EX7 8PR")
         .referralRoles(referralRoles)
-        .build();
-  }
-
-  private static DosService buildMockService2() {
-
-    List<String> address2 = new ArrayList<>();
-    address2.add("2 Service Street");
-    address2.add("Service town");
-    address2.add("Exmouth");
-
-    List<String> referralRoles2 = new ArrayList<>();
-    referralRoles2.add("Role 1");
-    referralRoles2.add("Role 4");
-
-    return new DosService.DosServiceBuilder()
-        .id(2)
-        .uIdentifier(23)
-        .name("service2")
-        .publicName("Public Service Name 2")
-        .type("Type 2")
-        .typeId(2)
-        .odsCode("odscode2")
-        .capacityStatus("AMBER")
-        .address(address2)
-        .postcode("EX7 8PR")
-        .referralRoles(referralRoles2)
         .build();
   }
 }

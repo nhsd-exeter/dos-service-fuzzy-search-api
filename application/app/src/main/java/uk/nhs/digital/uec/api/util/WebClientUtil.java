@@ -64,6 +64,8 @@ public class WebClientUtil {
           "Error while connecting Postcode mapping location service from Fuzzy search service: "
               + e.getMessage());
       return Collections.emptyList();
+    } catch (Exception e) {
+      log.error("Error from Postcode Mapping API: " + e.getCause());
     }
     return postcodeMappingLocationList;
   }
