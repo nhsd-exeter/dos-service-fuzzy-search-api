@@ -14,12 +14,12 @@ public class MockDosServicesUtil {
   public static Map<Integer, DosService> mockDosServices = new HashMap<>();
 
   static {
-    mockDosServices.put(1, buildMockService1("1"));
-    mockDosServices.put(2, buildMockService1("2"));
+//    mockDosServices.put(1, buildMockService1("1"));
+//    mockDosServices.put(2, buildMockService1("2"));
     addMockServices(20);
   }
 
-  public static void addMockServices(int numberToAdd) {
+  private static void addMockServices(int numberToAdd) {
     for (int i = mockDosServices.size() + 1; i <= numberToAdd; i++) {
       mockDosServices.put(i, buildMockService1(String.valueOf(i)));
     }
