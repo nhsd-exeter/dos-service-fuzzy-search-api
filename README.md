@@ -12,6 +12,7 @@
   - [Local Project Setup](#local-project-setup)
     - [Development Requirements](#development-requirements)
     - [Local Environment Configuration](#local-environment-configuration)
+    - [Set up IDE](#set-up-ide)
     - [Start application](#start-application)
     - [Running the API unit tests](#running-the-api-unit-tests)
     - [Stopping the API](#stopping-the-api)
@@ -120,6 +121,13 @@ Generate and trust a self-signed certificate that will be used locally to enable
 
     make trust-certificate
 
+### Set up IDE
+
+To open application use the command line command as the following
+
+  code project.code-workspace
+
+This is to ensure that the project settings are uniform for all developers.
 ### Start application
 
   To build the API, run the following make target:
