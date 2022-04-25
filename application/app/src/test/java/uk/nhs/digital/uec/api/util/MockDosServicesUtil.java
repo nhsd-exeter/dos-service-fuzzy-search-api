@@ -14,8 +14,6 @@ public class MockDosServicesUtil {
   public static Map<Integer, DosService> mockDosServices = new HashMap<>();
 
   static {
-//    mockDosServices.put(1, buildMockService1("1"));
-//    mockDosServices.put(2, buildMockService1("2"));
     addMockServices(20);
   }
 
@@ -36,18 +34,18 @@ public class MockDosServicesUtil {
     referralRoles.add("Role 1");
     referralRoles.add("Role 2");
 
-    return new DosService.DosServiceBuilder()
+    return DosService.builder()
         .id(Integer.valueOf(identifier))
-        .uIdentifier(identifier)
+        .u_id(Integer.valueOf(identifier))
         .name("service" + identifier)
-        .publicName("Public Service Name " + identifier)
+        .public_name("Public Service Name " + identifier)
         .type("Type 1")
-        .typeId(Integer.parseInt(identifier))
-        .odsCode("odscode" + identifier)
-        .capacityStatus("GREEN")
+        .type_id(Integer.parseInt(identifier))
+        .ods_code("odscode" + identifier)
+        .capacity_status("GREEN")
         .address(address)
         .postcode("EX7 8PR")
-        .referralRoles(referralRoles)
+        .referral_roles(referralRoles)
         .build();
   }
 }
