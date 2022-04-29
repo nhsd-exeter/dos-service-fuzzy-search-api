@@ -1,5 +1,6 @@
 package uk.nhs.digital.uec.api.util;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,7 @@ public class WebClientUtil {
   public List<PostcodeLocation> getPostcodeMappings(
       List<String> postCodes, MultiValueMap<String, String> headers, String psmUri)
       throws InvalidParameterException {
-    List<PostcodeLocation> postcodeMappingLocationList = null;
+    List<PostcodeLocation> postcodeMappingLocationList = new ArrayList<>();
     try {
       postcodeMappingLocationList =
           postCodeMappingWebClient

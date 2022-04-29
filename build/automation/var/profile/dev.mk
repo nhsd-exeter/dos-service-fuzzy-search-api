@@ -102,4 +102,3 @@ POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
 AUTH_LOGIN_URI := /authentication/login
-AUTHENTICATION_ENDPOINT = $(AUTH_LOGIN_URL)$(AUTH_LOGIN_URI)

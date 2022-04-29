@@ -236,6 +236,7 @@ prepare-lambda-deployment: # Downloads the required libraries for the Lambda fun
 		$(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
 	cp -R $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/psycopg2 \
 		$(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy
+
 create-lambda-deploy-dir:
 	if [ ! -d $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy ]
 	then

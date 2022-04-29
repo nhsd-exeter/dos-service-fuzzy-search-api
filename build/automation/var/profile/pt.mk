@@ -100,3 +100,6 @@ POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-dev-uec-dos-api-pc-ingre
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
 AUTH_LOGIN_URI := /authentication/login
 AUTHENTICATION_ENDPOINT = $(AUTH_LOGIN_URL)$(AUTH_LOGIN_URI)
+
+FUZZY_SEARCH_DOMAIN = $(PROJECT_ID)-$(PROFILE)-uec-dos-api-sfs-ingress.$(TEXAS_HOSTED_ZONE)
+FUZZY_SEARCH_ENDPOINT = https://$(FUZZY_SEARCH_DOMAIN)

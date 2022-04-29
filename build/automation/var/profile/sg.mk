@@ -37,7 +37,7 @@ MIN_SEARCH_TERM_LENGTH := 3
 MAX_SEARCH_CRITERIA := 5
 
 # Search parameters
-MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH := 3000
+MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH := 300
 MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH_3_SEARCH_TERMS := 100
 MAX_NUM_SERVICES_TO_RETURN := 5
 FUZZ_LEVEL := 2
@@ -54,34 +54,24 @@ CHECK_DEPLOYMENT_POLL_INTERVAL := 10
 # Infrastructure variables
 
 DEPLOYMENT_STACKS = application
-INFRASTRUCTURE_STACKS = $(INFRASTRUCTURE_STACKS_BASE),$(INFRASTRUCTURE_STACKS_ETL)
-INFRASTRUCTURE_STACKS_DESTROY = $(INFRASTRUCTURE_STACKS_ETL),$(INFRASTRUCTURE_STACKS_BASE)
 INFRASTRUCTURE_STACKS_BASE = elasticsearch
 INFRASTRUCTURE_STACKS_ETL = service_etl
 INFRASTRUCTURE_STACKS_AUTH = authentication
-SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
-TF_VAR_service_prefix := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 
+INFRASTRUCTURE_STACKS = $(INFRASTRUCTURE_STACKS_BASE),$(INFRASTRUCTURE_STACKS_ETL)
+INFRASTRUCTURE_STACKS_DESTROY = $(INFRASTRUCTURE_STACKS_ETL),$(INFRASTRUCTURE_STACKS_BASE)
+
+
+SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
+
+TF_VAR_service_prefix := $(SERVICE_PREFIX)
 TF_VAR_es_zone_awareness_enabled := true
 TF_VAR_es_availability_zone_count := 2
 TF_VAR_es_instance_count := 2
 TF_VAR_es_instance_type := m4.large.elasticsearch
 TF_VAR_es_snapshot_bucket := $(TF_VAR_service_prefix)-elastic-search-snapshots
 TF_VAR_es_snapshot_role := $(TF_VAR_service_prefix)-elasticsearch-snapshot
-TF_VAR_es_domain_name := $(TF_VAR_service_prefix)-service
-TF_VAR_service_etl_logging_level := INFO
-TF_VAR_service_etl_sns_logging_level := INFO
-TF_VAR_service_etl_sns_email := service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si.slack.com
-
-TF_VAR_service_etl_alarm_period := 240
-
-# Connection to DoS Read Replica for extraction Lambdas. For the Demo env we point to the live read replica
-TF_VAR_dos_sf_replica_db := uec-core-dos-performance-db-12-replica-sf.dos-db-rds
-TF_VAR_service_finder_replica_sg := uec-core-dos-perf-db-12-replica-sf-sg
-TF_VAR_dos_read_replica_secret_name := core-dos/deployment
-TF_VAR_dos_read_replica_secret_key := DB_SF_READONLY_PASSWORD
-TF_VAR_service_etl_db_user := dos_sf_readonly
-TF_VAR_service_etl_source_db := pathwaysdos
+TF_VAR_es_domain_name := $(DOMAIN)
 
 # See : https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html
 TF_VAR_service_etl_cron_timer_minutes := 0/4
@@ -90,8 +80,19 @@ TF_VAR_service_etl_cron_timer_day_of_month := *
 TF_VAR_service_etl_cron_timer_month := *
 TF_VAR_service_etl_cron_timer_day_of_week := ?
 TF_VAR_service_etl_cron_timer_year := *
+TF_VAR_service_etl_logging_level := INFO
+TF_VAR_service_etl_sns_logging_level := INFO
+TF_VAR_service_etl_sns_email := service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si.slack.com
+TF_VAR_service_etl_alarm_period := 240
+# TF_VAR_service_etl_alarm_period := 86400
 
-TF_VAR_service_etl_alarm_period := 86400
+# Connection to DoS Read Replica for extraction Lambdas. For the Demo env we point to the live read replica
+TF_VAR_dos_sf_replica_db := uec-core-dos-performance-db-12-replica-sf.dos-db-rds
+TF_VAR_service_finder_replica_sg := uec-core-dos-perf-db-12-replica-sf-sg
+TF_VAR_dos_read_replica_secret_name := core-dos/deployment
+TF_VAR_dos_read_replica_secret_key := DB_SF_READONLY_PASSWORD
+TF_VAR_service_etl_db_user := dos_sf_readonly
+TF_VAR_service_etl_source_db := pathwaysdos
 
 #Cognito user pool details
 COGNITO_USER_POOL := $(TF_VAR_service_prefix)-authentication
@@ -103,10 +104,8 @@ ADD_DEFAULT_COGNITO_USERS := false
 
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-$(PROFILE)-uec-dos-api-pc-ingress.$(TEXAS_HOSTED_ZONE)/api
 POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
+POSTCODE_MAPPING_PASSWORD := $(FUZZY_API_COGNIGTO_USER_PASSWORD)
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
 AUTH_LOGIN_URI := /authentication/login
-AUTHENTICATION_ENDPOINT = $(AUTH_LOGIN_URL)$(AUTH_LOGIN_URI)
-
-ADD_DEFAULT_COGNITO_USERS := false
