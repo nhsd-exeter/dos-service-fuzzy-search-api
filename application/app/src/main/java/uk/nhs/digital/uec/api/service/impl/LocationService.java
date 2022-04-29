@@ -1,7 +1,6 @@
 package uk.nhs.digital.uec.api.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.decimal4j.util.DoubleRounder;
@@ -35,11 +34,11 @@ public class LocationService implements LocationServiceInterface {
     if (StringUtils.isBlank(postcode)) {
       return null;
     }
+    List<String> sanitisedPostcodes =
+        apiUtilsService.removeBlankSpacesIn(Stream.of(postcode).toList());
     List<PostcodeLocation> postcodeMappings =
-        apiHandshakeService.getPostcodeMappings(
-            apiUtilsService.removeBlankSpacesIn(Stream.of(postcode).toList()), headers);
-    Optional<PostcodeLocation> postcodeLocation = postcodeMappings.stream().findFirst();
-    return postcodeLocation.isPresent() ? postcodeLocation.get() : null;
+        apiHandshakeService.getPostcodeMappings(sanitisedPostcodes, headers);
+    return postcodeMappings.stream().findFirst().orElse(null);
   }
 
   /** {@inheritDoc} */

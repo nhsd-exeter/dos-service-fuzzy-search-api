@@ -48,6 +48,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
               apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms(), 2);
     }
 
+    Long start = System.currentTimeMillis();
     Iterable<DosService> services =
         servicesRepo.findBySearchTerms(
             searchCriteria,
@@ -57,6 +58,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
             apiRequestParams.getPostcodePriority(),
             apiRequestParams.getPublicNamePriority(),
             PageRequest.of(0, numServicesToReturnFromEs));
+    log.info("Search query duration {}ms", System.currentTimeMillis() - start);
 
     Iterator<DosService> serviceit = services.iterator();
     while (serviceit.hasNext()) {
