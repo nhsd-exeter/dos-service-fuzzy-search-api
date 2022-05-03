@@ -7,8 +7,7 @@ CERTIFICATE_DOMAIN := localhost
 ALLOWED_ORIGINS := *
 
 # Datastore URLs
-ELASTICSEARCH_URL := https://vpc-uec-dos-api-sfsa-dev-service-v2nq2jqh7w6cmjmjh25n56zdfq.eu-west-2.es.amazonaws.com
-# ELASTICSEARCH_URL := http://elasticsearch.sfs.local:9200
+ELASTICSEARCH_URL := http://elasticsearch.sfs.local:9200
 API_SERVICE_SEARCH_ENDPOINT := https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch
 
 SERVER_PORT := 8443
