@@ -37,6 +37,7 @@ public class CognitoIdpServiceTest {
   private String userPass;
   private String accessToken;
   private String refreshToken;
+  private AuthenticationResultType authenticationResult;
 
   @BeforeEach
   public void setup() {
@@ -46,20 +47,42 @@ public class CognitoIdpServiceTest {
     userPass = "password";
     accessToken = "ACCESS_TOKEN_123";
     refreshToken = "REFRESH_TOKEN_123";
+    authenticationResult = new AuthenticationResultType();
+    authenticationResult.setAccessToken(accessToken);
+    authenticationResult.setRefreshToken(refreshToken);
   }
 
   @Test
   public void authenticationPositiveTest() throws UnauthorisedException {
     Credential cred = new Credential(user, userPass);
     InitiateAuthResult authResult = new InitiateAuthResult();
-    AuthenticationResultType authenticationResult = new AuthenticationResultType();
-    authenticationResult.setAccessToken(accessToken);
-    authenticationResult.setRefreshToken(refreshToken);
     authResult.setAuthenticationResult(authenticationResult);
-
     when(environment.getActiveProfiles()).thenReturn(new String[1]);
     when(cognitoClient.initiateAuth(any())).thenReturn(authResult);
     AuthToken accessTokenResponse = cognitoService.authenticate(cred);
+    assertNotNull(accessTokenResponse.getAccessToken());
+  }
+
+  @Test
+  public void authenticationWithRefreshToken() throws UnauthorisedException {
+    InitiateAuthResult authResult = new InitiateAuthResult();
+    authResult.setAuthenticationResult(authenticationResult);
+    when(environment.getActiveProfiles()).thenReturn(new String[1]);
+
+    when(cognitoClient.initiateAuth(any())).thenReturn(authResult);
+    AuthToken accessTokenResponse = cognitoService.authenticate(refreshToken, "user");
+    assertNotNull(accessTokenResponse.getAccessToken());
+  }
+
+  @Test
+  public void authenticationWithRefreshTokenMockEnv() throws UnauthorisedException {
+    InitiateAuthResult authResult = new InitiateAuthResult();
+    authResult.setAuthenticationResult(authenticationResult);
+
+    when(environment.getActiveProfiles()).thenReturn(new String[] {"dev", "mock-auth"});
+    when(cognitoClient.initiateAuth(any())).thenReturn(authResult);
+    AuthToken accessTokenResponse =
+        cognitoService.authenticate(refreshToken, "service-finder-admin@nhs.net");
     assertNotNull(accessTokenResponse.getAccessToken());
   }
 
@@ -68,12 +91,17 @@ public class CognitoIdpServiceTest {
     Credential cred = new Credential("service-finder-admin@nhs.net", "mock-auth-pass");
     when(environment.getActiveProfiles()).thenReturn(new String[] {"dev", "mock-auth"});
     InitiateAuthResult authResult = new InitiateAuthResult();
-    AuthenticationResultType authenticationResult = new AuthenticationResultType();
-    authenticationResult.setAccessToken(accessToken);
-    authenticationResult.setRefreshToken(refreshToken);
     authResult.setAuthenticationResult(authenticationResult);
     AuthToken accessTokenResponse = cognitoService.authenticate(cred);
     assertNotNull(accessTokenResponse.getAccessToken());
+  }
+
+  @Test
+  public void authenticationWithInvalidRefreshToken() throws UnauthorisedException {
+    when(environment.getActiveProfiles()).thenReturn(new String[] {});
+    when(cognitoClient.initiateAuth(any())).thenThrow(AWSCognitoIdentityProviderException.class);
+    assertThrows(
+        UnauthorisedException.class, () -> cognitoService.authenticate(refreshToken, user));
   }
 
   @Test
@@ -81,7 +109,8 @@ public class CognitoIdpServiceTest {
     Credential cred = new Credential("wrong@nhs.net", "mock-auth");
     when(environment.getActiveProfiles()).thenReturn(new String[] {"dev", "mock-auth"});
     when(cognitoClient.initiateAuth(any())).thenThrow(AWSCognitoIdentityProviderException.class);
-    assertThrows(AWSCognitoIdentityProviderException.class, () -> cognitoService.authenticate(cred));
+    assertThrows(
+        AWSCognitoIdentityProviderException.class, () -> cognitoService.authenticate(cred));
   }
 
   @Test

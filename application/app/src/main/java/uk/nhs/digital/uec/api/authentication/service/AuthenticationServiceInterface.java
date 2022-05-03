@@ -6,5 +6,7 @@ import uk.nhs.digital.uec.api.authentication.model.Credential;
 
 public interface AuthenticationServiceInterface {
 
-  public AuthToken getAccessToken(Credential credentials) throws UnauthorisedException;
+  AuthToken getAccessToken(Credential credentials) throws UnauthorisedException;
+
+  AuthToken getAccessToken(String refreshToken, String email) throws UnauthorisedException;
 }

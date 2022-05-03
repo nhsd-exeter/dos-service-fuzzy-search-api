@@ -3,6 +3,7 @@ package uk.nhs.digital.uec.api.authentication.service;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,15 +19,34 @@ public class AuthenticationServiceTest {
 
   @InjectMocks AuthenticationService authService;
   @Mock CognitoIdpServiceImpl cognitoIdpService;
+  Credential cred;
+
+  @BeforeEach
+  public void setup() {
+    cred = new Credential("admin@nhs.net", "password");
+  }
 
   @Test
   public void getAccessTokenTest() throws UnauthorisedException {
     AuthToken authToken = new AuthToken();
-    Credential cred = new Credential("admin@nhs.net", "password");
     authToken.setAccessToken("ACCESS_TOKEN_123");
     authToken.setRefreshToken("REFRESH_TOKEN_123");
     when(cognitoIdpService.authenticate(cred)).thenReturn(authToken);
     AuthToken accessToken = authService.getAccessToken(cred);
+
+    assertNotNull(accessToken.getAccessToken());
+  }
+
+  @Test
+  public void getAccessTokenTestFromRefresh() throws UnauthorisedException {
+    AuthToken authToken = new AuthToken();
+    String refreshToken = "REFRESH_TOKEN_123";
+    authToken.setAccessToken("ACCESS_TOKEN_123");
+    authToken.setRefreshToken("REFRESH_TOKEN_123");
+    when(cognitoIdpService.authenticate(refreshToken, cred.getEmailAddress()))
+        .thenReturn(authToken);
+
+    AuthToken accessToken = authService.getAccessToken(refreshToken, cred.getEmailAddress());
 
     assertNotNull(accessToken.getAccessToken());
   }

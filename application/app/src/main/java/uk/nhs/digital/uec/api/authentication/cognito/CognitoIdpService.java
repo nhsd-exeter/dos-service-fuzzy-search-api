@@ -15,4 +15,6 @@ public interface CognitoIdpService {
    * @return AuthToken object
    */
   AuthToken authenticate(Credential credential) throws UnauthorisedException;
+
+  AuthToken authenticate(String refreshToken, String email) throws UnauthorisedException;
 }
