@@ -22,7 +22,7 @@
         "services": [
           {
             "id": 45081,
-            "u_identifier": "1372850440",
+            "u_id": "1372850440",
             "name": "Dental Practice Woodbury Park Dental Practice Kent",
             "capacity_status": "GREEN",
             "type_id": 28,
@@ -41,7 +41,7 @@
           },
           {
             "id": 45078,
-            "u_identifier": "1372850140",
+            "u_id": "1372850140",
             "name": "GP - Woodbury Surgery - Woodbury - GPC",
             "capacity_status": "GREEN",
             "type_id": 28,

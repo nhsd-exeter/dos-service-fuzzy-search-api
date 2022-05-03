@@ -4,9 +4,9 @@ include $(VAR_DIR)/platform-texas/v1/account-live-k8s-prod.mk
 # Service variables
 AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/c0718115-4e22-4f48-a4aa-8c16ea86c5e6
 
-PROFILE := prod
-ENVIRONMENT := prod
-SPRING_PROFILES_ACTIVE := prod
+PROFILE := pd
+ENVIRONMENT := $(PROFILE)
+SPRING_PROFILES_ACTIVE := $(PROFILE)
 API_IMAGE_TAG := v0.0.3
 SLEEP_AFTER_PLAN := 120s
 
