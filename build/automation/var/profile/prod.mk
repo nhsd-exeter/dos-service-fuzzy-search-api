@@ -4,11 +4,11 @@ include $(VAR_DIR)/platform-texas/v1/account-live-k8s-prod.mk
 # Service variables
 AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/c0718115-4e22-4f48-a4aa-8c16ea86c5e6
 
-PROFILE := prod
-ENVIRONMENT := prod
-SPRING_PROFILES_ACTIVE := prod
+PROFILE := pd
+ENVIRONMENT := $(PROFILE)
+SPRING_PROFILES_ACTIVE := $(PROFILE)
 API_IMAGE_TAG := v0.0.3
-SLEEP_AFTER_PLAN := 2m
+SLEEP_AFTER_PLAN := 120s
 
 CERTIFICATE_DOMAIN := certificate
 ALLOWED_ORIGINS := *
@@ -107,6 +107,6 @@ POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-$(PROFILE)-uec-dos-api-p
 POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
 POSTCODE_MAPPING_PASSWORD := $(FUZZY_API_COGNIGTO_USER_PASSWORD)
 
-#Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
+##         sAuthentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
 AUTH_LOGIN_URI := /authentication/login
