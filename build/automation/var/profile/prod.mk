@@ -107,6 +107,6 @@ POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-$(PROFILE)-uec-dos-api-p
 POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
 POSTCODE_MAPPING_PASSWORD := $(FUZZY_API_COGNIGTO_USER_PASSWORD)
 
-#Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
+##         sAuthentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
 AUTH_LOGIN_URI := /authentication/login
