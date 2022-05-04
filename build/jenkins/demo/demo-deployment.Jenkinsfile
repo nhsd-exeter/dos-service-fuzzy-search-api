@@ -69,13 +69,6 @@ pipeline {
         }
       }
     }
-    stage('Plan ETL Infrastructure') {
-      steps {
-        script {
-          sh "make plan-etl PROFILE=${env.PROFILE}"
-        }
-      }
-    }
     stage('Provision Base Infrastructure') {
       steps {
         script {
@@ -83,6 +76,14 @@ pipeline {
         }
       }
     }
+    stage('Plan ETL Infrastructure') {
+      steps {
+        script {
+          sh "make plan-etl PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+
 
     stage('Provision ETL Infrastructure') {
       steps {
