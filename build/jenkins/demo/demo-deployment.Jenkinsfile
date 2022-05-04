@@ -84,7 +84,6 @@ pipeline {
       }
     }
 
-
     stage('Provision ETL Infrastructure') {
       steps {
         script {
