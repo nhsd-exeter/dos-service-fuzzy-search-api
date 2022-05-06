@@ -28,6 +28,7 @@ pipeline {
     stage('Show Variables') {
       steps {
         script {
+          sh "make destroy-infrastructure PROFILE=${env.PROFILE}"
           sh 'make devops-print-variables'
         }
       }

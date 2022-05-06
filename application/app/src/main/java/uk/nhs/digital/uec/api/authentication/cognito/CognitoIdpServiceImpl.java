@@ -1,6 +1,8 @@
 package uk.nhs.digital.uec.api.authentication.cognito;
 
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.PASSWORD;
+import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.REFRESH_TOKEN;
+import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.REFRESH_TOKEN_AUTH;
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.USERNAME;
 import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.USER_PASSWORD_AUTH;
 import static uk.nhs.digital.uec.api.util.Utils.calculateSecretHash;
@@ -55,6 +57,22 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
     } catch (InvalidPasswordException | NotAuthorizedException e) {
       log.error(e.getErrorMessage());
       throw new UnauthorisedException(e.getErrorMessage());
+    } catch (AWSCognitoIdentityProviderException e) {
+      log.error(e.getErrorMessage());
+      throw new UnauthorisedException(e.getErrorMessage());
+    }
+  }
+
+  @Override
+  public AuthToken authenticate(String refreshToken, String email) throws UnauthorisedException {
+    if(Arrays.asList(environment.getActiveProfiles()).contains(("mock-auth"))){
+      return getMockAuthenticationToken(Credential.builder().emailAddress(email).password("mock-auth-pass").build());
+    }
+    Map<String, String> authenticationParameters =
+      Map.of(REFRESH_TOKEN, refreshToken,
+        SECRET_HASH, calculateSecretHash(email, userPoolClientId, userPoolClientSecret));
+    try {
+      return getAuthenticationTokens(REFRESH_TOKEN_AUTH, authenticationParameters);
     } catch (AWSCognitoIdentityProviderException e) {
       log.error(e.getErrorMessage());
       throw new UnauthorisedException(e.getErrorMessage());

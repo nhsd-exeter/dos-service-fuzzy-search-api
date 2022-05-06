@@ -22,6 +22,7 @@ import uk.nhs.digital.uec.api.filter.TokenEntryPoint;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   public static final String LOGIN_URL = "/authentication/login";
+  public static final String REFRESH_URL = "/authentication/refresh";
   public static final String HEALTH_CHECK_READINESS_URL = "/actuator/health/readiness";
   public static final String HEALTH_CHECK_LIVENESS_URL = "/actuator/health/liveness";
   public static final String WELCOME_URL = "/api/home";
@@ -52,7 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             SWAGGER_RESOURCES_DIR,
             SWAGGER_WEBJARS,
             SWAGGER_API_DOCS_DIR,
-            SWAGGER_UI_DIR);
+            SWAGGER_UI_DIR,
+            REFRESH_URL);
 
     http.addFilterBefore(accessTokenFilter, AbstractPreAuthenticatedProcessingFilter.class)
         .cors()
