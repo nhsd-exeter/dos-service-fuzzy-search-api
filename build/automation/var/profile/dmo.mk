@@ -46,7 +46,6 @@ NAME_PUBLIC_PRIORITY := 100
 CHECK_DEPLOYMENT_TIME_LIMIT := 600
 CHECK_DEPLOYMENT_POLL_INTERVAL := 10
 
-
 # ==============================================================================
 # Infrastructure variables
 
