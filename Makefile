@@ -342,14 +342,17 @@ deploy-artefact:
 
 apply-data-changes:
 	eval "$$(make aws-assume-role-export-variables)"
-	http_result=$$(aws lambda invoke --function-name $(PROJECT_ID)-$(PROFILE)-service-etl out.json --log-type Tail | jq .StatusCode)
-	if [[ ! $$http_result -eq 200 ]]; then
-		cat out.json
-		rm -r out.json
-		exit 1
-	fi
-	echo $$http_result
+	process=$$(aws lambda invoke --function-name $(PROJECT_ID)-$(PROFILE)-service-etl out.json --log-type Tail | jq .StatusCode)
+	cat out.json
 	rm -r out.json
+	# http_result=$$(aws lambda invoke --function-name $(PROJECT_ID)-$(PROFILE)-service-etl out.json --log-type Tail | jq .StatusCode)
+	# if [[ ! $$http_result -eq 200 ]]; then
+	# 	cat out.json
+	# 	rm -r out.json
+	# 	exit 1
+	# fi
+	# echo $$http_result
+	# rm -r out.json
 
 monitor-r53-connection:
 	attempt_counter=1
