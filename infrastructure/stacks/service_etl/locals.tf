@@ -4,7 +4,7 @@ locals {
   service_etl_description   = "Service Finder function to extract data out of the DoS Read Replica and insert it into the elasticsearch datastore. Runs every 5 mins"
   service_etl_runtime       = "python3.8"
   //This is set to 3 mins and 59 seconds as the timer is set to run every 4 mins so it will timeout before the next job starts
-  service_etl_timeout     = 239
+  service_etl_timeout     = 299 //239
   service_etl_memory_size = 10240
 
   //service_etl_core_dos_python_libs_arn = data.aws_lambda_layer_version.dos_python_libs.arn
