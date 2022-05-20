@@ -260,7 +260,7 @@ plan-base: # Plan environment - mandatory: PROFILE=[name]
 	sleep $(SLEEP_AFTER_PLAN)
 
 provision-base: # Provision environment - mandatory: PROFILE=[name]
-	eval "$$(make aws-assume-role-export-variables)"
+	# eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
 	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS_BASE) PROFILE=$(PROFILE)
 
