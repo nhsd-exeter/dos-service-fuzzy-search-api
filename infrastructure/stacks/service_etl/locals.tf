@@ -7,7 +7,7 @@ locals {
   service_etl_timeout     = 299 //239
   service_etl_memory_size = 10240
 
-  //service_etl_core_dos_python_libs_arn = data.aws_lambda_layer_version.dos_python_libs.arn
+  ///service_etl_core_dos_python_libs_arn = data.aws_lambda_layer_version.dos_python_libs.arn
   dos_sf_replica_db_sg       = data.aws_security_group.service_finder_replica_sg.id
   service_etl_db_user        = var.service_etl_db_user
   service_etl_source_db      = var.service_etl_source_db
