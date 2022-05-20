@@ -25,7 +25,45 @@ resource "aws_iam_role" "iam_host_role" {
             "${trimprefix(data.terraform_remote_state.eks.outputs.eks_oidc_issuer_url, "https://")}:sub": "system:serviceaccount:${var.project_id}*:${var.application_service_account_name}"
         }
       }
-    }
+    },
+    {
+      "Sid": "EnableAnotherAWSAccountToReadTheSecret",
+      "Effect": "Allow",
+      "Principal": {
+        "Federated" : "arn:aws:iam::${var.aws_account_id}:oidc-provider/${trimprefix(data.terraform_remote_state.eks.outputs.eks_oidc_issuer_url, "https://")}"
+        },
+      "Action": [
+                "secretsmanager:GetResourcePolicy",
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:ListSecretVersionIds"
+            ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated" : "arn:aws:iam::${var.aws_account_id}:oidc-provider/${trimprefix(data.terraform_remote_state.eks.outputs.eks_oidc_issuer_url, "https://")}"
+        },
+      "Action": [
+        "s3:ListAllMyBuckets",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": "*"
+    },
+    {
+            "Sid": "DescribeQueryScanBooksTable",
+            "Effect": "Allow",
+            "Principal": {
+              "Federated" : "arn:aws:iam::${var.aws_account_id}:oidc-provider/${trimprefix(data.terraform_remote_state.eks.outputs.eks_oidc_issuer_url, "https://")}"
+            },
+            "Action": [
+                "dynamodb:DescribeTable",
+                "dynamodb:Query",
+                "dynamodb:Scan"
+            ],
+            "Resource": "*"
+        }
   ]
 }
 EOF
