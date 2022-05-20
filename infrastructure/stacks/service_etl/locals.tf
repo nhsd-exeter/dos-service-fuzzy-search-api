@@ -1,8 +1,8 @@
 locals {
-
-  service_etl_function_name = "${var.service_prefix}-service-etl"
-  service_etl_description   = "Service Finder function to extract data out of the DoS Read Replica and insert it into the elasticsearch datastore. Runs every 5 mins"
-  service_etl_runtime       = "python3.8"
+  service_account_iam_role_name = "$(var.service_prefix)-host-iam-role"
+  service_etl_function_name     = "${var.service_prefix}-service-etl"
+  service_etl_description       = "Service Finder function to extract data out of the DoS Read Replica and insert it into the elasticsearch datastore. Runs every 5 mins"
+  service_etl_runtime           = "python3.8"
   //This is set to 3 mins and 59 seconds as the timer is set to run every 4 mins so it will timeout before the next job starts
   service_etl_timeout     = 299 //239
   service_etl_memory_size = 10240

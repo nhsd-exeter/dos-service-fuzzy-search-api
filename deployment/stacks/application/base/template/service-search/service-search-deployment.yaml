@@ -19,8 +19,8 @@ spec:
       labels:
         app: service-search
     spec:
-      serviceAccountName: uec-dos-api-sfs-service-account
-      serviceAccount: uec-dos-api-sfs-service-account
+      serviceAccountName: uec-dos-api-sfsa-service-account
+      serviceAccount: uec-dos-api-sfsa-service-account
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -36,6 +36,8 @@ spec:
       containers:
       - name: service-search
         image: DOCKER_REGISTRY_TO_REPLACE/api:API_IMAGE_TAG_TO_REPLACE
+        securityContext:
+          runAsUser: 0
         envFrom:
         - configMapRef:
             name: service-search-configmap

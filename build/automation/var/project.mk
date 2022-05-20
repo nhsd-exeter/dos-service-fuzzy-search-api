@@ -6,6 +6,7 @@ PROJECT_NAME = service-fuzzy-search-api
 PROJECT_NAME_SHORT = sfsa
 PROJECT_DISPLAY_NAME = DoS Service Fuzzy Search API
 PROJECT_ID = $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)
+APPLICATION_SA_NAME = $(PROJECT_ID)-sa
 
 TEAM_NAME = Service Finder
 TEAM_ID = service-finder
