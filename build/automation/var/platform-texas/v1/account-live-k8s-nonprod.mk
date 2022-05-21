@@ -7,6 +7,7 @@ TEXAS_WAF_ACL_ID = dfae6ec3-aa05-428f-a022-5fd85f646009
 
 TF_VAR_project_id = $(PROJECT_ID)
 TF_VAR_terraform_platform_state_store = nhsd-texasplatform-terraform-state-store-live-lk8s-$(AWS_ACCOUNT_NAME)
+TF_VAR_eks_terraform_state_key = eks/terraform.tfstate
 TF_VAR_aws_account_id = $(AWS_ACCOUNT_ID_NONPROD)
 TF_VAR_application_service_account_name = $(APPLICATION_SA_NAME)
 

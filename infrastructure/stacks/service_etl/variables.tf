@@ -9,6 +9,8 @@ variable "aws_region" { description = "Texas AWS deployment region" }
 
 variable "terraform_platform_state_store" { description = "Name of the S3 bucket used to store the platform infrastructure terraform state" }
 
+variable "eks_terraform_state_key" { description = "eks terraform state key defined in  env" }
+
 variable "vpc_terraform_state_key" { description = "The VPC key in the terraform state bucket" }
 
 variable "es_domain_name" { description = "Elastic search domain name" }
