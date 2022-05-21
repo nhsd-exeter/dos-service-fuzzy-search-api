@@ -3,7 +3,7 @@ variable "aws_profile" { description = "Texas AWS profile name" }
 
 variable "profile" { description = "K8s deployment profile name that can be either 'nonprod' or 'prod'" }
 
-variable "pproject_id" { description = "product id for either nonprod or prod" }
+variable "project_id" { description = "product id for either nonprod or prod" }
 
 variable "aws_account_id" { description = "aws_account id for either nonprod or prod" }
 
