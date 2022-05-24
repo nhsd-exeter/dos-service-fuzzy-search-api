@@ -19,8 +19,8 @@ spec:
       labels:
         app: mock-postcode-service
     spec:
-      serviceAccountName: uec-dos-api-sfs-service-account
-      serviceAccount: uec-dos-api-sfs-service-account
+      serviceAccountName: uec-dos-api-sfsa-service-account
+      serviceAccount: uec-dos-api-sfsa-service-account
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -36,6 +36,8 @@ spec:
       containers:
       - name: mock-postcode-service
         image: DOCKER_REGISTRY_TO_REPLACE/mock-postcode-api:MOCK_POSTCODE_IMAGE_TAG_TO_REPLACE
+        securityContext:
+          runAsUser: 0
         readinessProbe:
           httpGet:
             path: /mock-postcode-api/health
