@@ -1,5 +1,5 @@
 locals {
-  service_account_iam_role_name = "$(var.service_prefix)-role"
+  service_account_iam_role_name = "${var.service_prefix}-role"
   service_etl_function_name     = "${var.service_prefix}-service-etl"
   service_etl_description       = "Service Finder function to extract data out of the DoS Read Replica and insert it into the elasticsearch datastore. Runs every 5 mins"
   service_etl_runtime           = "python3.8"
