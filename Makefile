@@ -254,10 +254,10 @@ provision: # Provision environment - mandatory: PROFILE=[name]
 	make provision-etl
 
 plan-base: # Plan environment - mandatory: PROFILE=[name]
-	eval "$$(make aws-assume-role-export-variables)"
-	eval "$$(make project-populate-application-variables)"
+	# eval "$$(make aws-assume-role-export-variables)"
+	# eval "$$(make project-populate-application-variables)"
 	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS_BASE) PROFILE=$(PROFILE)
-	sleep $(SLEEP_AFTER_PLAN)
+	# sleep $(SLEEP_AFTER_PLAN)
 
 provision-base: # Provision environment - mandatory: PROFILE=[name]
 	eval "$$(make aws-assume-role-export-variables)"
