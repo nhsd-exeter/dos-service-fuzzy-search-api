@@ -57,5 +57,3 @@ variable "service_etl_cron_timer_year" { description = "cron timer for the year 
 variable "service_etl_alarm_period" { description = "The period in seconds that the alarm will check to make sure the etl process has been triggered" }
 
 variable "service_account_role_name" { description = "Service account host IAM role for pod authentication" }
-
-variable "application_service_account_name" { description = "application service account defined in the profile" }
