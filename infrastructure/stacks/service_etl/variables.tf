@@ -3,6 +3,12 @@ variable "aws_profile" { description = "Texas AWS profile name" }
 
 variable "profile" { description = "K8s deployment profile name that can be either 'nonprod' or 'prod'" }
 
+variable "project_id" { description = "product id for either nonprod or prod" }
+
+variable "aws_account_id" { description = "aws_account id for either nonprod or prod" }
+
+variable "eks_terraform_state_key" { description = "eks terraform state key defined in  env" }
+
 # === Common ===================================================================
 
 variable "aws_region" { description = "Texas AWS deployment region" }
