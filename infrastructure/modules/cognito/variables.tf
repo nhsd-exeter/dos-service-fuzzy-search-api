@@ -20,3 +20,5 @@ variable "cognito_pool_name" {
 variable "profile" {
   description = "K8s deployment profile name that can be either 'nonprod' or 'prod'"
 }
+# === Profile Specific =========================================================
+variable "aws_profile" { description = "Texas AWS profile name" }
