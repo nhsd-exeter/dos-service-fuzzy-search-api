@@ -8,7 +8,7 @@ data "terraform_remote_state" "eks" {
 }
 resource "aws_iam_role" "iam_host_role" {
   path = "/"
-  name = var.service_account_iam_role_name
+  name = local.service_account_iam_role_name
 
   assume_role_policy = <<EOF
 {
