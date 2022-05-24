@@ -1,9 +1,11 @@
 # === Profile Specific =========================================================
-variable "aws_profile" { description = "Texas AWS profile name" }
+
 
 variable "aws_account_id" { description = "Texas AWS account id" }
 
-variable "profile" { description = "K8s deployment profile name that can be either 'nonprod' or 'prod'" }
+variable "aws_profile" { description = "Texas AWS profile name" }
+
+
 
 # === Common ===================================================================
 
