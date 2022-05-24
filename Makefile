@@ -403,7 +403,6 @@ k8s-check-deployment-of-replica-sets:
 				echo "Failure: Error with deployment"
 				exit 1
 			fi
-
 		fi
 		sleep 10
 		((elaspedtime=elaspedtime+$(CHECK_DEPLOYMENT_POLL_INTERVAL)))
