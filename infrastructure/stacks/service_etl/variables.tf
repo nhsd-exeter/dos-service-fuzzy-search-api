@@ -21,6 +21,10 @@ variable "es_domain_name" { description = "Elastic search domain name" }
 
 variable "service_prefix" { description = "The prefix used to adhere to the naming conventions" }
 
+variable "service_account_role_name" { description = "Service account host IAM role for pod authentication" }
+
+variable "application_service_account_name" { description = "application service account defined in the profile" }
+
 # === Stack Specific ============================================================
 
 variable "dos_sf_replica_db" { description = "The DOS read replica to get the postcodes from" }
