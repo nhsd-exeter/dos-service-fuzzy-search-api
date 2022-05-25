@@ -3,6 +3,10 @@ variable "aws_account" {
   description = "AWS account identifier."
 }
 
+# === Profile Specific =========================================================
+variable "aws_profile" { description = "Texas AWS profile name" }
+
+variable "aws_region" { description = "Texas AWS deployment region" }
 variable "tags" {
   type        = map(string)
   description = "A list of standard tags for any given resource."

@@ -5,4 +5,6 @@ module "cognito" {
   service_prefix    = var.service_prefix
   cognito_pool_name = local.sf_cognito["cognito_pool_name"]
   tags              = local.standard_tags
+  aws_profile       = var.aws_profile
+  aws_region        = var.aws_region
 }
