@@ -402,13 +402,13 @@ where typname = %s and ns.nspname = %s;
     _re_range = re.compile(r"""
         ( \(|\[ )                   # lower bound flag
         (?:                         # lower bound:
-        " ( (?: [^"] | "")* ) "   #   - a quoted string
-        | ( [^",]+ )              #   - or an unquoted string
+          " ( (?: [^"] | "")* ) "   #   - a quoted string
+          | ( [^",]+ )              #   - or an unquoted string
         )?                          #   - or empty (not catched)
         ,
         (?:                         # upper bound:
-        " ( (?: [^"] | "")* ) "   #   - a quoted string
-        | ( [^"\)\]]+ )           #   - or an unquoted string
+          " ( (?: [^"] | "")* ) "   #   - a quoted string
+          | ( [^"\)\]]+ )           #   - or an unquoted string
         )?                          #   - or empty (not catched)
         ( \)|\] )                   # upper bound flag
         """, re.VERBOSE)
