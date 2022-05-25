@@ -225,9 +225,7 @@
         </executions>
         <configuration>
         <!-- .Disable Net content-->
-      <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
-      <nugetconfAnalyzerEnabled>false</nugetconfAnalyzerEnabled>
-      <nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
+      <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
           <cveStartYear>2021</cveStartYear>
           <failBuildOnCVSS>10</failBuildOnCVSS>
         </configuration>
