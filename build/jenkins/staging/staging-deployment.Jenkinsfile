@@ -27,7 +27,7 @@ pipeline {
   stages {
     stage('Show Variables') {
       steps {
-
+        script {
           sh 'make devops-print-variables'
         }
       }
