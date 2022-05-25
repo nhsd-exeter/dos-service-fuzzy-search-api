@@ -52,7 +52,7 @@ scan:
 
 	make docker-run-mvn \
 		DIR="application/app" \
-		CMD="dependency-check-maven:7.1.0:purge dependency-check:check"
+		CMD="dependency-check:purge dependency-check:check"
 	mv \
 		$(PROJECT_DIR)/application/app/target/dependency-check-report.html \
 		$(PROJECT_DIR)/reports/fuzzy-search-dependency-report.html
