@@ -224,6 +224,8 @@
           </execution>
         </executions>
         <configuration>
+        <!-- .Disable Net content-->
+      <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
           <cveStartYear>2021</cveStartYear>
           <failBuildOnCVSS>10</failBuildOnCVSS>
         </configuration>
