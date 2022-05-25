@@ -3,7 +3,6 @@ pipeline {
   /*
     Description: Deployment pipeline
    */
-
   agent any
 
   options {
