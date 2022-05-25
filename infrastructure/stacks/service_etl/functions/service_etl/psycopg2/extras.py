@@ -607,7 +607,7 @@ class ReplicationCursor(_replicationCursor):
             lsn = "%X/%08X" % (int(lsn[0], 16), int(lsn[1], 16))
         else:
             lsn = "%X/%08X" % ((start_lsn >> 32) & 0xFFFFFFFF,
-                               start_lsn & 0xFFFFFFFF)
+                            start_lsn & 0xFFFFFFFF)
 
         command += lsn
 
@@ -1057,7 +1057,7 @@ class CompositeCaster(object):
         return self._ctor(values)
 
     _re_tokenize = _re.compile(r"""
-  \(? ([,)])                        # an empty token, representing NULL
+\(? ([,)])                        # an empty token, representing NULL
 | \(? " ((?: [^"] | "")*) " [,)]    # or a quoted string
 | \(? ([^",)]+) [,)]                # or an unquoted string
     """, _re.VERBOSE)
@@ -1223,11 +1223,11 @@ def execute_values(cur, sql, argslist, template=None, page_size=100, fetch=False
         compose the query.
 
         - If the *argslist* items are sequences it should contain positional
-          placeholders (e.g. ``"(%s, %s, %s)"``, or ``"(%s, %s, 42)``" if there
-          are constants value...).
+        placeholders (e.g. ``"(%s, %s, %s)"``, or ``"(%s, %s, 42)``" if there
+        are constants value...).
 
         - If the *argslist* items are mappings it should contain named
-          placeholders (e.g. ``"(%(id)s, %(f1)s, 42)"``).
+        placeholders (e.g. ``"(%(id)s, %(f1)s, 42)"``).
 
         If not specified, assume the arguments are sequence and use a simple
         positional template (i.e.  ``(%s, %s, ...)``), with the number of
