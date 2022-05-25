@@ -13,7 +13,7 @@ pipeline {
   }
 
   environment {
-    PROFILE = 'sg'
+    PROFILE = 'sta'
   }
 
   parameters {
@@ -27,8 +27,7 @@ pipeline {
   stages {
     stage('Show Variables') {
       steps {
-        script {
-          sh "make destroy-infrastructure PROFILE=${env.PROFILE}"
+
           sh 'make devops-print-variables'
         }
       }
