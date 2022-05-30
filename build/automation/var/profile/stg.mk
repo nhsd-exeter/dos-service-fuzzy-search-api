@@ -5,7 +5,7 @@ include $(VAR_DIR)/platform-texas/v1/account-live-k8s-nonprod.mk
 AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/c0718115-4e22-4f48-a4aa-8c16ea86c5e6
 ECR_TEXAS_URL_NONPROD = $(AWS_ECR_NON_PROD)/texas
 
-PROFILE := sta
+PROFILE := stg
 ENVIRONMENT := $(PROFILE)
 SPRING_PROFILES_ACTIVE := $(PROFILE)
 API_IMAGE_TAG := v0.0.3
