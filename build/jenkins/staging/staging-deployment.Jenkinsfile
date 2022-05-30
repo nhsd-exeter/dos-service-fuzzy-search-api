@@ -12,7 +12,7 @@ pipeline {
   }
 
   environment {
-    PROFILE = 'sta'
+    PROFILE = 'stg'
   }
 
   parameters {
@@ -34,7 +34,6 @@ pipeline {
     stage('Prepare') {
       steps {
         script {
-          sh "make destroy-infrastructure PROFILE=${env.PROFILE}"
           sh 'make prepare'
         }
       }
