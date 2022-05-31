@@ -96,13 +96,13 @@ TF_VAR_service_etl_alarm_period := 240
 
 
 # Connection to DoS Read Replica for extraction Lambdas. For the Demo env we point to the live read replica
-# TF_VAR_dos_sf_replica_db := uec-core-dos-put-db-12-replica-sf.crvqtzolulpo.eu-west-2.rds.amazonaws.com
-TF_VAR_dos_sf_replica_db := uec-core-dos-put-db-12-replica-sf
+TF_VAR_dos_sf_replica_db := uec-core-dos-put-db-12-replica-sf.crvqtzolulpo.eu-west-2.rds.amazonaws.com
+#TF_VAR_dos_sf_replica_db := uec-core-dos-put-db-12-replica-sf
 TF_VAR_service_finder_replica_sg := uec-core-dos-put-db-12-replica-sf-sg
 TF_VAR_dos_read_replica_secret_name := core-dos-uet-database-upgrade/deployment
 TF_VAR_dos_read_replica_secret_key := DB_SF_READONLY_PASSWORD
 TF_VAR_service_etl_db_user := dos_sf_readonly
-TF_VAR_service_etl_source_db := Pathwaydos_ut
+TF_VAR_service_etl_source_db := pathwaysdos_ut
 
 ####Cognito user pool details
 COGNITO_USER_POOL := $(TF_VAR_service_prefix)-authentication
