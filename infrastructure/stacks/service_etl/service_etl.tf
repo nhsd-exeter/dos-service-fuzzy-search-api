@@ -13,7 +13,7 @@ resource "aws_lambda_function" "service_etl_lambda" {
   //layers           = [local.service_etl_core_dos_python_libs_arn]
   environment {
     variables = {
-      USER               = local.service_etl_db_user
+      USR                = local.service_etl_db_user
       SOURCE_DB          = local.service_etl_source_db
       ENDPOINT           = local.service_etl_db_endpoint
       PORT               = local.service_etl_db_port
