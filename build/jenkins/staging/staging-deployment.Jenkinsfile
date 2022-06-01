@@ -12,7 +12,7 @@ pipeline {
   }
 
   environment {
-    PROFILE = 'stg'
+    PROFILE = 'sgg'
   }
 
   parameters {
