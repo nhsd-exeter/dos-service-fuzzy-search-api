@@ -41,6 +41,25 @@ resource "aws_security_group" "service_etl_security_group" {
   description = "Security group for Service ETL lambda"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
 }
+resource "aws_security_group_rule" "service_lambda_egress_443" {
+  type              = "egress"
+  from_port         = "443"
+  to_port           = "443"
+  protocol          = "tcp"
+  security_group_id = aws_security_group.service_etl_security_group.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "A rule to allow outgoing connections AWS APIs from the  lambda Security Group"
+}
+
+resource "aws_security_group_rule" "service_etl_security_group_rule" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  description              = "Allows service ETL lambda process to update service data into ES"
+  security_group_id        = local.es_domain_security_group_id
+  source_security_group_id = aws_security_group.service_etl_security_group.id
+}
 
 resource "aws_security_group_rule" "service_lambda_sg_ingress" {
   type                     = "ingress"
@@ -52,33 +71,13 @@ resource "aws_security_group_rule" "service_lambda_sg_ingress" {
   description              = "A rule to allow incoming connections to the SF service lambda SG from the SF read replica SG"
 }
 
-
-resource "aws_security_group_rule" "service_lambda_egress_443" {
-  type              = "egress"
-  from_port         = "443"
-  to_port           = "443"
-  protocol          = "tcp"
-  security_group_id = aws_security_group.service_etl_security_group.id
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "A rule to allow outgoing connections AWS APIs from the  lambda Security Group"
-}
-resource "aws_security_group_rule" "service_etl_security_group_rule" {
-  type                     = "ingress"
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "tcp"
-  description              = "Allows service ETL lambda process to update service data into ES"
-  security_group_id        = local.es_domain_security_group_id
-  source_security_group_id = aws_security_group.service_etl_security_group.id
-}
-
 resource "aws_security_group_rule" "service_lambda_sg_egress" {
   type                     = "egress"
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.service_etl_security_group.id
-  source_security_group_id = local.dos_sf_replica_db_sg
+  security_group_id        = local.dos_sf_replica_db_sg                       //aws_security_group.service_etl_security_group.id
+  source_security_group_id = aws_security_group.service_etl_security_group.id //local.dos_sf_replica_db_sg
   description              = "A rule to allow outgoing connections from the SF service lambda SG to the SF read replica SG"
 }
 
@@ -97,8 +96,8 @@ resource "aws_security_group_rule" "sf_replica_db_sg_egress" {
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.service_etl_security_group.id //local.dos_sf_replica_db_sg
-  source_security_group_id = local.dos_sf_replica_db_sg                       //aws_security_group.service_etl_security_group.id
+  security_group_id        = local.dos_sf_replica_db_sg
+  source_security_group_id = aws_security_group.service_etl_security_group.id
   description              = "A rule to allow outgoing connections from the SF read replica SG to the SF service lambda SG"
 }
 
