@@ -87,7 +87,7 @@ TF_VAR_service_etl_alarm_period := 240
 # TF_VAR_service_etl_alarm_period := 86400
 
 # Connection to DoS Read Replica for extraction Lambdas. For the Demo env we point to the live read replica
-TF_VAR_dos_sf_replica_db := uec-core-dos-regression-db-12-replica-sf
+TF_VAR_dos_sf_replica_db := uec-core-dos-regression-db-12-replica-sf.cqger35bxcwy.eu-west-2.rds.amazonaws.com
 TF_VAR_service_finder_replica_sg := live-lk8s-nonprod-uec-sf-core-dos-sf-replica-sg
 TF_VAR_dos_read_replica_secret_name := core-dos-dev/deployment
 # TF_VAR_dos_read_replica_secret_key := DB_USER_PASSWORD
