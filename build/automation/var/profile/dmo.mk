@@ -78,7 +78,7 @@ TF_VAR_es_domain_name := $(DOMAIN)
 # Config for the cron job trigger for the service etl set to be:
 # 6am Monday - Friday (This is because we dont want the service to be running every 4 minutes in non prod)
 # For prod we need to set cron(0/4 * * * ? *) (Every 4 minutes)
-TF_VAR_service_etl_cron_timer_minutes := 0/4
+TF_VAR_service_etl_cron_timer_minutes := 0/7
 TF_VAR_service_etl_cron_timer_hours := *
 TF_VAR_service_etl_cron_timer_day_of_month := *
 TF_VAR_service_etl_cron_timer_month := *
