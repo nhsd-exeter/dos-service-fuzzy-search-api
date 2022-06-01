@@ -97,8 +97,8 @@ resource "aws_security_group_rule" "sf_replica_db_sg_egress" {
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.service_etl_security_group.id //local.dos_sf_replica_db_sg
-  source_security_group_id = local.dos_sf_replica_db_sg                       //aws_security_group.service_etl_security_group.id
+  security_group_id        = local.dos_sf_replica_db_sg
+  source_security_group_id = aws_security_group.service_etl_security_group.id
   description              = "A rule to allow outgoing connections from the SF read replica SG to the SF service lambda SG"
 }
 
