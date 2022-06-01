@@ -41,6 +41,7 @@ resource "aws_security_group" "service_etl_security_group" {
   description = "Security group for Service ETL lambda"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
 }
+//security group rule for service lambda
 resource "aws_security_group_rule" "service_lambda_egress_443" {
   type              = "egress"
   from_port         = "443"
@@ -50,7 +51,7 @@ resource "aws_security_group_rule" "service_lambda_egress_443" {
   cidr_blocks       = ["0.0.0.0/0"]
   description       = "A rule to allow outgoing connections AWS APIs from the  lambda Security Group"
 }
-
+//security group rule for service lambda to elastic search
 resource "aws_security_group_rule" "service_etl_security_group_rule" {
   type                     = "ingress"
   from_port                = 443
@@ -60,7 +61,7 @@ resource "aws_security_group_rule" "service_etl_security_group_rule" {
   security_group_id        = local.es_domain_security_group_id
   source_security_group_id = aws_security_group.service_etl_security_group.id
 }
-
+//security group rule for service lambda to read replica - ingress
 resource "aws_security_group_rule" "service_lambda_sg_ingress" {
   type                     = "ingress"
   from_port                = 5432
@@ -70,7 +71,7 @@ resource "aws_security_group_rule" "service_lambda_sg_ingress" {
   source_security_group_id = local.dos_sf_replica_db_sg
   description              = "A rule to allow incoming connections to the SF service lambda SG from the SF read replica SG"
 }
-
+//security group rule for service lambda to read replica - egress
 resource "aws_security_group_rule" "service_lambda_sg_egress" {
   type                     = "egress"
   from_port                = 5432
@@ -80,7 +81,7 @@ resource "aws_security_group_rule" "service_lambda_sg_egress" {
   source_security_group_id = aws_security_group.service_etl_security_group.id //local.dos_sf_replica_db_sg
   description              = "A rule to allow outgoing connections from the SF service lambda SG to the SF read replica SG"
 }
-
+//security group rule for read replica to lambda - ingress
 resource "aws_security_group_rule" "sf_replica_db_sg_ingress" {
   type                     = "ingress"
   from_port                = 5432
@@ -90,14 +91,14 @@ resource "aws_security_group_rule" "sf_replica_db_sg_ingress" {
   source_security_group_id = aws_security_group.service_etl_security_group.id //lambda security group
   description              = "A rule to allow incoming connections to the SF read replica SG from the SF service lambda SG"
 }
-
+//security group rule for read replica to lambda - egress
 resource "aws_security_group_rule" "sf_replica_db_sg_egress" {
   type                     = "egress"
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
-  security_group_id        = local.dos_sf_replica_db_sg
-  source_security_group_id = aws_security_group.service_etl_security_group.id
+  security_group_id        = aws_security_group.service_etl_security_group.id //local.dos_sf_replica_db_sg
+  source_security_group_id = local.dos_sf_replica_db_sg                       //aws_security_group.service_etl_security_group.id
   description              = "A rule to allow outgoing connections from the SF read replica SG to the SF service lambda SG"
 }
 
