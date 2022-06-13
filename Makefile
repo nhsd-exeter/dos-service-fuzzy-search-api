@@ -245,6 +245,7 @@ create-lambda-deploy-dir:
 	fi
 
 plan: # Plan environment - mandatory: PROFILE=[name]
+	make destroy-infrastructure PROFILE=$(PROFILE)
 	make plan-base
 	make plan-etl
 	sleep $(SLEEP_AFTER_PLAN)
