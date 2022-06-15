@@ -110,7 +110,7 @@ COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
 # Change to false after deployment
 ADD_DEFAULT_COGNITO_USERS := true
 
-POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pca-$(PROFILE)-uec-dos-api-pc-ingress.$(TEXAS_HOSTED_ZONE)/api
+POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-$(PROFILE)-uec-dos-api-pc-ingress.$(TEXAS_HOSTED_ZONE)/api
 POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
 POSTCODE_MAPPING_PASSWORD := $(FUZZY_API_COGNIGTO_USER_PASSWORD)
 
