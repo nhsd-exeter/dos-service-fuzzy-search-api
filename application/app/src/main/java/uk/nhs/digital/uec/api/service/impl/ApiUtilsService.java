@@ -75,7 +75,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
 
   @Override
   public List<String> removeBlankSpacesIn(final List<String> fields) {
-    final String POSTCODE_REGEX = "^([A-Za-z][A-Ha-hJ-Yj-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$\n";
+    final String POSTCODE_REGEX = "^([A-Za-z][A-Ha-hJ-Yj-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$";
     Pattern pattern = Pattern.compile(POSTCODE_REGEX);
     return fields.stream()
       .filter(field -> pattern.matcher(field).matches())
