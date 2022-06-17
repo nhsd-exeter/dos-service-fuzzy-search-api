@@ -3,6 +3,8 @@ package uk.nhs.digital.uec.api.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -73,7 +75,12 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
 
   @Override
   public List<String> removeBlankSpacesIn(final List<String> fields) {
-    return fields.stream().map(this::removeBlankSpaces).toList();
+    final String POSTCODE_REGEX = "^([A-Za-z][A-Ha-hJ-Yj-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$";
+    Pattern pattern = Pattern.compile(POSTCODE_REGEX);
+    return fields.stream()
+      .filter(field -> pattern.matcher(field).matches())
+      .map(this::removeBlankSpaces)
+      .toList();
   }
 
   /**

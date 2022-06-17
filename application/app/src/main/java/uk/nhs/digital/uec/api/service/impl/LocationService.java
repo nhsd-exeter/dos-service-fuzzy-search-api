@@ -1,7 +1,6 @@
 package uk.nhs.digital.uec.api.service.impl;
 
-import java.util.List;
-import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +13,18 @@ import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
 import uk.nhs.digital.uec.api.service.LocationServiceInterface;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 @Service
+@Slf4j
 public class LocationService implements LocationServiceInterface {
 
-  @Autowired private ApiUtilsServiceInterface apiUtilsService;
+  @Autowired
+  private ApiUtilsServiceInterface apiUtilsService;
 
-  @Autowired private ExternalApiHandshakeInterface apiHandshakeService;
+  @Autowired
+  private ExternalApiHandshakeInterface apiHandshakeService;
 
   /**
    * {@inheritDoc}
@@ -29,30 +34,38 @@ public class LocationService implements LocationServiceInterface {
    */
   @Override
   public PostcodeLocation getLocationForPostcode(
-      final String postcode, MultiValueMap<String, String> headers)
-      throws NotFoundException, InvalidParameterException {
-    if (StringUtils.isBlank(postcode)) {
-      return null;
-    }
-    List<String> sanitisedPostcodes =
+    final String postcode, MultiValueMap<String, String> headers)
+    throws NotFoundException, InvalidParameterException {
+    try {
+      if (StringUtils.isBlank(postcode)) {
+        return null;
+      }
+      List<String> sanitisedPostcodes =
         apiUtilsService.removeBlankSpacesIn(Stream.of(postcode).toList());
-    List<PostcodeLocation> postcodeMappings =
+      List<PostcodeLocation> postcodeMappings =
         apiHandshakeService.getPostcodeMappings(sanitisedPostcodes, headers);
-    return postcodeMappings.stream().findFirst().orElse(null);
+      return postcodeMappings.stream().findFirst().orElse(new PostcodeLocation());
+    } catch (Exception e) {
+      log.error("An error occurred when accessing the postcode service, {}",e.getMessage());
+    }
+    log.warn("Returning empty postcode location for {} value",postcode);
+    return new PostcodeLocation();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Double distanceBetween(PostcodeLocation source, PostcodeLocation destination) {
 
     Double distance = null;
 
     if (source == null
-        || destination == null
-        || source.getEasting() == null
-        || source.getNorthing() == null
-        || destination.getEasting() == null
-        || destination.getNorthing() == null) {
+      || destination == null
+      || source.getEasting() == null
+      || source.getNorthing() == null
+      || destination.getEasting() == null
+      || destination.getNorthing() == null) {
       return distance;
     }
 
@@ -68,9 +81,9 @@ public class LocationService implements LocationServiceInterface {
 
   @Override
   public List<PostcodeLocation> getLocationsForPostcodes(
-      List<String> postCodes, MultiValueMap<String, String> headers)
-      throws InvalidParameterException {
+    List<String> postCodes, MultiValueMap<String, String> headers)
+    throws InvalidParameterException {
     return apiHandshakeService.getPostcodeMappings(
-        apiUtilsService.removeBlankSpacesIn(postCodes), headers);
+      apiUtilsService.removeBlankSpacesIn(postCodes), headers);
   }
 }
