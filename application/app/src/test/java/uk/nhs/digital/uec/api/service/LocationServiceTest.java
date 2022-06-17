@@ -2,12 +2,16 @@ package uk.nhs.digital.uec.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -150,5 +154,16 @@ public class LocationServiceTest {
     Double distanceReturned = locationService.distanceBetween(sourceLocation, destinationLocation);
 
     assertEquals(1.3, distanceReturned);
+  }
+
+  @Test
+  public void InvalidResponseReturnedFromPostcodeService() throws InvalidParameterException, NotFoundException {
+    when(apiUtilsService.removeBlankSpacesIn(Stream.of(postCode).toList())).thenReturn(List.of(postCode));
+    when(apiHandshakeService.getPostcodeMappings(Stream.of(postCode).toList(),null)).thenThrow(InvalidParameterException.class);
+
+    PostcodeLocation result = locationService.getLocationForPostcode(postCode,null);
+
+    assertTrue(Objects.isNull(result.getEasting()));
+    assertTrue(Objects.isNull(result.getNorthing()));
   }
 }
