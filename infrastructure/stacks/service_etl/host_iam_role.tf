@@ -32,7 +32,7 @@ EOF
 }
 
 resource "aws_iam_policy" "service_account_policy" {
-  name        = "sa_assume_policy"
+  name        = local.serivce_account_iam_policy
   path        = "/"
   description = "My test policy"
 
