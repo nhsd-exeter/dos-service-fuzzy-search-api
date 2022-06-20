@@ -106,7 +106,7 @@ def extract_data_from_dos():
                             servicereferralroles srr
                             where srr.serviceid = s.id and
                             srr.referralroleid = (select urr.referralroleid
-                            from userreferralroles urr where urr.userid = ?)) as canReferTo
+                            from userreferralroles urr where urr.userid = "?")) as canReferTo
                         from
                             pathwaysdos.services s,
                             pathwaysdos.servicecapacities sc,
