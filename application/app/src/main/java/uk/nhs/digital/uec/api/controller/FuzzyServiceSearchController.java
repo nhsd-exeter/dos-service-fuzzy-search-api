@@ -11,6 +11,7 @@ import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.S
 
 import io.swagger.annotations.ApiParam;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 
 /** Controller for Fuzzy searching of services. */
 @RestController
+@Slf4j
 @RequestMapping("/dosapi/dosservices/v0.0.1")
 public class FuzzyServiceSearchController {
 
@@ -87,7 +89,8 @@ public class FuzzyServiceSearchController {
           @RequestParam(name = "public_name_priority", required = false)
           Integer publicNamePriority)
       throws NotFoundException, InvalidParameterException {
-
+    log.info("Incoming request param - postcode: {}", searchPostcode);
+    log.info("Incoming request param - search_term: {}", searchCriteria);
     utils.configureApiRequestParams(
         fuzzLevel,
         null, // filterReferralRole will be implemented in future
