@@ -28,7 +28,9 @@ public class JwtUtil {
 
     DecodedJWT jwt = null;
     try {
+
       jwt = JWT.decode(accessToken);
+
     } catch (JWTDecodeException e) {
 
       log.info("Failed to decode access token", e);
