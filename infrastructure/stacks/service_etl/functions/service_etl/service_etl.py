@@ -101,7 +101,12 @@ def extract_data_from_dos():
                             s.telephonetriagereferralinstructions,
                             s.odscode,
                             s.isnational,
-                            s.modifiedtime
+                            s.modifiedtime,
+                            (select srr.referralroleid from
+                            servicereferralroles srr
+                            where srr.serviceid = s.id and
+                            srr.referralroleid = (select urr.referralroleid
+                            from userreferralroles urr where urr.userid = ?)) as canReferTo
                         from
                             pathwaysdos.services s,
                             pathwaysdos.servicecapacities sc,
@@ -119,6 +124,8 @@ def extract_data_from_dos():
                             sr.referralroleid = r.id
                             and
                             s.typeid = t.id
+                            and
+                            statusid = 1
                         ) group by s.id, t.name, c.color"""
 
     logger.debug("Open connection")
