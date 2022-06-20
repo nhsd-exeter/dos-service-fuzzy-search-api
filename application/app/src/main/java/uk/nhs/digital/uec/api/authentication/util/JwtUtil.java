@@ -26,7 +26,7 @@ public class JwtUtil {
   public void isTokenValid(String accessToken) throws AccessTokenExpiredException {
     if (accessToken == null) return;
 
-    DecodedJWT jwt = null;
+    DecodedJWT jwt;
     try {
 
       jwt = JWT.decode(accessToken);
@@ -35,7 +35,7 @@ public class JwtUtil {
 
       log.info("Failed to decode access token", e);
       log.info("Access token that fails: {}", accessToken);
-      log.info("JWT that fails: {}", jwt.toString());
+      // log.info("JWT that fails: {}", jwt.toString());
       throw new IllegalStateException();
     }
     if (jwt.getExpiresAt().before(new Date())) {
