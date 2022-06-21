@@ -101,12 +101,7 @@ def extract_data_from_dos():
                             s.telephonetriagereferralinstructions,
                             s.odscode,
                             s.isnational,
-                            s.modifiedtime,
-                            (select srr.referralroleid from
-                            servicereferralroles srr
-                            where srr.serviceid = s.id and
-                            srr.referralroleid = (select urr.referralroleid
-                            from userreferralroles urr where urr.userid = ?)) as canReferTo
+                            s.modifiedtime
                         from
                             pathwaysdos.services s,
                             pathwaysdos.servicecapacities sc,
