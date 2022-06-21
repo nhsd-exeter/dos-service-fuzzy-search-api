@@ -34,9 +34,7 @@ run-smoke: ### Run Postman test suite against deployed application ###
 			;;
 		pd|dmo|stg) #PD = Prod, dm = Demo, stg = staging
 			echo Profile: $(PROFILE) Executing real token test
-			eval "$$(make aws-assume-role-export-variables)"
-			echo $$(make secret-fetch NAME=uec-dos-api-sfsa-dmo-cognito-passwords)
-			$(APPLICATION_TEST_DIR)/contract/scripts/secrets.sh $(APPLICATION_TEST_DIR)/contract/environments/Fuzzy_Smoke_Tests_Env.postman_environment.json
+			sed -i -e "s/REPLACE_PASS/$(COGNITO_USER_PASS)/g" $(APPLICATION_TEST_DIR)/contract/environments/Fuzzy_Smoke_Tests_Env.postman_environment.json
 			make docker-run-postman DIR="$(APPLICATION_TEST_DIR)/contract" CMD="run collections/FuzzySearchSmokeTest.postman_collection.json -e environments/Fuzzy_Smoke_Tests_Env.postman_environment.json"
 			;;
 			*)
