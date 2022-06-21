@@ -425,7 +425,7 @@ run-smoke-test:
 	make quick-start PROFILE=$(PROFILE) VERSION=$(API_IMAGE_TAG)
 	sleep 20
 	cd test/contract
-	make run-smoke
+	make run-smoke COGNITO_USER_PASS=$$(make secret-fetch NAME=$(PROJECT_GROUP_SHORT)-sfsa-${PROFILE}-cognito-passwords | jq .AUTHENTICATION_PASSWORD | tr -d '"')
 	cd ../../
 	make stop
 
