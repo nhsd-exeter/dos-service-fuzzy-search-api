@@ -119,6 +119,8 @@ def extract_data_from_dos():
                             sr.referralroleid = r.id
                             and
                             s.typeid = t.id
+                            and
+                            statusid = 1
                         ) group by s.id, t.name, c.color"""
 
     logger.debug("Open connection")
