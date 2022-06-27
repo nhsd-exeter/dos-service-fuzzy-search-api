@@ -116,7 +116,7 @@ def extract_data_from_dos():
                             and
                             sr.serviceid = s.id
                             and
-                            sr.referralroleid = '24'
+                            sr.referralroleid = r.id
                             and
                             s.typeid = t.id
                             and
