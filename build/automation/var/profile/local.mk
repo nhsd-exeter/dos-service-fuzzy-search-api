@@ -2,7 +2,8 @@ include $(VAR_DIR)/platform-texas/v1/account-live-k8s-nonprod.mk
 
 # ==============================================================================
 # Service variables
-SPRING_PROFILES_ACTIVE := local, mock-auth
+PROFILE := local
+SPRING_PROFILES_ACTIVE := $(PROFILE), mock-auth
 CERTIFICATE_DOMAIN := localhost
 ALLOWED_ORIGINS := *
 
