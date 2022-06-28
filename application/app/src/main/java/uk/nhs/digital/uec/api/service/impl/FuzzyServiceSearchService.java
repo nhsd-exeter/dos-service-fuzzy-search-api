@@ -3,6 +3,8 @@ package uk.nhs.digital.uec.api.service.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -47,9 +49,10 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
 
     validationService.validateSearchCriteria(searchTerms);
 
-    List<DosService> dosServices = new ArrayList<>();
-    dosServices.addAll(
-        elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms)));
+    List<DosService> dosServices = elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms))
+          .stream()
+          .filter(dosService -> !dosService.getReferral_roles().contains("Professional Referral"))
+          .collect(Collectors.toList());
 
     /** Call the auth service login endpoint from here and get the authenticated headers */
     MultiValueMap<String, String> headers = externalApiHandshakeInterface.getAccessTokenHeader();
