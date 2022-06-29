@@ -33,6 +33,7 @@ public class MockDosServicesUtil {
     List<String> referralRoles = new ArrayList<>();
     referralRoles.add("Role 1");
     referralRoles.add("Role 2");
+    referralRoles.add("Professional Referral");
 
     return DosService.builder()
         .id(Integer.valueOf(identifier))

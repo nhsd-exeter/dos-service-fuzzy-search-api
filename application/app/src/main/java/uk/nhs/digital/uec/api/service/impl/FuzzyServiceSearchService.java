@@ -51,7 +51,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
 
     List<DosService> dosServices = elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms))
           .stream()
-          .filter(dosService -> !dosService.getReferral_roles().contains("Professional Referral"))
+          .filter(dosService -> dosService.getReferral_roles().contains("Professional Referral"))
           .collect(Collectors.toList());
 
     /** Call the auth service login endpoint from here and get the authenticated headers */
