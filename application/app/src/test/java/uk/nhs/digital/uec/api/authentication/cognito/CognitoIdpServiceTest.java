@@ -25,7 +25,7 @@ import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 
 @ExtendWith(SpringExtension.class)
-@ActiveProfiles("local")
+@ActiveProfiles({"local"})
 public class CognitoIdpServiceTest {
 
   @InjectMocks CognitoIdpServiceImpl cognitoService;
@@ -86,15 +86,15 @@ public class CognitoIdpServiceTest {
     assertNotNull(accessTokenResponse.getAccessToken());
   }
 
-  @Test
-  public void authenticationWithMockToken() throws UnauthorisedException {
-    Credential cred = new Credential("service-finder-admin@nhs.net", "mock-auth-pass");
-    when(environment.getActiveProfiles()).thenReturn(new String[] {"dev", "mock-auth"});
-    InitiateAuthResult authResult = new InitiateAuthResult();
-    authResult.setAuthenticationResult(authenticationResult);
-    AuthToken accessTokenResponse = cognitoService.authenticate(cred);
-    assertNotNull(accessTokenResponse.getAccessToken());
-  }
+//  @Test
+//  public void authenticationWithMockToken() throws UnauthorisedException {
+//    Credential cred = new Credential("service-finder-admin@nhs.net", "mock-auth-pass");
+//    when(environment.getActiveProfiles()).thenReturn(new String[] {"dev", "mock-auth"});
+//    InitiateAuthResult authResult = new InitiateAuthResult();
+//    authResult.setAuthenticationResult(authenticationResult);
+//    AuthToken accessTokenResponse = cognitoService.authenticate(cred);
+//    assertNotNull(accessTokenResponse.getAccessToken());
+//  }
 
   @Test
   public void authenticationWithInvalidRefreshToken() throws UnauthorisedException {
@@ -104,14 +104,14 @@ public class CognitoIdpServiceTest {
         UnauthorisedException.class, () -> cognitoService.authenticate(refreshToken, user));
   }
 
-  @Test
-  public void authenticationWithMockToken_WrongCreds() throws UnauthorisedException {
-    Credential cred = new Credential("wrong@nhs.net", "mock-auth");
-    when(environment.getActiveProfiles()).thenReturn(new String[] {"dev", "mock-auth"});
-    when(cognitoClient.initiateAuth(any())).thenThrow(AWSCognitoIdentityProviderException.class);
-    assertThrows(
-        AWSCognitoIdentityProviderException.class, () -> cognitoService.authenticate(cred));
-  }
+//  @Test
+//  public void authenticationWithMockToken_WrongCreds() throws UnauthorisedException {
+//    Credential cred = new Credential("wrong@nhs.net", "mock-auth");
+//    when(environment.getActiveProfiles()).thenReturn(new String[] {"dev", "mock-auth"});
+//    when(cognitoClient.initiateAuth(any())).thenThrow(AWSCognitoIdentityProviderException.class);
+//    assertThrows(
+//        AWSCognitoIdentityProviderException.class, () -> cognitoService.authenticate(cred));
+//  }
 
   @Test
   public void authenticationInvalidPasswordExceptionTest() throws UnauthorisedException {
