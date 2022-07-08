@@ -43,4 +43,28 @@ public class LocalAmazonCognitoIdentityClientStubTest {
     assertNotNull(initiateAuth.getAuthenticationResult().getAccessToken());
     assertNotNull(initiateAuth.getAuthenticationResult().getRefreshToken());
   }
+
+  @Test
+  public void initiateMockAuthRequestTest() {
+    Map<String, String> authenticationParameters =
+      Map.of(
+        USERNAME,
+        "service-finder-admin@nhs.net",
+        PASSWORD,
+        "mock-auth-pass",
+        "SECRET_HASH",
+        calculateSecretHash(
+          "service-finder-admin@nhs.net", "testUserPoolClientId", "testUserPoolClientSecret"));
+
+    InitiateAuthRequest authenticationRequest =
+      new InitiateAuthRequest()
+        .withAuthFlow("authFlowType")
+        .withClientId("testUserPoolClientId")
+        .withAuthParameters(authenticationParameters);
+
+    InitiateAuthResult initiateAuth =
+      amazonCognitoIdentityClientStub.initiateAuth(authenticationRequest);
+    assertNotNull(initiateAuth.getAuthenticationResult().getAccessToken());
+    assertNotNull(initiateAuth.getAuthenticationResult().getRefreshToken());
+  }
 }
