@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import uk.nhs.digital.uec.api.authentication.localstub.LocalAmazonCognitoIdentityClientStub;
 
 @Configuration
-@Profile({"local"})
+@Profile({"local","mock-auth"})
 public class LocalCognitoStubConfig {
 
   @Bean
