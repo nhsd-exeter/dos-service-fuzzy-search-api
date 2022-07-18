@@ -135,10 +135,10 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
     for (DosService serviceIterationItem : services) {
       if (Objects.nonNull(serviceIterationItem.getReferral_roles())
-        && !serviceIterationItem.getReferral_roles().isEmpty()
-        && serviceIterationItem.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)
-      ) {
-        dosServices.add(serviceIterationItem);
+        && !serviceIterationItem.getReferral_roles().isEmpty()){
+        if(serviceIterationItem.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)){
+          dosServices.add(serviceIterationItem);
+        }
       }
     }
 
