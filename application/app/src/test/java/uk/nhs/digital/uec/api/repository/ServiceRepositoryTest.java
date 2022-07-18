@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
+import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.repository.elasticsearch.ServicesRepositoryInterface;
@@ -54,6 +56,40 @@ public class ServiceRepositoryTest {
 
     List<DosService> findServiceBySearchTerms =
         serviceRepository.findServiceBySearchTerms(searchList);
+
+    DosService dosServiceResponse = findServiceBySearchTerms.get(0);
+
+    assertEquals(dosService.getName(), dosServiceResponse.getName());
+    assertEquals(dosService.getEasting(), dosServiceResponse.getEasting());
+    assertEquals(dosService.getNorthing(), dosServiceResponse.getNorthing());
+  }
+
+  @Test
+  public void findServiceByLocationTest() throws UnauthorisedException, NotFoundException {
+
+    DosService dosService = new DosService();
+    dosService.setName("Exeter NHS Service");
+    dosService.setEasting(23453);
+    dosService.setNorthing(45322);
+    dosService.setPostcode("EX1 1SR");
+    dosService.setReferral_roles(List.of("Referral","Professional Referral"));
+    List<DosService> services = new ArrayList<>();
+    services.add(dosService);
+
+    Page<DosService> pageItems = new PageImpl<>(services);
+    String searchLocation = "EX8 8XE";
+
+
+    services.add(dosService);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+
+    when(servicesRepo.findBySearchTerms(
+            anyString(), anyInt(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
+        .thenReturn(pageItems);
+
+    List<DosService> findServiceBySearchTerms =
+        serviceRepository.findServiceByLocation(searchLocation);
 
     DosService dosServiceResponse = findServiceBySearchTerms.get(0);
 
