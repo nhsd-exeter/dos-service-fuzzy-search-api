@@ -84,9 +84,9 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
     // Get the first part of the postcode
     String searchCriteria = searchLocation.substring(0, 4).trim();
-
+    Long start = System.currentTimeMillis();
     dosServices = performSearch(searchCriteria, null);
-
+    log.info("Search query duration {}ms", System.currentTimeMillis() - start);
     return dosServices;
   }
 
@@ -94,8 +94,6 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     if (numberOfServicesToReturnFromElasticSearch == null) {
       return performSearch(searchCriteria);
     }
-
-    Long start = System.currentTimeMillis();
     Iterable<DosService> services =
       servicesRepo.findBySearchTerms(
         searchCriteria,
@@ -105,15 +103,10 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         apiRequestParams.getPostcodePriority(),
         apiRequestParams.getPublicNamePriority(),
         PageRequest.of(0, numberOfServicesToReturnFromElasticSearch));
-    log.info("Search query duration {}ms", System.currentTimeMillis() - start);
-
     return getFilteredServices(services);
   }
 
   private List<DosService> performSearch(String searchCriteria) {
-    final List<DosService> dosServices = new ArrayList<>();
-
-    Long start = System.currentTimeMillis();
     Iterable<DosService> services =
       servicesRepo.findBySearchTerms(
         searchCriteria,
@@ -123,8 +116,6 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         apiRequestParams.getPostcodePriority(),
         apiRequestParams.getPublicNamePriority(),
         PageRequest.of(0, apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()));
-    log.info("Search query duration {}ms", System.currentTimeMillis() - start);
-
     return getFilteredServices(services);
   }
 
