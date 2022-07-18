@@ -103,7 +103,7 @@ public class FuzzyServiceSearchController {
 
     final ApiSearchParamsResponse searchParamsResponse =
         new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()
-            .searchCriteria(searchCriteria)
+            .searchCriteria(searchCriteria == null || searchCriteria.isEmpty() ? List.of(searchPostcode.substring(0,4).trim()) : searchCriteria)
             .searchLocation(searchPostcode)
             .fuzzLevel(requestParams.getFuzzLevel())
             .addressPriority(requestParams.getAddressPriority())

@@ -1,5 +1,7 @@
 package uk.nhs.digital.uec.api.service.impl;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,6 +52,9 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
       if (searchTerm.length() >= minSearchTermLength) {
 
         String searchTermToAdd = searchTerm.replaceAll("\\s+", " ");
+
+        //Remove URL encoding
+        searchTermToAdd = URLDecoder.decode(searchTermToAdd, StandardCharsets.UTF_8);
 
         // Remove weird characters
         searchTermToAdd = searchTermToAdd.replaceAll("[^a-zA-Z0-9:;.?! ]", "");

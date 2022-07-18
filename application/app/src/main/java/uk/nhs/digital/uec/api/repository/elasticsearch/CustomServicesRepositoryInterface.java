@@ -1,6 +1,8 @@
 package uk.nhs.digital.uec.api.repository.elasticsearch;
 
 import java.util.List;
+
+import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.DosService;
 
 public interface CustomServicesRepositoryInterface {
@@ -12,4 +14,6 @@ public interface CustomServicesRepositoryInterface {
    * @return list of Dos Services that match the search criteria.
    */
   List<DosService> findServiceBySearchTerms(List<String> searchTerms);
+
+  List<DosService> findServiceByLocation(String searchLocation) throws NotFoundException;
 }
