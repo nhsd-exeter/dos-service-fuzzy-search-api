@@ -37,7 +37,7 @@ public class ServiceRepositoryTest {
     dosService.setEasting(23453);
     dosService.setNorthing(45322);
     dosService.setPostcode("EX1 1SR");
-    dosService.setReferral_roles(List.of("Referral"));
+    dosService.setReferral_roles(List.of("Referral","Professional Referral"));
     List<DosService> services = new ArrayList<>();
     services.add(dosService);
 
