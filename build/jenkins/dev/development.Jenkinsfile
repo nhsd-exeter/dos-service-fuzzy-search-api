@@ -61,13 +61,13 @@ pipeline {
         }
       }
     }
-    stage('Run Contract Tests') {
-      steps {
-        script {
-          sh "make run-contract-tests VERSION=${env.PROJECT_BUILD_TAG}"
-        }
-      }
-    }
+    // stage('Run Contract Tests') {
+    //   steps {
+    //     script {
+    //       sh "make run-contract-tests VERSION=${env.PROJECT_BUILD_TAG}"
+    //     }
+    //   }
+    // }
     stage('Push API Image to ECR') {
       steps {
         script {
