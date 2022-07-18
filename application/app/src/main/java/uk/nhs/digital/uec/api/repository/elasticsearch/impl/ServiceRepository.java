@@ -76,7 +76,6 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
       "Number of services to get from elasticsearch: "
         + apiRequestParams.getMaxNumServicesToReturnFromElasticsearch());
 
-    //TODO:- Validate postcode entry
     log.info("Validate Postcode: {}", searchLocation);
     Pattern pattern = Pattern.compile(POSTCODE_REGEX);
     if (!pattern.matcher(searchLocation).matches()) {
@@ -95,7 +94,6 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     if (numberOfServicesToReturnFromElasticSearch == null) {
       return performSearch(searchCriteria);
     }
-    final List<DosService> dosServices = new ArrayList<>();
 
     Long start = System.currentTimeMillis();
     Iterable<DosService> services =
@@ -109,13 +107,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         PageRequest.of(0, numberOfServicesToReturnFromElasticSearch));
     log.info("Search query duration {}ms", System.currentTimeMillis() - start);
 
-    for (DosService serviceIterationItem : services) {
-      if (serviceIterationItem.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)) {
-        dosServices.add(serviceIterationItem);
-      }
-    }
-
-    return dosServices;
+    return getFilteredServices(services);
   }
 
   private List<DosService> performSearch(String searchCriteria) {
@@ -133,15 +125,19 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         PageRequest.of(0, apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()));
     log.info("Search query duration {}ms", System.currentTimeMillis() - start);
 
+    return getFilteredServices(services);
+  }
+
+  private List<DosService> getFilteredServices(Iterable<DosService> services) {
+    final List<DosService> dosServices = new ArrayList<>();
+
     for (DosService serviceIterationItem : services) {
-      if (Objects.nonNull(serviceIterationItem.getReferral_roles())
-        || !serviceIterationItem.getReferral_roles().isEmpty()){
-        if(serviceIterationItem.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)){
-          dosServices.add(serviceIterationItem);
-        }
+      if (Objects.nonNull(serviceIterationItem.getReferral_roles()) &&
+        !serviceIterationItem.getReferral_roles().isEmpty() &&
+        serviceIterationItem.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)) {
+        dosServices.add(serviceIterationItem);
       }
     }
-
     return dosServices;
   }
 }

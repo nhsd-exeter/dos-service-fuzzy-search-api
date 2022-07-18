@@ -1,6 +1,8 @@
 package uk.nhs.digital.uec.api.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -96,5 +98,39 @@ public class ServiceRepositoryTest {
     assertEquals(dosService.getName(), dosServiceResponse.getName());
     assertEquals(dosService.getEasting(), dosServiceResponse.getEasting());
     assertEquals(dosService.getNorthing(), dosServiceResponse.getNorthing());
+  }
+
+  @Test
+  public void findServiceByLocationValidationExceptionTest() throws UnauthorisedException, NotFoundException {
+
+    DosService dosService = new DosService();
+    dosService.setName("Exeter NHS Service");
+    dosService.setEasting(23453);
+    dosService.setNorthing(45322);
+    dosService.setPostcode("EX1 1SR");
+    dosService.setReferral_roles(List.of("Referral","Professional Referral"));
+    List<DosService> services = new ArrayList<>();
+    services.add(dosService);
+
+    Page<DosService> pageItems = new PageImpl<>(services);
+    String searchLocation = "EdscXzxcxz8 sccasc8XdcsdcasE";
+
+
+    services.add(dosService);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+
+    when(servicesRepo.findBySearchTerms(
+            anyString(), anyInt(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
+        .thenReturn(pageItems);
+
+    NotFoundException notFoundException = assertThrows(NotFoundException.class, () ->serviceRepository.findServiceByLocation(searchLocation));
+    assertNotNull(notFoundException);
+
+//    DosService dosServiceResponse = findServiceBySearchTerms.get(0);
+//
+//    assertEquals(dosService.getName(), dosServiceResponse.getName());
+//    assertEquals(dosService.getEasting(), dosServiceResponse.getEasting());
+//    assertEquals(dosService.getNorthing(), dosServiceResponse.getNorthing());
   }
 }
