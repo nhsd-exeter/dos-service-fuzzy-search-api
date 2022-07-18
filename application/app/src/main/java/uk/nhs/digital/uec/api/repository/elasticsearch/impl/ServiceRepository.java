@@ -13,8 +13,8 @@ import uk.nhs.digital.uec.api.repository.elasticsearch.CustomServicesRepositoryI
 import uk.nhs.digital.uec.api.repository.elasticsearch.ServicesRepositoryInterface;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Repository
@@ -61,7 +61,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
           apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms(), 2);
     }
 
-    dosServices = performSearch(searchCriteria);
+    dosServices = performSearch(searchCriteria, numServicesToReturnFromEs);
 
     return dosServices;
   }
@@ -79,14 +79,41 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     //TODO:- Validate postcode entry
     log.info("Validate Postcode: {}", searchLocation);
     Pattern pattern = Pattern.compile(POSTCODE_REGEX);
-    if (!pattern.matcher(searchLocation).matches()){
+    if (!pattern.matcher(searchLocation).matches()) {
       throw new NotFoundException(ErrorMessageEnum.INVALID_LOCATION.getMessage());
     }
 
     // Get the first part of the postcode
     String searchCriteria = searchLocation.substring(0, 4).trim();
 
-    dosServices = performSearch(searchCriteria);
+    dosServices = performSearch(searchCriteria, null);
+
+    return dosServices;
+  }
+
+  private List<DosService> performSearch(String searchCriteria, Integer numberOfServicesToReturnFromElasticSearch) {
+    if (numberOfServicesToReturnFromElasticSearch == null) {
+      return performSearch(searchCriteria);
+    }
+    final List<DosService> dosServices = new ArrayList<>();
+
+    Long start = System.currentTimeMillis();
+    Iterable<DosService> services =
+      servicesRepo.findBySearchTerms(
+        searchCriteria,
+        apiRequestParams.getFuzzLevel(),
+        apiRequestParams.getNamePriority(),
+        apiRequestParams.getAddressPriority(),
+        apiRequestParams.getPostcodePriority(),
+        apiRequestParams.getPublicNamePriority(),
+        PageRequest.of(0, numberOfServicesToReturnFromElasticSearch));
+    log.info("Search query duration {}ms", System.currentTimeMillis() - start);
+
+    for (DosService serviceIterationItem : services) {
+      if (serviceIterationItem.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)) {
+        dosServices.add(serviceIterationItem);
+      }
+    }
 
     return dosServices;
   }
@@ -107,7 +134,10 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     log.info("Search query duration {}ms", System.currentTimeMillis() - start);
 
     for (DosService serviceIterationItem : services) {
-      if (serviceIterationItem.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)) {
+      if (Objects.nonNull(serviceIterationItem.getReferral_roles())
+        && !serviceIterationItem.getReferral_roles().isEmpty()
+        && serviceIterationItem.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)
+      ) {
         dosServices.add(serviceIterationItem);
       }
     }
