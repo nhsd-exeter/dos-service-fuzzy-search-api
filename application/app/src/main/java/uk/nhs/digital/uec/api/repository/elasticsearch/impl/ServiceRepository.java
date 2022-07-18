@@ -36,8 +36,6 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
    */
   @Override
   public List<DosService> findServiceBySearchTerms(List<String> searchTerms) {
-    List<DosService> dosServices = new ArrayList<>();
-
     log.info("Request Params: {}", searchTerms);
     log.info("Fuzzy level: {}", apiRequestParams.getFuzzLevel());
     log.info(
@@ -61,14 +59,11 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
           apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms(), 2);
     }
 
-    dosServices = performSearch(searchCriteria, numServicesToReturnFromEs);
-
-    return dosServices;
+    return performSearch(searchCriteria, numServicesToReturnFromEs);
   }
 
   @Override
   public List<DosService> findServiceByLocation(String searchLocation) throws NotFoundException {
-    List<DosService> dosServices = new ArrayList<>();
 
     log.info("Request Params: {}", searchLocation);
     log.info("Fuzzy level: {}", apiRequestParams.getFuzzLevel());
@@ -84,13 +79,11 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
     // Get the first part of the postcode
     String searchCriteria = searchLocation.substring(0, 4).trim();
-    Long start = System.currentTimeMillis();
-    dosServices = performSearch(searchCriteria, null);
-    log.info("Search query duration {}ms", System.currentTimeMillis() - start);
-    return dosServices;
+    return performSearch(searchCriteria, null);
   }
 
   private List<DosService> performSearch(String searchCriteria, Integer numberOfServicesToReturnFromElasticSearch) {
+    Long start = System.currentTimeMillis();
     if (numberOfServicesToReturnFromElasticSearch == null) {
       return performSearch(searchCriteria);
     }
@@ -103,10 +96,13 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         apiRequestParams.getPostcodePriority(),
         apiRequestParams.getPublicNamePriority(),
         PageRequest.of(0, numberOfServicesToReturnFromElasticSearch));
+    log.info("Search query duration {}ms", System.currentTimeMillis() - start);
+
     return getFilteredServices(services);
   }
 
   private List<DosService> performSearch(String searchCriteria) {
+    Long start = System.currentTimeMillis();
     Iterable<DosService> services =
       servicesRepo.findBySearchTerms(
         searchCriteria,
@@ -116,6 +112,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         apiRequestParams.getPostcodePriority(),
         apiRequestParams.getPublicNamePriority(),
         PageRequest.of(0, apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()));
+    log.info("Search query duration {}ms", System.currentTimeMillis() - start);
     return getFilteredServices(services);
   }
 
