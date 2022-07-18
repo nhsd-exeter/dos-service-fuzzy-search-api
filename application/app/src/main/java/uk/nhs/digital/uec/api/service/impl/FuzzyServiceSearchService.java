@@ -1,10 +1,5 @@
 package uk.nhs.digital.uec.api.service.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -20,6 +15,9 @@ import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
 import uk.nhs.digital.uec.api.service.LocationServiceInterface;
 import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInterface {
@@ -47,12 +45,15 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
       final String searchPostcode, final List<String> searchTerms)
       throws NotFoundException, InvalidParameterException {
 
-    validationService.validateSearchCriteria(searchTerms);
+    List<DosService> dosServices;
 
-    List<DosService> dosServices = elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms))
-          .stream()
-          .filter(dosService -> dosService.getReferral_roles().contains("Professional Referral"))
-          .collect(Collectors.toList());
+    if (searchTerms == null || searchTerms.isEmpty()) {
+      dosServices = elasticsearch.findServiceByLocation(searchPostcode);
+    } else {
+      validationService.validateSearchCriteria(searchTerms);
+      dosServices = elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms));
+    }
+
 
     /** Call the auth service login endpoint from here and get the authenticated headers */
     MultiValueMap<String, String> headers = externalApiHandshakeInterface.getAccessTokenHeader();
