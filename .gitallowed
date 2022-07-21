@@ -2,3 +2,4 @@ uec-core-dos-put-db-12-replica-sf.crvqtzolulpo.eu-west-2.rds.amazonaws.com
 uec-core-dos-performance-db-12-replica-sf.cqger35bxcwy.eu-west-2.rds.amazonaws.com
 uec-core-dos-regression-db-12-replica-sf.cqger35bxcwy.eu-west-2.rds.amazonaws.com
 infrastructure/stacks/service_etl/functions/service_etl/psycopg2/*
+uec-core-dos-live-db-12-replica-sf.crvqtzolulpo.eu-west-2.rds.amazonaws.com
