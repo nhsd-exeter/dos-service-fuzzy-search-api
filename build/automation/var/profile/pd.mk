@@ -2,7 +2,7 @@ include $(VAR_DIR)/platform-texas/v1/account-live-k8s-prod.mk
 
 # ==============================================================================
 # Service variables
-AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/c0718115-4e22-4f48-a4aa-8c16ea86c5e6
+AWS_CERTIFICATE := arn:aws:acm:eu-west-2:$(AWS_ACCOUNT_ID):certificate/$(TEXAS_CERTIFICATE_ID)
 
 PROFILE := pd
 ENVIRONMENT := $(PROFILE)
@@ -35,7 +35,7 @@ MAX_SEARCH_CRITERIA := 20
 # Search parameters
 MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH := 300
 MAX_NUM_SERVICES_TO_RETURN_FROM_ELASTICSEARCH_3_SEARCH_TERMS := 100
-MAX_NUM_SERVICES_TO_RETURN := 5
+MAX_NUM_SERVICES_TO_RETURN := 50
 FUZZ_LEVEL := 2
 NAME_PRIORITY := 100
 ADDRESS_PRIORITY := 75
@@ -62,8 +62,8 @@ INFRASTRUCTURE_STACKS_DESTROY = $(INFRASTRUCTURE_STACKS_ETL),$(INFRASTRUCTURE_ST
 SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 
 TF_VAR_service_prefix := $(SERVICE_PREFIX)
-TF_VAR_es_zone_awareness_enabled := false #Cross check reaosning with Jon P
-TF_VAR_es_availability_zone_count := null
+TF_VAR_es_zone_awareness_enabled := true #false #Cross check reaosning with Jon P
+TF_VAR_es_availability_zone_count := 2 #null
 TF_VAR_es_instance_count := 4
 TF_VAR_es_instance_type := m6g.8xlarge.elasticsearch
 TF_VAR_es_snapshot_bucket := $(TF_VAR_service_prefix)-elastic-search-snapshots
@@ -82,12 +82,12 @@ TF_VAR_service_etl_cron_timer_day_of_week := ?
 TF_VAR_service_etl_cron_timer_year := *
 TF_VAR_service_etl_logging_level := INFO
 TF_VAR_service_etl_sns_logging_level := INFO
-TF_VAR_service_etl_sns_email := service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si.slack.com
+TF_VAR_service_etl_sns_email := service-etl-alerts-de-aaaafqkcxkkecdxfimtohq46zu@a2si.slack.com #service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si.slack.com
 #Every 4 minutes
 TF_VAR_service_etl_alarm_period := 240
 
 # Connection to DoS Read Replica for extraction Lambdas. For the Demo env we point to the live read replica
-TF_VAR_dos_sf_replica_db := uec-core-dos-live-db-12-replica-sf.dos-db-rds
+TF_VAR_dos_sf_replica_db := uec-core-dos-live-db-12-replica-sf.crvqtzolulpo.eu-west-2.rds.amazonaws.com #uec-core-dos-live-db-12-replica-sf.dos-db-rds
 TF_VAR_service_finder_replica_sg := uec-core-dos-live-db-12-replica-sf-sg
 TF_VAR_dos_read_replica_secret_name := core-dos/deployment
 TF_VAR_dos_read_replica_secret_key := DB_SF_READONLY_PASSWORD
