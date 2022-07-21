@@ -17,8 +17,7 @@ SPLUNK_INDEX := eks_logs_service_finder_prod
 
 APP_URL_PREFIX := $(K8S_APP_NAMESPACE)-$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)
 
-# Elastic search datastore
-DOMAIN := $(TF_VAR_service_prefix)-service
+
 # ELASTICSEARCH_URL configured in make project-populate-application-variables
 
 API_SERVICE_SEARCH_ENDPOINT := https://$(APP_URL_PREFIX)-service-search.$(TF_VAR_platform_zone)/dosapi/dosservices/v0.0.1/services/byfuzzysearch
@@ -62,6 +61,9 @@ INFRASTRUCTURE_STACKS_DESTROY = $(INFRASTRUCTURE_STACKS_ETL),$(INFRASTRUCTURE_ST
 SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 
 TF_VAR_service_prefix := $(SERVICE_PREFIX)
+# Elastic search datastore
+DOMAIN := $(TF_VAR_service_prefix)-service
+
 TF_VAR_es_zone_awareness_enabled := true #false #Cross check reaosning with Jon P
 TF_VAR_es_availability_zone_count := 2 #null
 TF_VAR_es_instance_count := 4
