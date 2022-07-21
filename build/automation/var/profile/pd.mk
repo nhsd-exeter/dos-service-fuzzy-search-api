@@ -68,8 +68,8 @@ TF_VAR_es_instance_count := 4
 TF_VAR_es_instance_type := m6g.8xlarge.elasticsearch
 TF_VAR_es_snapshot_bucket := $(TF_VAR_service_prefix)-elastic-search-snapshots
 TF_VAR_es_snapshot_role := $(TF_VAR_service_prefix)-elasticsearch-snapshot
-TF_VAR_es_domain_name := $(DOMAIN)
-
+#TF_VAR_es_domain_name := $(DOMAIN)
+TF_VAR_es_domain_name := $(TF_VAR_service_prefix)-service
 # See : https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html
 # Config for the cron job trigger for the service etl set to be:
 # 6am Monday - Friday (This is because we dont want the service to be running every 4 minutes in non prod)
