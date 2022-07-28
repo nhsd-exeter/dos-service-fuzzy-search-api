@@ -87,6 +87,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     if (numberOfServicesToReturnFromElasticSearch == null) {
       return performSearch(searchCriteria);
     }
+
     Iterable<DosService> services =
       servicesRepo.findBySearchTerms(
         searchCriteria,
