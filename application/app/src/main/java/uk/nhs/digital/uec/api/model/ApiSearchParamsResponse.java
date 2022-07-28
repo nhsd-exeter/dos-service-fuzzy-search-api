@@ -32,7 +32,7 @@ public class ApiSearchParamsResponse {
   private String searchLocation;
 
   @JsonProperty("fuzz_level")
-  private int fuzzLevel;
+  private Object fuzzLevel;
 
   @JsonProperty("address_priority")
   private int addressPriority;
@@ -65,7 +65,7 @@ public class ApiSearchParamsResponse {
   public static class ApiSearchParamsResponseBuilder {
     private List<String> searchCriteria;
     private String searchLocation;
-    private int fuzzLevel;
+    private Object fuzzLevel;
     private int addressPriority;
     private int postcodePriority;
     private int publicNamePriority;
@@ -82,7 +82,7 @@ public class ApiSearchParamsResponse {
       return this;
     }
 
-    public ApiSearchParamsResponseBuilder fuzzLevel(Integer fuzzLevel) {
+    public ApiSearchParamsResponseBuilder fuzzLevel(Object fuzzLevel) {
       this.fuzzLevel = fuzzLevel;
       return this;
     }

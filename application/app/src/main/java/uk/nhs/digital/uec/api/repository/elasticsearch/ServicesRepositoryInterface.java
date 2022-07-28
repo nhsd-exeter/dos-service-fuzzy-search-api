@@ -19,7 +19,7 @@ public interface ServicesRepositoryInterface extends ElasticsearchRepository<Dos
           + " \"postcode^?4\"], \"fuzziness\": \"?1\", \"operator\":\"or\"}}")
   Page<DosService> findBySearchTerms(
       String searchTerms_0,
-      Integer fuzzLevel_1,
+      Object fuzzLevel_1,
       Integer namePriority_2,
       Integer addressPriority_3,
       Integer postcodePriority_4,

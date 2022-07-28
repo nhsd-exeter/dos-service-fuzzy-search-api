@@ -42,7 +42,7 @@ public class ApiRequestParams {
   private Integer defaultMaxNumServicesToReturn;
 
   @Value("${configuration.search_parameters.fuzz_level}")
-  private Integer defaultFuzzLevel;
+  private Object defaultFuzzLevel;
 
   @Value("${configuration.search_parameters.name_priority}")
   private Integer defaultNamePriority;
@@ -80,7 +80,7 @@ public class ApiRequestParams {
     return maxNumServicesToReturn;
   }
 
-  public Integer getFuzzLevel() {
+  public Object getFuzzLevel() {
     if (this.fuzzLevel == null) {
       return defaultFuzzLevel;
     }
