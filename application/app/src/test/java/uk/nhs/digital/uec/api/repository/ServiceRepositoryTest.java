@@ -56,7 +56,7 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
 
     when(servicesRepo.findBySearchTerms(
-      anyString(), anyInt(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
+      anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
       .thenReturn(pageItems);
 
     List<DosService> findServiceBySearchTerms =
@@ -90,7 +90,7 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
 
     when(servicesRepo.findBySearchTerms(
-      anyString(), anyInt(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
+      anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
       .thenReturn(pageItems);
 
     List<DosService> findServiceBySearchTerms =
