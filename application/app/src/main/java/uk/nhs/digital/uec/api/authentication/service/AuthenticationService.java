@@ -18,7 +18,7 @@ public class AuthenticationService implements AuthenticationServiceInterface {
   }
 
   @Override
-  public AuthToken getAccessToken(String refreshToken, String email) throws UnauthorisedException {
-    return cognitoIdpService.authenticate(refreshToken, email);
+  public AuthToken getAccessToken(String refreshToken, Credential credential) throws UnauthorisedException {
+    return cognitoIdpService.authenticate(refreshToken, credential);
   }
 }

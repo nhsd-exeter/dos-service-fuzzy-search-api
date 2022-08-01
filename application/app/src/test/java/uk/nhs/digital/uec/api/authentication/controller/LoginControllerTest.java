@@ -47,7 +47,7 @@ public class LoginControllerTest {
 
   @Test
   public void loginRefreshTest() throws NotFoundException, UnauthorisedException {
-    when(authenticationService.getAccessToken(refreshToken, cred.getEmailAddress()))
+    when(authenticationService.getAccessToken(refreshToken, cred))
         .thenReturn(authToken);
     ResponseEntity response = loginController.getAccessToken(refreshToken, cred);
     AuthToken authTokenResponse = (AuthToken) response.getBody();
@@ -64,7 +64,7 @@ public class LoginControllerTest {
 
   @Test
   public void loginRefreshExceptionTest() throws NotFoundException, UnauthorisedException {
-    when(authenticationService.getAccessToken(refreshToken, cred.getEmailAddress()))
+    when(authenticationService.getAccessToken(refreshToken, cred))
         .thenThrow(UnauthorisedException.class);
     ResponseEntity response = loginController.getAccessToken(refreshToken, cred);
     assertEquals(response.getStatusCode().value(), HttpStatus.UNAUTHORIZED.value());

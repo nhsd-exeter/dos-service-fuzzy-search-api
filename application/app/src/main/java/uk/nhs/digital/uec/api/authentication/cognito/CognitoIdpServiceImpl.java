@@ -51,7 +51,8 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
         PASSWORD,
         credential.getPassword(),
         SECRET_HASH,
-        hash);
+        calculateSecretHash(
+          credential.getEmailAddress(), userPoolClientId, userPoolClientSecret));
     try {
       return getAuthenticationTokens(USER_PASSWORD_AUTH, authenticationParameters);
     } catch (InvalidPasswordException | NotAuthorizedException e) {
@@ -64,15 +65,16 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
   }
 
   @Override
-  public AuthToken authenticate(String refreshToken, String email) throws UnauthorisedException {
+  public AuthToken authenticate(String refreshToken, Credential credential) throws UnauthorisedException {
     String hash = calculateSecretHash(
-      email, userPoolClientId, userPoolClientSecret);
+      credential.getEmailAddress(), userPoolClientId, userPoolClientSecret);
     log.info("Refresh Auth hash: {}",hash);
     Map<String, String> authenticationParameters =
       Map.of(REFRESH_TOKEN,
         refreshToken,
         SECRET_HASH,
-        hash);
+        calculateSecretHash(
+          credential.getEmailAddress(), userPoolClientId, userPoolClientSecret));
     try {
       return getAuthenticationTokens(REFRESH_TOKEN_AUTH, authenticationParameters);
     } catch (AWSCognitoIdentityProviderException e) {

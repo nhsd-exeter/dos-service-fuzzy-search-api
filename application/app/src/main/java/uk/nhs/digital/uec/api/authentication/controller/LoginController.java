@@ -33,7 +33,7 @@ public class LoginController {
   public ResponseEntity getAccessToken(@RequestHeader("REFRESH-TOKEN") String refreshToken, @RequestBody Credential credential){
     AuthToken resultPayload = null;
     try{
-      resultPayload = authenticationService.getAccessToken(refreshToken, credential.getEmailAddress());
+      resultPayload = authenticationService.getAccessToken(refreshToken, credential);
     }catch (UnauthorisedException ex){
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }

@@ -39,14 +39,15 @@ public class AuthenticationServiceTest {
 
   @Test
   public void getAccessTokenTestFromRefresh() throws UnauthorisedException {
+
     AuthToken authToken = new AuthToken();
     String refreshToken = "REFRESH_TOKEN_123";
     authToken.setAccessToken("ACCESS_TOKEN_123");
     authToken.setRefreshToken("REFRESH_TOKEN_123");
-    when(cognitoIdpService.authenticate(refreshToken, cred.getEmailAddress()))
+    when(cognitoIdpService.authenticate(refreshToken, cred))
         .thenReturn(authToken);
 
-    AuthToken accessToken = authService.getAccessToken(refreshToken, cred.getEmailAddress());
+    AuthToken accessToken = authService.getAccessToken(refreshToken, cred);
 
     assertNotNull(accessToken.getAccessToken());
   }
