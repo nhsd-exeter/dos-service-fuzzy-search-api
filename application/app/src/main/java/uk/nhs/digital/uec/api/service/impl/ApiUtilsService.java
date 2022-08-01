@@ -22,7 +22,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
   private int minSearchTermLength;
 
   public void configureApiRequestParams(
-      Integer fuzzLevel,
+      Object fuzzLevel,
       String referralRole,
       Integer maxNumServicesToReturnFromEs,
       Integer maxNumServicesToReturn,

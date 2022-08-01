@@ -21,7 +21,7 @@ public class ApiRequestParams {
 
   private Integer maxNumServicesToReturn;
 
-  private Integer fuzzLevel;
+  private Object fuzzLevel;
 
   private Integer namePriority;
 
