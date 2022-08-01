@@ -78,7 +78,7 @@ public class FuzzyServiceSearchController {
           @RequestParam(name = "max_number_of_services_to_return", required = false)
           Integer maxNumServicesToReturn,
       @ApiParam(FUZZ_LEVEL_DESC) @RequestParam(name = "fuzz_level", required = false)
-          Integer fuzzLevel,
+          Object fuzzLevel,
       @ApiParam(NAME_PRIORITY_DESC) @RequestParam(name = "name_priority", required = false)
           Integer namePriority,
       @ApiParam(ADDRESS_PRIORITY_DESC) @RequestParam(name = "address_priority", required = false)

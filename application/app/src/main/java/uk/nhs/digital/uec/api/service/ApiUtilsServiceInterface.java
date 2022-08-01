@@ -13,7 +13,7 @@ public interface ApiUtilsServiceInterface {
    * @param request {@link HttpServletRequest} of the request.
    */
   void configureApiRequestParams(
-      Integer fuzzLevel,
+      Object fuzzLevel,
       String referralRole,
       Integer maxNumServicesToReturnFromEs,
       Integer maxNumServicesToReturn,
