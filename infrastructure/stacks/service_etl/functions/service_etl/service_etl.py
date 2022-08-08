@@ -24,9 +24,9 @@ ES_INDEX = "service"
 TIMESTAMP_VERSION = time.time()
 LOGGING_LEVEL = os.environ.get("LOGGING_LEVEL")
 
-
 logging.basicConfig(level=LOGGING_LEVEL)
-logger=logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
+
 
 def get_secret():
 
@@ -35,13 +35,15 @@ def get_secret():
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
-    client = session.client(service_name="secretsmanager", region_name=region_name)
+    client = session.client(service_name="secretsmanager",
+                            region_name=region_name)
 
     try:
-        get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name)
     except ClientError as e:
-            logger.error("Unable to retrieve secret due to {}".format(e))
-            raise e
+        logger.error("Unable to retrieve secret due to {}".format(e))
+        raise e
     else:
         # Decrypts secret using the associated KMS CMK.
         # Depending on whether the secret is a string or binary, one of these fields will be populated.
@@ -101,7 +103,10 @@ def extract_data_from_dos():
                             s.telephonetriagereferralinstructions,
                             s.odscode,
                             s.isnational,
-                            s.modifiedtime
+                            s.modifiedtime,
+                            array_to_string(array(select name from pathwaysdos.servicedayopenings sdo inner join pathwaysdos.openingtimedays o  on sdo.dayid = o.id inner join pathwaysdos.servicedayopeningtimes sdot on sdo.id = sdot.servicedayopeningid where s.id = sdo.serviceid order by sdo.dayid), ',') as openingtimedays,
+                            array_to_string(array(select starttime from pathwaysdos.servicedayopenings sdo inner join pathwaysdos.openingtimedays o  on sdo.dayid = o.id inner join pathwaysdos.servicedayopeningtimes sdot on sdo.id = sdot.servicedayopeningid where s.id = sdo.serviceid order by sdo.dayid), ',') as openingtime,
+                            array_to_string(array(select endtime from pathwaysdos.servicedayopenings sdo inner join pathwaysdos.openingtimedays o  on sdo.dayid = o.id inner join pathwaysdos.servicedayopeningtimes sdot on sdo.id = sdot.servicedayopeningid where s.id = sdo.serviceid order by sdo.dayid), ',') as closingtime
                         from
                             pathwaysdos.services s,
                             pathwaysdos.servicecapacities sc,
@@ -143,7 +148,8 @@ def extract_data_from_dos():
         logger.debug("Successfully fetched " + str(count) + " records")
         return doc_list
     except Exception as e:
-        logger.error("DoS Read Replica ETL extraction failed due to {}".format(e))
+        logger.error(
+            "DoS Read Replica ETL extraction failed due to {}".format(e))
     finally:
         cur.close()
         conn.close()
@@ -192,34 +198,53 @@ def connect_to_elastic_search():
         logger.debug("getting credentials")
         service = 'es'
         credentials = boto3.Session().get_credentials()
-        awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, service, session_token=credentials.token)
+        awsauth = AWS4Auth(
+            credentials.access_key,
+            credentials.secret_key,
+            region,
+            service,
+            session_token=credentials.token
+        )
 
         logger.debug("connecting to es")
-        es = Elasticsearch(
-            hosts = [{'host': host, 'port': 443}],
-            http_auth = awsauth,
-            use_ssl = True,
-            verify_certs = True,
-            connection_class = RequestsHttpConnection
-        )
+        es = Elasticsearch(hosts=[{
+            'host': host,
+            'port': 443
+        }],
+            http_auth=awsauth,
+            use_ssl=True,
+            verify_certs=True,
+            connection_class=RequestsHttpConnection)
+
         logger.debug(es.info())
         if not es.ping():
             raise ValueError("Connection failed")
         logger.debug("connected to es")
-        return es;
+        return es
     except Exception as e:
         logger.error("Unable to connect to ElasticSearch due to {}".format(e))
 
 
 def remove_deleted_services(es):
-    query_string = {"query": {"bool": {"must_not": {"term": {"timestamp_version": TIMESTAMP_VERSION}}}}}
-    results = helpers.scan(es,
-                    query=query_string,  # same as the search() body parameter
-                    index=ES_INDEX,
-                    doc_type="_doc",
-                    _source=False,
-                    track_scores=False,
-                    scroll='5m')
+    query_string = {
+        "query": {
+            "bool": {
+                "must_not": {
+                    "term": {
+                        "timestamp_version": TIMESTAMP_VERSION
+                    }
+                }
+            }
+        }
+    }
+    results = helpers.scan(
+        es,
+        query=query_string,  # same as the search() body parameter
+        index=ES_INDEX,
+        doc_type="_doc",
+        _source=False,
+        track_scores=False,
+        scroll='5m')
     bulk_deletes = []
     for result in results:
         result['_op_type'] = 'delete'
@@ -234,7 +259,7 @@ def send_dos_changes_to_elasticsearch(doc_list):
     logger.debug("size of import: " + str(len(doc_list)))
     try:
         logger.debug("Inserting into ES...")
-        resp = helpers.bulk(es, doc_list, index = ES_INDEX, doc_type = "_doc")
+        resp = helpers.bulk(es, doc_list, index=ES_INDEX, doc_type="_doc")
         logger.info("Insert complete")
         logger.info(resp)
         logger.debug("starting to remove old services")
@@ -244,6 +269,7 @@ def send_dos_changes_to_elasticsearch(doc_list):
         return resp
     except Exception as e:
         logger.error("Unable to insert records due to {}".format(e))
+
 
 # This is the entry point for the Lambda function
 def lambda_handler(event, context):
