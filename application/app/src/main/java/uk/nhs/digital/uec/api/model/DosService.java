@@ -121,6 +121,21 @@ public class DosService implements Comparable<DosService> {
   @JsonProperty("updated")
   private String updated;
 
+  @JsonProperty("openingtimedays")
+  private List<String> openingTimeDays;
+
+  @JsonProperty("openingtime")
+  private List<String> openingTime;
+
+  @JsonProperty("closingtime")
+  private List<String> closingTime;
+
+  @JsonProperty("specifiedopeningdates")
+  private List<String> specifiedopeningdates;
+
+  @JsonProperty("specifiedopeningtimes")
+  private List<String> specifiedopeningtimes;
+
   public Double getDistance() {
     if (this.distance == null) {
       return Double.valueOf(999.9);

@@ -97,8 +97,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         apiRequestParams.getPostcodePriority(),
         apiRequestParams.getPublicNamePriority(),
         PageRequest.of(0, numberOfServicesToReturnFromElasticSearch));
-    log.info("Search query duration {}ms", System.currentTimeMillis() - start);
-
+    log.info("Search query duration {}ms. Number of services found {}", System.currentTimeMillis() - start, services.spliterator().getExactSizeIfKnown());
     return getFilteredServices(services);
   }
 
@@ -113,7 +112,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         apiRequestParams.getPostcodePriority(),
         apiRequestParams.getPublicNamePriority(),
         PageRequest.of(0, apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()));
-    log.info("Search query duration {}ms", System.currentTimeMillis() - start);
+    log.info("Search query duration {}ms. Number of services found {}", System.currentTimeMillis() - start, services.spliterator().getExactSizeIfKnown());
     return getFilteredServices(services);
   }
 
@@ -127,6 +126,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         dosServices.add(serviceIterationItem);
       }
     }
+    log.info("Number of services by Professional Referral: {} ",dosServices.size());
     return dosServices;
   }
 }
