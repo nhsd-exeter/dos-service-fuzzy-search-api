@@ -32,10 +32,31 @@ build: project-config # Build project
 	cp \
 		$(PROJECT_DIR)/build/automation/etc/certificate/* \
 		$(PROJECT_DIR)/application/app/src/main/resources/certificate
-	make docker-run-mvn \
-		DIR="application/app" \
-		CMD="-Dmaven.test.skip=true -Ddependency-check.skip=true clean install" \
-		LIB_VOLUME_MOUNT="true"
+
+	if [ $(PROFILE) == 'local' ]
+	then
+		make docker-run-mvn \
+			DIR="application/app" \
+			CMD="-Dmaven.test.skip=true -Ddependency-check.skip=true clean install" \
+			LIB_VOLUME_MOUNT="true"
+	else
+		make docker-run-mvn \
+			DIR="application/app" \
+			CMD="-Ddependency-check.skip=true clean verify install \
+			-Dsonar.verbose=true \
+			-Dsonar.host.url='https://sonarcloud.io' \
+			-Dsonar.organization='nhsd-exeter' \
+			-Dsonar.projectKey='uec-dos-api-sfsa' \
+			-Dsonar.java.binaries=target/classes \
+			-Dsonar.projectName='dos-service-fuzzy-search-api' \
+			-Dsonar.login='$$(make secret-fetch NAME=service-finder-sonar-pass | jq .SONAR_HOST_TOKEN | tr -d '"' || exit 1)' \
+			-Dsonar.sourceEncoding='UTF-8' \
+			-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco \
+			-Dsonar.exclusions='src/main/java/**/config/*.*,src/main/java/**/model/*.*,src/main/java/**/exception/*.*,src/test/**/*.*,src/main/java/**/filter/*.*,src/main/java/**/DosServiceFuzzySearchApi.*' \
+			sonar:sonar" \
+			LIB_VOLUME_MOUNT="true"
+	fi
+
 	mv \
 		$(PROJECT_DIR)/application/app/target/dos-service-fuzzy-search-api-*.jar \
 		$(PROJECT_DIR)/build/docker/api/assets/application/dos-service-fuzzy-search-api.jar
