@@ -183,9 +183,9 @@ def build_insert_dict(records, doc_list):
             "ods_code": row[18],
             "is_national": row[19],
             "updated": row[20],
-            "openingtimedays": row[21],
-            "openingtime": row[22],
-            "closingtime": row[23],
+            "openingtimedays": row[21].split(","),
+            "openingtime": row[22].split(","),
+            "closingtime": row[23].split(","),
             "timestamp_version": TIMESTAMP_VERSION
         }
         doc_list.append(document)
