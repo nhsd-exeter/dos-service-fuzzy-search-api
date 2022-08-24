@@ -183,6 +183,9 @@ def build_insert_dict(records, doc_list):
             "ods_code": row[18],
             "is_national": row[19],
             "updated": row[20],
+            "openingtimedays": row[21],
+            "openingtime": row[22],
+            "closingtime": row[23],
             "timestamp_version": TIMESTAMP_VERSION
         }
         doc_list.append(document)
@@ -198,23 +201,21 @@ def connect_to_elastic_search():
         logger.debug("getting credentials")
         service = 'es'
         credentials = boto3.Session().get_credentials()
-        awsauth = AWS4Auth(
-            credentials.access_key,
-            credentials.secret_key,
-            region,
-            service,
-            session_token=credentials.token
-        )
+        awsauth = AWS4Auth(credentials.access_key,
+                           credentials.secret_key,
+                           region,
+                           service,
+                           session_token=credentials.token)
 
         logger.debug("connecting to es")
         es = Elasticsearch(hosts=[{
             'host': host,
             'port': 443
         }],
-            http_auth=awsauth,
-            use_ssl=True,
-            verify_certs=True,
-            connection_class=RequestsHttpConnection)
+                           http_auth=awsauth,
+                           use_ssl=True,
+                           verify_certs=True,
+                           connection_class=RequestsHttpConnection)
 
         logger.debug(es.info())
         if not es.ping():
