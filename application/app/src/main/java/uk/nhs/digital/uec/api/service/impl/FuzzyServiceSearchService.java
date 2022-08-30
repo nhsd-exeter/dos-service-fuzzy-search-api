@@ -1,5 +1,6 @@
 package uk.nhs.digital.uec.api.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -20,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@Slf4j
 public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInterface {
 
   @Autowired private ApiUtilsServiceInterface apiUtilsService;
@@ -48,8 +50,10 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     List<DosService> dosServices;
 
     if (searchTerms == null || searchTerms.isEmpty()) {
+      log.info("Location based search, Search terms: {}, Search Location: {}",searchTerms,searchPostcode);
       dosServices = elasticsearch.findServiceByLocation(searchPostcode);
     } else {
+      log.info("Searching based on search terms: {}, Search Location {}",searchTerms,searchPostcode);
       validationService.validateSearchCriteria(searchTerms);
       dosServices = elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms));
     }
@@ -65,7 +69,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
      * if dos services returns empty locations populate location based on postcodes from postcode
      * mapping API
      */
-    List<PostcodeLocation> dosServicePostCodeLocation = populateEmptyLocation(dosServices, headers);
+    List<PostcodeLocation> dosServicePostCodeLocation = this.populateEmptyLocation(dosServices, headers);
 
     if (searchLocation != null) {
       for (DosService dosService : dosServices) {
@@ -77,6 +81,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
         if (serviceLocation.getEasting() == null && serviceLocation.getNorthing() == null) {
           setServiceLocation(serviceLocation, dosServicePostCodeLocation);
         }
+        log.info("Calculating distance between {} : {}",searchLocation,serviceLocation);
         dosService.setDistance(locationService.distanceBetween(searchLocation, serviceLocation));
       }
     }
@@ -114,6 +119,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
   private List<PostcodeLocation> populateEmptyLocation(
       List<DosService> dosServices, MultiValueMap<String, String> headers)
       throws InvalidParameterException {
+    log.info("Populating empty location on service");
     List<String> postCodes =
         dosServices.stream()
             .filter(t -> t.getEasting() == null && t.getNorthing() == null)

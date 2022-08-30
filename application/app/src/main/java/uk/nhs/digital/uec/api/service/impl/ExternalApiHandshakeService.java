@@ -5,6 +5,8 @@ import static uk.nhs.digital.uec.api.authentication.constants.MockAuthentication
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -19,6 +21,7 @@ import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
 import uk.nhs.digital.uec.api.util.WebClientUtil;
 
 @Service
+@Slf4j
 public class ExternalApiHandshakeService implements ExternalApiHandshakeInterface {
 
   @Value("${postcode.mapping.uri}")
@@ -57,12 +60,14 @@ public class ExternalApiHandshakeService implements ExternalApiHandshakeInterfac
             .emailAddress(postcodeMappingUser)
             .password(postcodeMappingPassword)
             .build();
+    log.info("Attempting to log in with user: {}:{}",postcodeMappingUser,postcodeMappingPassword);
     if (isMockAuthenticationForProfile()) {
       authToken = new AuthToken();
       authToken.setAccessToken(MOCK_PCA_ACCESS_TOKEN);
     } else {
       authToken = webClientUtil.getAuthenticationToken(credential, loginUri);
     }
+    log.info("Login complete");
     return createAuthenticationHeader(authToken);
   }
 
