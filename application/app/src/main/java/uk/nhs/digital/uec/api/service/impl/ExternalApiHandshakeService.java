@@ -60,7 +60,8 @@ public class ExternalApiHandshakeService implements ExternalApiHandshakeInterfac
             .emailAddress(postcodeMappingUser)
             .password(postcodeMappingPassword)
             .build();
-    log.info("Attempting to log in with user: {}:{}",postcodeMappingUser,postcodeMappingPassword);
+    log.info("Attempting to log in with user: {}",postcodeMappingUser);
+    log.debug("Attempting to log in with user: {}:{}",postcodeMappingUser,postcodeMappingPassword);
     if (isMockAuthenticationForProfile()) {
       authToken = new AuthToken();
       authToken.setAccessToken(MOCK_PCA_ACCESS_TOKEN);

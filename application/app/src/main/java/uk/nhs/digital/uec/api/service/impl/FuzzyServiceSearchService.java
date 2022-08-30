@@ -81,7 +81,6 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
         if (serviceLocation.getEasting() == null && serviceLocation.getNorthing() == null) {
           setServiceLocation(serviceLocation, dosServicePostCodeLocation);
         }
-        log.info("Calculating distance between {} : {}",searchLocation,serviceLocation);
         dosService.setDistance(locationService.distanceBetween(searchLocation, serviceLocation));
       }
     }
