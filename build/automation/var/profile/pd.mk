@@ -107,8 +107,6 @@ ADD_DEFAULT_COGNITO_USERS := true
 
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-$(PROFILE)-uec-dos-api-pc-ingress.$(TEXAS_HOSTED_ZONE)/api
 POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
-# POSTCODE_MAPPING_PASSWORD := $(FUZZY_API_COGNIGTO_USER_PASSWORD)
-POSTCODE_MAPPING_PASSWORD := cm7xetC93qNBxKeY
 
 ##Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)

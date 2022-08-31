@@ -35,3 +35,4 @@ resource "aws_cognito_user_pool_client" "client" {
   generate_secret        = true
   refresh_token_validity = 1
 }
+# explicit_auth_flows    = ["USER_PASSWORD_AUTH","ALLOW_REFRESH_TOKEN_AUTH"] Enable instead once all secrets removed from code and cognito and secrets have been reset
