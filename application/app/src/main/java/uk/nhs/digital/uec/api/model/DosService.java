@@ -1,16 +1,10 @@
 package uk.nhs.digital.uec.api.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -25,8 +19,7 @@ public class DosService implements Comparable<DosService> {
 
   private int _score; // NOSONAR
 
-  @Id
-  private int id;
+  @Id private int id;
 
   private int u_id; // NOSONAR
 
@@ -76,9 +69,11 @@ public class DosService implements Comparable<DosService> {
 
   private String closingtime;
 
-  private List<String> specifiedopeningdates;
+  private String specifieddates;
 
-  private List<String> specifiedopeningtimes;
+  private String specificopentimes;
+
+  private String specificendtimes;
 
   public Double getDistance() {
     if (this.distance == null) {
