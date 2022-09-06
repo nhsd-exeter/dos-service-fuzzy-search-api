@@ -106,7 +106,10 @@ def extract_data_from_dos():
                             s.modifiedtime,
                             array_to_string(array(select name from pathwaysdos.servicedayopenings sdo inner join pathwaysdos.openingtimedays o  on sdo.dayid = o.id inner join pathwaysdos.servicedayopeningtimes sdot on sdo.id = sdot.servicedayopeningid where s.id = sdo.serviceid order by sdo.dayid), ',') as openingtimedays,
                             array_to_string(array(select starttime from pathwaysdos.servicedayopenings sdo inner join pathwaysdos.openingtimedays o  on sdo.dayid = o.id inner join pathwaysdos.servicedayopeningtimes sdot on sdo.id = sdot.servicedayopeningid where s.id = sdo.serviceid order by sdo.dayid), ',') as openingtime,
-                            array_to_string(array(select endtime from pathwaysdos.servicedayopenings sdo inner join pathwaysdos.openingtimedays o  on sdo.dayid = o.id inner join pathwaysdos.servicedayopeningtimes sdot on sdo.id = sdot.servicedayopeningid where s.id = sdo.serviceid order by sdo.dayid), ',') as closingtime
+                            array_to_string(array(select endtime from pathwaysdos.servicedayopenings sdo inner join pathwaysdos.openingtimedays o  on sdo.dayid = o.id inner join pathwaysdos.servicedayopeningtimes sdot on sdo.id = sdot.servicedayopeningid where s.id = sdo.serviceid order by sdo.dayid), ',') as closingtime,
+                            array_to_string(array(select date from pathwaysdos.servicespecifiedopeningdates sod where sod.serviceid = s.id),',') as specifieddates,
+                            array_to_string(array(select starttime from pathwaysdos.servicespecifiedopeningtimes sot inner join pathwaysdos.servicespecifiedopeningdates spcd on sot.servicespecifiedopeningdateid = spcd.id where spcd.serviceid = s.id),',') as specificopentimes,
+                            array_to_string(array(select endtime from pathwaysdos.servicespecifiedopeningtimes sot inner join pathwaysdos.servicespecifiedopeningdates spcd on sot.servicespecifiedopeningdateid = spcd.id where spcd.serviceid = s.id),',') as specificendtimes
                         from
                             pathwaysdos.services s,
                             pathwaysdos.servicecapacities sc,
@@ -186,6 +189,9 @@ def build_insert_dict(records, doc_list):
             "openingtimedays": row[21].split(","),
             "openingtime": row[22].split(","),
             "closingtime": row[23].split(","),
+            "specifieddates": row[24].split(","),
+            "specificopentimes": row[25].split(","),
+            "specificendtimes": row[26].split(","),
             "timestamp_version": TIMESTAMP_VERSION
         }
         doc_list.append(document)
@@ -212,10 +218,10 @@ def connect_to_elastic_search():
             'host': host,
             'port': 443
         }],
-                            http_auth=awsauth,
-                            use_ssl=True,
-                            verify_certs=True,
-                            connection_class=RequestsHttpConnection)
+            http_auth=awsauth,
+            use_ssl=True,
+            verify_certs=True,
+            connection_class=RequestsHttpConnection)
 
         logger.debug(es.info())
         if not es.ping():
