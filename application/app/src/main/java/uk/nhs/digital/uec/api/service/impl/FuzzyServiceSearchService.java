@@ -19,6 +19,7 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -123,7 +124,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
         dosServices.stream()
             .filter(t -> t.getEasting() == null && t.getNorthing() == null)
             .map(DosService::getPostcode)
-            .toList();
+          .collect(Collectors.toList());
     return !CollectionUtils.isNullOrEmpty(postCodes)
         ? locationService.getLocationsForPostcodes(postCodes, headers)
         : Collections.emptyList();

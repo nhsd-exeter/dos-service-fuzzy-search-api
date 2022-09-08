@@ -83,6 +83,7 @@ public class LocationService implements LocationServiceInterface {
   public List<PostcodeLocation> getLocationsForPostcodes(
       List<String> postCodes, MultiValueMap<String, String> headers)
       throws InvalidParameterException {
+    postCodes.forEach(pc -> log.info("Getting location for {}",pc));
     return apiHandshakeService.getPostcodeMappings(
         apiUtilsService.removeBlankSpacesIn(postCodes), headers);
   }

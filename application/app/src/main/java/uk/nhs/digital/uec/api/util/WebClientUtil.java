@@ -68,6 +68,7 @@ public class WebClientUtil {
     } catch (Exception e) {
       log.error("Error from Postcode Mapping API: " + e.getCause());
     }
+    postcodeMappingLocationList.forEach(postcodeLocation -> log.info("Found locations for {}",postcodeLocation.getPostCode()));
     return postcodeMappingLocationList;
   }
 
