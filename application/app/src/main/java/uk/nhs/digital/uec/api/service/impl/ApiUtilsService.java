@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 
 @Service
+@Slf4j
 public class ApiUtilsService implements ApiUtilsServiceInterface {
 
   @Autowired private ApiRequestParams apiRequestParams;
@@ -71,10 +73,10 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
   /** {@inheritDoc} */
   @Override
   public String removeBlankSpaces(final String field) {
+    log.info("Formatting {}",field);
     if (field != null) {
       return field.replaceAll("\\s", "");
     }
-
     return "";
   }
 
