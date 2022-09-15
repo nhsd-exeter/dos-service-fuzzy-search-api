@@ -9,6 +9,7 @@ pipeline {
     buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
+    timeout(time: 60, unit: "MINUTES")
   }
 
   environment {
