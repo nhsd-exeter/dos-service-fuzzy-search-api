@@ -7,7 +7,7 @@ ECR_TEXAS_URL_NONPROD = $(AWS_ECR_NON_PROD)/texas
 
 PROFILE := dev
 ENVIRONMENT := $(PROFILE)
-SPRING_PROFILES_ACTIVE := $(PROFILE), mock-auth
+SPRING_PROFILES_ACTIVE := $(PROFILE)
 API_IMAGE_TAG := v0.0.3
 
 
@@ -93,7 +93,7 @@ TF_VAR_cognito_user_pool := $(COGNITO_USER_POOL)
 COGNITO_USER_POOL_CLIENT_SECRET := $(or $(COGNITO_USER_POOL_CLIENT_SECRET), )
 COGNITO_USER_POOL_CLIENT_ID := $(or $(COGNITO_USER_POOL_CLIENT_ID), )
 COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
-ADD_DEFAULT_COGNITO_USERS := false
+ADD_DEFAULT_COGNITO_USERS := true
 
 #Once wiremock is deployed to dev environment calls to postcode api will be mocked
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-mock-postcode-ingress.k8s-nonprod.texasplatform.uk/api

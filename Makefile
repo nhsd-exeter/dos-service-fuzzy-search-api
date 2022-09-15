@@ -309,6 +309,10 @@ project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,A
 		echo 'Default users already added to pool';
 	fi
 
+destroy:
+	make delete-namespace PROFILE=$(PROFILE)
+	make destroy-infrastructure PROFILE=$(PROFILE)
+
 delete-namespace: # Delete namespace - mandatory: PROFILE=[name]
 	make k8s-undeploy PROFILE=$(PROFILE)
 
