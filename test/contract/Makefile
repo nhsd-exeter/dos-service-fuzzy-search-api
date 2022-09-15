@@ -27,12 +27,12 @@ run-smoke: ### Run Postman test suite against deployed application ###
 	sed -i -e "s/REPLACE_HOST/$(FUZZY_DOMAIN)/g" $(APPLICATION_TEST_DIR)/contract/environments/Fuzzy_Smoke_Tests_Env.postman_environment.json
 
 	case $(PROFILE) in
-		dev|pt|test) #pt = peformance testing
+		pt|test) #pt = peformance testing
 			echo Profile: $(PROFILE) Executing mock token test
 			sed -i -e "s/REPLACE_ACCESS_TOKEN/MOCK_FUZZY_API_ACCESS_TOKEN/g" $(APPLICATION_TEST_DIR)/contract/environments/Fuzzy_Smoke_Tests_Env.postman_environment.json
 			make docker-run-postman DIR="$(APPLICATION_TEST_DIR)/contract" CMD="run collections/FuzzySearchApiSmokeTests_nonAuth.postman_collection.json -e environments/Fuzzy_Smoke_Tests_Env.postman_environment.json"
 			;;
-		pd|dmo|stg) #PD = Prod, dm = Demo, stg = staging
+		pd|dmo|dev) #PD = Prod, dm = Demo, stg = staging
 			echo Profile: $(PROFILE) Executing real token test
 			sed -i -e "s/REPLACE_PASS/$(COGNITO_USER_PASS)/g" $(APPLICATION_TEST_DIR)/contract/environments/Fuzzy_Smoke_Tests_Env.postman_environment.json
 			make docker-run-postman DIR="$(APPLICATION_TEST_DIR)/contract" CMD="run collections/FuzzySearchSmokeTest.postman_collection.json -e environments/Fuzzy_Smoke_Tests_Env.postman_environment.json"

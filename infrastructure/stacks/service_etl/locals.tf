@@ -52,6 +52,8 @@ locals {
     "Service"     = "service-finder"
     "Product"     = "service-finder"
     "Environment" = var.profile
+    "tag"         = "uec-sf"
+    "uc_name"     = "UECSF"
   }
 
 }
