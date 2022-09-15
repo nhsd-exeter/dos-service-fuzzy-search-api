@@ -28,7 +28,7 @@ pipeline {
     stage('Destory Env') {
       steps {
         script {
-          sh 'make destroy PROFILE=${env.PROFILE}'
+          sh "make destroy PROFILE=${env.PROFILE}"
         }
       }
     }
