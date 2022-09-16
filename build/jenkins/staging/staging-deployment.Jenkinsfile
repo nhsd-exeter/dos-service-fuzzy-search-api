@@ -9,7 +9,7 @@ pipeline {
     buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
-    timeout(time: 60, unit: "MINUTES")
+    timeout(time: 120, unit: "MINUTES")
   }
 
   environment {
@@ -53,13 +53,6 @@ pipeline {
         }
       }
     }
-    stage('Provision Infrastructure') {
-      steps {
-        script {
-          sh "make provision_auth PROFILE=${env.PROFILE}"
-        }
-      }
-    }
     stage('Plan Base Infrastructure') {
       steps {
         script {
@@ -67,25 +60,10 @@ pipeline {
         }
       }
     }
-    stage('Provision Base Infrastructure') {
-      steps {
-        script {
-          sh "make provision-base PROFILE=${env.PROFILE}"
-        }
-      }
-    }
     stage('Plan ETL Infrastructure') {
       steps {
         script {
           sh "make plan-etl PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-
-    stage('Provision ETL Infrastructure') {
-      steps {
-        script {
-          sh "make provision-etl PROFILE=${env.PROFILE}"
         }
       }
     }
