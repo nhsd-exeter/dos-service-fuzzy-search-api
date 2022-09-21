@@ -9,7 +9,7 @@ pipeline {
     buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
-    timeout(time: 120, unit: "MINUTES")
+    timeout(time: 150, unit: "MINUTES")
   }
 
   environment {
@@ -46,27 +46,35 @@ pipeline {
         }
       }
     }
-    // stage('Plan Infrastructure') {
-    //   steps {
-    //     script {
-    //       sh "make plan_auth PROFILE=${env.PROFILE}"
-    //     }
-    //   }
-    // }
-    // stage('Plan Base Infrastructure') {
-    //   steps {
-    //     script {
-    //       sh "make plan-base PROFILE=${env.PROFILE}"
-    //     }
-    //   }
-    // }
-    // stage('Plan ETL Infrastructure') {
-    //   steps {
-    //     script {
-    //       sh "make plan-etl PROFILE=${env.PROFILE}"
-    //     }
-    //   }
-    // }
+    stage('Plan Base Infrastructure') {
+      steps {
+        script {
+          sh "make plan-base PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+    stage('Plan ETL Infrastructure') {
+      steps {
+        script {
+          sh "make plan-etl PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+    stage('Provision Base Infrastructure') {
+      steps {
+        script {
+          sh "make provision-base PROFILE=${env.PROFILE}"
+        }
+      }
+    }
+
+    stage('Provision ETL Infrastructure') {
+      steps {
+        script {
+          sh "make provision-etl PROFILE=${env.PROFILE}"
+        }
+      }
+    }
     stage('Destory Env') {
       steps {
         script {
