@@ -46,27 +46,27 @@ pipeline {
         }
       }
     }
-    stage('Plan Infrastructure') {
-      steps {
-        script {
-          sh "make plan_auth PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-    stage('Plan Base Infrastructure') {
-      steps {
-        script {
-          sh "make plan-base PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-    stage('Plan ETL Infrastructure') {
-      steps {
-        script {
-          sh "make plan-etl PROFILE=${env.PROFILE}"
-        }
-      }
-    }
+    // stage('Plan Infrastructure') {
+    //   steps {
+    //     script {
+    //       sh "make plan_auth PROFILE=${env.PROFILE}"
+    //     }
+    //   }
+    // }
+    // stage('Plan Base Infrastructure') {
+    //   steps {
+    //     script {
+    //       sh "make plan-base PROFILE=${env.PROFILE}"
+    //     }
+    //   }
+    // }
+    // stage('Plan ETL Infrastructure') {
+    //   steps {
+    //     script {
+    //       sh "make plan-etl PROFILE=${env.PROFILE}"
+    //     }
+    //   }
+    // }
     stage('Destory Env') {
       steps {
         script {
