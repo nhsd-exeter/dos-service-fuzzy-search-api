@@ -52,7 +52,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
 
     if (searchTerms == null || searchTerms.isEmpty()) {
       log.info("Location based search, Search terms: {}, Search Location: {}",searchTerms,searchPostcode);
-      dosServices = elasticsearch.findServiceByLocation(searchPostcode);
+      dosServices = elasticsearch.findServiceByPostcode(searchPostcode);
     } else {
       log.info("Searching based on search terms: {}, Search Location {}",searchTerms,searchPostcode);
       validationService.validateSearchCriteria(searchTerms);
@@ -128,5 +128,13 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     return !CollectionUtils.isNullOrEmpty(postCodes)
         ? locationService.getLocationsForPostcodes(postCodes, headers)
         : Collections.emptyList();
+  }
+
+  @Override
+  public List<DosService> retrieveServicesByGeoLocation(String searchLatitude, String searchLongitude,
+      List<String> searchTerms) throws NotFoundException, InvalidParameterException {
+        log.info("in retrieveServicesByGeoLocation {} {} {}",searchLatitude,searchLongitude,searchTerms.toString());
+    // TODO Auto-generated method stub
+    return null;
   }
 }

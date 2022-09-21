@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
+
 
 /** Defines the structure and attributes that are returned for each service. */
 @Document(indexName = "service")
@@ -74,6 +76,8 @@ public class DosService implements Comparable<DosService> {
   private String specificopentimes;
 
   private String specificendtimes;
+
+  private GeoPoint location;
 
   public Double getDistance() {
     if (this.distance == null) {

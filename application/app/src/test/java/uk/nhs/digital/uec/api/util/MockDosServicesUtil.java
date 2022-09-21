@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
+
 import uk.nhs.digital.uec.api.model.DosService;
 
 /** Class to encapsulate testing service data. */
@@ -46,6 +49,7 @@ public class MockDosServicesUtil {
         .capacity_status("GREEN")
         .address(address)
         .postcode("EX7 8PR")
+        .location(new GeoPoint(24.35, -2.56789))
         .referral_roles(referralRoles)
         .build();
   }

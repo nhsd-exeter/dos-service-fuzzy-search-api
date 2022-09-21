@@ -45,6 +45,7 @@ public class FuzzySearchControllerTest {
   private static final Integer POSTCODE_PRIORITY = 0;
   private static final Integer PUBLIC_NAME_PRIORITY = 0;
   private static final String SEARCH_POSTCODE = "EX2 3SE";
+
   List<String> searchCriteria;
 
   @BeforeEach
@@ -73,6 +74,9 @@ public class FuzzySearchControllerTest {
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
             SEARCH_POSTCODE,
+            null,
+            null,
+            null,
             MAX_SERVICES_TO_RETURN_FROM_ES,
             MAX_SERVICES_TO_RETURN,
             FUZZ_LEVEL,

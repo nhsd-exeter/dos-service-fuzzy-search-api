@@ -147,7 +147,7 @@ public class ServiceRepositoryTest {
 
   @Test
   public void findServiceByLocationTest() throws UnauthorisedException, NotFoundException {
-    final String searchLocation = "EX8 8XE";
+    final String searchPostcode = "EX8 8XE";
 
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
@@ -157,7 +157,7 @@ public class ServiceRepositoryTest {
       .thenReturn(pageItems);
 
     List<DosService> findServiceBySearchTerms =
-      serviceRepository.findServiceByLocation(searchLocation);
+      serviceRepository.findServiceByPostcode(searchPostcode);
 
     DosService dosServiceResponse = findServiceBySearchTerms.get(0);
 
@@ -169,12 +169,12 @@ public class ServiceRepositoryTest {
   @Test
   public void findServiceByLocationValidationExceptionTest() {
 
-    final String searchLocation = "EdscXzxcxz8 sccasc8XdcsdcasE";
+    final String searchPostcode = "EdscXzxcxz8 sccasc8XdcsdcasE";
 
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
 
-    NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> serviceRepository.findServiceByLocation(searchLocation));
+    NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> serviceRepository.findServiceByPostcode(searchPostcode));
     assertNotNull(notFoundException);
 
   }

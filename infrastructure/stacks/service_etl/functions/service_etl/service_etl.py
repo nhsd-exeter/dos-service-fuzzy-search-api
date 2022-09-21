@@ -194,7 +194,7 @@ def build_insert_dict(records, doc_list):
             "specifieddates": row[24],
             "specificopentimes": row[25],
             "specificendtimes": row[26],
-            "location":[row[27],row[28]],
+            "location": {"lat": row[27], "lon": row[28]},
             "timestamp_version": TIMESTAMP_VERSION
         }
         doc_list.append(document)
