@@ -49,7 +49,7 @@ public class MockDosServicesUtil {
         .capacity_status("GREEN")
         .address(address)
         .postcode("EX7 8PR")
-        .location(new GeoPoint(24.35, -2.56789))
+        .location(new GeoPoint(24.35,  -2.56789))
         .referral_roles(referralRoles)
         .build();
   }

@@ -25,17 +25,20 @@ public interface ServicesRepositoryInterface extends ElasticsearchRepository<Dos
             Integer publicNamePriority_5,
             Pageable pageable);
 
-    @Query("\"bool\": {\"must\": {\"match_all\": {}},"
-            + " \"filter\": {\"geo_distance\": {\"distance\": \"?2\",\"location\": [?0,?1]}}},"
-            + " \"fields\": [\"search_data^3\", \"name^?4\", \"public_name^?7\", \"address^?5\",\"postcode^?6\"]")
+    @Query("{\"bool\":{\"must\":{\"multi_match\":{\"query\":\"?0\","
+    + " \"fields\":[\"search_data^1\",\"name^?5\",\"public_name^?8\",\"address^?6\",\"postcode^?7\"],"
+    + " \"type\":\"best_fields\",\"fuzziness\":\"?4\",\"operator\":\"and\"}},"
+    + " \"filter\":{\"geo_distance\":{\"location\":{\"lat\":?1,\"lon\":?2},\"distance\":\"?3\"}}}},"
+    + " \"sort\":[{\"_geo_distance\":{\"location\":{\"lat\":?1,\"lon\":?2},\"order\":\"asc\",\"unit\":\"mi\",\"mode\":\"min\"}}]")
     Page<DosService> findByGeoLocation(
-            String searchLatitude_0,
-            String searchLongitude_1,
-            String distanceRange_2,
-            Object fuzzLevel_3,
-            Integer namePriority_4,
-            Integer addressPriority_5,
-            Integer postcodePriority_6,
-            Integer publicNamePriority_7,
+            String searchTerms_0,
+            String searchLatitude_1,
+            String searchLongitude_2,
+            String distanceRange_3,
+            Object fuzzLevel_4,
+            Integer namePriority_5,
+            Integer addressPriority_6,
+            Integer postcodePriority_7,
+            Integer publicNamePriority_8,
             Pageable pageable);
 }

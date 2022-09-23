@@ -36,7 +36,7 @@ public interface FuzzyServiceSearchServiceInterface {
      * @throws InvalidParameterException
      */
     List<DosService> retrieveServicesByGeoLocation(
-            final String searchLatitude, final String searchLongitude, final List<String> searchTerms)
+            final String searchLatitude, final String searchLongitude, final String distanceRange, final List<String> searchTerms)
 
             throws NotFoundException, InvalidParameterException;
 

@@ -88,6 +88,7 @@ public class ServiceRepositoryTest {
 
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
 
     when(servicesRepo.findBySearchTerms(
       anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
@@ -109,6 +110,7 @@ public class ServiceRepositoryTest {
 
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
 
     when(servicesRepo.findBySearchTerms(
       anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
@@ -130,6 +132,8 @@ public class ServiceRepositoryTest {
 
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+    when(apiRequestParams.getFuzzLevel()).thenReturn(2);
+    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
 
     when(servicesRepo.findBySearchTerms(
       anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
@@ -146,11 +150,13 @@ public class ServiceRepositoryTest {
   }
 
   @Test
-  public void findServiceByLocationTest() throws UnauthorisedException, NotFoundException {
+  public void findServiceByPostcodeTest() throws UnauthorisedException, NotFoundException {
     final String searchPostcode = "EX8 8XE";
 
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+    when(apiRequestParams.getFuzzLevel()).thenReturn(2);
+    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
 
     when(servicesRepo.findBySearchTerms(
       anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
@@ -167,7 +173,7 @@ public class ServiceRepositoryTest {
   }
 
   @Test
-  public void findServiceByLocationValidationExceptionTest() {
+  public void findServiceByPostcodeValidationExceptionTest() {
 
     final String searchPostcode = "EdscXzxcxz8 sccasc8XdcsdcasE";
 
@@ -178,4 +184,32 @@ public class ServiceRepositoryTest {
     assertNotNull(notFoundException);
 
   }
+
+  @Test
+  public void findServiceByLatitudeAndLongitudeTest() throws NotFoundException {
+    final String searchLatitude = "24.34";
+    final String searchLongitude = "-0.2345";
+    final String distanceRange = "25mi";
+
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
+    when(apiRequestParams.getFuzzLevel()).thenReturn(2);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
+
+    when(servicesRepo.findByGeoLocation(anyString(), anyString(), anyString(), anyString(),any(),
+      anyInt(), anyInt(), anyInt(), anyInt(), any()))
+      .thenReturn(pageItems);
+
+    List<DosService> findServiceBySearchTerms =
+      serviceRepository.findServiceByLatitudeAndLongitude(List.of(""),searchLatitude, searchLongitude, distanceRange) ;
+
+    DosService dosServiceResponse = findServiceBySearchTerms.get(0);
+
+    assertEquals(DOS_NAME, dosServiceResponse.getName());
+    assertEquals(EASTING, dosServiceResponse.getEasting());
+    assertEquals(NORTHING, dosServiceResponse.getNorthing());
+  }
+
+
+
 }

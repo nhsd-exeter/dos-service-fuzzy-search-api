@@ -131,6 +131,8 @@ def extract_data_from_dos():
                             s.typeid = t.id
                             and
                             statusid = 1
+                            and
+                            r.name IN ('Professional Referral')
                         ) group by s.id, t.name, c.color"""
 
     logger.debug("Open connection")

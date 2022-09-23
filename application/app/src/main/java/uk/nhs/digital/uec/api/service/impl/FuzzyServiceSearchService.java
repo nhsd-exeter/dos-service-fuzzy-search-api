@@ -96,6 +96,22 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     return dosServices.subList(0, serviceResultLimit);
   }
 
+  @Override
+  public List<DosService> retrieveServicesByGeoLocation(String searchLatitude, String searchLongitude,String distanceRange,
+      List<String> searchTerms) throws NotFoundException, InvalidParameterException {
+        log.info("in retrieveServicesByGeoLocation {} {} {}",searchLatitude,searchLongitude,searchTerms.toString());
+        List<DosService> dosServices;
+        dosServices = elasticsearch.findServiceByLatitudeAndLongitude(searchTerms,searchLatitude, searchLongitude, distanceRange);
+        Collections.sort(dosServices);
+
+        // return max number of services, or the number of services returned. Which ever is the least.
+        int serviceResultLimit = apiRequestParams.getMaxNumServicesToReturn();
+        if (apiRequestParams.getMaxNumServicesToReturn() > dosServices.size()) {
+          serviceResultLimit = dosServices.size();
+        }
+        return dosServices.subList(0, serviceResultLimit);
+  }
+
   private void setServiceLocation(
       PostcodeLocation serviceLocation, List<PostcodeLocation> dosServicePostCodeLocation) {
     if (dosServicePostCodeLocation != null) {
@@ -130,11 +146,4 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
         : Collections.emptyList();
   }
 
-  @Override
-  public List<DosService> retrieveServicesByGeoLocation(String searchLatitude, String searchLongitude,
-      List<String> searchTerms) throws NotFoundException, InvalidParameterException {
-        log.info("in retrieveServicesByGeoLocation {} {} {}",searchLatitude,searchLongitude,searchTerms.toString());
-    // TODO Auto-generated method stub
-    return null;
-  }
 }

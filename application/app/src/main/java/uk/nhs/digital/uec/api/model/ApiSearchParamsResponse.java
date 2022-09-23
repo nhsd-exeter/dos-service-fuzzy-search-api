@@ -37,6 +37,13 @@ public class ApiSearchParamsResponse {
   @JsonProperty("search_longitude")
   private String searchLongitude;
 
+  @JsonProperty("distance_range")
+  private String distanceRange;
+
+  @JsonProperty("referral_role")
+  private String referralRole;
+
+
   @JsonProperty("fuzz_level")
   private Object fuzzLevel;
 
@@ -61,6 +68,8 @@ public class ApiSearchParamsResponse {
     this.searchCriteria = builder.searchCriteria;
     this.searchPostcode = builder.searchPostcode;
     this.searchLatitude = builder.searchLatitude;
+    this.distanceRange = builder.distanceRange;
+    this.referralRole = builder.referralRole;
     this.searchLongitude = builder.searchLongitude;
     this.fuzzLevel = builder.fuzzLevel;
     this.addressPriority = builder.addressPriority;
@@ -75,6 +84,8 @@ public class ApiSearchParamsResponse {
     private String searchPostcode;
     private String searchLatitude;
     private String searchLongitude;
+    private String distanceRange;
+    private String referralRole;
     private Object fuzzLevel;
     private int addressPriority;
     private int postcodePriority;
@@ -99,6 +110,17 @@ public class ApiSearchParamsResponse {
 
     public ApiSearchParamsResponseBuilder searchLongitude(String searchLongitude) {
       this.searchLongitude = searchLongitude;
+      return this;
+    }
+
+
+    public ApiSearchParamsResponseBuilder distanceRange(String distanceRange) {
+      this.distanceRange = distanceRange;
+      return this;
+    }
+
+    public ApiSearchParamsResponseBuilder referralRole(String referralRole) {
+      this.referralRole = referralRole;
       return this;
     }
 

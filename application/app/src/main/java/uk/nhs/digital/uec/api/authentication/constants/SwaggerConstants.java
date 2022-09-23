@@ -28,4 +28,7 @@ public class SwaggerConstants {
     public static final String SEARCH_LONGITUDE_DESC = "Optional parameter representing the longitude of the location to search from. If provided the API will return a point to point distance of the services returned";
 
     public static final String DISTANCE_RANGE_DESC = "Optional parameter representing the distance range (e.g 20mi) of the current location to search from. If provided the API will return a point to point distance of the services returned";
+
+    public static final String REFERRAL_ROLE_DESC = "Optional parameter representing the referral role. If provided the API will filter the data based the referral role";
+
 }

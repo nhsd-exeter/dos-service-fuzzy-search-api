@@ -11,6 +11,7 @@ import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.S
 import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.SEARCH_LATITUDE_DESC;
 import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.SEARCH_LONGITUDE_DESC;
 import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.DISTANCE_RANGE_DESC;
+import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.REFERRAL_ROLE_DESC;
 
 import io.swagger.annotations.ApiParam;
 import java.util.List;
@@ -33,16 +34,21 @@ import uk.nhs.digital.uec.api.model.ApiResponse;
 import uk.nhs.digital.uec.api.model.ApiSearchParamsResponse;
 import uk.nhs.digital.uec.api.model.ApiSearchResultsResponse;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
+import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
 import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
+
 
 /** Controller for Fuzzy searching of services. */
 @RestController
 @Slf4j
 @RequestMapping("/dosapi/dosservices/v0.0.1")
 public class FuzzyServiceSearchController {
+
+    private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
+    private static final String DEFAULT_DISTANCE_RANGE = "25mi";
 
     @Autowired
     private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
@@ -52,6 +58,7 @@ public class FuzzyServiceSearchController {
 
     @Autowired
     private ApiUtilsServiceInterface utils;
+
 
     @Autowired
     private ApiRequestParams requestParams;
@@ -83,7 +90,8 @@ public class FuzzyServiceSearchController {
             @ApiParam(SEARCH_POSTCODE_DESC) @RequestParam(name = "search_postcode", required = false) String searchPostcode,
             @ApiParam(SEARCH_LATITUDE_DESC) @RequestParam(name = "search_latitude", required = false) String searchLatitude,
             @ApiParam(SEARCH_LONGITUDE_DESC) @RequestParam(name = "search_longitude", required = false) String searchLongitude,
-            @ApiParam(DISTANCE_RANGE_DESC) @RequestParam(name = "distance_range", required = false, defaultValue = "25mi") String distanceRange,
+            @ApiParam(DISTANCE_RANGE_DESC) @RequestParam(name = "distance_range", required = false, defaultValue = DEFAULT_DISTANCE_RANGE) String distanceRange,
+            @ApiParam(REFERRAL_ROLE_DESC) @RequestParam(name = "referral_role", required = false,defaultValue = PROFESSIONAL_REFERRAL_FILTER) String referralRole,
             @ApiParam(hidden = true) @RequestParam(name = "max_num_services_to_return_from_es", required = false) Integer maxNumServicesToReturnFromEs,
             @ApiParam(MAX_NUM_SERVICES_DESC) @RequestParam(name = "max_number_of_services_to_return", required = false) Integer maxNumServicesToReturn,
             @ApiParam(FUZZ_LEVEL_DESC) @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel,
@@ -92,12 +100,10 @@ public class FuzzyServiceSearchController {
             @ApiParam(POSTCODE_PRIORITY_DESC) @RequestParam(name = "postcode_priority", required = false) Integer postcodePriority,
             @ApiParam(PUBLIC_NAME_PRIORITY_DESC) @RequestParam(name = "public_name_priority", required = false) Integer publicNamePriority)
             throws NotFoundException, InvalidParameterException {
-        log.info("Incoming request param - postcode: {}", searchPostcode);
-        log.info("Incoming request param - search_term: {}", searchCriteria);
-        log.info("Incoming request param - search_latitude: {}, search_longitude:{}", searchLatitude,searchLongitude);
+        log.info("Incoming request param - postcode: {}, search_term: {}, search_latitude: {}, search_longitude:{}", searchPostcode,searchCriteria,searchLatitude,searchLongitude);
         utils.configureApiRequestParams(
                 fuzzLevel,
-                null, // filterReferralRole will be implemented in future
+                referralRole, // filterReferralRole will be implemented in future
                 maxNumServicesToReturnFromEs,
                 maxNumServicesToReturn,
                 namePriority,
@@ -105,13 +111,21 @@ public class FuzzyServiceSearchController {
                 postcodePriority,
                 publicNamePriority);
 
+        boolean isValidPostcodeSearch = searchPostcode != null && searchPostcode.length() > 3;
+        boolean isValidGeoSearch = NumberUtils.isCreatable(searchLatitude) && NumberUtils.isCreatable(searchLongitude);
+        boolean isSearchCriteriaEmpty = (searchCriteria == null || searchCriteria.isEmpty());
+
+        if ((!isValidPostcodeSearch) && (!isValidGeoSearch)){
+                return ResponseEntity.badRequest().body(new ApiValidationErrorResponse("","valid postcode or location values required"));
+        }
+        List<String> searchCriteriaList = isSearchCriteriaEmpty ? List.of("") : searchCriteria;
         final ApiSearchParamsResponse searchParamsResponse = new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()
-                .searchCriteria(searchCriteria == null || searchCriteria.isEmpty()
-                        ? List.of(searchPostcode.substring(0, 4).trim())
-                        : searchCriteria)
+                .searchCriteria(searchCriteriaList)
                 .searchPostcode(searchPostcode)
                 .searchLatitude(searchLatitude)
                 .searchLongitude(searchLongitude)
+                .distanceRange(distanceRange)
+                .referralRole(requestParams.getFilterReferralRole())
                 .fuzzLevel(requestParams.getFuzzLevel())
                 .addressPriority(requestParams.getAddressPriority())
                 .postcodePriority(requestParams.getPostcodePriority())
@@ -122,10 +136,8 @@ public class FuzzyServiceSearchController {
 
         final ApiSuccessResponse response = new ApiSuccessResponse();
         final ApiSearchResultsResponse searchResultsResponse = new ApiSearchResultsResponse();
-        final boolean areValuesNumbers = NumberUtils.isCreatable(searchLatitude) && NumberUtils.isCreatable(searchLongitude);
-        log.info("Is lat and lng values are numbers: {}", areValuesNumbers);
-        final List<DosService> dosServices =  areValuesNumbers ?
-        fuzzyServiceSearchService.retrieveServicesByGeoLocation(searchLatitude, searchLongitude, searchCriteria):
+        final List<DosService> dosServices = isValidGeoSearch ?
+        fuzzyServiceSearchService.retrieveServicesByGeoLocation(searchLatitude, searchLongitude,distanceRange, searchCriteria):
           fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchPostcode,searchCriteria);
         searchResultsResponse.setServices(dosServices);
         response.setSearchParameters(searchParamsResponse);

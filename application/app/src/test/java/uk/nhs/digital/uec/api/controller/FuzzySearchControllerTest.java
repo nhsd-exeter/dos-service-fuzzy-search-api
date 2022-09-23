@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +29,7 @@ import uk.nhs.digital.uec.api.service.impl.ApiUtilsService;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
 import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 
+
 @ExtendWith(SpringExtension.class)
 public class FuzzySearchControllerTest {
 
@@ -45,6 +48,8 @@ public class FuzzySearchControllerTest {
   private static final Integer POSTCODE_PRIORITY = 0;
   private static final Integer PUBLIC_NAME_PRIORITY = 0;
   private static final String SEARCH_POSTCODE = "EX2 3SE";
+  private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
+  private static final String DEFAULT_DISTANCE_RANGE = "25mi";
 
   List<String> searchCriteria;
 
@@ -58,13 +63,13 @@ public class FuzzySearchControllerTest {
   @Test
   public void getServicesByFuzzySearchTestSucc()
       throws NotFoundException, InvalidParameterException {
-
     when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
     when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);
     when(mockRequestParams.getPostcodePriority()).thenReturn(POSTCODE_PRIORITY);
     when(mockRequestParams.getPublicNamePriority()).thenReturn(PUBLIC_NAME_PRIORITY);
     when(mockRequestParams.getFuzzLevel()).thenReturn(FUZZ_LEVEL);
     when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
+    when(mockRequestParams.getFilterReferralRole()).thenReturn(PROFESSIONAL_REFERRAL_FILTER);
     when(mockFuzzyServiceSearchService.retrieveServicesByFuzzySearch(
             SEARCH_POSTCODE, searchCriteria))
         .thenReturn(getDosServices());
@@ -76,7 +81,8 @@ public class FuzzySearchControllerTest {
             SEARCH_POSTCODE,
             null,
             null,
-            null,
+            DEFAULT_DISTANCE_RANGE,
+            PROFESSIONAL_REFERRAL_FILTER,
             MAX_SERVICES_TO_RETURN_FROM_ES,
             MAX_SERVICES_TO_RETURN,
             FUZZ_LEVEL,

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ServiceRepository implements CustomServicesRepositoryInterface {
 
-  private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
+
   private static final String POSTCODE_REGEX = "([Gg][Ii][Rr]"
       + " 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})";
 
@@ -82,7 +82,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
   }
 
   @Override
-  public List<DosService> findServiceByLatitudeAndLongitude(String searchLatitude, String searchLongitude,
+  public List<DosService> findServiceByLatitudeAndLongitude(List<String> searchTerms,String searchLatitude, String searchLongitude,
       String distanceRange) throws NotFoundException {
 
     log.info("Request Params: Lat: {}, Lng: {}", searchLatitude, searchLongitude);
@@ -95,8 +95,8 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     if (!NumberUtils.isCreatable(searchLatitude) || (!NumberUtils.isCreatable(searchLongitude))) {
       throw new NotFoundException(ErrorMessageEnum.INVALID_LOCATION.getMessage());
     }
-
-    return performSearch(searchLatitude, searchLongitude, distanceRange, null);
+    String searchCriteria = String.join(" ", searchTerms);
+    return performSearch(searchCriteria,searchLatitude, searchLongitude, distanceRange, null);
   }
 
   private List<DosService> performSearch(String searchCriteria, Integer numberOfServicesToReturnFromElasticSearch) {
@@ -119,14 +119,15 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
   }
 
-  private List<DosService> performSearch(String searchLatitude, String searchLongitude, String distanceRange,
+  private List<DosService> performSearch(String searchCriteria,String searchLatitude, String searchLongitude, String distanceRange,
       Integer numberOfServicesToReturnFromElasticSearch) {
     Long start = System.currentTimeMillis();
     if (numberOfServicesToReturnFromElasticSearch == null) {
-      return performSearch(searchLatitude, searchLongitude, distanceRange);
+      return performSearch(searchCriteria,searchLatitude, searchLongitude, distanceRange);
     }
 
     Iterable<DosService> services = servicesRepo.findByGeoLocation(
+      searchCriteria,
         searchLatitude,
         searchLongitude,
         distanceRange,
@@ -157,9 +158,10 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     return getFilteredServices(services);
   }
 
-  private List<DosService> performSearch(String searchLatitude, String searchLongitude, String distanceRange) {
+  private List<DosService> performSearch(String searchCriteria,String searchLatitude, String searchLongitude, String distanceRange) {
     Long start = System.currentTimeMillis();
     Iterable<DosService> services = servicesRepo.findByGeoLocation(
+        searchCriteria,
         searchLatitude,
         searchLongitude,
         distanceRange,
@@ -180,7 +182,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     for (DosService serviceIterationItem : services) {
       if (Objects.nonNull(serviceIterationItem.getReferral_roles()) &&
           !serviceIterationItem.getReferral_roles().isEmpty() &&
-          serviceIterationItem.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)) {
+          serviceIterationItem.getReferral_roles().contains(apiRequestParams.getFilterReferralRole())) {
         dosServices.add(serviceIterationItem);
       }
     }
