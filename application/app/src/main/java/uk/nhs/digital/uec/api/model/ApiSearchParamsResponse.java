@@ -28,7 +28,7 @@ public class ApiSearchParamsResponse {
   @JsonProperty("search_criteria")
   private List<String> searchCriteria;
 
-  @JsonProperty("search_postcode")
+  @JsonProperty("search_location")
   private String searchPostcode;
 
   @JsonProperty("search_latitude")

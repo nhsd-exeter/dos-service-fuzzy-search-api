@@ -87,7 +87,7 @@ public class FuzzyServiceSearchController {
     @PreAuthorize("hasAnyRole('FUZZY_API_ACCESS')")
     public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
             @ApiParam(SEARCH_CRITERIA_DESC) @RequestParam(name = "search_term", required = false) List<String> searchCriteria,
-            @ApiParam(SEARCH_POSTCODE_DESC) @RequestParam(name = "search_postcode", required = false) String searchPostcode,
+            @ApiParam(SEARCH_POSTCODE_DESC) @RequestParam(name = "search_location", required = false) String searchPostcode,
             @ApiParam(SEARCH_LATITUDE_DESC) @RequestParam(name = "search_latitude", required = false) String searchLatitude,
             @ApiParam(SEARCH_LONGITUDE_DESC) @RequestParam(name = "search_longitude", required = false) String searchLongitude,
             @ApiParam(DISTANCE_RANGE_DESC) @RequestParam(name = "distance_range", required = false, defaultValue = DEFAULT_DISTANCE_RANGE) String distanceRange,
@@ -113,14 +113,13 @@ public class FuzzyServiceSearchController {
 
         boolean isValidPostcodeSearch = searchPostcode != null && searchPostcode.length() > 3;
         boolean isValidGeoSearch = NumberUtils.isCreatable(searchLatitude) && NumberUtils.isCreatable(searchLongitude);
-        boolean isSearchCriteriaEmpty = (searchCriteria == null || searchCriteria.isEmpty());
 
         if ((!isValidPostcodeSearch) && (!isValidGeoSearch)){
                 return ResponseEntity.badRequest().body(new ApiValidationErrorResponse("","valid postcode or location values required"));
         }
-        List<String> searchCriteriaList = isSearchCriteriaEmpty ? List.of("") : searchCriteria;
+
         final ApiSearchParamsResponse searchParamsResponse = new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()
-                .searchCriteria(searchCriteriaList)
+                .searchCriteria(searchCriteria)
                 .searchPostcode(searchPostcode)
                 .searchLatitude(searchLatitude)
                 .searchLongitude(searchLongitude)

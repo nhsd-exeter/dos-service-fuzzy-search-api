@@ -1,7 +1,10 @@
 package uk.nhs.digital.uec.api.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import software.amazon.awssdk.utils.CollectionUtils;
@@ -99,11 +102,18 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
   @Override
   public List<DosService> retrieveServicesByGeoLocation(String searchLatitude, String searchLongitude,String distanceRange,
       List<String> searchTerms) throws NotFoundException, InvalidParameterException {
-        log.info("in retrieveServicesByGeoLocation {} {} {}",searchLatitude,searchLongitude,searchTerms.toString());
+        boolean isSearchTermNullOrEmpty = (searchTerms == null || searchTerms.isEmpty());
         List<DosService> dosServices;
-        dosServices = elasticsearch.findServiceByLatitudeAndLongitude(searchTerms,searchLatitude, searchLongitude, distanceRange);
-        Collections.sort(dosServices);
+        dosServices = isSearchTermNullOrEmpty ?
+        elasticsearch.findAllServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange)
+        : elasticsearch.findServicesByGeoLocation(searchTerms,searchLatitude, searchLongitude, distanceRange);
 
+          for (DosService dosService : dosServices) {
+            GeoPoint source = new GeoPoint(Double.parseDouble(searchLatitude),Double.parseDouble(searchLongitude));
+
+            dosService.setDistance(locationService.distanceBetween(source, dosService.getLocation())) ;
+          }
+        Collections.sort(dosServices);
         // return max number of services, or the number of services returned. Which ever is the least.
         int serviceResultLimit = apiRequestParams.getMaxNumServicesToReturn();
         if (apiRequestParams.getMaxNumServicesToReturn() > dosServices.size()) {

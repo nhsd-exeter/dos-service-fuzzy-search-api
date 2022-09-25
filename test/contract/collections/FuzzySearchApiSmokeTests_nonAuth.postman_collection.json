@@ -34,7 +34,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test%2011&search_location=EX88PR&fuzz_level=2",
+          "raw": "https://{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test%2011&search_postcode=EX88PR&fuzz_level=2",
           "protocol": "https",
           "host": [
             "{{host}}"

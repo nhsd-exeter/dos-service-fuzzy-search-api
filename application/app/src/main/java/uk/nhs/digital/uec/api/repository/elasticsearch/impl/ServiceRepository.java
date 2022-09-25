@@ -82,7 +82,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
   }
 
   @Override
-  public List<DosService> findServiceByLatitudeAndLongitude(List<String> searchTerms,String searchLatitude, String searchLongitude,
+  public List<DosService> findServicesByGeoLocation(List<String> searchTerms,String searchLatitude, String searchLongitude,
       String distanceRange) throws NotFoundException {
 
     log.info("Request Params: Lat: {}, Lng: {}", searchLatitude, searchLongitude);
@@ -97,6 +97,23 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     }
     String searchCriteria = String.join(" ", searchTerms);
     return performSearch(searchCriteria,searchLatitude, searchLongitude, distanceRange, null);
+  }
+
+  @Override
+  public List<DosService> findAllServicesByGeoLocation(String searchLatitude, String searchLongitude,
+      String distanceRange) throws NotFoundException {
+        log.info("Request Params: Lat: {}, Lng: {}", searchLatitude, searchLongitude);
+        log.info("Fuzzy level: {}", apiRequestParams.getFuzzLevel());
+        log.info(
+            "Number of services to get from elasticsearch: "
+                + apiRequestParams.getMaxNumServicesToReturnFromElasticsearch());
+
+        log.info("Validate geo location points: {} {}", searchLatitude, searchLongitude);
+        if (!NumberUtils.isCreatable(searchLatitude) || (!NumberUtils.isCreatable(searchLongitude))) {
+          throw new NotFoundException(ErrorMessageEnum.INVALID_LOCATION.getMessage());
+        }
+        return performAllSearch(searchLatitude, searchLongitude, distanceRange, null);
+
   }
 
   private List<DosService> performSearch(String searchCriteria, Integer numberOfServicesToReturnFromElasticSearch) {
@@ -126,7 +143,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
       return performSearch(searchCriteria,searchLatitude, searchLongitude, distanceRange);
     }
 
-    Iterable<DosService> services = servicesRepo.findByGeoLocation(
+    Iterable<DosService> services = servicesRepo.findSearchTermsByGeoLocation(
       searchCriteria,
         searchLatitude,
         searchLongitude,
@@ -142,6 +159,28 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     return getFilteredServices(services);
 
   }
+
+  private List<DosService> performAllSearch(String searchLatitude, String searchLongitude, String distanceRange,
+      Integer numberOfServicesToReturnFromElasticSearch) {
+    Long start = System.currentTimeMillis();
+    if (numberOfServicesToReturnFromElasticSearch == null) {
+      return performSearch(searchLatitude, searchLongitude, distanceRange);
+    }
+
+    Iterable<DosService> services = servicesRepo.findAllByGeoLocation(
+        searchLatitude,
+        searchLongitude,
+        distanceRange,
+        PageRequest.of(0, numberOfServicesToReturnFromElasticSearch));
+    log.info("Search query duration {}ms. Number of services found {}", System.currentTimeMillis() - start,
+        services.spliterator().getExactSizeIfKnown());
+    return getFilteredServices(services);
+
+  }
+
+
+
+
 
   private List<DosService> performSearch(String searchCriteria) {
     Long start = System.currentTimeMillis();
@@ -160,7 +199,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
   private List<DosService> performSearch(String searchCriteria,String searchLatitude, String searchLongitude, String distanceRange) {
     Long start = System.currentTimeMillis();
-    Iterable<DosService> services = servicesRepo.findByGeoLocation(
+    Iterable<DosService> services = servicesRepo.findSearchTermsByGeoLocation(
         searchCriteria,
         searchLatitude,
         searchLongitude,
@@ -175,6 +214,19 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         services.spliterator().getExactSizeIfKnown());
     return getFilteredServices(services);
   }
+
+  private List<DosService> performSearch(String searchLatitude, String searchLongitude, String distanceRange) {
+    Long start = System.currentTimeMillis();
+    Iterable<DosService> services = servicesRepo.findAllByGeoLocation(
+        searchLatitude,
+        searchLongitude,
+        distanceRange,
+        PageRequest.of(0, apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()));
+    log.info("Search query duration {}ms. Number of services found {}", System.currentTimeMillis() - start,
+        services.spliterator().getExactSizeIfKnown());
+    return getFilteredServices(services);
+  }
+
 
   private List<DosService> getFilteredServices(Iterable<DosService> services) {
     final List<DosService> dosServices = new ArrayList<>();

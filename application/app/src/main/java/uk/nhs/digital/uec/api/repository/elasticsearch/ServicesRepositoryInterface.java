@@ -26,11 +26,10 @@ public interface ServicesRepositoryInterface extends ElasticsearchRepository<Dos
             Pageable pageable);
 
     @Query("{\"bool\":{\"must\":{\"multi_match\":{\"query\":\"?0\","
-    + " \"fields\":[\"search_data^1\",\"name^?5\",\"public_name^?8\",\"address^?6\",\"postcode^?7\"],"
-    + " \"type\":\"best_fields\",\"fuzziness\":\"?4\",\"operator\":\"and\"}},"
-    + " \"filter\":{\"geo_distance\":{\"location\":{\"lat\":?1,\"lon\":?2},\"distance\":\"?3\"}}}},"
-    + " \"sort\":[{\"_geo_distance\":{\"location\":{\"lat\":?1,\"lon\":?2},\"order\":\"asc\",\"unit\":\"mi\",\"mode\":\"min\"}}]")
-    Page<DosService> findByGeoLocation(
+        + " \"fields\":[\"search_data^1\",\"name^?5\",\"public_name^?8\",\"address^?6\",\"postcode^?7\"],"
+        + " \"type\":\"best_fields\",\"fuzziness\":\"?4\",\"operator\":\"and\"}},"
+        + " \"filter\":{\"geo_distance\":{\"location\":{\"lat\":?1,\"lon\":?2},\"distance\":\"?3\"}}}}")
+    Page<DosService> findSearchTermsByGeoLocation(
             String searchTerms_0,
             String searchLatitude_1,
             String searchLongitude_2,
@@ -41,4 +40,12 @@ public interface ServicesRepositoryInterface extends ElasticsearchRepository<Dos
             Integer postcodePriority_7,
             Integer publicNamePriority_8,
             Pageable pageable);
+
+    @Query("{\"bool\":{\"must\":{\"geo_distance\":{\"distance\":\"?2\","
+        + " \"location\":{\"lat\":?0,\"lon\":?1}}}}}")
+    Page<DosService> findAllByGeoLocation(
+                String searchLatitude_0,
+                String searchLongitude_1,
+                String distanceRange_2,
+                Pageable pageable);
 }

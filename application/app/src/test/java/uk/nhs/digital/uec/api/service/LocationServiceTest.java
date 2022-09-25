@@ -87,7 +87,9 @@ public class LocationServiceTest {
 
   @Test
   public void distanceWithNullSourceAndDestination() {
-    Double distanceReturned = locationService.distanceBetween(null, null);
+    PostcodeLocation source = null;
+    PostcodeLocation destination = null;
+    Double distanceReturned = locationService.distanceBetween(source, destination);
     assertNull(distanceReturned);
   }
 

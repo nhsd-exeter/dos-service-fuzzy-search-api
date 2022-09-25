@@ -196,12 +196,12 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
     when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
 
-    when(servicesRepo.findByGeoLocation(anyString(), anyString(), anyString(), anyString(),any(),
+    when(servicesRepo.findSearchTermsByGeoLocation(anyString(), anyString(), anyString(), anyString(),any(),
       anyInt(), anyInt(), anyInt(), anyInt(), any()))
       .thenReturn(pageItems);
 
     List<DosService> findServiceBySearchTerms =
-      serviceRepository.findServiceByLatitudeAndLongitude(List.of(""),searchLatitude, searchLongitude, distanceRange) ;
+      serviceRepository.findServicesByGeoLocation(List.of(""),searchLatitude, searchLongitude, distanceRange) ;
 
     DosService dosServiceResponse = findServiceBySearchTerms.get(0);
 
