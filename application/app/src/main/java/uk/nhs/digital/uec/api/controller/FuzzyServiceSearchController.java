@@ -111,11 +111,10 @@ public class FuzzyServiceSearchController {
                 postcodePriority,
                 publicNamePriority);
 
-        boolean isValidPostcodeSearch = searchPostcode != null && searchPostcode.length() > 3;
         boolean isValidGeoSearch = NumberUtils.isCreatable(searchLatitude) && NumberUtils.isCreatable(searchLongitude);
 
-        if ((!isValidPostcodeSearch) && (!isValidGeoSearch)){
-                return ResponseEntity.badRequest().body(new ApiValidationErrorResponse("","valid postcode or location values required"));
+        if (!isValidGeoSearch) {
+                return ResponseEntity.badRequest().body(new ApiValidationErrorResponse("","valid location values required"));
         }
 
         final ApiSearchParamsResponse searchParamsResponse = new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()
@@ -135,13 +134,10 @@ public class FuzzyServiceSearchController {
 
         final ApiSuccessResponse response = new ApiSuccessResponse();
         final ApiSearchResultsResponse searchResultsResponse = new ApiSearchResultsResponse();
-        final List<DosService> dosServices = isValidGeoSearch ?
-        fuzzyServiceSearchService.retrieveServicesByGeoLocation(searchLatitude, searchLongitude,distanceRange, searchCriteria):
-          fuzzyServiceSearchService.retrieveServicesByFuzzySearch(searchPostcode,searchCriteria);
+        final List<DosService> dosServices = fuzzyServiceSearchService.retrieveServicesByGeoLocation(searchLatitude, searchLongitude,distanceRange, searchCriteria);
         searchResultsResponse.setServices(dosServices);
         response.setSearchParameters(searchParamsResponse);
         response.setSearchResults(searchResultsResponse);
-
         return ResponseEntity.ok(response);
     }
 }
