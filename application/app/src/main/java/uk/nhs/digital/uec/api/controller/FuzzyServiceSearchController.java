@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import uk.nhs.digital.uec.api.exception.ErrorMappingEnum;
+import uk.nhs.digital.uec.api.exception.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
@@ -48,7 +51,7 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 public class FuzzyServiceSearchController {
 
     private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
-    private static final String DEFAULT_DISTANCE_RANGE = "25mi";
+    private static final String DEFAULT_DISTANCE_RANGE = "60mi";
 
     @Autowired
     private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
@@ -114,7 +117,7 @@ public class FuzzyServiceSearchController {
         boolean isValidGeoSearch = NumberUtils.isCreatable(searchLatitude) && NumberUtils.isCreatable(searchLongitude);
 
         if (!isValidGeoSearch) {
-                return ResponseEntity.badRequest().body(new ApiValidationErrorResponse("","valid location values required"));
+                return ResponseEntity.badRequest().body(new ApiValidationErrorResponse(ErrorMappingEnum.ValidationCodes.VAL005.getValidationCode(), ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage()));
         }
 
         final ApiSearchParamsResponse searchParamsResponse = new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()

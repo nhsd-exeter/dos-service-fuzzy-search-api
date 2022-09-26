@@ -67,29 +67,6 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
   }
 
   @Override
-  public List<DosService> findServiceByPostcode(String searchPostcode)
-    throws NotFoundException {
-    log.info("Request Params: {}", searchPostcode);
-    log.info("Fuzzy level: {}", apiRequestParams.getFuzzLevel());
-    log.info(
-      "Number of services to get from elasticsearch: " +
-      apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()
-    );
-
-    log.info("Validate Postcode: {}", searchPostcode);
-    Pattern pattern = Pattern.compile(POSTCODE_REGEX);
-    if (!pattern.matcher(searchPostcode).matches()) {
-      throw new NotFoundException(
-        ErrorMessageEnum.INVALID_LOCATION.getMessage()
-      );
-    }
-
-    // Get the first part of the postcode
-    String searchCriteria = searchPostcode.substring(0, 4).trim();
-    return performSearch(searchCriteria, null);
-  }
-
-  @Override
   public List<DosService> findServicesByGeoLocation(
     List<String> searchTerms,
     String searchLatitude,

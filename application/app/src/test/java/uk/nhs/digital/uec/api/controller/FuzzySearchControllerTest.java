@@ -17,6 +17,8 @@ import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import uk.nhs.digital.uec.api.exception.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
@@ -183,7 +185,7 @@ public class FuzzySearchControllerTest {
       );
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-    assertEquals("valid location values required", errorMessage);
+    assertEquals(ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage(), errorMessage);
   }
 
   private boolean isExpectedServiceReturned(

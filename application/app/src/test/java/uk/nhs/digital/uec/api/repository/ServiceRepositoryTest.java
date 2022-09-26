@@ -208,63 +208,6 @@ public class ServiceRepositoryTest {
   }
 
   @Test
-  public void findServiceByPostcodeTest()
-    throws UnauthorisedException, NotFoundException {
-    final String searchPostcode = "EX8 8XE";
-
-    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch())
-      .thenReturn(2);
-    when(
-      apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()
-    )
-      .thenReturn(3);
-    when(apiRequestParams.getFuzzLevel()).thenReturn(2);
-    when(apiRequestParams.getFilterReferralRole())
-      .thenReturn("Professional Referral");
-
-    when(
-      servicesRepo.findBySearchTerms(
-        anyString(),
-        any(),
-        anyInt(),
-        anyInt(),
-        anyInt(),
-        anyInt(),
-        any()
-      )
-    )
-      .thenReturn(pageItems);
-
-    List<DosService> findServiceBySearchTerms = serviceRepository.findServiceByPostcode(
-      searchPostcode
-    );
-
-    DosService dosServiceResponse = findServiceBySearchTerms.get(0);
-
-    assertEquals(DOS_NAME, dosServiceResponse.getName());
-    assertEquals(EASTING, dosServiceResponse.getEasting());
-    assertEquals(NORTHING, dosServiceResponse.getNorthing());
-  }
-
-  @Test
-  public void findServiceByPostcodeValidationExceptionTest() {
-    final String searchPostcode = "EdscXzxcxz8 sccasc8XdcsdcasE";
-
-    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch())
-      .thenReturn(2);
-    when(
-      apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()
-    )
-      .thenReturn(3);
-
-    NotFoundException notFoundException = assertThrows(
-      NotFoundException.class,
-      () -> serviceRepository.findServiceByPostcode(searchPostcode)
-    );
-    assertNotNull(notFoundException);
-  }
-
-  @Test
   public void findServiceByGeoLocationTest() throws NotFoundException {
     final String searchLatitude = "24.34";
     final String searchLongitude = "-0.2345";
