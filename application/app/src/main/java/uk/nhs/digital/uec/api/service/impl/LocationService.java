@@ -121,6 +121,9 @@ public class LocationService implements LocationServiceInterface {
 
   @Override
   public Double distanceBetween(GeoPoint source, GeoPoint destination) {
+    if (source == null || destination == null) {
+      return null;
+    }
     if (
       (source.getLat() == destination.getLat()) &&
       (source.getLon() == destination.getLon())
@@ -137,7 +140,7 @@ public class LocationService implements LocationServiceInterface {
       dist = Math.acos(dist);
       dist = Math.toDegrees(dist);
       dist = dist * 60 * 1.1515;
-      return dist;
+      return DoubleRounder.round(dist, 1);
     }
   }
 }

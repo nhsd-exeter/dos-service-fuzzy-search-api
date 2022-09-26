@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
@@ -93,6 +94,8 @@ public class LocationServiceTest {
     assertNull(distanceReturned);
   }
 
+
+
   @Test
   public void distanceWithSourceEastingAndNorthingNull() {
     PostcodeLocation source = new PostcodeLocation();
@@ -168,4 +171,43 @@ public class LocationServiceTest {
     assertTrue(Objects.isNull(result.getEasting()));
     assertTrue(Objects.isNull(result.getNorthing()));
   }
+
+  @Test
+  public void shouldReturnNullWhenPassingNullValues() {
+
+
+    GeoPoint source = null;
+    GeoPoint destination = null;
+
+
+    Double distanceReturned = locationService.distanceBetween(source, destination);
+    assertEquals(null, distanceReturned);;
+  }
+
+  @Test
+  public void shouldReturnZeroWhenBothLatAndLonAreSame() {
+
+    double expected = 0.0;
+    GeoPoint source = new GeoPoint(23.45, -2.34);
+    GeoPoint destination = new GeoPoint(23.45, -2.34);
+
+
+    Double distanceReturned = locationService.distanceBetween(source, destination);
+    assertEquals(expected, distanceReturned);;
+  }
+
+
+  @Test
+  public void shouldReturn4MilesWhenPassSourceAndDestinationValuesByGeoPoint() {
+
+    double expected = 1.2;
+    GeoPoint source = new GeoPoint( 0.111, 4.621);
+    GeoPoint destination = new GeoPoint(0.112, 4.639);
+
+
+    Double distanceReturned = locationService.distanceBetween(source, destination);
+    assertEquals(expected, distanceReturned);
+
+  }
+
 }

@@ -94,7 +94,7 @@ public class DosService implements Comparable<DosService> {
     if (this.distance == null) {
       return Double.valueOf(999.9);
     }
-    return  DoubleRounder.round(this.distance, 1);
+    return this.distance;
   }
 
   @Override

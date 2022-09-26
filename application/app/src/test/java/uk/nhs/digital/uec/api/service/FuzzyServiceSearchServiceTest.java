@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,6 +51,8 @@ public class FuzzyServiceSearchServiceTest {
   @Mock private ExternalApiHandshakeService apiHandshakeService;
 
   @Mock private ValidationService mockValidationService;
+
+
 
   private MultiValueMap<String, String> headers = null;
 
@@ -249,4 +252,82 @@ public class FuzzyServiceSearchServiceTest {
     assertEquals(2, services.size());
     assertEquals(357.7, services.get(0).getDistance());
   }
+
+  @Test
+  public void retrieveServicesByGeoLocationSearchSuccess()
+      throws NotFoundException, InvalidParameterException {
+
+        String searchLatitude="0.0";
+        String  searchLongitude="0.0";
+        String distanceRange="0.0";
+        List<String> searchTerms = null;
+    // Arrange
+    List<DosService> dosServices = new ArrayList<>();
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
+
+    when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
+    when(serviceRepository.findAllServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange)).thenReturn(dosServices);
+
+
+    // Act
+    List<DosService> services =
+        fuzzyServiceSearchService.retrieveServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange, searchTerms);
+
+    // Assert
+    assertEquals(2, services.size());
+  }
+
+
+  @Test
+  public void shouldCallfindAllServicesByGeoLocationMethodWhenSearchTermIsEmptyOrNull()
+      throws NotFoundException, InvalidParameterException {
+    // Arrange
+    String searchLatitude="0.0";
+    String  searchLongitude="0.0";
+    String distanceRange="0.0";
+    List<String> searchTerms = null;
+
+    List<DosService> dosServices = new ArrayList<>();
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
+
+    when(serviceRepository.findAllServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange)).thenReturn(dosServices);
+
+    //Act
+    List<DosService> services =
+        fuzzyServiceSearchService.retrieveServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange, searchTerms);
+
+    // Assert
+    verify(serviceRepository, only()).findAllServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange);
+    assertEquals(2, services.size());
+  }
+
+
+  @Test
+  public void shouldCallfindServicesByGeoLocationMethodWhenSearchTermIsNotEmptyOrNotNull()
+      throws NotFoundException, InvalidParameterException {
+    // Arrange
+    String searchLatitude="0.0";
+    String  searchLongitude="0.0";
+    String distanceRange="0.0";
+    List<String> searchTerms =  new ArrayList<>();
+    searchTerms.add("pharmacy");
+
+    List<DosService> dosServices = new ArrayList<>();
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
+
+    when(serviceRepository.findServicesByGeoLocation(searchTerms,searchLatitude, searchLongitude, distanceRange)).thenReturn(dosServices);
+
+    //Act
+    List<DosService> services =
+        fuzzyServiceSearchService.retrieveServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange, searchTerms);
+
+    // Assert
+    verify(serviceRepository, only()).findServicesByGeoLocation(searchTerms,searchLatitude, searchLongitude, distanceRange);
+    assertEquals(2, services.size());
+  }
+
+
 }
