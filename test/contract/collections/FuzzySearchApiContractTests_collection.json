@@ -34,7 +34,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test%2011&search_latitude=23.45&search_longitude=-2.345&fuzz_level=2",
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test%201&search_latitude=23.45&search_longitude=-2.345&fuzz_level=2",
           "protocol": "https",
           "host": ["{{host}}"],
           "port": "8443",
@@ -58,7 +58,6 @@
               "key": "search_longitude",
               "value": "-2.345"
             },
-
             {
               "key": "fuzz_level",
               "value": "2"
@@ -84,7 +83,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch",
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_latitude=23.45&search_longitude=-2.345",
           "protocol": "https",
           "host": ["{{host}}"],
           "port": "8443",
@@ -94,6 +93,16 @@
             "v0.0.1",
             "services",
             "byfuzzysearch"
+          ],
+          "query": [
+            {
+              "key": "search_latitude",
+              "value": "23.45"
+            },
+            {
+              "key": "search_longitude",
+              "value": "-2.345"
+            }
           ]
         }
       },
@@ -115,7 +124,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test1,test2,test3,test4, test5, test6",
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test1,test2,test3,test4,test5,test6&search_latitude=23.45&search_longitude=-2.345",
           "protocol": "https",
           "host": ["{{host}}"],
           "port": "8443",
@@ -130,6 +139,14 @@
             {
               "key": "search_term",
               "value": "test1,test2,test3,test4, test5, test6"
+            },
+            {
+              "key": "search_latitude",
+              "value": "23.45"
+            },
+            {
+              "key": "search_longitude",
+              "value": "-2.345"
             }
           ]
         }
@@ -152,7 +169,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=z",
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=z&search_latitude=23.45&search_longitude=-2.345",
           "protocol": "https",
           "host": ["{{host}}"],
           "port": "8443",
@@ -167,6 +184,14 @@
             {
               "key": "search_term",
               "value": "z"
+            },
+            {
+              "key": "search_latitude",
+              "value": "23.45"
+            },
+            {
+              "key": "search_longitude",
+              "value": "-2.345"
             }
           ]
         }
