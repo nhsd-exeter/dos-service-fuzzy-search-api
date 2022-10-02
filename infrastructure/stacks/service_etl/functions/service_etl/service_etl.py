@@ -264,7 +264,6 @@ def remove_deleted_services(es):
 
 def send_dos_changes_to_elasticsearch(doc_list):
     es = connect_to_elastic_search()
-    es.indices.create(index=ES_INDEX,body={"mappings": {"properties": {"location": {"type": "geo_point"}}}})
     logger.debug("size of import: " + str(len(doc_list)))
     try:
         logger.debug("Inserting into ES...")
