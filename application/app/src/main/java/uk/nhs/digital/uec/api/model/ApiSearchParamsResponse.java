@@ -29,7 +29,20 @@ public class ApiSearchParamsResponse {
   private List<String> searchCriteria;
 
   @JsonProperty("search_location")
-  private String searchLocation;
+  private String searchPostcode;
+
+  @JsonProperty("search_latitude")
+  private String searchLatitude;
+
+  @JsonProperty("search_longitude")
+  private String searchLongitude;
+
+  @JsonProperty("distance_range")
+  private String distanceRange;
+
+  @JsonProperty("referral_role")
+  private String referralRole;
+
 
   @JsonProperty("fuzz_level")
   private Object fuzzLevel;
@@ -53,7 +66,11 @@ public class ApiSearchParamsResponse {
 
   private ApiSearchParamsResponse(ApiSearchParamsResponseBuilder builder) {
     this.searchCriteria = builder.searchCriteria;
-    this.searchLocation = builder.searchLocation;
+    this.searchPostcode = builder.searchPostcode;
+    this.searchLatitude = builder.searchLatitude;
+    this.distanceRange = builder.distanceRange;
+    this.referralRole = builder.referralRole;
+    this.searchLongitude = builder.searchLongitude;
     this.fuzzLevel = builder.fuzzLevel;
     this.addressPriority = builder.addressPriority;
     this.namePriority = builder.namePriority;
@@ -64,7 +81,11 @@ public class ApiSearchParamsResponse {
 
   public static class ApiSearchParamsResponseBuilder {
     private List<String> searchCriteria;
-    private String searchLocation;
+    private String searchPostcode;
+    private String searchLatitude;
+    private String searchLongitude;
+    private String distanceRange;
+    private String referralRole;
     private Object fuzzLevel;
     private int addressPriority;
     private int postcodePriority;
@@ -77,10 +98,32 @@ public class ApiSearchParamsResponse {
       return this;
     }
 
-    public ApiSearchParamsResponseBuilder searchLocation(String searchLocation) {
-      this.searchLocation = searchLocation;
+    public ApiSearchParamsResponseBuilder searchPostcode(String searchPostcode) {
+      this.searchPostcode = searchPostcode;
       return this;
     }
+
+    public ApiSearchParamsResponseBuilder searchLatitude(String searchLatitude) {
+      this.searchLatitude = searchLatitude;
+      return this;
+    }
+
+    public ApiSearchParamsResponseBuilder searchLongitude(String searchLongitude) {
+      this.searchLongitude = searchLongitude;
+      return this;
+    }
+
+
+    public ApiSearchParamsResponseBuilder distanceRange(String distanceRange) {
+      this.distanceRange = distanceRange;
+      return this;
+    }
+
+    public ApiSearchParamsResponseBuilder referralRole(String referralRole) {
+      this.referralRole = referralRole;
+      return this;
+    }
+
 
     public ApiSearchParamsResponseBuilder fuzzLevel(Object fuzzLevel) {
       this.fuzzLevel = fuzzLevel;

@@ -106,7 +106,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test 1&search_location=EX88PR&fuzz_level=2",
+          "raw": "https://{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test%201&search_location=EX88PR&fuzz_level=2&search_latitude=23.45&search_longitude=-2.345",
           "protocol": "https",
           "host": [
             "{{host}}"
@@ -126,6 +126,14 @@
             {
               "key": "search_location",
               "value": "EX88PR"
+            },
+            {
+              "key": "search_latitude",
+              "value": "23.45"
+            },
+            {
+              "key": "search_longitude",
+              "value": "-2.345"
             },
             {
               "key": "fuzz_level",

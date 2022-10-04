@@ -12,8 +12,8 @@ public enum ErrorMessageEnum {
           + " applied. The maximum number of terms that can be applied is {0}"),
   MINIMUM_PARAMS_NOT_PASSED(
       "None of the search criteria given meets the minimum required search criteria length."),
-  INVALID_LOCATION("Invalid search location");
-
+  INVALID_LOCATION("Invalid search location"),
+  INVALID_LAT_LON_VALUES("Valid location (lat and lon) values required");
   private String message;
 
   private ErrorMessageEnum(String s) {

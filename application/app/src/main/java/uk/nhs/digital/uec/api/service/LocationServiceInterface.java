@@ -1,6 +1,8 @@
 package uk.nhs.digital.uec.api.service;
 
 import java.util.List;
+
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.util.MultiValueMap;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
@@ -28,6 +30,15 @@ public interface LocationServiceInterface {
    * @return point-to-point distance (in miles) between the source and destination locations.
    */
   Double distanceBetween(PostcodeLocation source, PostcodeLocation destination);
+  /**
+   * Returns the point-to-point distance (in miles) between the source and destination locations.
+   *
+   * @param source location source
+   * @param destination location destination
+   * @return point-to-point distance (in miles) between the source and destination locations.
+   */
+  Double distanceBetween(GeoPoint source, GeoPoint destination);
+
   /**
    * Retrieve PostcodeLocation (easting and northing values) for a given postcodes.
    *

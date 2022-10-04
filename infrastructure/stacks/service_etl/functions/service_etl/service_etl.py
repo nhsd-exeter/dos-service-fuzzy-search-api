@@ -109,7 +109,9 @@ def extract_data_from_dos():
                             array_to_string(array(select endtime from pathwaysdos.servicedayopenings sdo inner join pathwaysdos.openingtimedays o  on sdo.dayid = o.id inner join pathwaysdos.servicedayopeningtimes sdot on sdo.id = sdot.servicedayopeningid where s.id = sdo.serviceid order by sdo.dayid), ',') as closingtime,
                             array_to_string(array(select date from pathwaysdos.servicespecifiedopeningdates sod where sod.serviceid = s.id),',') as specifieddates,
                             array_to_string(array(select starttime from pathwaysdos.servicespecifiedopeningtimes sot inner join pathwaysdos.servicespecifiedopeningdates spcd on sot.servicespecifiedopeningdateid = spcd.id where spcd.serviceid = s.id),',') as specificopentimes,
-                            array_to_string(array(select endtime from pathwaysdos.servicespecifiedopeningtimes sot inner join pathwaysdos.servicespecifiedopeningdates spcd on sot.servicespecifiedopeningdateid = spcd.id where spcd.serviceid = s.id),',') as specificendtimes
+                            array_to_string(array(select endtime from pathwaysdos.servicespecifiedopeningtimes sot inner join pathwaysdos.servicespecifiedopeningdates spcd on sot.servicespecifiedopeningdateid = spcd.id where spcd.serviceid = s.id),',') as specificendtimes,
+                            s.latitude,
+                            s.longitude
                         from
                             pathwaysdos.services s,
                             pathwaysdos.servicecapacities sc,
@@ -129,6 +131,8 @@ def extract_data_from_dos():
                             s.typeid = t.id
                             and
                             statusid = 1
+                            and
+                            r.name IN ('Professional Referral')
                         ) group by s.id, t.name, c.color"""
 
     logger.debug("Open connection")
@@ -192,6 +196,7 @@ def build_insert_dict(records, doc_list):
             "specifieddates": row[24],
             "specificopentimes": row[25],
             "specificendtimes": row[26],
+            "location": {"lat": row[27], "lon": row[28]},
             "timestamp_version": TIMESTAMP_VERSION
         }
         doc_list.append(document)
@@ -259,6 +264,19 @@ def remove_deleted_services(es):
 
 def send_dos_changes_to_elasticsearch(doc_list):
     es = connect_to_elastic_search()
+    mappings = {
+            "properties":{
+                "location":{
+                    "type":"geo_point"
+                    }
+                }
+        }
+    if (es.indices.exists(ES_INDEX)):
+        es.indices.put_mapping(index=ES_INDEX,body=mappings)
+    else:
+        es.indices.create(index=ES_INDEX)
+        es.indices.put_mapping(index=ES_INDEX,body=mappings)
+
     logger.debug("size of import: " + str(len(doc_list)))
     try:
         logger.debug("Inserting into ES...")
