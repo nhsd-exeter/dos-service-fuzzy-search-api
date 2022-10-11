@@ -34,9 +34,11 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test%201&search_latitude=23.45&search_longitude=-2.345&fuzz_level=2",
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test%201&search_latitude=23.45&search_longitude=-2.345&fuzz_level=2&search_location=EX88PR",
           "protocol": "https",
-          "host": ["{{host}}"],
+          "host": [
+            "{{host}}"
+          ],
           "port": "8443",
           "path": [
             "dosapi",
@@ -49,6 +51,10 @@
             {
               "key": "search_term",
               "value": "test 1"
+            },
+            {
+              "key": "search_location",
+              "value": "EX88PR"
             },
             {
               "key": "search_latitude",
@@ -85,7 +91,9 @@
         "url": {
           "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_latitude=23.45&search_longitude=-2.345",
           "protocol": "https",
-          "host": ["{{host}}"],
+          "host": [
+            "{{host}}"
+          ],
           "port": "8443",
           "path": [
             "dosapi",
@@ -126,7 +134,9 @@
         "url": {
           "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=test1,test2,test3,test4,test5,test6&search_latitude=23.45&search_longitude=-2.345",
           "protocol": "https",
-          "host": ["{{host}}"],
+          "host": [
+            "{{host}}"
+          ],
           "port": "8443",
           "path": [
             "dosapi",
@@ -171,7 +181,9 @@
         "url": {
           "raw": "https://{{host}}:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=z&search_latitude=23.45&search_longitude=-2.345",
           "protocol": "https",
-          "host": ["{{host}}"],
+          "host": [
+            "{{host}}"
+          ],
           "port": "8443",
           "path": [
             "dosapi",

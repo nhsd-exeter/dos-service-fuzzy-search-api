@@ -46,6 +46,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
   @Override
   public List<String> sanitiseSearchTerms(final List<String> searchCriteria) {
 
+    log.info("Sanitising search terms {}",searchCriteria);
     List<String> listFromString = searchCriteria.stream().map(String::trim).toList();
 
     List<String> sanitisedSearchTerms = new ArrayList<>();
@@ -66,7 +67,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
         addAdditionalSearchTerms(sanitisedSearchTerms, searchTerm);
       }
     }
-
+    log.info("Sanitised search terms {}",sanitisedSearchTerms);
     return sanitisedSearchTerms;
   }
 

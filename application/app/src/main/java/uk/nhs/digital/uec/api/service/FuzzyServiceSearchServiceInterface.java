@@ -23,6 +23,7 @@ public interface FuzzyServiceSearchServiceInterface {
       final String searchLatitude,
       final String searchLongitude,
       final Double distanceRange,
-      final List<String> searchTerms)
+      final List<String> searchTerms,
+      final String searchPostcode)
       throws NotFoundException, InvalidParameterException;
 }

@@ -42,7 +42,7 @@ build: project-config # Build project
 	else
 		make docker-run-mvn \
 			DIR="application/app" \
-			CMD="-Ddependency-check.skip=true clean verify install \
+			CMD="-Ddependency-check.skip=true clean install \
 			-Dsonar.verbose=true \
 			-Dsonar.host.url='https://sonarcloud.io' \
 			-Dsonar.organization='nhsd-exeter' \
