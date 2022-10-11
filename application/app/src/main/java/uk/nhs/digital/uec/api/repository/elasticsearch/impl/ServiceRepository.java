@@ -2,7 +2,8 @@ package uk.nhs.digital.uec.api.repository.elasticsearch.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -62,7 +63,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
   @Override
   public List<DosService> findServicesByGeoLocation(
-      List<String> searchTerms, String searchLatitude, String searchLongitude, String distanceRange)
+      List<String> searchTerms, String searchLatitude, String searchLongitude, Double distanceRange)
       throws NotFoundException {
     log.info("Request Params: Lat: {}, Lng: {}", searchLatitude, searchLongitude);
     log.info("Fuzzy level: {}", apiRequestParams.getFuzzLevel());
@@ -96,7 +97,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
   @Override
   public List<DosService> findAllServicesByGeoLocation(
-      String searchLatitude, String searchLongitude, String distanceRange)
+      String searchLatitude, String searchLongitude, Double distanceRange)
       throws NotFoundException {
     log.info("Request Params: Lat: {}, Lng: {}", searchLatitude, searchLongitude);
     log.info("Fuzzy level: {}", apiRequestParams.getFuzzLevel());
@@ -120,6 +121,14 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
       return performSearch(searchCriteria);
     }
 
+    log.info("Search Params {} {} {} {} {} {} {}",searchCriteria,
+      apiRequestParams.getFuzzLevel(),
+      apiRequestParams.getNamePriority(),
+      apiRequestParams.getAddressPriority(),
+      apiRequestParams.getPostcodePriority(),
+      apiRequestParams.getPublicNamePriority(),
+      PageRequest.of(0, numberOfServicesToReturnFromElasticSearch));
+
     Page<DosService> services =
         servicesRepo.findBySearchTerms(
             searchCriteria,
@@ -140,12 +149,22 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
       String searchCriteria,
       String searchLatitude,
       String searchLongitude,
-      String distanceRange,
+      Double distanceRange,
       Integer numberOfServicesToReturnFromElasticSearch) {
     Long start = System.currentTimeMillis();
     if (numberOfServicesToReturnFromElasticSearch == null) {
       return performSearch(searchCriteria, searchLatitude, searchLongitude, distanceRange);
     }
+    log.info("Search Params {} {} {} {} {} {} {} {} {} {}",searchCriteria,
+      searchLatitude,
+      searchLongitude,
+      distanceRange,
+      apiRequestParams.getFuzzLevel(),
+      apiRequestParams.getNamePriority(),
+      apiRequestParams.getAddressPriority(),
+      apiRequestParams.getPostcodePriority(),
+      apiRequestParams.getPublicNamePriority(),
+      PageRequest.of(0, numberOfServicesToReturnFromElasticSearch));
 
     Page<DosService> services =
         servicesRepo.findSearchTermsByGeoLocation(
@@ -169,12 +188,16 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
   private List<DosService> performSearch(
       String searchLatitude,
       String searchLongitude,
-      String distanceRange,
+      Double distanceRange,
       Integer numberOfServicesToReturnFromElasticSearch) {
     Long start = System.currentTimeMillis();
     if (numberOfServicesToReturnFromElasticSearch == null) {
       return performSearch(null, searchLatitude, searchLongitude, distanceRange);
     }
+    log.info("Search Params {} {} {} {}",searchLatitude,
+      searchLongitude,
+      distanceRange,
+      PageRequest.of(0, numberOfServicesToReturnFromElasticSearch));
 
     Page<DosService> services =
         servicesRepo.findAllByGeoLocation(
@@ -191,6 +214,15 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
   private List<DosService> performSearch(String searchCriteria) {
     Long start = System.currentTimeMillis();
+    log.info("Search params {} {} {} {} {} {} {}", searchCriteria,
+      apiRequestParams.getFuzzLevel(),
+      apiRequestParams.getNamePriority(),
+      apiRequestParams.getAddressPriority(),
+      apiRequestParams.getPostcodePriority(),
+      apiRequestParams.getPublicNamePriority(),
+      PageRequest.of(
+        0, apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()));
+
     Page<DosService> services =
         servicesRepo.findBySearchTerms(
             searchCriteria,
@@ -209,8 +241,20 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
   }
 
   private List<DosService> performSearch(
-      String searchCriteria, String searchLatitude, String searchLongitude, String distanceRange) {
+      String searchCriteria, String searchLatitude, String searchLongitude, Double distanceRange) {
     Long start = System.currentTimeMillis();
+
+    log.info("Search params {} {} {} {} {} {} {} {} {} {} ", searchCriteria,
+      searchLatitude,
+      searchLongitude,
+      distanceRange,
+      apiRequestParams.getFuzzLevel(),
+      apiRequestParams.getNamePriority(),
+      apiRequestParams.getAddressPriority(),
+      apiRequestParams.getPostcodePriority(),
+      apiRequestParams.getPublicNamePriority(),
+      PageRequest.of(
+        0, apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()));
 
     Page<DosService> services =
         (searchCriteria == null || searchCriteria.isEmpty())
@@ -241,16 +285,10 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
   private List<DosService> getFilteredServices(Page<DosService> services) {
     final List<DosService> dosServices = new ArrayList<>();
-    log.info("Filtering {} services by Professional referral", services.getTotalElements());
     for (DosService serviceIterationItem : services) {
-      if (Objects.nonNull(serviceIterationItem.getReferral_roles())
-          && !serviceIterationItem.getReferral_roles().isEmpty()
-          && serviceIterationItem
-              .getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)) {
-        dosServices.add(serviceIterationItem);
-      }
+      dosServices.add(serviceIterationItem);
     }
-    log.info("Number of services by Professional Referral: {} ", dosServices.size());
+    log.info("Number of services : {} ", dosServices.size());
     return dosServices;
   }
 }
