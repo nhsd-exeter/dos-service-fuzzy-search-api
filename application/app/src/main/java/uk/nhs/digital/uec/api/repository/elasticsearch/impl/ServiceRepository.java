@@ -108,8 +108,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
       throw new NotFoundException(ErrorMessageEnum.INVALID_LOCATION.getMessage());
     }
     Integer numberOfServicesToReturnFromElasticSearch = null;
-    return performSearch(
-        searchLatitude, searchLongitude, distanceRange, numberOfServicesToReturnFromElasticSearch);
+    return performSearch(searchLatitude, searchLongitude, distanceRange, numberOfServicesToReturnFromElasticSearch);
   }
 
   private List<DosService> performSearch(
