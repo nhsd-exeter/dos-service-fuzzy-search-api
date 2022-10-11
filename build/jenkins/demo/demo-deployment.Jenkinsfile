@@ -111,13 +111,13 @@ pipeline {
         }
       }
     }
-    /*stage('Run Service ETL') {
+    stage('Run Service ETL') {
       steps {
         script {
           sh 'make apply-data-changes'
         }
       }
-    }*/
+    }
     stage('Populate Cognito Store') {
       steps {
         script {

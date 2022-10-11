@@ -131,8 +131,6 @@ def extract_data_from_dos():
                             s.typeid = t.id
                             and
                             statusid = 1
-                            and
-                            r.name IN ('Professional Referral')
                         ) group by s.id, t.name, c.color"""
 
     logger.debug("Open connection")
@@ -196,7 +194,10 @@ def build_insert_dict(records, doc_list):
             "specifieddates": row[24],
             "specificopentimes": row[25],
             "specificendtimes": row[26],
-            "location": {"lat": row[27], "lon": row[28]},
+            "location": {
+                "lat": row[27],
+                "lon": row[28]
+            },
             "timestamp_version": TIMESTAMP_VERSION
         }
         doc_list.append(document)
@@ -212,17 +213,21 @@ def connect_to_elastic_search():
         logger.debug("getting credentials")
         service = 'es'
         credentials = boto3.Session().get_credentials()
-        awsauth = AWS4Auth(credentials.access_key,credentials.secret_key,region,service,session_token=credentials.token)
+        awsauth = AWS4Auth(credentials.access_key,
+                        credentials.secret_key,
+                        region,
+                        service,
+                        session_token=credentials.token)
 
         logger.debug("connecting to es")
         es = Elasticsearch(hosts=[{
             'host': host,
             'port': 443
         }],
-                            http_auth=awsauth,
-                            use_ssl=True,
-                            verify_certs=True,
-                            connection_class=RequestsHttpConnection)
+                        http_auth=awsauth,
+                        use_ssl=True,
+                        verify_certs=True,
+                        connection_class=RequestsHttpConnection)
 
         logger.debug(es.info())
         if not es.ping():
@@ -264,18 +269,12 @@ def remove_deleted_services(es):
 
 def send_dos_changes_to_elasticsearch(doc_list):
     es = connect_to_elastic_search()
-    mappings = {
-            "properties":{
-                "location":{
-                    "type":"geo_point"
-                    }
-                }
-        }
+    mappings = {"properties": {"location": {"type": "geo_point"}}}
     if (es.indices.exists(ES_INDEX)):
-        es.indices.put_mapping(index=ES_INDEX,body=mappings)
+        es.indices.put_mapping(index=ES_INDEX, body=mappings)
     else:
         es.indices.create(index=ES_INDEX)
-        es.indices.put_mapping(index=ES_INDEX,body=mappings)
+        es.indices.put_mapping(index=ES_INDEX, body=mappings)
 
     logger.debug("size of import: " + str(len(doc_list)))
     try:
