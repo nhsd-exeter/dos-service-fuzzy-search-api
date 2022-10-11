@@ -119,4 +119,12 @@ public class ApiRequestParams {
 
     this.publicNamePriority = publicNamePriority;
   }
+
+  public String getFilterReferralRole() {
+    if (this.filterReferralRole == null) {
+      return "Professional Referral";
+    } else {
+      return filterReferralRole;
+    }
+  }
 }

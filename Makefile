@@ -367,10 +367,15 @@ deploy-artefact:
 
 apply-data-changes:
 	eval "$$(make aws-assume-role-export-variables)"
-	process=$$(aws lambda invoke --function-name $(PROJECT_ID)-$(PROFILE)-service-etl out.json --log-type Tail | jq .StatusCode)
-	cat out.json
-	rm -r out.json
-
+	if [ $(PROFILE) == dmo ]; then
+		process=$$(aws lambda invoke --invocation-type Event --function-name $(PROJECT_ID)-$(PROFILE)-service-etl out.json --log-type Tail | jq .StatusCode)
+		cat out.json
+		rm -r out.json
+	else
+		process=$$(aws lambda invoke --function-name $(PROJECT_ID)-$(PROFILE)-service-etl out.json --log-type Tail | jq .StatusCode)
+		cat out.json
+		rm -r out.json
+	fi
 
 monitor-r53-connection:
 	attempt_counter=1
