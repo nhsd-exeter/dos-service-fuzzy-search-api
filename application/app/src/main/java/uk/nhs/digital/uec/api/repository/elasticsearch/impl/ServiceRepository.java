@@ -24,6 +24,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
   private static final String POSTCODE_REGEX =
       "([Gg][Ii][Rr]"
           + " 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})";
+  private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
 
   @Autowired private ServicesRepositoryInterface servicesRepo;
 
@@ -238,15 +239,14 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     return getFilteredServices(services);
   }
 
-  private List<DosService> getFilteredServices(Iterable<DosService> services) {
+  private List<DosService> getFilteredServices(Page<DosService> services) {
     final List<DosService> dosServices = new ArrayList<>();
-
+    log.info("Filtering {} services by Professional referral", services.getTotalElements());
     for (DosService serviceIterationItem : services) {
       if (Objects.nonNull(serviceIterationItem.getReferral_roles())
           && !serviceIterationItem.getReferral_roles().isEmpty()
           && serviceIterationItem
-              .getReferral_roles()
-              .contains(apiRequestParams.getFilterReferralRole())) {
+              .getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)) {
         dosServices.add(serviceIterationItem);
       }
     }
