@@ -117,7 +117,6 @@ public class FuzzyServiceSearchServiceTest {
     assertEquals(2, services.size());
   }
 
-  @Test
   public void shouldCallfindServicesByGeoLocationMethodWhenSearchTermIsNotEmptyOrNotNull()
       throws NotFoundException, InvalidParameterException {
     // Arrange
