@@ -17,7 +17,6 @@ import io.swagger.annotations.ApiParam;
 import java.util.List;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.nhs.digital.uec.api.exception.ErrorMappingEnum;
-import uk.nhs.digital.uec.api.exception.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
@@ -36,7 +33,6 @@ import uk.nhs.digital.uec.api.model.ApiResponse;
 import uk.nhs.digital.uec.api.model.ApiSearchParamsResponse;
 import uk.nhs.digital.uec.api.model.ApiSearchResultsResponse;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
-import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
@@ -130,20 +126,7 @@ public class FuzzyServiceSearchController {
         postcodePriority,
         publicNamePriority);
 
-    boolean isValidGeoSearch =
-        NumberUtils.isCreatable(searchLatitude) && NumberUtils.isCreatable(searchLongitude);
-
-    if (!isValidGeoSearch) {
-      return ResponseEntity.badRequest()
-          .body(
-              new ApiValidationErrorResponse(
-                  ErrorMappingEnum.ValidationCodes.VAL005.getValidationCode(),
-                  ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage()));
-    }
-    Double range =
-      Objects.isNull(distanceRange)
-          ? DEFAULT_DISTANCE_RANGE
-          : distanceRange;
+    Double range = Objects.isNull(distanceRange) ? DEFAULT_DISTANCE_RANGE : distanceRange;
     final ApiSearchParamsResponse searchParamsResponse =
         new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()
             .searchCriteria(searchCriteria)
