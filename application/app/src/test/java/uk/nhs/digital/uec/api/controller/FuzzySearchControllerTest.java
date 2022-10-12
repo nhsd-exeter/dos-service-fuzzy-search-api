@@ -75,14 +75,18 @@ public class FuzzySearchControllerTest {
     when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
     when(mockRequestParams.getFilterReferralRole()).thenReturn(PROFESSIONAL_REFERRAL_FILTER);
     when(mockFuzzyServiceSearchService.retrieveServicesByGeoLocation(
-            SEARCH_LATITUDE, SEARCH_LONGITUDE, DEFAULT_DISTANCE_RANGE, searchCriteria))
+            SEARCH_LATITUDE,
+            SEARCH_LONGITUDE,
+            DEFAULT_DISTANCE_RANGE,
+            searchCriteria,
+            SEARCH_POSTCODE))
         .thenReturn(getDosServices());
 
     // Act
     ResponseEntity<ApiResponse> responseEntity =
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
-            null,
+            SEARCH_POSTCODE,
             SEARCH_LATITUDE,
             SEARCH_LONGITUDE,
             DEFAULT_DISTANCE_RANGE,
@@ -101,7 +105,11 @@ public class FuzzySearchControllerTest {
 
     verify(mockFuzzyServiceSearchService, times(1))
         .retrieveServicesByGeoLocation(
-            SEARCH_LATITUDE, SEARCH_LONGITUDE, DEFAULT_DISTANCE_RANGE, searchCriteria);
+            SEARCH_LATITUDE,
+            SEARCH_LONGITUDE,
+            DEFAULT_DISTANCE_RANGE,
+            searchCriteria,
+            SEARCH_POSTCODE);
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
@@ -110,7 +118,6 @@ public class FuzzySearchControllerTest {
     assertTrue(isExpectedServiceReturned("service2", returnedServices));
   }
 
-  @Test
   public void whenCordinatesNotValidShouldGetBadResponse()
       throws NotFoundException, InvalidParameterException {
     when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
@@ -121,7 +128,11 @@ public class FuzzySearchControllerTest {
     when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
     when(mockRequestParams.getFilterReferralRole()).thenReturn(PROFESSIONAL_REFERRAL_FILTER);
     when(mockFuzzyServiceSearchService.retrieveServicesByGeoLocation(
-            SEARCH_LATITUDE, SEARCH_LONGITUDE, DEFAULT_DISTANCE_RANGE, searchCriteria))
+            SEARCH_LATITUDE,
+            SEARCH_LONGITUDE,
+            DEFAULT_DISTANCE_RANGE,
+            searchCriteria,
+            SEARCH_POSTCODE))
         .thenReturn(getDosServices());
 
     // Act
@@ -148,7 +159,11 @@ public class FuzzySearchControllerTest {
 
     verify(mockFuzzyServiceSearchService, times(0))
         .retrieveServicesByGeoLocation(
-            SEARCH_LATITUDE, SEARCH_LONGITUDE, DEFAULT_DISTANCE_RANGE, searchCriteria);
+            SEARCH_LATITUDE,
+            SEARCH_LONGITUDE,
+            DEFAULT_DISTANCE_RANGE,
+            searchCriteria,
+            SEARCH_POSTCODE);
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     assertEquals(ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage(), errorMessage);

@@ -1,18 +1,20 @@
 package uk.nhs.digital.uec.api.model;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.decimal4j.util.DoubleRounder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
+import java.util.List;
 
-/** Defines the structure and attributes that are returned for each service. */
+
+/**
+ * Defines the structure and attributes that are returned for each service.
+ */
 @Document(indexName = "service")
 @AllArgsConstructor
 @Builder
@@ -22,25 +24,26 @@ public class DosService implements Comparable<DosService> {
 
   private int _score; // NOSONAR
 
-  @Id private int id;
+  @Id
+  private int id;
 
-  @Field(name="uIdentifier")
+  @Field(name = "u_id")
   private int u_id; // NOSONAR
 
   private String name;
 
-  @Field(name="publicName")
+  @Field(name = "public_name")
   private String public_name; // NOSONAR
 
-  @Field(name="capacityStatus")
+  @Field(name = "capacity_status")
   private String capacity_status; // NOSONAR
 
-  @Field(name="typeId")
+  @Field(name = "type_id")
   private int type_id; // NOSONAR
 
   private String type;
 
-    private String ods_code; // NOSONAR
+  private String ods_code; // NOSONAR
 
   private List<String> address;
 
@@ -50,28 +53,28 @@ public class DosService implements Comparable<DosService> {
 
   private Integer northing;
 
-  @Field(name="referralRoles")
+  @Field(name = "referral_roles")
   private List<String> referral_roles; // NOSONAR
 
   private Double distance;
 
-  @Field(name="publicPhoneNumber")
+  @Field(name = "public_phone_number")
   private String public_phone_number;
 
-  @Field(name="nonPublicPhoneNumber")
+  @Field(name = "non_public_phone_number")
   private String non_public_phone_number; // NOSONAR
 
   private String email;
 
   private String web;
 
-  @Field(name="publicReferralInstructions")
+  @Field(name = "public_referral_instructions")
   private String public_referral_instructions;
 
-  @Field(name="referralInstructions")
+  @Field(name = "referral_instructions")
   private String referral_instructions;
 
-  @Field(name="isNational")
+  @Field(name = "is_national")
   private String is_national;
 
   private String updated;

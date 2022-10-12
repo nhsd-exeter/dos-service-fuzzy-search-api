@@ -56,8 +56,8 @@ public interface ServicesRepositoryInterface extends ElasticsearchRepository<Dos
           + "  }")
   Page<DosService> findSearchTermsByGeoLocation(
       String searchTerms_0,
-      String searchLatitude_1,
-      String searchLongitude_2,
+      Double searchLatitude_1,
+      Double searchLongitude_2,
       Double distanceRangeKm_3,
       Object fuzzLevel_4,
       Integer namePriority_5,
@@ -83,5 +83,5 @@ public interface ServicesRepositoryInterface extends ElasticsearchRepository<Dos
           + "    }"
           + "  }")
   Page<DosService> findAllByGeoLocation(
-      String searchLatitude_0, String searchLongitude_1, Double distanceRange_2, Pageable pageable);
+      Double searchLatitude_0, Double searchLongitude_1, Double distanceRange_2, Pageable pageable);
 }

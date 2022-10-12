@@ -77,13 +77,13 @@ public class FuzzyServiceSearchServiceTest {
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
     when(serviceRepository.findAllServicesByGeoLocation(
-            searchLatitude, searchLongitude, distanceRange))
+            Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange))
         .thenReturn(dosServices);
 
     // Act
     List<DosService> services =
         fuzzyServiceSearchService.retrieveServicesByGeoLocation(
-            searchLatitude, searchLongitude, distanceRange, searchTerms);
+            searchLatitude, searchLongitude, distanceRange, searchTerms, "");
 
     // Assert
     assertEquals(2, services.size());
@@ -103,45 +103,18 @@ public class FuzzyServiceSearchServiceTest {
     dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
 
     when(serviceRepository.findAllServicesByGeoLocation(
-            searchLatitude, searchLongitude, distanceRange))
+            Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange))
         .thenReturn(dosServices);
 
     // Act
     List<DosService> services =
         fuzzyServiceSearchService.retrieveServicesByGeoLocation(
-            searchLatitude, searchLongitude, distanceRange, searchTerms);
+            searchLatitude, searchLongitude, distanceRange, searchTerms, "");
 
     // Assert
     verify(serviceRepository, only())
-        .findAllServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange);
-    assertEquals(2, services.size());
-  }
-
-  public void shouldCallfindServicesByGeoLocationMethodWhenSearchTermIsNotEmptyOrNotNull()
-      throws NotFoundException, InvalidParameterException {
-    // Arrange
-    String searchLatitude = "0.0";
-    String searchLongitude = "0.0";
-    Double distanceRange = 0.0;
-    List<String> searchTerms = new ArrayList<>();
-    searchTerms.add("pharmacy");
-
-    List<DosService> dosServices = new ArrayList<>();
-    dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
-    dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
-
-    when(serviceRepository.findServicesByGeoLocation(
-            searchTerms, searchLatitude, searchLongitude, distanceRange))
-        .thenReturn(dosServices);
-
-    // Act
-    List<DosService> services =
-        fuzzyServiceSearchService.retrieveServicesByGeoLocation(
-            searchLatitude, searchLongitude, distanceRange, searchTerms);
-
-    // Assert
-    verify(serviceRepository, only())
-        .findServicesByGeoLocation(searchTerms, searchLatitude, searchLongitude, distanceRange);
+        .findAllServicesByGeoLocation(
+            Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange);
     assertEquals(2, services.size());
   }
 }

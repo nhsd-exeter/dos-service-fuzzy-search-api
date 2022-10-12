@@ -1,7 +1,6 @@
 package uk.nhs.digital.uec.api.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -15,12 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
-import uk.nhs.digital.uec.api.exception.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
@@ -35,6 +34,8 @@ public class ServiceRepositoryTest {
   @Mock private ServicesRepositoryInterface servicesRepo;
 
   @Mock private ApiRequestParams apiRequestParams;
+
+  @Mock private Environment environment;
 
   List<DosService> services = new ArrayList<>();
   Page<DosService> pageItems;
@@ -86,6 +87,7 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
     when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
+    when(environment.getActiveProfiles()).thenReturn(new String[] {"local"});
 
     when(servicesRepo.findBySearchTerms(
             anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
@@ -108,6 +110,7 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
     when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
+    when(environment.getActiveProfiles()).thenReturn(new String[] {"local"});
 
     when(servicesRepo.findBySearchTerms(
             anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
@@ -131,6 +134,7 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
     when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
+    when(environment.getActiveProfiles()).thenReturn(new String[] {"local"});
 
     when(servicesRepo.findBySearchTerms(
             anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
@@ -147,79 +151,16 @@ public class ServiceRepositoryTest {
   }
 
   @Test
-  public void findServiceByGeoLocationTest() throws NotFoundException {
-    final String searchLatitude = "24.34";
-    final String searchLongitude = "-0.2345";
-    final Double distanceRange = 25D;
-
-    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
-    when(apiRequestParams.getFuzzLevel()).thenReturn(2);
-    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
-    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
-
-    when(servicesRepo.findSearchTermsByGeoLocation(
-            anyString(),
-            anyString(),
-            anyString(),
-            any(),
-            any(),
-            anyInt(),
-            anyInt(),
-            anyInt(),
-            anyInt(),
-            any()))
-        .thenReturn(pageItems);
-
-    List<DosService> findServiceBySearchTerms =
-        serviceRepository.findServicesByGeoLocation(
-            List.of(""), searchLatitude, searchLongitude, distanceRange);
-
-    DosService dosServiceResponse = findServiceBySearchTerms.get(0);
-
-    assertEquals(DOS_NAME, dosServiceResponse.getName());
-    assertEquals(EASTING, dosServiceResponse.getEasting());
-    assertEquals(NORTHING, dosServiceResponse.getNorthing());
-  }
-
-  @Test
-  public void shouldThrowNotFoundExceptionWhenLatAndLonValuesNotPresentTest()
-      throws NotFoundException {
-    final String searchLatitude = null;
-    final String searchLongitude = "-0.2345";
-    final Double distanceRange = 25D;
-
-    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
-    when(apiRequestParams.getFuzzLevel()).thenReturn(2);
-
-    Exception excection =
-        assertThrows(
-            NotFoundException.class,
-            () -> {
-              serviceRepository.findServicesByGeoLocation(
-                  List.of(""), searchLatitude, searchLongitude, distanceRange);
-            });
-    assertEquals(ErrorMessageEnum.INVALID_LOCATION.getMessage(), excection.getMessage());
-
-    excection =
-        assertThrows(
-            NotFoundException.class,
-            () -> {
-              serviceRepository.findAllServicesByGeoLocation(
-                  searchLatitude, searchLongitude, distanceRange);
-            });
-    assertEquals(ErrorMessageEnum.INVALID_LOCATION.getMessage(), excection.getMessage());
-  }
-
-  @Test
   public void findAllServiceByGeoLocationTest() throws NotFoundException {
-    final String searchLatitude = "24.34";
-    final String searchLongitude = "-0.2345";
+    final Double searchLatitude = 24.34;
+    final Double searchLongitude = -0.2345;
     final Double distanceRange = 25D;
 
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
     when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
+    when(environment.getActiveProfiles()).thenReturn(new String[] {"local"});
 
     when(servicesRepo.findAllByGeoLocation(
             searchLatitude, searchLongitude, distanceRange, PageRequest.of(0, 3)))
