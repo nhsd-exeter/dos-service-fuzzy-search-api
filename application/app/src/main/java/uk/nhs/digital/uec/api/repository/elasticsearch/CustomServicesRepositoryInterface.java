@@ -15,9 +15,9 @@ public interface CustomServicesRepositoryInterface {
   List<DosService> findServiceBySearchTerms(List<String> searchTerms);
 
   List<DosService> findServicesByGeoLocation(
-      List<String> searchTerms, String searchLatitude, String searchLongitude, String distanceRange)
+      List<String> searchTerms, String searchLatitude, String searchLongitude, Double distanceRange)
       throws NotFoundException;
 
   List<DosService> findAllServicesByGeoLocation(
-      String searchLatitude, String searchLongitude, String distanceRange) throws NotFoundException;
+      String searchLatitude, String searchLongitude, Double distanceRange) throws NotFoundException;
 }

@@ -1,12 +1,10 @@
 package uk.nhs.digital.uec.api.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -32,14 +30,11 @@ import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
 @ExtendWith(SpringExtension.class)
 public class ServiceRepositoryTest {
 
-  @InjectMocks
-  ServiceRepository serviceRepository;
+  @InjectMocks ServiceRepository serviceRepository;
 
-  @Mock
-  private ServicesRepositoryInterface servicesRepo;
+  @Mock private ServicesRepositoryInterface servicesRepo;
 
-  @Mock
-  private ApiRequestParams apiRequestParams;
+  @Mock private ApiRequestParams apiRequestParams;
 
   List<DosService> services = new ArrayList<>();
   Page<DosService> pageItems;
@@ -88,31 +83,16 @@ public class ServiceRepositoryTest {
   public void findServiceBySearchTermsTest() throws UnauthorisedException {
     final List<String> searchTerms = Arrays.asList("Search1, Search3");
 
-    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch())
-      .thenReturn(2);
-    when(
-      apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()
-    )
-      .thenReturn(3);
-    when(apiRequestParams.getFilterReferralRole())
-      .thenReturn("Professional Referral");
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
 
-    when(
-      servicesRepo.findBySearchTerms(
-        anyString(),
-        any(),
-        anyInt(),
-        anyInt(),
-        anyInt(),
-        anyInt(),
-        any()
-      )
-    )
-      .thenReturn(pageItems);
+    when(servicesRepo.findBySearchTerms(
+            anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
+        .thenReturn(pageItems);
 
-    List<DosService> findServiceBySearchTerms = serviceRepository.findServiceBySearchTerms(
-      searchTerms
-    );
+    List<DosService> findServiceBySearchTerms =
+        serviceRepository.findServiceBySearchTerms(searchTerms);
 
     DosService dosServiceResponse = findServiceBySearchTerms.get(0);
 
@@ -122,39 +102,19 @@ public class ServiceRepositoryTest {
   }
 
   @Test
-  public void findServiceByLongerSearchTermsListTest()
-    throws UnauthorisedException {
-    final List<String> searchTerms = Arrays.asList(
-      "Search1",
-      "Search3",
-      "Search4"
-    );
+  public void findServiceByLongerSearchTermsListTest() throws UnauthorisedException {
+    final List<String> searchTerms = Arrays.asList("Search1", "Search3", "Search4");
 
-    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch())
-      .thenReturn(2);
-    when(
-      apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()
-    )
-      .thenReturn(3);
-    when(apiRequestParams.getFilterReferralRole())
-      .thenReturn("Professional Referral");
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
 
-    when(
-      servicesRepo.findBySearchTerms(
-        anyString(),
-        any(),
-        anyInt(),
-        anyInt(),
-        anyInt(),
-        anyInt(),
-        any()
-      )
-    )
-      .thenReturn(pageItems);
+    when(servicesRepo.findBySearchTerms(
+            anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
+        .thenReturn(pageItems);
 
-    List<DosService> findServiceBySearchTerms = serviceRepository.findServiceBySearchTerms(
-      searchTerms
-    );
+    List<DosService> findServiceBySearchTerms =
+        serviceRepository.findServiceBySearchTerms(searchTerms);
 
     DosService dosServiceResponse = findServiceBySearchTerms.get(0);
 
@@ -164,41 +124,20 @@ public class ServiceRepositoryTest {
   }
 
   @Test
-  public void findServiceByLongerThan3SearchTermsListTest()
-    throws UnauthorisedException {
-    final List<String> searchTerms = Arrays.asList(
-      "Search1",
-      "Search3",
-      "Search4",
-      "Search5"
-    );
+  public void findServiceByLongerThan3SearchTermsListTest() throws UnauthorisedException {
+    final List<String> searchTerms = Arrays.asList("Search1", "Search3", "Search4", "Search5");
 
-    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch())
-      .thenReturn(2);
-    when(
-      apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()
-    )
-      .thenReturn(3);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
-    when(apiRequestParams.getFilterReferralRole())
-      .thenReturn("Professional Referral");
+    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
 
-    when(
-      servicesRepo.findBySearchTerms(
-        anyString(),
-        any(),
-        anyInt(),
-        anyInt(),
-        anyInt(),
-        anyInt(),
-        any()
-      )
-    )
-      .thenReturn(pageItems);
+    when(servicesRepo.findBySearchTerms(
+            anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
+        .thenReturn(pageItems);
 
-    List<DosService> findServiceBySearchTerms = serviceRepository.findServiceBySearchTerms(
-      searchTerms
-    );
+    List<DosService> findServiceBySearchTerms =
+        serviceRepository.findServiceBySearchTerms(searchTerms);
 
     DosService dosServiceResponse = findServiceBySearchTerms.get(0);
 
@@ -211,40 +150,29 @@ public class ServiceRepositoryTest {
   public void findServiceByGeoLocationTest() throws NotFoundException {
     final String searchLatitude = "24.34";
     final String searchLongitude = "-0.2345";
-    final String distanceRange = "25mi";
+    final Double distanceRange = 25D;
 
-    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch())
-      .thenReturn(2);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
-    when(
-      apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()
-    )
-      .thenReturn(3);
-    when(apiRequestParams.getFilterReferralRole())
-      .thenReturn("Professional Referral");
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
 
-    when(
-      servicesRepo.findSearchTermsByGeoLocation(
-        anyString(),
-        anyString(),
-        anyString(),
-        anyString(),
-        any(),
-        anyInt(),
-        anyInt(),
-        anyInt(),
-        anyInt(),
-        any()
-      )
-    )
-      .thenReturn(pageItems);
+    when(servicesRepo.findSearchTermsByGeoLocation(
+            anyString(),
+            anyString(),
+            anyString(),
+            any(),
+            any(),
+            anyInt(),
+            anyInt(),
+            anyInt(),
+            anyInt(),
+            any()))
+        .thenReturn(pageItems);
 
-    List<DosService> findServiceBySearchTerms = serviceRepository.findServicesByGeoLocation(
-      List.of(""),
-      searchLatitude,
-      searchLongitude,
-      distanceRange
-    );
+    List<DosService> findServiceBySearchTerms =
+        serviceRepository.findServicesByGeoLocation(
+            List.of(""), searchLatitude, searchLongitude, distanceRange);
 
     DosService dosServiceResponse = findServiceBySearchTerms.get(0);
 
@@ -255,79 +183,51 @@ public class ServiceRepositoryTest {
 
   @Test
   public void shouldThrowNotFoundExceptionWhenLatAndLonValuesNotPresentTest()
-    throws NotFoundException {
+      throws NotFoundException {
     final String searchLatitude = null;
     final String searchLongitude = "-0.2345";
-    final String distanceRange = "25mi";
+    final Double distanceRange = 25D;
 
-    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch())
-      .thenReturn(2);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
 
-    Exception excection = assertThrows(
-      NotFoundException.class,
-      () -> {
-        serviceRepository.findServicesByGeoLocation(
-          List.of(""),
-          searchLatitude,
-          searchLongitude,
-          distanceRange
-        );
-      }
-    );
-    assertEquals(
-      ErrorMessageEnum.INVALID_LOCATION.getMessage(),
-      excection.getMessage()
-    );
+    Exception excection =
+        assertThrows(
+            NotFoundException.class,
+            () -> {
+              serviceRepository.findServicesByGeoLocation(
+                  List.of(""), searchLatitude, searchLongitude, distanceRange);
+            });
+    assertEquals(ErrorMessageEnum.INVALID_LOCATION.getMessage(), excection.getMessage());
 
     excection =
-      assertThrows(
-        NotFoundException.class,
-        () -> {
-          serviceRepository.findAllServicesByGeoLocation(
-            searchLatitude,
-            searchLongitude,
-            distanceRange
-          );
-        }
-      );
-    assertEquals(
-      ErrorMessageEnum.INVALID_LOCATION.getMessage(),
-      excection.getMessage()
-    );
+        assertThrows(
+            NotFoundException.class,
+            () -> {
+              serviceRepository.findAllServicesByGeoLocation(
+                  searchLatitude, searchLongitude, distanceRange);
+            });
+    assertEquals(ErrorMessageEnum.INVALID_LOCATION.getMessage(), excection.getMessage());
   }
 
   @Test
   public void findAllServiceByGeoLocationTest() throws NotFoundException {
     final String searchLatitude = "24.34";
     final String searchLongitude = "-0.2345";
-    final String distanceRange = "25mi";
+    final Double distanceRange = 25D;
 
-    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch())
-      .thenReturn(2);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
-    when(
-      apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()
-    )
-      .thenReturn(3);
-    when(apiRequestParams.getFilterReferralRole())
-      .thenReturn("Professional Referral");
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
 
-    when(
-      servicesRepo.findAllByGeoLocation(
-        searchLatitude,
-        searchLongitude,
-        distanceRange,
-        PageRequest.of(0, 3)
-      )
-    )
-      .thenReturn(pageItems);
+    when(servicesRepo.findAllByGeoLocation(
+            searchLatitude, searchLongitude, distanceRange, PageRequest.of(0, 3)))
+        .thenReturn(pageItems);
 
-    List<DosService> findAllServiceByGeoLocation = serviceRepository.findAllServicesByGeoLocation(
-      searchLatitude,
-      searchLongitude,
-      distanceRange
-    );
+    List<DosService> findAllServiceByGeoLocation =
+        serviceRepository.findAllServicesByGeoLocation(
+            searchLatitude, searchLongitude, distanceRange);
 
     DosService dosServiceResponse = findAllServiceByGeoLocation.get(0);
 
