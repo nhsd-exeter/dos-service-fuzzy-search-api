@@ -28,6 +28,7 @@ public class ApiUtilsServiceTest {
   public void sanitiseSearchTerms() {
     // Arrange
     final List<String> searchCriteria = new ArrayList<>();
+    searchCriteria.add("MUI");
     searchCriteria.add("term1");
     searchCriteria.add("   term2");
     searchCriteria.add("term3   ");
@@ -40,6 +41,7 @@ public class ApiUtilsServiceTest {
         apiUtilsService.sanitiseSearchTerms(searchCriteria);
 
     // Assert
+    assertTrue(sanitisedSearchCriteria.contains("MUI"));
     assertTrue(sanitisedSearchCriteria.contains("term1"));
     assertTrue(sanitisedSearchCriteria.contains("term2"));
     assertTrue(sanitisedSearchCriteria.contains("term3"));
@@ -48,7 +50,7 @@ public class ApiUtilsServiceTest {
     assertTrue(sanitisedSearchCriteria.contains("term5"));
     assertTrue(sanitisedSearchCriteria.contains("term 6"));
     assertTrue(sanitisedSearchCriteria.contains("term6"));
-    assertEquals(8, sanitisedSearchCriteria.size());
+    assertEquals(9, sanitisedSearchCriteria.size());
   }
 
 

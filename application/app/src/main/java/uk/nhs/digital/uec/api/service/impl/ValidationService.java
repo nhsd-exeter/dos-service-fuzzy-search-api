@@ -21,7 +21,7 @@ public class ValidationService implements ValidationServiceInterface {
   @Override
   public void validateSearchCriteria(final List<String> searchCriteria) throws NotFoundException {
 
-    boolean minSearchCriteriaLthMet = false;
+    boolean minSearchCriteriaLengthMet = false;
 
     if (searchCriteria == null || searchCriteria.isEmpty()) {
       throw new NotFoundException(ErrorMessageEnum.NO_SEARCH_CRITERIA.getMessage());
@@ -33,11 +33,11 @@ public class ValidationService implements ValidationServiceInterface {
     }
     for (final String searchCriteriaStr : searchCriteria) {
       if (searchCriteriaStr.length() >= minSearchTermLength) {
-        minSearchCriteriaLthMet = true;
+        minSearchCriteriaLengthMet = true;
         break;
       }
     }
-    if (!minSearchCriteriaLthMet) {
+    if (!minSearchCriteriaLengthMet) {
       throw new NotFoundException(ErrorMessageEnum.MINIMUM_PARAMS_NOT_PASSED.getMessage());
     }
   }

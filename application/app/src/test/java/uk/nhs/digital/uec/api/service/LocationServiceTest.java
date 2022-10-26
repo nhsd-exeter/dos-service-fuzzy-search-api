@@ -40,7 +40,7 @@ public class LocationServiceTest {
   @BeforeEach
   public void initialise() {
     postcodeLocation = new PostcodeLocation();
-    postcodeLocation.setPostCode("EX88PR");
+    postcodeLocation.setPostcode("EX88PR");
     postcodeLocation.setEasting(297717);
     postcodeLocation.setNorthing(81762);
     postCode = "EX88PR";
@@ -59,7 +59,7 @@ public class LocationServiceTest {
     listLocations.add(postcodeLocation);
     when(apiHandshakeService.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
     PostcodeLocation returnedLocation = locationService.getLocationForPostcode(postCode, any());
-    assertEquals(postCode, returnedLocation.getPostCode());
+    assertEquals(postCode, returnedLocation.getPostcode());
     assertEquals(297717, returnedLocation.getEasting());
     assertEquals(81762, returnedLocation.getNorthing());
   }
@@ -70,7 +70,7 @@ public class LocationServiceTest {
     listLocations.add(postcodeLocation);
     when(apiHandshakeService.getPostcodeMappings(anyList(), any())).thenReturn(listLocations);
     PostcodeLocation returnedLocation = locationService.getLocationForPostcode(postCode, any());
-    assertEquals(postCode, returnedLocation.getPostCode());
+    assertEquals(postCode, returnedLocation.getPostcode());
   }
 
   @Test
@@ -83,7 +83,7 @@ public class LocationServiceTest {
     List<PostcodeLocation> locationsForPostcodes =
         locationService.getLocationsForPostcodes(postCodes, any());
     PostcodeLocation returnedLocation = locationsForPostcodes.get(0);
-    assertEquals(postCode, returnedLocation.getPostCode());
+    assertEquals(postCode, returnedLocation.getPostcode());
   }
 
   @Test
@@ -99,11 +99,11 @@ public class LocationServiceTest {
   @Test
   public void distanceWithSourceEastingAndNorthingNull() {
     PostcodeLocation source = new PostcodeLocation();
-    source.setPostCode("EX21PR");
+    source.setPostcode("EX21PR");
     source.setEasting(null);
     source.setNorthing(null);
     PostcodeLocation destination = new PostcodeLocation();
-    destination.setPostCode("EX22PR");
+    destination.setPostcode("EX22PR");
     destination.setEasting(237765);
     destination.setNorthing(176543);
     Double distanceReturned = locationService.distanceBetween(source, destination);
@@ -113,11 +113,11 @@ public class LocationServiceTest {
   @Test
   public void distanceWithDestinationEastingAndNorthingNull() {
     PostcodeLocation destination = new PostcodeLocation();
-    destination.setPostCode("EX21SR");
+    destination.setPostcode("EX21SR");
     destination.setEasting(null);
     destination.setNorthing(null);
     PostcodeLocation source = new PostcodeLocation();
-    source.setPostCode("EX22SR");
+    source.setPostcode("EX22SR");
     source.setEasting(221133);
     source.setNorthing(298223);
     Double distanceReturned = locationService.distanceBetween(source, destination);
@@ -128,7 +128,7 @@ public class LocationServiceTest {
   public void distanceWithNullSource() {
 
     PostcodeLocation destinationLocation = new PostcodeLocation();
-    destinationLocation.setPostCode("EX26PR");
+    destinationLocation.setPostcode("EX26PR");
     destinationLocation.setEasting(43212);
     destinationLocation.setNorthing(87896);
 
@@ -147,12 +147,12 @@ public class LocationServiceTest {
   public void distanceWithSourceAndDestination() {
 
     PostcodeLocation sourceLocation = new PostcodeLocation();
-    sourceLocation.setPostCode("EX1QPR");
+    sourceLocation.setPostcode("EX1QPR");
     sourceLocation.setEasting(12345);
     sourceLocation.setNorthing(12345);
 
     PostcodeLocation destinationLocation = new PostcodeLocation();
-    destinationLocation.setPostCode("EX86PJ");
+    destinationLocation.setPostcode("EX86PJ");
     destinationLocation.setEasting(14355);
     destinationLocation.setNorthing(12445);
 

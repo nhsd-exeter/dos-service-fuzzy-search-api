@@ -44,6 +44,7 @@ public class ValidationServiceTest {
         "No validation exception raised when expected because the search criteria is empty.";
     codeVal1 = "VAL-001";
     searchCriteria = new ArrayList<>();
+    searchCriteria.add("MIU");
     searchCriteria.add("term1");
     searchCriteria.add("term2");
     searchCriteria.add("term3");

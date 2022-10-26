@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,8 +88,8 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
     Pattern pattern = Pattern.compile(POSTCODE_REGEX);
     return fields.stream()
       .filter(field -> pattern.matcher(field).matches())
-      .map(this::removeBlankSpaces)
-      .toList();
+      .map(this::removeBlankSpaces).collect(Collectors.toList());
+
   }
 
   /**

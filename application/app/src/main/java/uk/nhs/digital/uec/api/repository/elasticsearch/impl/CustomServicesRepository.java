@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import uk.nhs.digital.uec.api.exception.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
@@ -21,7 +22,7 @@ import uk.nhs.digital.uec.api.repository.elasticsearch.ServicesRepositoryInterfa
 
 @Repository
 @Slf4j
-public class ServiceRepository implements CustomServicesRepositoryInterface {
+public class CustomServicesRepository implements CustomServicesRepositoryInterface {
 
   private static final String POSTCODE_REGEX =
       "([Gg][Ii][Rr]"
@@ -66,7 +67,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
   @Override
   public List<DosService> findAllServicesByGeoLocation(
-      Double searchLatitude, Double searchLongitude, Double distanceRange)
+      Double searchLatitude, Double searchLongitude, Double distanceRange,List<String> searchTerms)
       throws NotFoundException {
     log.info("Request Params: Lat: {}, Lng: {}", searchLatitude, searchLongitude);
     log.info("Fuzzy level: {}", apiRequestParams.getFuzzLevel());
@@ -78,10 +79,14 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     if (Objects.isNull(searchLatitude) || (Objects.isNull(searchLongitude))) {
       throw new NotFoundException(ErrorMessageEnum.INVALID_LOCATION.getMessage());
     }
-    Integer numberOfServicesToReturnFromElasticSearch = null;
-    return performSearch(
-        searchLatitude, searchLongitude, distanceRange, numberOfServicesToReturnFromElasticSearch);
+
+    int numServicesToReturnFromEs = apiRequestParams.getMaxNumServicesToReturnFromElasticsearch();
+
+    return !Objects.isNull(searchTerms) ? performSearch( String.join(" ", searchTerms),searchLatitude, searchLongitude, distanceRange,numServicesToReturnFromEs):
+      performSearch(
+        searchLatitude, searchLongitude, distanceRange, numServicesToReturnFromEs);
   }
+
 
   private List<DosService> performSearch(
       String searchCriteria, Integer numberOfServicesToReturnFromElasticSearch) {
@@ -123,7 +128,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
       Integer numberOfServicesToReturnFromElasticSearch) {
     Long start = System.currentTimeMillis();
     if (numberOfServicesToReturnFromElasticSearch == null) {
-      return performSearch(null, searchLatitude, searchLongitude, distanceRange);
+      return performSearch(null, searchLatitude, searchLongitude, distanceRange,numberOfServicesToReturnFromElasticSearch);
     }
     log.info(
         "Search Params {} {} {} {}",
@@ -176,7 +181,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
   }
 
   private List<DosService> performSearch(
-      String searchCriteria, Double searchLatitude, Double searchLongitude, Double distanceRange) {
+      String searchCriteria, Double searchLatitude, Double searchLongitude, Double distanceRange,Integer numberOfServicesToReturnFromElasticSearch) {
     Long start = System.currentTimeMillis();
 
     log.info(
@@ -191,7 +196,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
         apiRequestParams.getPostcodePriority(),
         apiRequestParams.getPublicNamePriority(),
         PageRequest.of(
-            0, apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()));
+            0, numberOfServicesToReturnFromElasticSearch));
 
     Page<DosService> services =
         (searchCriteria == null || searchCriteria.isEmpty())
@@ -200,7 +205,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
                 searchLongitude,
                 distanceRange,
                 PageRequest.of(
-                    0, apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()))
+                    0, numberOfServicesToReturnFromElasticSearch))
             : servicesRepo.findSearchTermsByGeoLocation(
                 searchCriteria,
                 searchLatitude,
@@ -212,7 +217,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
                 apiRequestParams.getPostcodePriority(),
                 apiRequestParams.getPublicNamePriority(),
                 PageRequest.of(
-                    0, apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()));
+                    0, numberOfServicesToReturnFromElasticSearch));
     log.info(
         "Search query duration {}ms. Number of services found {}",
         System.currentTimeMillis() - start,
@@ -244,4 +249,6 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     }
     return dosServices;
   }
+
+
 }

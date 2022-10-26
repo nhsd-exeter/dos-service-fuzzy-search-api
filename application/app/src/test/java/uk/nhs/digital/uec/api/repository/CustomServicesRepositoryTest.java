@@ -24,12 +24,13 @@ import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.repository.elasticsearch.ServicesRepositoryInterface;
-import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
+import uk.nhs.digital.uec.api.repository.elasticsearch.impl.CustomServicesRepository;
 
 @ExtendWith(SpringExtension.class)
-public class ServiceRepositoryTest {
+public class CustomServicesRepositoryTest {
 
-  @InjectMocks ServiceRepository serviceRepository;
+  @InjectMocks
+  CustomServicesRepository serviceRepository;
 
   @Mock private ServicesRepositoryInterface servicesRepo;
 
@@ -82,7 +83,7 @@ public class ServiceRepositoryTest {
 
   @Test
   public void findServiceBySearchTermsTest() throws UnauthorisedException {
-    final List<String> searchTerms = Arrays.asList("Search1, Search3");
+    final List<String> searchTerms = Arrays.asList("MUI, Search1, Search3");
 
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
@@ -155,6 +156,7 @@ public class ServiceRepositoryTest {
     final Double searchLatitude = 24.34;
     final Double searchLongitude = -0.2345;
     final Double distanceRange = 25D;
+    final List<String> searchTerms = List.of("MIU");
 
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
@@ -162,13 +164,21 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
     when(environment.getActiveProfiles()).thenReturn(new String[] {"local"});
 
-    when(servicesRepo.findAllByGeoLocation(
-            searchLatitude, searchLongitude, distanceRange, PageRequest.of(0, 3)))
+    when(servicesRepo.findSearchTermsByGeoLocation(anyString(),
+            any(),
+            any(),
+            any(),
+            any(),
+            anyInt(),
+            anyInt(),
+            anyInt(),
+            anyInt(),
+            any()))
         .thenReturn(pageItems);
 
     List<DosService> findAllServiceByGeoLocation =
         serviceRepository.findAllServicesByGeoLocation(
-            searchLatitude, searchLongitude, distanceRange);
+            searchLatitude, searchLongitude, distanceRange,searchTerms);
 
     DosService dosServiceResponse = findAllServiceByGeoLocation.get(0);
 

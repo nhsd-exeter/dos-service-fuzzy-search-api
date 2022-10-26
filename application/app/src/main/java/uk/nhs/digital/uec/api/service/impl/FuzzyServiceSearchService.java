@@ -55,20 +55,29 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
 
     List<DosService> dosServices;
 
-    if (!isSearchTermNullOrEmpty) {
-      log.info("Searching using search terms {}", searchTerms);
+    if ((!isSearchTermNullOrEmpty) && isValidGeoSearch ){
       validationService.validateSearchCriteria(searchTerms);
       dosServices =
-          elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms));
-    } else if (isValidGeoSearch) {
+        elasticsearch.findAllServicesByGeoLocation(
+          Double.parseDouble(searchLatitude),
+          Double.parseDouble(searchLongitude),
+          distanceRange,searchTerms);
+    }
+    else if (isValidGeoSearch) {
       log.info("Searching using location {}lat {} long", searchLatitude, searchLongitude);
       dosServices =
           elasticsearch.findAllServicesByGeoLocation(
               Double.parseDouble(searchLatitude),
               Double.parseDouble(searchLongitude),
-              distanceRange);
-
-    } else {
+              distanceRange,null);
+    }
+    else if (!isSearchTermNullOrEmpty) {
+      log.info("Searching using search terms {}", searchTerms);
+      validationService.validateSearchCriteria(searchTerms);
+      dosServices =
+        elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms));
+    }
+    else {
       throw new InvalidParameterException(
           ErrorMessageEnum.NO_SEARCH_CRITERIA.getMessage()
               + " or "
@@ -102,17 +111,19 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
       log.info("Populating services without lat and long values");
       /** Call the auth service login endpoint from here and get the authenticated headers */
       MultiValueMap<String, String> headers = externalApiHandshakeInterface.getAccessTokenHeader();
-      log.info("Calling Postcode API to get location values");
+      log.info("Calling Postcode API to get location values {}", searchPostcode);
+      log.info("Headers {}", headers);
       /** Calculate distance to services returned if we have a search location */
       PostcodeLocation searchLocation =
           locationService.getLocationForPostcode(searchPostcode, headers);
+      log.info("Returned from Postcode API  {} ", searchLocation);
 
       List<PostcodeLocation> dosServicePostCodeLocation =
           this.populateEmptyLocation(nonPopulatedLatLong, headers);
       if (searchLocation != null) {
         for (DosService dosService : nonPopulatedLatLong) {
           PostcodeLocation serviceLocation = new PostcodeLocation();
-          serviceLocation.setPostCode(dosService.getPostcode());
+          serviceLocation.setPostcode(dosService.getPostcode());
           serviceLocation.setEasting(dosService.getEasting());
           serviceLocation.setNorthing(dosService.getNorthing());
 
@@ -138,16 +149,16 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
       PostcodeLocation serviceLocation, List<PostcodeLocation> dosServicePostCodeLocation) {
     if (dosServicePostCodeLocation != null) {
       String servicePostcodeWithoutSpace =
-          apiUtilsService.removeBlankSpaces(serviceLocation.getPostCode());
+          apiUtilsService.removeBlankSpaces(serviceLocation.getPostcode());
       serviceLocation.setEasting(
           dosServicePostCodeLocation.stream()
-              .filter(t -> t.getPostCode().equals(servicePostcodeWithoutSpace))
+              .filter(t -> t.getPostcode().equals(servicePostcodeWithoutSpace))
               .map(PostcodeLocation::getEasting)
               .findFirst()
               .orElse(null));
       serviceLocation.setNorthing(
           dosServicePostCodeLocation.stream()
-              .filter(t -> t.getPostCode().equals(servicePostcodeWithoutSpace))
+              .filter(t -> t.getPostcode().equals(servicePostcodeWithoutSpace))
               .map(PostcodeLocation::getNorthing)
               .findFirst()
               .orElse(null));
@@ -158,11 +169,19 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
       List<DosService> dosServices, MultiValueMap<String, String> headers)
       throws InvalidParameterException {
     log.info("Populating empty location on service");
+    for (DosService service: dosServices){
+      log.info("Populating Dosservices {}",service);
+    }
+
     List<String> postCodes =
         dosServices.stream()
             .filter(t -> t.getEasting() == null && t.getNorthing() == null)
             .map(DosService::getPostcode)
             .collect(Collectors.toList());
+    for (String str: postCodes){
+      log.info("postCode : {}",str);
+    }
+
     return !CollectionUtils.isNullOrEmpty(postCodes)
         ? locationService.getLocationsForPostcodes(postCodes, headers)
         : Collections.emptyList();

@@ -19,7 +19,7 @@ import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
-import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
+import uk.nhs.digital.uec.api.repository.elasticsearch.impl.CustomServicesRepository;
 import uk.nhs.digital.uec.api.service.impl.ExternalApiHandshakeService;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
 import uk.nhs.digital.uec.api.service.impl.ValidationService;
@@ -32,7 +32,7 @@ public class FuzzyServiceSearchServiceTest {
 
   @InjectMocks private FuzzyServiceSearchService fuzzyServiceSearchService;
 
-  @Mock private ServiceRepository serviceRepository;
+  @Mock private CustomServicesRepository serviceRepository;
 
   @Mock private ApiRequestParams apiRequestParams;
 
@@ -77,7 +77,7 @@ public class FuzzyServiceSearchServiceTest {
 
     when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
     when(serviceRepository.findAllServicesByGeoLocation(
-            Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange))
+            Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange, searchTerms))
         .thenReturn(dosServices);
 
     // Act
@@ -103,7 +103,7 @@ public class FuzzyServiceSearchServiceTest {
     dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
 
     when(serviceRepository.findAllServicesByGeoLocation(
-            Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange))
+            Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange,searchTerms))
         .thenReturn(dosServices);
 
     // Act
@@ -114,7 +114,7 @@ public class FuzzyServiceSearchServiceTest {
     // Assert
     verify(serviceRepository, only())
         .findAllServicesByGeoLocation(
-            Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange);
+            Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange,searchTerms);
     assertEquals(2, services.size());
   }
 }
