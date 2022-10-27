@@ -56,6 +56,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     List<DosService> dosServices;
 
     if ((!isSearchTermNullOrEmpty) && isValidGeoSearch ){
+      log.info("Searching using search terms and Lat Lng values {} {} {}", searchTerms,searchLatitude,searchLongitude);
       validationService.validateSearchCriteria(searchTerms);
       dosServices =
         elasticsearch.findAllServicesByGeoLocation(
@@ -64,7 +65,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
           distanceRange,searchTerms);
     }
     else if (isValidGeoSearch) {
-      log.info("Searching using location {}lat {} long", searchLatitude, searchLongitude);
+      log.info("Searching using lat: {} lng: {}", searchLatitude, searchLongitude);
       dosServices =
           elasticsearch.findAllServicesByGeoLocation(
               Double.parseDouble(searchLatitude),
@@ -72,10 +73,11 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
               distanceRange,null);
     }
     else if (!isSearchTermNullOrEmpty) {
-      log.info("Searching using search terms {}", searchTerms);
+      log.info("Searching using search terms: {}", searchTerms);
       validationService.validateSearchCriteria(searchTerms);
+      searchTerms = apiUtilsService.sanitiseSearchTerms(searchTerms);
       dosServices =
-        elasticsearch.findServiceBySearchTerms(apiUtilsService.sanitiseSearchTerms(searchTerms));
+        elasticsearch.findServiceBySearchTerms(searchTerms);
     }
     else {
       throw new InvalidParameterException(
