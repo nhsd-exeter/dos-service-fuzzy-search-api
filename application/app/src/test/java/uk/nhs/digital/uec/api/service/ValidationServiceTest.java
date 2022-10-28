@@ -7,14 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import uk.nhs.digital.uec.api.exception.ErrorMappingEnum;
-import uk.nhs.digital.uec.api.exception.ErrorMappingEnum.ValidationCodes;
+import uk.nhs.digital.uec.api.model.ErrorMappingEnum;
+import uk.nhs.digital.uec.api.model.ErrorMappingEnum.ValidationCodes;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.service.impl.ValidationService;
 
@@ -184,6 +185,28 @@ public class ValidationServiceTest {
       fail("Unexpected exception thrown: " + e.getMessage());
     }
   }
+
+  @Test
+  public void GivenPostcodesShouldBeValidPostcodes() {
+    assertEquals(true,validationService.isPostcodeValid("MK8 1AS"));
+    assertEquals(true,validationService.isPostcodeValid("MK130LG"));
+    assertEquals(true,validationService.isPostcodeValid("mk130lg"));
+    assertEquals(true,validationService.isPostcodeValid("mk13 0lg"));
+    assertEquals(true,validationService.isPostcodeValid("DN1 1AA"));
+    assertEquals(true,validationService.isPostcodeValid("BL0 0AE"));
+
+  }
+
+  @Test
+  public void GivenPostcodesShouldBeInValidPostcodes() {
+    assertEquals(false,validationService.isPostcodeValid("MKK 1AS"));
+    assertEquals(false,validationService.isPostcodeValid("not available"));
+    assertEquals(false,validationService.isPostcodeValid("null"));
+    assertEquals(false,validationService.isPostcodeValid("blank"));
+    assertEquals(false,validationService.isPostcodeValid("ZZ1123"));
+
+  }
+
 
   private String getValidationCodeForErrorMessage(String errorMessage) {
     Optional<ValidationCodes> validationCodesOptional =

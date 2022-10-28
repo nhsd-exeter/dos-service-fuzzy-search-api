@@ -17,7 +17,7 @@ import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.nhs.digital.uec.api.exception.ErrorMessageEnum;
+import uk.nhs.digital.uec.api.model.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
@@ -118,6 +118,7 @@ public class FuzzySearchControllerTest {
     assertTrue(isExpectedServiceReturned("service2", returnedServices));
   }
 
+
   public void whenCordinatesNotValidShouldGetBadResponse()
       throws NotFoundException, InvalidParameterException {
     when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
@@ -166,8 +167,64 @@ public class FuzzySearchControllerTest {
             SEARCH_POSTCODE);
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-    assertEquals(ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage(), errorMessage);
+    assertEquals(ErrorMessageEnum.INVALID_LAT_LON_VALUES_OR_INVALID_POSTCODE.getMessage(), errorMessage);
   }
+
+  @Test
+  public void whenDistanceRangeIsSuppliedItShouldUseTheGivenValue()
+    throws NotFoundException, InvalidParameterException {
+
+    Double distance_range = null;
+    String searchLatitude = "23.45";
+    String searchLongitude = "8.00";
+    String searchPostCode = null;
+
+    when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
+    when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);
+    when(mockRequestParams.getPostcodePriority()).thenReturn(POSTCODE_PRIORITY);
+    when(mockRequestParams.getPublicNamePriority()).thenReturn(PUBLIC_NAME_PRIORITY);
+    when(mockRequestParams.getFuzzLevel()).thenReturn(FUZZ_LEVEL);
+    when(mockRequestParams.getMaxNumServicesToReturn()).thenReturn(MAX_SERVICES_TO_RETURN);
+    when(mockRequestParams.getFilterReferralRole()).thenReturn(PROFESSIONAL_REFERRAL_FILTER);
+    when(mockFuzzyServiceSearchService.retrieveServicesByGeoLocation(
+      searchLatitude,
+      searchLongitude,
+      distance_range,
+      searchCriteria,
+      searchPostCode))
+      .thenReturn(getDosServices());
+
+    // Act
+    ResponseEntity<ApiResponse> responseEntity =
+      fuzzyServiceSearchController.getServicesByFuzzySearch(
+        searchCriteria,
+        null,
+        searchLatitude,
+        searchLongitude,
+        DEFAULT_DISTANCE_RANGE,
+        PROFESSIONAL_REFERRAL_FILTER,
+        MAX_SERVICES_TO_RETURN_FROM_ES,
+        MAX_SERVICES_TO_RETURN,
+        FUZZ_LEVEL,
+        NAME_PRIORITY,
+        ADDRESS_PRIORITY,
+        POSTCODE_PRIORITY,
+        PUBLIC_NAME_PRIORITY);
+
+    // Assert
+      verify(mockFuzzyServiceSearchService, times(1))
+      .retrieveServicesByGeoLocation(
+        searchLatitude,
+        searchLongitude,
+        DEFAULT_DISTANCE_RANGE,
+        searchCriteria,
+        searchPostCode);
+  }
+
+
+
+
+
 
   private boolean isExpectedServiceReturned(
       String expectedServiceName, List<DosService> returnedServices) {

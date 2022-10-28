@@ -39,12 +39,26 @@ pipeline {
         }
       }
     }
+  stage('Scan Dependencies'){
+      steps {
+        script {
+          sh "make scan"
+        }
+        archiveArtifacts artifacts: 'reports/**'
+      }
+    }
     stage('Build API') {
       steps {
         script {
           sh "make build VERSION=${env.PROJECT_BUILD_TAG}"
         }
-        archiveArtifacts artifacts: 'reports/**'
+      }
+    }
+    stage('Unit Test') {
+      steps {
+        script {
+          sh "make unit-test"
+        }
       }
     }
     stage('Run Contract Tests') {

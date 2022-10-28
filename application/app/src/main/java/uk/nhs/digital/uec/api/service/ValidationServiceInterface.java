@@ -14,5 +14,6 @@ public interface ValidationServiceInterface {
    * @param searchCriteria the searchCriteria list to validate.
    * @throws NotFoundException when business requirements are not met.
    */
-  public void validateSearchCriteria(final List<String> searchCriteria) throws NotFoundException;
+  void validateSearchCriteria(final List<String> searchCriteria) throws NotFoundException;
+  boolean isPostcodeValid(String postcode);
 }

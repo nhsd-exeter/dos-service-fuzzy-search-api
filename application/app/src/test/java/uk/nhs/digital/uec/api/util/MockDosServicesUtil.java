@@ -24,7 +24,10 @@ public class MockDosServicesUtil {
     for (int i = mockDosServices.size() + 1; i <= numberToAdd; i++) {
       mockDosServices.put(i, buildMockService1(String.valueOf(i)));
     }
+    String identifer = String.valueOf(mockDosServices.size()+1);
+    mockDosServices.put(Integer.parseInt(identifer), buildMockSerivcesWithNoLocation(identifer));
   }
+
 
   private static DosService buildMockService1(String identifier) {
 
@@ -52,5 +55,13 @@ public class MockDosServicesUtil {
         .location(new GeoPoint(24.35,  -2.56789))
         .referral_roles(referralRoles)
         .build();
+  }
+
+  private static DosService buildMockSerivcesWithNoLocation(String identifer){
+    DosService dosService = buildMockService1(identifer);
+    dosService.setLocation(null);
+    dosService.setNorthing(10);
+    dosService.setEasting(15);
+    return dosService;
   }
 }

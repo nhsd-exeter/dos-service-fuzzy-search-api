@@ -1,13 +1,11 @@
 package uk.nhs.digital.uec.api.authentication.util;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import uk.nhs.digital.uec.api.authentication.exception.AccessTokenExpiredException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JwtUtilTest {
 
@@ -38,6 +36,8 @@ public class JwtUtilTest {
         assertThrows(IllegalStateException.class, () -> jwtUtil.isTokenValid(accessToken));
     assertNotNull(illegalStateException);
   }
+
+
 
   @Test
   public void getUserNameFromTokenTest() {
