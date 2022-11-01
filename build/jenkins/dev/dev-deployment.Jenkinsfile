@@ -75,6 +75,13 @@ pipeline {
         }
       }
     }
+    stage('Update Cloud Components') {
+      steps {
+        script {
+          sh "make update-cloud-components"
+        }
+      }
+    }
     stage('Deploy API') {
       steps {
         script {

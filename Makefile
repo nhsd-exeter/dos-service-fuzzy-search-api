@@ -198,6 +198,9 @@ deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	eval "$$(make project-populate-application-variables)"
 	make project-deploy PROFILE=$(PROFILE) STACK=$(DEPLOYMENT_STACKS)
 
+update-cloud-components: ### update opensearch image
+	aws opensearch start-service-software-update --domain-name=$(DOMAIN) --endpoint-url=https://$${ELASTICSEARCH_EP}
+
 project-populate-application-variables:
 	export TTL=$$(make -s k8s-get-namespace-ttl)
 

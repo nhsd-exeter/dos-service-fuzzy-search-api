@@ -104,6 +104,13 @@ pipeline {
         }
       }
     }
+    stage('Update Cloud Components') {
+      steps {
+        script {
+          sh "make update-cloud-components"
+        }
+      }
+    }
     stage('Monitor Route53 Connection') {
       steps {
         script {
