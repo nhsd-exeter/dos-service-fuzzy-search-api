@@ -80,14 +80,17 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
           distanceRange);
 
     } else if (!isSearchPostCodeNullOrEmpty) {
-      List<String> newSearchTerms = new ArrayList<>();
-      newSearchTerms.add(searchPostcode);
-      if (!isSearchTermNullOrEmpty) {
-        newSearchTerms.addAll(searchTerms);
+
+      if (Objects.isNull(searchTerms)) {
+        searchTerms = new ArrayList<>();
+        searchTerms.add(searchPostcode);
+      } else if (searchTerms.isEmpty()) {
+        searchTerms.add(searchPostcode);
       }
-      log.info("Searching using search terms: {}", newSearchTerms);
-      validationService.validateSearchCriteria(newSearchTerms);
-      List<String> sanitiseSearchTerms = apiUtilsService.sanitiseSearchTerms(newSearchTerms);
+
+      log.info("Searching using search terms: {}", searchTerms);
+      validationService.validateSearchCriteria(searchTerms);
+      List<String> sanitiseSearchTerms = apiUtilsService.sanitiseSearchTerms(searchTerms);
       log.info("sanitiseSearch terms : {}", sanitiseSearchTerms);
       dosServices =
         elasticsearch.findServiceBySearchTerms(sanitiseSearchTerms);
