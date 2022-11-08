@@ -199,7 +199,12 @@ deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	make project-deploy PROFILE=$(PROFILE) STACK=$(DEPLOYMENT_STACKS)
 
 update-cloud-components: ### update opensearch image
-	aws opensearch start-service-software-update --domain-name=$(DOMAIN) --endpoint-url=https://$${ELASTICSEARCH_EP}
+	eval "$$(make aws-assume-role-export-variables)"
+	make docker-run-tools ARGS="$$(echo $(AWSCLI) | grep awslocal > /dev/null 2>&1 && echo '--env LOCALSTACK_HOST=$(LOCALSTACK_HOST)' ||:)" CMD=" \
+		$(AWSCLI) opensearch start-service-software-update \
+		--domain-name=$(DOMAIN) \
+		--endpoint-url=https://$${ELASTICSEARCH_EP} \
+		"
 
 project-populate-application-variables:
 	export TTL=$$(make -s k8s-get-namespace-ttl)
