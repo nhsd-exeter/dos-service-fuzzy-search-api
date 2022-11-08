@@ -203,7 +203,7 @@ update-cloud-components: ### update opensearch image
 	eval "$$(make project-populate-application-variables)"
 	make docker-run-tools ARGS="$$(echo $(AWSCLI) | grep awslocal > /dev/null 2>&1 && echo '--env LOCALSTACK_HOST=$(LOCALSTACK_HOST)' ||:)" CMD=" \
 		$(AWSCLI) opensearch start-service-software-update \
-		--domain-name=$(DOMAIN) \
+		--domain-name=$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)-service \
 		--endpoint-url=https://$${ELASTICSEARCH_EP} \
 		"
 
