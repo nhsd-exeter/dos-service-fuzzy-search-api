@@ -200,6 +200,8 @@ deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 
 update-cloud-components: ### update opensearch image
 	eval "$$(make aws-assume-role-export-variables)"
+	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
+	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}
 	make docker-run-tools ARGS="$$(echo $(AWSCLI) | grep awslocal > /dev/null 2>&1 && echo '--env LOCALSTACK_HOST=$(LOCALSTACK_HOST)' ||:)" CMD=" \
 		$(AWSCLI) opensearch start-service-software-update \
 		--domain-name=$(DOMAIN) \
