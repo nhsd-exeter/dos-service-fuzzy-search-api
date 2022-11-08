@@ -13,7 +13,7 @@ locals {
   sfs_elasticsearch = {
     component               = "elasticsearch"
     availability_zone_count = var.es_availability_zone_count
-    elasticsearch_version   = "OpenSearch_1.1"
+    elasticsearch_version   = "OpenSearch_1.3"
     encrypt_at_rest         = true
     node_to_node_encryption = true
     instance_count          = var.es_instance_count
