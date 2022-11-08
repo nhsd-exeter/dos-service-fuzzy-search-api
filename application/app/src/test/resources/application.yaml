@@ -23,6 +23,9 @@ server:
     key-store-password:
 
 api:
+  version: 1.0.0
+  title: Service Fuzzy Search API
+  description: NHS Fuzzy search APIs provide NHS Services information to the users
   endpoint:
     service_search: https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch
   cors:
@@ -51,8 +54,20 @@ postcode:
   mapping:
     url: https://127.0.0.1:18085/api
     uri: /search
+    user: POSTCODE_MAPPING_USER
+    password: POSTCODE_MAPPING_PASSWORD
+
 local:
   host: https://localhost
   uri: authentication/login
   welcome:
     uri: /api/home
+
+auth:
+  login:
+    url: https://localhost
+    uri: authentication/login
+
+profile:
+  local: local
+  mock_auth: mock_auth

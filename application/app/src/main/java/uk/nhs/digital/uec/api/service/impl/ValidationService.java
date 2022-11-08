@@ -2,9 +2,10 @@ package uk.nhs.digital.uec.api.service.impl;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.nhs.digital.uec.api.exception.ErrorMessageEnum;
+import uk.nhs.digital.uec.api.model.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 
@@ -40,5 +41,14 @@ public class ValidationService implements ValidationServiceInterface {
     if (!minSearchCriteriaLthMet) {
       throw new NotFoundException(ErrorMessageEnum.MINIMUM_PARAMS_NOT_PASSED.getMessage());
     }
+  }
+
+  @Override
+  public boolean isPostcodeValid(String postcode) {
+    final String POSTCODE_REGEX =
+      "([Gg][Ii][Rr]"
+        + " 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})";
+    Pattern pattern = Pattern.compile(POSTCODE_REGEX);
+    return pattern.matcher(postcode).matches();
   }
 }

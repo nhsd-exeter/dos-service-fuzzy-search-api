@@ -1,6 +1,8 @@
-package uk.nhs.digital.uec.api.exception;
+package uk.nhs.digital.uec.api.model;
 
 import java.util.EnumMap;
+import java.util.Map;
+import java.util.stream.Stream;
 
 /** This class maps the validation error code with the relevant message */
 public class ErrorMappingEnum {
@@ -30,7 +32,16 @@ public class ErrorMappingEnum {
     codesMapping.put(
         ValidationCodes.VAL003, ErrorMessageEnum.MINIMUM_PARAMS_NOT_PASSED.getMessage());
     codesMapping.put(ValidationCodes.VAL004, ErrorMessageEnum.INVALID_LOCATION.getMessage());
-    codesMapping.put(ValidationCodes.VAL005, ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage());
+    codesMapping.put(ValidationCodes.VAL005, ErrorMessageEnum.INVALID_LAT_LON_VALUES_OR_INVALID_POSTCODE.getMessage());
     return codesMapping;
   }
+
+  public static <K, V> Stream<K> getKeys(Map<K, V> map, V value) {
+    return map
+      .entrySet()
+      .stream()
+      .filter(entry -> value.equals(entry.getValue()))
+      .map(Map.Entry::getKey);
+  }
+
 }

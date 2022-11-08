@@ -50,7 +50,7 @@ public class ExternalApiHandshakeServiceTest {
     PostcodeLocation postcodeLocation = new PostcodeLocation();
     postcodeLocation.setEasting(123677);
     postcodeLocation.setNorthing(655343);
-    postcodeLocation.setPostCode("EX1 1PR");
+    postcodeLocation.setPostcode("EX1 1PR");
     postcodeLocations.add(postcodeLocation);
 
     postCodes = new ArrayList<>();
@@ -125,6 +125,6 @@ public class ExternalApiHandshakeServiceTest {
 
     assertEquals(123677, postcodeLocation.getEasting());
     assertEquals(655343, postcodeLocation.getNorthing());
-    assertEquals("EX1 1PR", postcodeLocation.getPostCode());
+    assertEquals("EX1 1PR", postcodeLocation.getPostcode());
   }
 }

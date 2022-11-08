@@ -90,7 +90,7 @@ public class WebClientUtilTest {
     PostcodeLocation postcodeLocation = new PostcodeLocation();
     postcodeLocation.setEasting(123677);
     postcodeLocation.setNorthing(655343);
-    postcodeLocation.setPostCode("EX1 2PR");
+    postcodeLocation.setPostcode("EX1 2PR");
 
     postCodeMappingWebClient = getPostCodeWebClient(postcodeLocation);
 
@@ -99,7 +99,7 @@ public class WebClientUtilTest {
     PostcodeLocation returnedLocation = postcodeMappings.get(0);
     assertEquals(655343, returnedLocation.getNorthing());
     assertEquals(123677, returnedLocation.getEasting());
-    assertEquals("EX1 2PR", returnedLocation.getPostCode());
+    assertEquals("EX1 2PR", returnedLocation.getPostcode());
   }
 
   private WebClient getMockedAuthWebClient(final AuthToken resp) {

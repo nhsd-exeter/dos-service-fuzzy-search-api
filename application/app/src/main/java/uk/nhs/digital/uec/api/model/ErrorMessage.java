@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.exception;
+package uk.nhs.digital.uec.api.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class PostcodeLocation {
 
-  private String postCode;
+  private String postcode;
 
   private Integer easting;
 

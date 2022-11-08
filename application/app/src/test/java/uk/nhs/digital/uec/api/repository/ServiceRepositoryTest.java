@@ -1,6 +1,7 @@
 package uk.nhs.digital.uec.api.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -23,6 +24,7 @@ import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
+import uk.nhs.digital.uec.api.model.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.repository.elasticsearch.ServicesRepositoryInterface;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
 
@@ -134,7 +136,7 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
     when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
-    when(environment.getActiveProfiles()).thenReturn(new String[] {"local"});
+    when(environment.getActiveProfiles()).thenReturn(new String[] {"local","mock-auth","dev"});
 
     when(servicesRepo.findBySearchTerms(
             anyString(), any(), anyInt(), anyInt(), anyInt(), anyInt(), any()))
@@ -151,7 +153,42 @@ public class ServiceRepositoryTest {
   }
 
   @Test
-  public void findAllServiceByGeoLocationTest() throws NotFoundException {
+  public void findAllServiceByGeoLocationWithAllParametersTest() throws NotFoundException {
+    final Double searchLatitude = 24.34;
+    final Double searchLongitude = -0.2345;
+    final Double distanceRange = 25D;
+    final List<String> searchTerms = List.of("term1");
+
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
+    when(apiRequestParams.getFuzzLevel()).thenReturn(2);
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
+    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
+    when(apiRequestParams.getNamePriority()).thenReturn(2);
+    when(apiRequestParams.getAddressPriority()).thenReturn(2);
+    when(apiRequestParams.getPostcodePriority()).thenReturn(2);
+    when(apiRequestParams.getPublicNamePriority()).thenReturn(2);
+    when(environment.getActiveProfiles()).thenReturn(new String[] {"demo"});
+
+
+    when(servicesRepo.findSearchTermsByGeoLocation(String.join(" ",searchTerms),
+      searchLatitude, searchLongitude, distanceRange,2,2,2,2,2, PageRequest.of(0, 2)))
+      .thenReturn(pageItems);
+
+
+    List<DosService> findAllServiceByGeoLocation =
+        serviceRepository.findAllServicesByGeoLocationAndSearchTerms(
+            searchLatitude, searchLongitude, distanceRange,searchTerms);
+
+    DosService dosServiceResponse = findAllServiceByGeoLocation.get(0);
+
+    assertEquals(DOS_NAME, dosServiceResponse.getName());
+    assertEquals(EASTING, dosServiceResponse.getEasting());
+    assertEquals(NORTHING, dosServiceResponse.getNorthing());
+  }
+
+
+  @Test
+  public void findAllServiceByGeoLocationWithOutSearchTermsTest() throws NotFoundException {
     final Double searchLatitude = 24.34;
     final Double searchLongitude = -0.2345;
     final Double distanceRange = 25D;
@@ -160,15 +197,18 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
     when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
+    when(apiRequestParams.getNamePriority()).thenReturn(2);
+    when(apiRequestParams.getAddressPriority()).thenReturn(2);
+    when(apiRequestParams.getPostcodePriority()).thenReturn(2);
+    when(apiRequestParams.getPublicNamePriority()).thenReturn(2);
     when(environment.getActiveProfiles()).thenReturn(new String[] {"local"});
-
     when(servicesRepo.findAllByGeoLocation(
-            searchLatitude, searchLongitude, distanceRange, PageRequest.of(0, 3)))
-        .thenReturn(pageItems);
+      searchLatitude, searchLongitude, distanceRange, PageRequest.of(0, 2)))
+      .thenReturn(pageItems);
 
     List<DosService> findAllServiceByGeoLocation =
-        serviceRepository.findAllServicesByGeoLocation(
-            searchLatitude, searchLongitude, distanceRange);
+      serviceRepository.findAllServicesByGeoLocation(
+        searchLatitude, searchLongitude, distanceRange);
 
     DosService dosServiceResponse = findAllServiceByGeoLocation.get(0);
 
@@ -176,4 +216,47 @@ public class ServiceRepositoryTest {
     assertEquals(EASTING, dosServiceResponse.getEasting());
     assertEquals(NORTHING, dosServiceResponse.getNorthing());
   }
+
+  @Test
+  public void shouldThrowErrorWhenNoGeoValuesAndNoSearchTerms() throws NotFoundException {
+    final Double searchLatitude = null;
+    final Double searchLongitude = null;
+    final Double distanceRange = 25D;
+    final List<String> searchTerms = null;
+
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
+    when(apiRequestParams.getFuzzLevel()).thenReturn(2);
+
+    NotFoundException exception =  assertThrows(NotFoundException.class, () -> {
+      serviceRepository.findAllServicesByGeoLocationAndSearchTerms(
+        searchLatitude, searchLongitude, distanceRange,searchTerms);
+    });
+
+
+    assertEquals(exception.getMessage(), ErrorMessageEnum.INVALID_LOCATION.getMessage());
+
+  }
+
+  @Test
+  public void shouldThrowErrorWhenNoGeoValues() throws NotFoundException {
+    final Double searchLatitude = null;
+    final Double searchLongitude = null;
+    final Double distanceRange = 25D;
+
+
+    when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
+    when(apiRequestParams.getFuzzLevel()).thenReturn(2);
+
+    NotFoundException exception =  assertThrows(NotFoundException.class, () -> {
+      serviceRepository.findAllServicesByGeoLocation(
+        searchLatitude, searchLongitude, distanceRange);
+    });
+
+
+    assertEquals(exception.getMessage(), ErrorMessageEnum.INVALID_LOCATION.getMessage());
+
+  }
+
+
+
 }
