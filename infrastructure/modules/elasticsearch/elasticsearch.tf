@@ -39,7 +39,7 @@ resource "aws_elasticsearch_domain" "elasticsearch_service" {
   }
 
   advanced_options = {
-    "override_main_response_version"         = "true"
+    "override_main_response_version"         = "false"
     "rest.action.multi.allow_explicit_index" = "true"
   }
 
