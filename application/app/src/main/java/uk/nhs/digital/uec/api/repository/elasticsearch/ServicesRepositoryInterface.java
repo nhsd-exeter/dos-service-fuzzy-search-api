@@ -67,8 +67,13 @@ public interface ServicesRepositoryInterface extends ElasticsearchRepository<Dos
       Pageable pageable);
 
   @Query(
+<<<<<<< HEAD
     "{\"bool\": { \"must\" : { \"match_all\" :{}}, \"filter\" : {\"geo_distance\" :{ \"distance\""
       + " : ?2, \"unit\":\"km\",\"location\" : { \"lat\": ?0, \"lon\":?1}}}}}")
+=======
+      "{\"bool\": { \"must\" : { \"match_all\" :{}}, \"filter\" : {\"geo_distance\" :{ \"distance\""
+          + " : ?3, \"unit\":\"km\",\"location\" : { \"lat\": ?0, \"lon\":?1}}}}}")
+>>>>>>> 5b90a21 (Fix elasticsearch query)
   Page<DosService> findAllByGeoLocation(
     Double searchLatitude_0, Double searchLongitude_1, Double distanceRange_2, Pageable pageable);
 }
