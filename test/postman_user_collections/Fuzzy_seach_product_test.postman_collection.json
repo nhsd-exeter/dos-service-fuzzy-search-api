@@ -22,7 +22,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=dental&search_location=EX88PR&fuzz_level=2&search_latitude=23.45&search_longitude=-2.345",
+          "raw": "{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=dental&search_location=EX88PR&fuzz_level=2",
           "host": [
             "{{host}}"
           ],
@@ -38,19 +38,6 @@
               "key": "search_term",
               "value": "dental"
             },
-            {
-              "key": "search_location",
-              "value": "EX88PR"
-            },
-            {
-              "key": "search_longitude",
-              "value": -2.345
-            },
-            {
-              "key": "search_latitude",
-              "value": 23.45
-            },
-
             {
               "key": "search_location",
               "value": "EX88PR"
@@ -76,6 +63,45 @@
             }
           ]
         }
+      },
+      "response": []
+    },
+    {
+      "name": "Postcode API",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{postcode_host}}/search?postcodes=EX88PR",
+          "host": [
+            "{{postcode_host}}"
+          ],
+          "path": [
+            "search"
+          ],
+          "query": [
+            {
+              "key": "postcodes",
+              "value": "EX88PR"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "dev_fuzzy_search",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "local_fuzzy",
+      "request": {
+        "method": "GET",
+        "header": []
       },
       "response": []
     }
@@ -106,6 +132,7 @@
           "    body:{",
           "        mode:'raw',",
           "        raw: JSON.stringify({'emailAddress':'service-finder-admin@nhs.net','password':pm.environment.get(\"code\")})",
+          "        //  raw: JSON.stringify({'emailAddress':'fuzzy-search-api@nhs.net','password':'NcrBLurj10L26Beo'})",
           "    }",
           "}",
           "",
@@ -114,7 +141,9 @@
           "        console.log(err)",
           "    }",
           "    pm.environment.set(\"accessToken\", res.json().accessToken)",
-          "})"
+          "})",
+          "",
+          ""
         ]
       }
     },
