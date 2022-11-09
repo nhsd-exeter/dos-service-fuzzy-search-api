@@ -152,20 +152,16 @@ public class FuzzyServiceSearchServiceTest {
     String searchPostcode = "XX1 1XX";
     List<String> searchTerms = List.of("term1");
 
-    List<String> newSearchTerms = new ArrayList<>();
-    newSearchTerms.add(searchPostcode);
-    newSearchTerms.addAll(searchTerms);
-
 
     List<DosService> dosServices = new ArrayList<>();
     dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
     dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
 
 
-    when(serviceRepository.findServiceBySearchTerms(newSearchTerms))
+    when(serviceRepository.findServiceBySearchTerms(searchTerms))
       .thenReturn(dosServices);
 
-    when(apiUtilsService.sanitiseSearchTerms(newSearchTerms)).thenReturn(newSearchTerms);
+    when(apiUtilsService.sanitiseSearchTerms(searchTerms)).thenReturn(searchTerms);
     when(mockValidationService.isPostcodeValid(anyString())).thenReturn(true);
 
     // Act
@@ -177,8 +173,8 @@ public class FuzzyServiceSearchServiceTest {
 
     // Assert
     verify(serviceRepository, times(1))
-      .findServiceBySearchTerms(newSearchTerms);
-    verify(mockValidationService, times(1)).validateSearchCriteria(newSearchTerms);
+      .findServiceBySearchTerms(searchTerms);
+    verify(mockValidationService, times(1)).validateSearchCriteria(searchTerms);
     assertTrue(log.getOut().contains("Searching using search terms:"));
     assertEquals(2, services.size());
   }
