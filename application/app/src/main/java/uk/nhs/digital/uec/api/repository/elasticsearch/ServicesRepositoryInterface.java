@@ -47,7 +47,7 @@ public interface ServicesRepositoryInterface extends ElasticsearchRepository<Dos
           + "      \"filter\": {"
           + "        \"geo_distance\": {"
           + "          \"distance\": ?3,"
-          + "          \"distance_unit\": \"km\","
+          + "          \"unit\": \"km\","
           + "          \"location.lon\" : ?2,"
           + "          \"location.lat\": ?1"
           + "        }"
@@ -68,7 +68,7 @@ public interface ServicesRepositoryInterface extends ElasticsearchRepository<Dos
 
   @Query(
       "{\"bool\": { \"must\" : { \"match_all\" :{}}, \"filter\" : {\"geo_distance\" :{ \"distance\""
-          + " : \"60mi\", \"location\" : { \"lat\": ?0, \"lon\":?1}}}}}")
+          + " : ?3, \"unit\":\"km\",\"location\" : { \"lat\": ?0, \"lon\":?1}}}}}")
   Page<DosService> findAllByGeoLocation(
       Double searchLatitude_0, Double searchLongitude_1, Double distanceRange_2, Pageable pageable);
 }
