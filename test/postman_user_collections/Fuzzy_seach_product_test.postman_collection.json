@@ -1,160 +1,160 @@
 {
-	"info": {
-		"_postman_id": "582bf7ce-7851-4415-9913-aade71c06c75",
-		"name": "Fuzzy_seach_product_test",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "19852548"
-	},
-	"item": [
-		{
-			"name": "fuzzy_search_request",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{accessToken}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=dental&search_location=EX88PR&fuzz_level=2",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"dosapi",
-						"dosservices",
-						"v0.0.1",
-						"services",
-						"byfuzzysearch"
-					],
-					"query": [
-						{
-							"key": "search_term",
-							"value": "dental"
-						},
-						{
-							"key": "search_location",
-							"value": "EX88PR"
-						},
-						{
-							"key": "fuzz_level",
-							"value": "2"
-						},
-						{
-							"key": "name_priority",
-							"value": null,
-							"disabled": true
-						},
-						{
-							"key": "address_priority",
-							"value": null,
-							"disabled": true
-						},
-						{
-							"key": "postcode_priority",
-							"value": null,
-							"disabled": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Postcode API",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{postcode_host}}/search?postcodes=EX88PR",
-					"host": [
-						"{{postcode_host}}"
-					],
-					"path": [
-						"search"
-					],
-					"query": [
-						{
-							"key": "postcodes",
-							"value": "EX88PR"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "dev_fuzzy_search",
-			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
-			"name": "local_fuzzy",
-			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
-		}
-	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{accessToken}}",
-				"type": "string"
-			}
-		]
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					"const options = {",
-					"    url:pm.environment.get(\"host\") + \"/authentication/login\",",
-					"    method: 'POST',",
-					"    header: {",
-					"        'Accept': 'application/json',",
-					"        'Content-Type': 'application/json'",
-					"    },",
-					"    body:{",
-					"        mode:'raw',",
-					"        raw: JSON.stringify({'emailAddress':'service-finder-admin@nhs.net','password':pm.environment.get(\"code\")})",
-					"        //  raw: JSON.stringify({'emailAddress':'fuzzy-search-api@nhs.net','password':'NcrBLurj10L26Beo'})",
-					"    }",
-					"}",
-					"",
-					"pm.sendRequest(options, (err,res) => {",
-					"    if (err) {",
-					"        console.log(err)",
-					"    }",
-					"    pm.environment.set(\"accessToken\", res.json().accessToken)",
-					"})",
-					"",
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	]
+  "info": {
+    "_postman_id": "582bf7ce-7851-4415-9913-aade71c06c75",
+    "name": "Fuzzy_seach_product_test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "19852548"
+  },
+  "item": [
+    {
+      "name": "fuzzy_search_request",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=dental&search_location=EX88PR&fuzz_level=2",
+          "host": [
+            "{{host}}"
+          ],
+          "path": [
+            "dosapi",
+            "dosservices",
+            "v0.0.1",
+            "services",
+            "byfuzzysearch"
+          ],
+          "query": [
+            {
+              "key": "search_term",
+              "value": "dental"
+            },
+            {
+              "key": "search_location",
+              "value": "EX88PR"
+            },
+            {
+              "key": "fuzz_level",
+              "value": "2"
+            },
+            {
+              "key": "name_priority",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "address_priority",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "postcode_priority",
+              "value": null,
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Postcode API",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{postcode_host}}/search?postcodes=EX88PR",
+          "host": [
+            "{{postcode_host}}"
+          ],
+          "path": [
+            "search"
+          ],
+          "query": [
+            {
+              "key": "postcodes",
+              "value": "EX88PR"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "dev_fuzzy_search",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "local_fuzzy",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const options = {",
+          "    url:pm.environment.get(\"host\") + \"/authentication/login\",",
+          "    method: 'POST',",
+          "    header: {",
+          "        'Accept': 'application/json',",
+          "        'Content-Type': 'application/json'",
+          "    },",
+          "    body:{",
+          "        mode:'raw',",
+          "        raw: JSON.stringify({'emailAddress':'service-finder-admin@nhs.net','password':pm.environment.get(\"code\")})",
+          "        //  raw: JSON.stringify({'emailAddress':'fuzzy-search-api@nhs.net','password':'NcrBLurj10L26Beo'})",
+          "    }",
+          "}",
+          "",
+          "pm.sendRequest(options, (err,res) => {",
+          "    if (err) {",
+          "        console.log(err)",
+          "    }",
+          "    pm.environment.set(\"accessToken\", res.json().accessToken)",
+          "})",
+          "",
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
 }
