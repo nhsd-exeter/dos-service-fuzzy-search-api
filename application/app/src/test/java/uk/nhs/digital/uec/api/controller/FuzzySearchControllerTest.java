@@ -167,7 +167,7 @@ public class FuzzySearchControllerTest {
             SEARCH_POSTCODE);
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-    assertEquals(ErrorMessageEnum.INVALID_LAT_LON_VALUES_OR_INVALID_POSTCODE.getMessage(), errorMessage);
+    assertEquals(ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage(), errorMessage);
   }
 
   @Test

@@ -14,6 +14,7 @@ import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.S
 import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.SEARCH_POSTCODE_DESC;
 
 import io.swagger.annotations.ApiParam;
+
 import java.util.List;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,7 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 public class FuzzyServiceSearchController {
 
   private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
-  private static final Double DEFAULT_DISTANCE_RANGE = 96.5606; // 1.60934 * 60 miles to km
+  private static final Double DEFAULT_DISTANCE_RANGE = 60.00; // in miles
 
   @Autowired private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
 
@@ -108,7 +109,7 @@ public class FuzzyServiceSearchController {
       @ApiParam(PUBLIC_NAME_PRIORITY_DESC)
           @RequestParam(name = "public_name_priority", required = false)
           Integer publicNamePriority)
-      throws NotFoundException, InvalidParameterException {
+    throws NotFoundException, InvalidParameterException {
     log.info(
         "Incoming request param - postcode: {}, search_term: {}, search_latitude: {},"
             + " search_longitude:{}",
