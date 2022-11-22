@@ -45,7 +45,7 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 public class FuzzyServiceSearchController {
 
   private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
-  private static final Double DEFAULT_DISTANCE_RANGE = 96.5606; // 1.60934 * 60 miles to km
+  private static final Double DEFAULT_DISTANCE_RANGE = 60.00; // miles 1.60934 * 60 miles to km
 
   @Autowired private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
 

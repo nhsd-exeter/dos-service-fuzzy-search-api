@@ -143,41 +143,7 @@ public class FuzzyServiceSearchServiceTest {
     assertEquals(0, services.size()); // because no valid postcode in dos services
   }
 
-  @Test
-  @DisplayName("Should return dos services when geo values null")
-  public void retrieveServicesByGeoLocationSearchWhenGeovaluesNull(CapturedOutput log)
-    throws NotFoundException, InvalidParameterException {
-    // Arrange
-    Double distanceRange = 0.0;
-    String searchPostcode = "XX1 1XX";
-    List<String> searchTerms = List.of("term1");
 
-
-    List<DosService> dosServices = new ArrayList<>();
-    dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
-    dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
-
-
-    when(serviceRepository.findServiceBySearchTerms(searchTerms))
-      .thenReturn(dosServices);
-
-    when(apiUtilsService.sanitiseSearchTerms(searchTerms)).thenReturn(searchTerms);
-    when(mockValidationService.isPostcodeValid(anyString())).thenReturn(true);
-
-    // Act
-    List<DosService> services =
-      classUnderTest.retrieveServicesByGeoLocation(null, null, distanceRange,
-        searchTerms, searchPostcode);
-
-
-
-    // Assert
-    verify(serviceRepository, times(1))
-      .findServiceBySearchTerms(searchTerms);
-    verify(mockValidationService, times(1)).validateSearchCriteria(searchTerms);
-    assertTrue(log.getOut().contains("Searching using search terms:"));
-    assertEquals(2, services.size());
-  }
 
 
   @Test
@@ -187,7 +153,7 @@ public class FuzzyServiceSearchServiceTest {
       classUnderTest.retrieveServicesByGeoLocation(null, null, null,
         null, null);
     });
-    assertEquals(exception.getMessage(), ErrorMessageEnum.INVALID_LAT_LON_VALUES_OR_INVALID_POSTCODE.getMessage());
+    assertEquals(exception.getMessage(), ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage());
   }
 
 
@@ -223,17 +189,14 @@ public class FuzzyServiceSearchServiceTest {
     when(mockValidationService.isPostcodeValid(anyString())).thenReturn(true);
     when(apiUtilsService.sanitiseSearchTerms(searchTerms)).thenReturn(searchTerms);
     when(apiUtilsService.removeBlankSpaces(postcode)).thenReturn("XX11XX");
-    when(serviceRepository.findAllServicesByGeoLocationAndSearchTerms(
+    when(serviceRepository.findAllServicesByGeoLocationWithSearchTerms(
       Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange, searchTerms))
       .thenReturn(dosServices);
-
     // Act
     List<DosService> services =
       classUnderTest.retrieveServicesByGeoLocation(
         searchLatitude, searchLongitude, distanceRange, searchTerms, postcode);
     assertTrue(log.getOut().contains("Searching using location & search terms: "));
-    //assertTrue(log.getOut().contains("nonPopulatedLatLong 1"));
-    verify(locationService, times(1)).getLocationForPostcode(postcode, headers);
     verify(mockValidationService, times(1)).validateSearchCriteria(searchTerms);
 
     // Assert
@@ -257,7 +220,7 @@ public class FuzzyServiceSearchServiceTest {
 
 
     doNothing().when(mockValidationService).validateSearchCriteria(searchTerms);
-    when(serviceRepository.findAllServicesByGeoLocationAndSearchTerms(
+    when(serviceRepository.findAllServicesByGeoLocationWithSearchTerms(
       Double.parseDouble(searchLatitude),
       Double.parseDouble(searchLongitude),
       distanceRange,
@@ -273,7 +236,7 @@ public class FuzzyServiceSearchServiceTest {
 
     //Then
     assertEquals(3,fuzzyResults.size());
-    verify(locationService,times(1)).getLocationForPostcode(postcode,mockHeaders);
+
 
   }
 }
