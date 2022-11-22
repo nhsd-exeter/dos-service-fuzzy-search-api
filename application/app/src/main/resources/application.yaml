@@ -65,6 +65,12 @@ auth:
     url: ${AUTH_LOGIN_URL}
     uri: ${AUTH_LOGIN_URI}
 
+google:
+  api:
+    url: ${GOOGLE_API_URL}
+    uri: ${GOOGLE_API_ADDRESS_URI}
+    key: ${GOOGLE_MAPS_API_KEY}
+
 profile:
   local: local
   mock_auth: mock_auth

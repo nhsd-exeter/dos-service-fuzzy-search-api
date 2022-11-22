@@ -36,7 +36,7 @@ import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
-import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
+import uk.nhs.digital.uec.api.util.Constants;
 
 /** Controller for Fuzzy searching of services. */
 @RestController
@@ -44,113 +44,92 @@ import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
 @RequestMapping("/dosapi/dosservices/v0.0.1")
 public class FuzzyServiceSearchController {
 
-  private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
-  private static final Double DEFAULT_DISTANCE_RANGE = 96.5606; // 1.60934 * 60 miles to km
+    @Autowired
+    private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
 
-  @Autowired private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
+    @Autowired
+    private ApiUtilsServiceInterface utils;
 
-  @Autowired private ValidationServiceInterface validationService;
+    @Autowired
+    private ApiRequestParams requestParams;
 
-  @Autowired private ApiUtilsServiceInterface utils;
+    @Value("${configuration.search_parameters.max_num_services_to_return}")
+    private String defaultMaxNumServicesToReturn;
 
-  @Autowired private ApiRequestParams requestParams;
+    @Value("${configuration.search_parameters.fuzz_level}")
+    private String defaultFuzzLevel;
 
-  @Value("${configuration.search_parameters.max_num_services_to_return}")
-  private String defaultMaxNumServicesToReturn;
+    /**
+     * Endpoint for retrieving services with attributes that match the search
+     * criteria provided.
+     *
+     * @param searchCriteria     the search criteria containing the list of search
+     *                           criteria terms.
+     * @param filterReferralRole if passed through, results will be filtered by the
+     *                           referral role
+     *                           provided.
+     * @return {@link ApiResponse}
+     * @throws NotFoundException
+     * @throws InvalidParameterException
+     */
+    @GetMapping("/services/byfuzzysearch")
+    @CrossOrigin(origins = "*")
+    @PreAuthorize("hasAnyRole('FUZZY_API_ACCESS')")
+    public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
+            @ApiParam(SEARCH_CRITERIA_DESC) @RequestParam(name = "search_term", required = false) List<String> searchCriteria,
+            @ApiParam(SEARCH_POSTCODE_DESC) @RequestParam(name = "search_location", required = false) String searchPostcode,
+            @ApiParam(SEARCH_LATITUDE_DESC) @RequestParam(name = "search_latitude", required = false) String searchLatitude,
+            @ApiParam(SEARCH_LONGITUDE_DESC) @RequestParam(name = "search_longitude", required = false) String searchLongitude,
+            @ApiParam(DISTANCE_RANGE_DESC) @RequestParam(name = "distance_range", required = false) Double distanceRange,
+            @ApiParam(REFERRAL_ROLE_DESC) @RequestParam(name = "referral_role", required = false, defaultValue = Constants.PROFESSIONAL_REFERRAL_FILTER) String referralRole,
+            @ApiParam(hidden = true) @RequestParam(name = "max_num_services_to_return_from_es", required = false) Integer maxNumServicesToReturnFromEs,
+            @ApiParam(MAX_NUM_SERVICES_DESC) @RequestParam(name = "max_number_of_services_to_return", required = false) Integer maxNumServicesToReturn,
+            @ApiParam(FUZZ_LEVEL_DESC) @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel,
+            @ApiParam(NAME_PRIORITY_DESC) @RequestParam(name = "name_priority", required = false) Integer namePriority,
+            @ApiParam(ADDRESS_PRIORITY_DESC) @RequestParam(name = "address_priority", required = false) Integer addressPriority,
+            @ApiParam(POSTCODE_PRIORITY_DESC) @RequestParam(name = "postcode_priority", required = false) Integer postcodePriority,
+            @ApiParam(PUBLIC_NAME_PRIORITY_DESC) @RequestParam(name = "public_name_priority", required = false) Integer publicNamePriority)
+            throws NotFoundException, InvalidParameterException {
+        distanceRange = Objects.isNull(distanceRange) ? Constants.DEFAULT_DISTANCE_RANGE : distanceRange;
+        log.info(
+                "Incoming request param - postcode: {}, search_term: {}, search_latitude: {},"
+                        + " search_longitude:{} and using distanceRange: {}",
+                searchPostcode,
+                searchCriteria,
+                searchLatitude,
+                searchLongitude, distanceRange);
+        utils.configureApiRequestParams(
+                fuzzLevel,
+                referralRole, // filterReferralRole will be implemented in future
+                maxNumServicesToReturnFromEs,
+                maxNumServicesToReturn,
+                namePriority,
+                addressPriority,
+                postcodePriority,
+                publicNamePriority);
 
-  @Value("${configuration.search_parameters.fuzz_level}")
-  private String defaultFuzzLevel;
+        final ApiSearchParamsResponse searchParamsResponse = new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()
+                .searchCriteria(searchCriteria)
+                .searchPostcode(searchPostcode)
+                .searchLatitude(searchLatitude)
+                .searchLongitude(searchLongitude)
+                .distanceRange(distanceRange)
+                .referralRole(requestParams.getFilterReferralRole())
+                .fuzzLevel(requestParams.getFuzzLevel())
+                .addressPriority(requestParams.getAddressPriority())
+                .postcodePriority(requestParams.getPostcodePriority())
+                .publicNamePriority(requestParams.getPublicNamePriority())
+                .namePriority(requestParams.getNamePriority())
+                .maxNumServicesToReturn(requestParams.getMaxNumServicesToReturn())
+                .build();
 
-  /**
-   * Endpoint for retrieving services with attributes that match the search criteria provided.
-   *
-   * @param searchCriteria the search criteria containing the list of search criteria terms.
-   * @param filterReferralRole if passed through, results will be filtered by the referral role
-   *     provided.
-   * @return {@link ApiResponse}
-   * @throws NotFoundException
-   * @throws InvalidParameterException
-   */
-  @GetMapping("/services/byfuzzysearch")
-  @CrossOrigin(origins = "*")
-  @PreAuthorize("hasAnyRole('FUZZY_API_ACCESS')")
-  public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
-      @ApiParam(SEARCH_CRITERIA_DESC) @RequestParam(name = "search_term", required = false)
-          List<String> searchCriteria,
-      @ApiParam(SEARCH_POSTCODE_DESC) @RequestParam(name = "search_location", required = false)
-          String searchPostcode,
-      @ApiParam(SEARCH_LATITUDE_DESC) @RequestParam(name = "search_latitude", required = false)
-          String searchLatitude,
-      @ApiParam(SEARCH_LONGITUDE_DESC) @RequestParam(name = "search_longitude", required = false)
-          String searchLongitude,
-      @ApiParam(DISTANCE_RANGE_DESC) @RequestParam(name = "distance_range", required = false)
-          Double distanceRange,
-      @ApiParam(REFERRAL_ROLE_DESC)
-          @RequestParam(
-              name = "referral_role",
-              required = false,
-              defaultValue = PROFESSIONAL_REFERRAL_FILTER)
-          String referralRole,
-      @ApiParam(hidden = true)
-          @RequestParam(name = "max_num_services_to_return_from_es", required = false)
-          Integer maxNumServicesToReturnFromEs,
-      @ApiParam(MAX_NUM_SERVICES_DESC)
-          @RequestParam(name = "max_number_of_services_to_return", required = false)
-          Integer maxNumServicesToReturn,
-      @ApiParam(FUZZ_LEVEL_DESC) @RequestParam(name = "fuzz_level", required = false)
-          Integer fuzzLevel,
-      @ApiParam(NAME_PRIORITY_DESC) @RequestParam(name = "name_priority", required = false)
-          Integer namePriority,
-      @ApiParam(ADDRESS_PRIORITY_DESC) @RequestParam(name = "address_priority", required = false)
-          Integer addressPriority,
-      @ApiParam(POSTCODE_PRIORITY_DESC) @RequestParam(name = "postcode_priority", required = false)
-          Integer postcodePriority,
-      @ApiParam(PUBLIC_NAME_PRIORITY_DESC)
-          @RequestParam(name = "public_name_priority", required = false)
-          Integer publicNamePriority)
-      throws NotFoundException, InvalidParameterException {
-    log.info(
-        "Incoming request param - postcode: {}, search_term: {}, search_latitude: {},"
-            + " search_longitude:{}",
-        searchPostcode,
-        searchCriteria,
-        searchLatitude,
-        searchLongitude);
-    utils.configureApiRequestParams(
-        fuzzLevel,
-        referralRole, // filterReferralRole will be implemented in future
-        maxNumServicesToReturnFromEs,
-        maxNumServicesToReturn,
-        namePriority,
-        addressPriority,
-        postcodePriority,
-        publicNamePriority);
-
-    Double range = Objects.isNull(distanceRange) ? DEFAULT_DISTANCE_RANGE : distanceRange;
-    final ApiSearchParamsResponse searchParamsResponse =
-        new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()
-            .searchCriteria(searchCriteria)
-            .searchPostcode(searchPostcode)
-            .searchLatitude(searchLatitude)
-            .searchLongitude(searchLongitude)
-            .distanceRange(range)
-            .referralRole(requestParams.getFilterReferralRole())
-            .fuzzLevel(requestParams.getFuzzLevel())
-            .addressPriority(requestParams.getAddressPriority())
-            .postcodePriority(requestParams.getPostcodePriority())
-            .publicNamePriority(requestParams.getPublicNamePriority())
-            .namePriority(requestParams.getNamePriority())
-            .maxNumServicesToReturn(requestParams.getMaxNumServicesToReturn())
-            .build();
-
-    final ApiSuccessResponse response = new ApiSuccessResponse();
-    final ApiSearchResultsResponse searchResultsResponse = new ApiSearchResultsResponse();
-    final List<DosService> dosServices =
-        fuzzyServiceSearchService.retrieveServicesByGeoLocation(
-            searchLatitude, searchLongitude, range, searchCriteria, searchPostcode);
-    searchResultsResponse.setServices(dosServices);
-    response.setSearchParameters(searchParamsResponse);
-    response.setSearchResults(searchResultsResponse);
-    return ResponseEntity.ok(response);
-  }
+        final ApiSuccessResponse response = new ApiSuccessResponse();
+        final ApiSearchResultsResponse searchResultsResponse = new ApiSearchResultsResponse();
+        final List<DosService> dosServices = fuzzyServiceSearchService.retrieveServicesByGeoLocation(
+                searchLatitude, searchLongitude, distanceRange, searchCriteria, searchPostcode);
+        searchResultsResponse.setServices(dosServices);
+        response.setSearchParameters(searchParamsResponse);
+        response.setSearchResults(searchResultsResponse);
+        return ResponseEntity.ok(response);
+    }
 }

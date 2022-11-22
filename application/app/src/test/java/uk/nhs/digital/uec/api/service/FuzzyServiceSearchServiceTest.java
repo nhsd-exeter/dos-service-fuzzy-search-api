@@ -17,7 +17,10 @@ import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.ErrorMessageEnum;
-import uk.nhs.digital.uec.api.model.PostcodeLocation;
+import uk.nhs.digital.uec.api.model.google.GeoLocationResponse;
+import uk.nhs.digital.uec.api.model.google.GeoLocationResponseResult;
+import uk.nhs.digital.uec.api.model.google.Geometry;
+import uk.nhs.digital.uec.api.model.google.Location;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
 import uk.nhs.digital.uec.api.service.impl.ExternalApiHandshakeService;
 import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
@@ -31,8 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -85,7 +88,7 @@ public class FuzzyServiceSearchServiceTest {
 
   @Test
   public void retrieveServicesByGeoLocationSearchSuccess(CapturedOutput log)
-    throws NotFoundException, InvalidParameterException {
+      throws NotFoundException, InvalidParameterException {
 
     String searchLatitude = "0.0";
     String searchLongitude = "0.0";
@@ -96,26 +99,24 @@ public class FuzzyServiceSearchServiceTest {
     dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
     dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
 
-//    when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
+    // when(apiUtilsService.sanitiseSearchTerms(searchCriteria)).thenReturn(searchCriteria);
     when(serviceRepository.findAllServicesByGeoLocation(
-      Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange))
-      .thenReturn(dosServices);
+        Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange))
+        .thenReturn(dosServices);
     when(mockValidationService.isPostcodeValid(anyString())).thenReturn(true);
 
     // Act
-    List<DosService> services =
-      classUnderTest.retrieveServicesByGeoLocation(
+    List<DosService> services = classUnderTest.retrieveServicesByGeoLocation(
         searchLatitude, searchLongitude, distanceRange, searchTerms, "");
 
     // Assert
     assertEquals(2, services.size());
-
 
   }
 
   @Test
   public void shouldCallfindAllServicesByGeoLocationMethodWhenSearchTermIsEmptyOrNull()
-    throws NotFoundException, InvalidParameterException {
+      throws NotFoundException, InvalidParameterException {
     // Arrange
     String searchLatitude = "0.0";
     String searchLongitude = "0.0";
@@ -127,73 +128,101 @@ public class FuzzyServiceSearchServiceTest {
     dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
 
     when(serviceRepository.findAllServicesByGeoLocation(
-      Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange))
-      .thenReturn(dosServices);
+        Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange))
+        .thenReturn(dosServices);
     when(mockValidationService.isPostcodeValid(anyString())).thenReturn(false);
 
     // Act
-    List<DosService> services =
-      classUnderTest.retrieveServicesByGeoLocation(
+    List<DosService> services = classUnderTest.retrieveServicesByGeoLocation(
         searchLatitude, searchLongitude, distanceRange, searchTerms, "");
 
     // Assert
     verify(serviceRepository, only())
-      .findAllServicesByGeoLocation(
-        Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange);
+        .findAllServicesByGeoLocation(
+            Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange);
     assertEquals(0, services.size()); // because no valid postcode in dos services
   }
 
   @Test
-  @DisplayName("Should return dos services when geo values null")
-  public void retrieveServicesByGeoLocationSearchWhenGeovaluesNull(CapturedOutput log)
-    throws NotFoundException, InvalidParameterException {
+  public void shouldCallfindAllServicesByGeoLocationMethodWhenOnlyPostCodePassed()
+      throws NotFoundException, InvalidParameterException {
     // Arrange
-    Double distanceRange = 0.0;
-    String searchPostcode = "XX1 1XX";
-    List<String> searchTerms = List.of("term1");
-
+    String searchPostCode = "XX1 1XX";
 
     List<DosService> dosServices = new ArrayList<>();
     dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
     dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
 
+    GeoPoint geoPoint = new GeoPoint(12.45, 23.45);
+    Geometry geometry = mock(Geometry.class);
+    Location location = mock(Location.class);
+    when(location.getLat()).thenReturn(22.0);
+    when(location.getLng()).thenReturn(22.0);
+    when(geometry.getLocation()).thenReturn(location);
 
-    when(serviceRepository.findServiceBySearchTerms(searchTerms))
-      .thenReturn(dosServices);
-
-    when(apiUtilsService.sanitiseSearchTerms(searchTerms)).thenReturn(searchTerms);
+    GeoLocationResponse geoLocationResponse = mock(GeoLocationResponse.class);
+    GeoLocationResponseResult[] geoLocationResponseResults = new GeoLocationResponseResult[1];
+    GeoLocationResponseResult geoLocationResponseResult = mock(GeoLocationResponseResult.class);
+    when(geoLocationResponseResult.getGeometry()).thenReturn(geometry);
+    geoLocationResponseResults[0] = geoLocationResponseResult;
+    when(geoLocationResponse.getGeoLocationResponseResults()).thenReturn(geoLocationResponseResults);
+    when(locationService.distanceBetween(geoPoint, geoPoint)).thenReturn(99.00);
+    when(apiHandshakeService.getGeoCoordinates(anyString())).thenReturn(geoLocationResponse);
     when(mockValidationService.isPostcodeValid(anyString())).thenReturn(true);
 
     // Act
-    List<DosService> services =
-      classUnderTest.retrieveServicesByGeoLocation(null, null, distanceRange,
-        searchTerms, searchPostcode);
-
-
+    List<DosService> services = classUnderTest.retrieveServicesByGeoLocation(
+        null, null, 24.5, null, searchPostCode);
 
     // Assert
-    verify(serviceRepository, times(1))
-      .findServiceBySearchTerms(searchTerms);
-    verify(mockValidationService, times(1)).validateSearchCriteria(searchTerms);
-    assertTrue(log.getOut().contains("Searching using search terms:"));
-    assertEquals(2, services.size());
+    assertEquals(0, services.size()); // because no valid postcode in dos services
   }
 
+  @Test
+  public void shouldThrowInvalidParameterExceptionWhenGoogleAPIReturnsZeroResults()
+      throws NotFoundException, InvalidParameterException {
+    // Arrange
+    String searchPostCode = "XX1 1XX";
+
+    List<DosService> dosServices = new ArrayList<>();
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
+    dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
+
+    GeoPoint geoPoint = new GeoPoint(12.45, 23.45);
+    Geometry geometry = mock(Geometry.class);
+    Location location = mock(Location.class);
+    when(location.getLat()).thenReturn(22.0);
+    when(location.getLng()).thenReturn(22.0);
+    when(geometry.getLocation()).thenReturn(location);
+
+    GeoLocationResponse geoLocationResponse = mock(GeoLocationResponse.class);
+    GeoLocationResponseResult[] geoLocationResponseResults = new GeoLocationResponseResult[0];
+    when(geoLocationResponse.getGeoLocationResponseResults()).thenReturn(geoLocationResponseResults);
+    when(locationService.distanceBetween(geoPoint, geoPoint)).thenReturn(99.00);
+    when(apiHandshakeService.getGeoCoordinates(anyString())).thenReturn(geoLocationResponse);
+    when(mockValidationService.isPostcodeValid(anyString())).thenReturn(true);
+    // Act
+    InvalidParameterException exception = assertThrows(InvalidParameterException.class, () -> {
+      classUnderTest.retrieveServicesByGeoLocation(null, null, null,
+          null, searchPostCode);
+    });
+    assertEquals(exception.getMessage(), ErrorMessageEnum.INVALID_POSTCODE.getMessage());
+
+  }
 
   @Test
   @DisplayName("Should throw InvalidParameterException  when all values null")
   public void shouldThrowInvalidParameterExceptionWhenValuesNullOrEmpty() {
-    InvalidParameterException exception =   assertThrows(InvalidParameterException.class, () -> {
+    InvalidParameterException exception = assertThrows(InvalidParameterException.class, () -> {
       classUnderTest.retrieveServicesByGeoLocation(null, null, null,
-        null, null);
+          null, null);
     });
-    assertEquals(exception.getMessage(), ErrorMessageEnum.INVALID_LAT_LON_VALUES_OR_INVALID_POSTCODE.getMessage());
+    assertEquals(exception.getMessage(), ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage());
   }
-
 
   @Test
   public void dosReturnsEmptyLocationsTest(CapturedOutput log)
-    throws NotFoundException, InvalidParameterException {
+      throws NotFoundException, InvalidParameterException {
     // Arrange
     String searchLatitude = "23.45";
     String searchLongitude = "-0.3456";
@@ -206,43 +235,41 @@ public class FuzzyServiceSearchServiceTest {
     dosService.setLocation(null);
     dosServices.add(dosService);
     dosServices.add(MockDosServicesUtil.mockDosServices.get(2));
-    MultiValueMap headers = new LinkedMultiValueMap<>();
-    headers.add("Content-Type", "application/json");
-    headers.add("Authorization", "Bearer " + "DUMMY");
+    GeoPoint geoPoint = new GeoPoint(12.45, 23.45);
+    Geometry geometry = mock(Geometry.class);
+    Location location = mock(Location.class);
+    when(location.getLat()).thenReturn(22.0);
+    when(location.getLng()).thenReturn(22.0);
+    when(geometry.getLocation()).thenReturn(location);
 
-    PostcodeLocation postcodeLocation = new PostcodeLocation();
-    postcodeLocation.setPostcode(postcode);
-    postcodeLocation.setEasting(anyInt());
-    postcodeLocation.setNorthing(anyInt());
-
-    when(locationService.getLocationForPostcode(postcode, headers)).thenReturn(postcodeLocation);
-    when(locationService.getLocationsForPostcodes(List.of(postcode), headers)).thenReturn(List.of(postcodeLocation));
-    when(locationService.distanceBetween(postcodeLocation, postcodeLocation)).thenReturn(99.00);
-    when(apiHandshakeService.getAccessTokenHeader()).thenReturn(headers);
+    GeoLocationResponse geoLocationResponse = mock(GeoLocationResponse.class);
+    GeoLocationResponseResult[] geoLocationResponseResults = new GeoLocationResponseResult[1];
+    GeoLocationResponseResult geoLocationResponseResult = mock(GeoLocationResponseResult.class);
+    when(geoLocationResponseResult.getGeometry()).thenReturn(geometry);
+    geoLocationResponseResults[0] = geoLocationResponseResult;
+    when(geoLocationResponse.getGeoLocationResponseResults()).thenReturn(geoLocationResponseResults);
+    when(locationService.distanceBetween(geoPoint, geoPoint)).thenReturn(99.00);
+    when(apiHandshakeService.getGeoCoordinates(anyString())).thenReturn(geoLocationResponse);
 
     when(mockValidationService.isPostcodeValid(anyString())).thenReturn(true);
     when(apiUtilsService.sanitiseSearchTerms(searchTerms)).thenReturn(searchTerms);
     when(apiUtilsService.removeBlankSpaces(postcode)).thenReturn("XX11XX");
-    when(serviceRepository.findAllServicesByGeoLocationAndSearchTerms(
-      Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange, searchTerms))
-      .thenReturn(dosServices);
-
+    when(serviceRepository.findAllServicesByGeoLocationWithSearchTerms(
+        Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange, searchTerms))
+        .thenReturn(dosServices);
     // Act
-    List<DosService> services =
-      classUnderTest.retrieveServicesByGeoLocation(
+    List<DosService> services = classUnderTest.retrieveServicesByGeoLocation(
         searchLatitude, searchLongitude, distanceRange, searchTerms, postcode);
-    assertTrue(log.getOut().contains("Searching using location & search terms: "));
-    //assertTrue(log.getOut().contains("nonPopulatedLatLong 1"));
-    verify(locationService, times(1)).getLocationForPostcode(postcode, headers);
+    assertTrue(log.getOut().contains("Searching using location & search terms:"));
     verify(mockValidationService, times(1)).validateSearchCriteria(searchTerms);
-
     // Assert
     assertEquals(2, services.size());
   }
 
   @Test
-  public void postcodeAPIUsedToPopulateServicesWithoutLatLongValues() throws NotFoundException, InvalidParameterException {
-    //Given
+  public void googleAPIUsedToPopulateServicesWithoutLatLongValues()
+      throws NotFoundException, InvalidParameterException {
+    // Given
     final String searchLatitude = "0";
     final String searchLongitude = "0";
     final Double distanceRange = 0D;
@@ -252,28 +279,40 @@ public class FuzzyServiceSearchServiceTest {
     dosServices.add(MockDosServicesUtil.mockDosServices.get(1));
     dosServices.add(MockDosServicesUtil.mockDosServices.get(21));
     dosServices.add(MockDosServicesUtil.mockDosServices.get(21));
-    final MultiValueMap<String, String> mockHeaders = new LinkedMultiValueMap<>();
-    final PostcodeLocation searchLocation = new PostcodeLocation();
+    // final MultiValueMap<String, String> mockHeaders = new
+    // LinkedMultiValueMap<>();
+    GeoPoint geoPoint = new GeoPoint(12.45, 23.45);
+    Geometry geometry = mock(Geometry.class);
+    Location location = mock(Location.class);
+    when(location.getLat()).thenReturn(22.0);
+    when(location.getLng()).thenReturn(22.0);
+    when(geometry.getLocation()).thenReturn(location);
 
+    GeoLocationResponse geoLocationResponse = mock(GeoLocationResponse.class);
+    GeoLocationResponseResult[] geoLocationResponseResults = new GeoLocationResponseResult[1];
+    GeoLocationResponseResult geoLocationResponseResult = mock(GeoLocationResponseResult.class);
+    when(geoLocationResponseResult.getGeometry()).thenReturn(geometry);
+    geoLocationResponseResults[0] = geoLocationResponseResult;
+    when(geoLocationResponse.getGeoLocationResponseResults()).thenReturn(geoLocationResponseResults);
+    when(locationService.distanceBetween(geoPoint, geoPoint)).thenReturn(99.00);
+    when(apiHandshakeService.getGeoCoordinates(anyString())).thenReturn(geoLocationResponse);
 
     doNothing().when(mockValidationService).validateSearchCriteria(searchTerms);
-    when(serviceRepository.findAllServicesByGeoLocationAndSearchTerms(
-      Double.parseDouble(searchLatitude),
-      Double.parseDouble(searchLongitude),
-      distanceRange,
-      searchTerms
-    )).thenReturn(dosServices);
+    when(serviceRepository.findAllServicesByGeoLocationWithSearchTerms(
+        Double.parseDouble(searchLatitude),
+        Double.parseDouble(searchLongitude),
+        distanceRange,
+        searchTerms)).thenReturn(dosServices);
 
     when(mockValidationService.isPostcodeValid(anyString())).thenReturn(true);
-    when(apiHandshakeService.getAccessTokenHeader()).thenReturn(mockHeaders);
-    when(locationService.getLocationForPostcode(postcode,mockHeaders)).thenReturn(searchLocation);
-
-    //When
-    List<DosService> fuzzyResults = classUnderTest.retrieveServicesByGeoLocation(searchLatitude,searchLongitude,distanceRange,searchTerms,postcode);
-
-    //Then
-    assertEquals(3,fuzzyResults.size());
-    verify(locationService,times(1)).getLocationForPostcode(postcode,mockHeaders);
+    // when(apiHandshakeService.getAccessTokenHeader()).thenReturn(mockHeaders);
+    // when(locationService.getLocationForPostcode(postcode,mockHeaders)).thenReturn(searchLocation);
+    // When
+    List<DosService> fuzzyResults = classUnderTest.retrieveServicesByGeoLocation(searchLatitude, searchLongitude,
+        distanceRange, searchTerms, postcode);
+    // Then
+    assertEquals(3, fuzzyResults.size());
 
   }
+
 }

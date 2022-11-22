@@ -1,5 +1,8 @@
 package uk.nhs.digital.uec.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +23,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @Data
-public class DosService implements Comparable<DosService> {
+public class DosService {
 
   private int _score; // NOSONAR
 
@@ -98,10 +101,5 @@ public class DosService implements Comparable<DosService> {
       return Double.valueOf(999.9);
     }
     return this.distance;
-  }
-
-  @Override
-  public int compareTo(DosService ds) {
-    return this.getDistance().compareTo(ds.getDistance());
   }
 }

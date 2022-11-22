@@ -32,7 +32,7 @@ public class ErrorMappingEnum {
     codesMapping.put(
         ValidationCodes.VAL003, ErrorMessageEnum.MINIMUM_PARAMS_NOT_PASSED.getMessage());
     codesMapping.put(ValidationCodes.VAL004, ErrorMessageEnum.INVALID_LOCATION.getMessage());
-    codesMapping.put(ValidationCodes.VAL005, ErrorMessageEnum.INVALID_LAT_LON_VALUES_OR_INVALID_POSTCODE.getMessage());
+    codesMapping.put(ValidationCodes.VAL005, ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage());
     return codesMapping;
   }
 

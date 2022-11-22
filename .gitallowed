@@ -4,3 +4,4 @@ uec-core-dos-regression-db-12-replica-sf.cqger35bxcwy.eu-west-2.rds.amazonaws.co
 infrastructure/stacks/service_etl/functions/service_etl/psycopg2/*
 uec-core-dos-live-db-12-replica-sf.crvqtzolulpo.eu-west-2.rds.amazonaws.com
 cm7xetC93qNBxKeY
+GOOGLE_MAPS_API_KEY
