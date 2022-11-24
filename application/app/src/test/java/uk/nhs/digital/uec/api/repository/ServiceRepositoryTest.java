@@ -19,6 +19,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
@@ -54,6 +55,7 @@ public class ServiceRepositoryTest {
     dosService.setNorthing(NORTHING);
     dosService.setPostcode("EX1 1SR");
     dosService.setReferral_roles(List.of("Referral", "Professional Referral"));
+    dosService.setGeoLocation(new GeoPoint(0D, 0D));
     dosServicesList.add(dosService);
 
     DosService dosService2 = new DosService();
@@ -61,6 +63,7 @@ public class ServiceRepositoryTest {
     dosService2.setEasting(EASTING);
     dosService2.setNorthing(NORTHING);
     dosService2.setPostcode("EX1 1SR");
+    dosService.setGeoLocation(new GeoPoint(23.456, -0.2345));
     dosService2.setReferral_roles(new ArrayList<>());
     dosServicesList.add(dosService2);
 
@@ -109,8 +112,6 @@ public class ServiceRepositoryTest {
     when(searchHits.getSearchHits()).thenReturn(hits);
     when(operations.search(any(Query.class), any(Class.class))).thenReturn(searchHits);
 
-
-
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(2);
     when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
@@ -146,10 +147,10 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
     when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
-    //when(apiRequestParams.getNamePriority()).thenReturn(2);
-    //when(apiRequestParams.getAddressPriority()).thenReturn(2);
-    //when(apiRequestParams.getPostcodePriority()).thenReturn(2);
-    //when(apiRequestParams.getPublicNamePriority()).thenReturn(2);
+    when(apiRequestParams.getNamePriority()).thenReturn(2);
+    when(apiRequestParams.getAddressPriority()).thenReturn(2);
+    when(apiRequestParams.getPostcodePriority()).thenReturn(2);
+    when(apiRequestParams.getPublicNamePriority()).thenReturn(2);
     when(environment.getActiveProfiles()).thenReturn(new String[] {"DEV"});
 
 

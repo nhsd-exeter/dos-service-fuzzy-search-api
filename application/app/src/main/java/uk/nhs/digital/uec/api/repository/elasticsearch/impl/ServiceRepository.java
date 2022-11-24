@@ -4,10 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.unit.DistanceUnit;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.Operator;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
@@ -27,10 +28,11 @@ import uk.nhs.digital.uec.api.repository.elasticsearch.CustomServicesRepositoryI
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
@@ -38,15 +40,12 @@ import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 @Slf4j
 public class ServiceRepository implements CustomServicesRepositoryInterface {
 
-  private static final String POSTCODE_REGEX =
-    "([Gg][Ii][Rr]"
+  private static final String POSTCODE_REGEX = "([Gg][Ii][Rr]"
       + " 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})";
   private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
 
-
   @Autowired
   private ElasticsearchOperations operations;
-
 
   @Autowired
   private ApiRequestParams apiRequestParams;
@@ -55,13 +54,14 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
   private Environment environment;
 
   private static final DecimalFormat df = new DecimalFormat("0.00");
+
   /**
    * {@inheritDoc}
    */
 
-
   @Override
-  public List<DosService> findAllServicesByGeoLocationWithSearchTerms(Double searchLatitude, Double searchLongitude, Double distanceRange, List<String> searchTerms) throws NotFoundException {
+  public List<DosService> findAllServicesByGeoLocationWithSearchTerms(Double searchLatitude, Double searchLongitude,
+      Double distanceRange, List<String> searchTerms) throws NotFoundException {
     log.info("Request Params: Lat: {}, Lng: {}", searchLatitude, searchLongitude);
     log.info("Fuzzy level: {}", apiRequestParams.getFuzzLevel());
     if (Objects.isNull(searchLatitude) || (Objects.isNull(searchLongitude))) {
@@ -74,34 +74,34 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
 
     int numberOfServicesToReturnFromElasticSearch = apiRequestParams.getMaxNumServicesToReturnFromElasticsearch();
     if (numOfSpaces == 2) {
-      numberOfServicesToReturnFromElasticSearch =
-        apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms();
+      numberOfServicesToReturnFromElasticSearch = apiRequestParams
+          .getMaxNumServicesToReturnFromElasticsearch3SearchTerms();
     }
     if (numOfSpaces > 2) {
-      numberOfServicesToReturnFromElasticSearch =
-        Math.floorDiv(
+      numberOfServicesToReturnFromElasticSearch = Math.floorDiv(
           apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms(), 2);
     }
     log.info("Number of services to get from elasticsearch: {}", numberOfServicesToReturnFromElasticSearch);
     List<SearchHit<DosService>> services;
 
-    Query searchQuery =   buildElasticSearchQuery(searchLatitude, searchLongitude, distanceRange, searchCriteria, numberOfServicesToReturnFromElasticSearch);
+    Query searchQuery = buildElasticSearchQuery(searchLatitude, searchLongitude, distanceRange, searchCriteria,
+        numberOfServicesToReturnFromElasticSearch);
     SearchHits<DosService> searchHitsDosServices = operations.search(searchQuery, DosService.class);
     services = searchHitsDosServices.getSearchHits();
-    List<DosService> dosServices =   services.stream()
-      .map(searchHit -> {
-        Double distance = (Double) searchHit.getSortValues().get(0);
-        DosService service = searchHit.getContent();
-        service.setDistance(Double.parseDouble(df.format(distance)));
-        return service;
-      }).collect(Collectors.toList());
+    List<DosService> dosServices = services.stream()
+        .map(searchHit -> {
+          Double distance = (Double) searchHit.getSortValues().get(0);
+          DosService service = searchHit.getContent();
+          service.setDistance(Double.parseDouble(df.format(distance)));
+          return service;
+        }).collect(Collectors.toList());
     return getFilteredServices(dosServices);
   }
 
   @Override
   public List<DosService> findAllServicesByGeoLocation(
-    Double searchLatitude, Double searchLongitude, Double distanceRange)
-    throws NotFoundException {
+      Double searchLatitude, Double searchLongitude, Double distanceRange)
+      throws NotFoundException {
     int numberOfServicesToReturnFromElasticSearch = apiRequestParams.getMaxNumServicesToReturnFromElasticsearch();
     log.info("Request Params: Lat: {}, Lng: {}", searchLatitude, searchLongitude);
     log.info("Fuzzy level: {}", apiRequestParams.getFuzzLevel());
@@ -111,20 +111,19 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
       throw new NotFoundException(ErrorMessageEnum.INVALID_LOCATION.getMessage());
     }
     List<SearchHit<DosService>> services;
-    Query searchQuery =   buildElasticSearchQuery(searchLatitude, searchLongitude, distanceRange, null, numberOfServicesToReturnFromElasticSearch);
+    Query searchQuery = buildElasticSearchQuery(searchLatitude, searchLongitude, distanceRange, null,
+        numberOfServicesToReturnFromElasticSearch);
     services = operations.search(searchQuery, DosService.class).getSearchHits();
 
-
-    List<DosService> dosServices =   services.stream()
-      .map(searchHit -> {
-        Double distance = (Double) searchHit.getSortValues().get(0);
-        DosService service = searchHit.getContent();
-        service.setDistance(Double.parseDouble(df.format(distance)));
-        return service;
-      }).collect(Collectors.toList());
-      return getFilteredServices(dosServices);
+    List<DosService> dosServices = services.stream()
+        .map(searchHit -> {
+          Double distance = (Double) searchHit.getSortValues().get(0);
+          DosService service = searchHit.getContent();
+          service.setDistance(Double.parseDouble(df.format(distance)));
+          return service;
+        }).collect(Collectors.toList());
+    return getFilteredServices(dosServices);
   }
-
 
   private List<DosService> getFilteredServices(List<DosService> services) {
     List<DosService> dosServices = new ArrayList<>();
@@ -134,67 +133,67 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
     log.info("Number of services : {} ", dosServices.size());
     log.info("Active Profiles : {}", String.join(",", environment.getActiveProfiles()));
     if (Arrays.stream(environment.getActiveProfiles())
-      .noneMatch(
-        env ->
-          env.equalsIgnoreCase("local")
-            || env.equalsIgnoreCase("mock-auth")
-            || env.equalsIgnoreCase("dev"))) {
-      dosServices =
-        dosServices.stream()
+        .noneMatch(
+            env -> env.equalsIgnoreCase("local")
+                || env.equalsIgnoreCase("mock-auth")
+                || env.equalsIgnoreCase("dev"))) {
+      dosServices = dosServices.stream()
           .filter(
-            ds ->
-              Objects.nonNull(ds.getReferral_roles())
-                && (ds.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)))
+              ds -> Objects.nonNull(ds.getReferral_roles())
+                  && (ds.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)))
           .collect(Collectors.toList());
       log.info("Number of filtered services by Professional Referral {}", dosServices.size());
     }
     return dosServices;
   }
 
-
-
-  private Query buildElasticSearchQuery(Double searchLatitude, Double searchLongitude,Double distanceRange,String searchCriteria,int numberOfServicesToReturnFromElasticSearch){
+  private Query buildElasticSearchQuery(Double searchLatitude, Double searchLongitude, Double distanceRange,
+      String searchCriteria, int numberOfServicesToReturnFromElasticSearch) {
     GeoPoint location = new GeoPoint(searchLatitude, searchLongitude);
     Sort sort = Sort.by(
-      new GeoDistanceOrder("location", location)
-      .withUnit("mi")
-      .withIgnoreUnmapped(true)
-    );
+        new GeoDistanceOrder("location", location)
+            .withUnit("mi")
+            .withIgnoreUnmapped(true));
 
-    GeoDistanceQueryBuilder geoDistanceQueryBuilder =  QueryBuilders
-      .geoDistanceQuery("location")
-      .geoDistance(GeoDistance.ARC)
-      .point(searchLatitude, searchLongitude)
-      .ignoreUnmapped(true)
-      .distance(distanceRange,DistanceUnit.MILES);
+    GeoDistanceQueryBuilder geoDistanceQueryBuilder = QueryBuilders
+        .geoDistanceQuery("location")
+        .geoDistance(GeoDistance.ARC)
+        .point(searchLatitude, searchLongitude)
+        .ignoreUnmapped(true)
+        .distance(distanceRange, DistanceUnit.MILES);
 
+    NativeSearchQuery searchQuery = null;
+    if ((!StringUtils.isBlank(searchCriteria)) && (!StringUtils.isEmpty(searchCriteria))) {
 
-    QueryBuilder queryFilter = QueryBuilders.regexpQuery("referral_roles", "*" + PROFESSIONAL_REFERRAL_FILTER + "*");
-    NativeSearchQuery searchQuery =null;
-    if ((!StringUtils.isBlank(searchCriteria)) && (!StringUtils.isEmpty(searchCriteria))){
-
-      searchQuery = new NativeSearchQueryBuilder()
-        .withQuery(multiMatchQuery(searchCriteria)
+      Map<String, Float> fields = new HashMap<>();
+      fields.put("name", (float) apiRequestParams.getDefaultNamePriority());
+      fields.put("public_name", (float) apiRequestParams.getDefaultPublicNamePriority());
+      fields.put("address", (float) apiRequestParams.getDefaultAddressPriority());
+      fields.put("postcode", (float) apiRequestParams.getDefaultPostcodePriority());
+      BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+      boolQueryBuilder.must(multiMatchQuery(searchCriteria)
           .operator(Operator.AND)
+          .type(Type.BEST_FIELDS)
+          .fields(fields)
           .fuzziness(apiRequestParams.getFuzzLevel())
-          .prefixLength(3))
-        .withQuery(geoDistanceQueryBuilder)
-        // .withFilter(queryFilter )
-        .build();
-      searchQuery.setPageable(PageRequest.of(
-        0, numberOfServicesToReturnFromElasticSearch));
-      searchQuery.addSort(sort);
-    }
-    else{
+          .prefixLength(3));
       searchQuery = new NativeSearchQueryBuilder()
-        .withQuery(geoDistanceQueryBuilder)
-        // .withFilter(queryFilter )
-        .build();
+          .withQuery(boolQueryBuilder)
+          .withFilter(geoDistanceQueryBuilder)
+          .build();
       searchQuery.setPageable(PageRequest.of(
-        0, numberOfServicesToReturnFromElasticSearch));
+          0, numberOfServicesToReturnFromElasticSearch));
+      searchQuery.addSort(sort);
+    } else {
+      searchQuery = new NativeSearchQueryBuilder()
+          .withFilter(geoDistanceQueryBuilder)
+          .build();
+      searchQuery.setPageable(PageRequest.of(
+          0, numberOfServicesToReturnFromElasticSearch));
       searchQuery.addSort(sort);
     }
-    log.info("ElasticQuery: {}, Sort: {}, Paging:{} ",searchQuery.getQuery(),searchQuery.getSort(),searchQuery.getPageable());
+    log.info("Query: {}, Filter: {}, Sort: {}, Paging:{} ", searchQuery.getQuery(), searchQuery.getFilter(),
+        searchQuery.getSort(), searchQuery.getPageable());
     return searchQuery;
   }
 }
