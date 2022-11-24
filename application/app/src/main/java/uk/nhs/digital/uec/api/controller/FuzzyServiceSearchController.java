@@ -36,20 +36,16 @@ import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
-import uk.nhs.digital.uec.api.service.ValidationServiceInterface;
-
+import uk.nhs.digital.uec.api.util.Constants;
 /** Controller for Fuzzy searching of services. */
 @RestController
 @Slf4j
 @RequestMapping("/dosapi/dosservices/v0.0.1")
 public class FuzzyServiceSearchController {
 
-  private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
-  private static final Double DEFAULT_DISTANCE_RANGE = 60.00; // miles 1.60934 * 60 miles to km
 
   @Autowired private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
 
-  @Autowired private ValidationServiceInterface validationService;
 
   @Autowired private ApiUtilsServiceInterface utils;
 
@@ -89,7 +85,7 @@ public class FuzzyServiceSearchController {
           @RequestParam(
               name = "referral_role",
               required = false,
-              defaultValue = PROFESSIONAL_REFERRAL_FILTER)
+              defaultValue = Constants.PROFESSIONAL_REFERRAL_FILTER)
           String referralRole,
       @ApiParam(hidden = true)
           @RequestParam(name = "max_num_services_to_return_from_es", required = false)
@@ -126,7 +122,7 @@ public class FuzzyServiceSearchController {
         postcodePriority,
         publicNamePriority);
 
-    Double range = Objects.isNull(distanceRange) ? DEFAULT_DISTANCE_RANGE : distanceRange;
+    Double range = Objects.isNull(distanceRange) ? Constants.DEFAULT_DISTANCE_RANGE : distanceRange;
     final ApiSearchParamsResponse searchParamsResponse =
         new ApiSearchParamsResponse.ApiSearchParamsResponseBuilder()
             .searchCriteria(searchCriteria)

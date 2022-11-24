@@ -24,6 +24,7 @@ import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.repository.elasticsearch.CustomServicesRepositoryInterface;
+import uk.nhs.digital.uec.api.util.Constants;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -39,10 +40,6 @@ import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 @Repository
 @Slf4j
 public class ServiceRepository implements CustomServicesRepositoryInterface {
-
-  private static final String POSTCODE_REGEX = "([Gg][Ii][Rr]"
-      + " 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})";
-  private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
 
   @Autowired
   private ElasticsearchOperations operations;
@@ -140,7 +137,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
       dosServices = dosServices.stream()
           .filter(
               ds -> Objects.nonNull(ds.getReferral_roles())
-                  && (ds.getReferral_roles().contains(PROFESSIONAL_REFERRAL_FILTER)))
+                  && (ds.getReferral_roles().contains(Constants.PROFESSIONAL_REFERRAL_FILTER)))
           .collect(Collectors.toList());
       log.info("Number of filtered services by Professional Referral {}", dosServices.size());
     }

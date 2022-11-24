@@ -7,8 +7,8 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +27,8 @@ import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
+import uk.nhs.digital.uec.api.util.Constants;;
+
 
 @ExtendWith(SpringExtension.class)
 public class ServiceRepositoryTest {
@@ -54,7 +56,7 @@ public class ServiceRepositoryTest {
     dosService.setEasting(EASTING);
     dosService.setNorthing(NORTHING);
     dosService.setPostcode("EX1 1SR");
-    dosService.setReferral_roles(List.of("Referral", "Professional Referral"));
+    dosService.setReferral_roles(List.of("Referral", Constants.PROFESSIONAL_REFERRAL_FILTER));
     dosService.setGeoLocation(new GeoPoint(0D, 0D));
     dosServicesList.add(dosService);
 
@@ -72,7 +74,7 @@ public class ServiceRepositoryTest {
     dosService3.setEasting(EASTING);
     dosService3.setNorthing(NORTHING);
     dosService3.setPostcode("EX1 1SR");
-    dosService3.setReferral_roles(List.of("Professional Referral"));
+    dosService3.setReferral_roles(List.of(Constants.PROFESSIONAL_REFERRAL_FILTER));
     dosServicesList.add(dosService3);
 
     DosService dosService4 = new DosService();
@@ -114,7 +116,7 @@ public class ServiceRepositoryTest {
 
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(2);
-    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
+    when(apiRequestParams.getFilterReferralRole()).thenReturn(Constants.PROFESSIONAL_REFERRAL_FILTER);
     when(environment.getActiveProfiles()).thenReturn(new String[] {"prod"});
 
     List<DosService> findServiceBySearchTerms =
@@ -146,7 +148,7 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
-    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
+    when(apiRequestParams.getFilterReferralRole()).thenReturn(Constants.PROFESSIONAL_REFERRAL_FILTER);
     when(apiRequestParams.getNamePriority()).thenReturn(2);
     when(apiRequestParams.getAddressPriority()).thenReturn(2);
     when(apiRequestParams.getPostcodePriority()).thenReturn(2);
@@ -184,7 +186,7 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
-    when(apiRequestParams.getFilterReferralRole()).thenReturn("Professional Referral");
+    when(apiRequestParams.getFilterReferralRole()).thenReturn(Constants.PROFESSIONAL_REFERRAL_FILTER);
     when(apiRequestParams.getNamePriority()).thenReturn(2);
     when(apiRequestParams.getAddressPriority()).thenReturn(2);
     when(apiRequestParams.getPostcodePriority()).thenReturn(2);
