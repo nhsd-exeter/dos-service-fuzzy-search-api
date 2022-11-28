@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
-import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -196,9 +195,8 @@ public class FuzzyServiceSearchServiceTest {
     List<DosService> services =
       classUnderTest.retrieveServicesByGeoLocation(
         searchLatitude, searchLongitude, distanceRange, searchTerms, postcode);
-    assertTrue(log.getOut().contains("Searching using location & search terms: "));
+    assertTrue(log.getOut().contains("Searching using location & search terms:"));
     verify(mockValidationService, times(1)).validateSearchCriteria(searchTerms);
-
     // Assert
     assertEquals(2, services.size());
   }

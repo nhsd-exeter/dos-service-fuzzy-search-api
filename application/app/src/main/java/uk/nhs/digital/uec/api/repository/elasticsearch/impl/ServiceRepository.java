@@ -189,7 +189,7 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
           0, numberOfServicesToReturnFromElasticSearch));
       searchQuery.addSort(sort);
     }
-    log.info("Query: {}, Filter: {}, Sort: {}, Paging:{} ", searchQuery.getQuery(), searchQuery.getFilter(),
+    log.debug("Query: {}, Filter: {}, Sort: {}, Paging:{} ", searchQuery.getQuery(), searchQuery.getFilter(),
         searchQuery.getSort(), searchQuery.getPageable());
     return searchQuery;
   }

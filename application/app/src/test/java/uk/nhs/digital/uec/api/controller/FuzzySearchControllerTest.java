@@ -53,7 +53,7 @@ public class FuzzySearchControllerTest {
   private static final String SEARCH_LATITUDE = "23.45";
   private static final String SEARCH_LONGITUDE = "-2.34";
   private static final String PROFESSIONAL_REFERRAL_FILTER = "Professional Referral";
-  private static final Double DEFAULT_DISTANCE_RANGE = 25D;
+  private static final Double DEFAULT_DISTANCE_RANGE = 60.0D;
 
   List<String> searchCriteria;
 
@@ -89,7 +89,7 @@ public class FuzzySearchControllerTest {
             SEARCH_POSTCODE,
             SEARCH_LATITUDE,
             SEARCH_LONGITUDE,
-            DEFAULT_DISTANCE_RANGE,
+            null,
             PROFESSIONAL_REFERRAL_FILTER,
             MAX_SERVICES_TO_RETURN_FROM_ES,
             MAX_SERVICES_TO_RETURN,
@@ -143,7 +143,7 @@ public class FuzzySearchControllerTest {
             null,
             "23.45",
             "abc",
-            DEFAULT_DISTANCE_RANGE,
+            null,
             PROFESSIONAL_REFERRAL_FILTER,
             MAX_SERVICES_TO_RETURN_FROM_ES,
             MAX_SERVICES_TO_RETURN,
@@ -174,7 +174,7 @@ public class FuzzySearchControllerTest {
   public void whenDistanceRangeIsSuppliedItShouldUseTheGivenValue()
     throws NotFoundException, InvalidParameterException {
 
-    Double distance_range = null;
+    Double distance_range = 99.99;
     String searchLatitude = "23.45";
     String searchLongitude = "8.00";
     String searchPostCode = null;
@@ -201,7 +201,7 @@ public class FuzzySearchControllerTest {
         null,
         searchLatitude,
         searchLongitude,
-        DEFAULT_DISTANCE_RANGE,
+        distance_range,
         PROFESSIONAL_REFERRAL_FILTER,
         MAX_SERVICES_TO_RETURN_FROM_ES,
         MAX_SERVICES_TO_RETURN,
@@ -216,7 +216,7 @@ public class FuzzySearchControllerTest {
       .retrieveServicesByGeoLocation(
         searchLatitude,
         searchLongitude,
-        DEFAULT_DISTANCE_RANGE,
+        distance_range,
         searchCriteria,
         searchPostCode);
   }
