@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: uec-dos-api-sfs-mock-postcode-ingress
@@ -20,7 +20,10 @@ spec:
   rules:
     - http:
         paths:
-          - path: /*
+          - path: /
+            pathType: Prefix
             backend:
-              serviceName: uec-dos-api-sfs-mock-postcode-service
-              servicePort: 8080
+              service:
+                name: uec-dos-api-sfs-mock-postcode-service
+                port:
+                  number: 8080
