@@ -92,6 +92,9 @@ COGNITO_USER_POOL_CLIENT_ID := $(or $(COGNITO_USER_POOL_CLIENT_ID), )
 COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
 ADD_DEFAULT_COGNITO_USERS := false
 
+# Google API Key
+GOOGLE_MAPS_API_KEY := $(or $(GOOGLE_MAPS_API_KEY), )
+
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-dev-uec-dos-api-pc-ingress.k8s-nonprod.texasplatform.uk/api
 #Once wiremock is deployed to dev environment calls to postcode api will be mocked
 # POSTCODE_MAPPING_SERVICE_URL := http://mockservice.sfs.test:8080/api
@@ -103,3 +106,8 @@ AUTHENTICATION_ENDPOINT = $(AUTH_LOGIN_URL)$(AUTH_LOGIN_URI)
 
 FUZZY_SEARCH_DOMAIN = $(PROJECT_ID)-$(PROFILE)-uec-dos-api-sfs-ingress.$(TEXAS_HOSTED_ZONE)
 FUZZY_SEARCH_ENDPOINT = https://$(FUZZY_SEARCH_DOMAIN)
+
+GOOGLE_API_URL := https://maps.google.com/maps/api
+GOOGLE_API_ADDRESS_URI := /geocode/json
+
+

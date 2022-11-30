@@ -109,9 +109,17 @@ COGNITO_USER_POOL_CLIENT_ID := $(or $(COGNITO_USER_POOL_CLIENT_ID), )
 COGNITO_USER_POOL_ID := $(or $(COGNITO_USER_POOL_ID), )
 ADD_DEFAULT_COGNITO_USERS := false
 
+# Google API Key
+GOOGLE_MAPS_API_KEY := $(or $(GOOGLE_MAPS_API_KEY), )
+
 POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-$(PROFILE)-uec-dos-api-pc-ingress.$(TEXAS_HOSTED_ZONE)/api
 POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
 AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
 AUTH_LOGIN_URI := /authentication/login
+
+GOOGLE_API_URL := https://maps.google.com/maps/api
+GOOGLE_API_ADDRESS_URI := /geocode/json
+
+

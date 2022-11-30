@@ -22,6 +22,10 @@ public class WebClientConfig {
   @Value("${postcode.mapping.url}")
   private String psmUrl;
 
+  @Value("${google.api.url}")
+  private String googleApiUrl;
+
+
   @Bean
   public WebClient authWebClient() {
     return WebClient.builder()
@@ -37,6 +41,15 @@ public class WebClientConfig {
         .clientConnector(new ReactorClientHttpConnector(getSecureHttpClient()))
         .build();
   }
+
+  @Bean
+  public WebClient googleApiWebClient() {
+    return WebClient.builder()
+        .baseUrl(googleApiUrl)
+        .clientConnector(new ReactorClientHttpConnector(getSecureHttpClient()))
+        .build();
+  }
+
 
   private HttpClient getSecureHttpClient() {
     SslContext context;

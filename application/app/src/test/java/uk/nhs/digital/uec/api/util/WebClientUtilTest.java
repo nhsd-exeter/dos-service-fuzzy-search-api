@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.nio.charset.StandardCharsets;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.net.ssl.SSLException;
+
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,12 +27,19 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
+import uk.nhs.digital.uec.api.model.google.GeoLocationResponse;
+import uk.nhs.digital.uec.api.model.google.GeoLocationResponseResult;
+import uk.nhs.digital.uec.api.model.google.Geometry;
+import uk.nhs.digital.uec.api.model.google.Location;
 
 @ExtendWith(SpringExtension.class)
 public class WebClientUtilTest {
@@ -36,6 +47,7 @@ public class WebClientUtilTest {
   @InjectMocks private WebClientUtil webClientUtil;
   @Mock private WebClient authWebClient;
   @Mock private WebClient postCodeMappingWebClient;
+  @Mock private WebClient googleApiWebClient;
 
   @SuppressWarnings("rawtypes")
   @Mock
@@ -101,6 +113,38 @@ public class WebClientUtilTest {
     assertEquals(123677, returnedLocation.getEasting());
     assertEquals("EX1 2PR", returnedLocation.getPostcode());
   }
+
+
+  @Test
+  public void getGoogleAPIMappingsTest() throws SSLException, InvalidParameterException {
+
+    Geometry geometry = mock(Geometry.class);
+    Location location = mock(Location.class);
+    when(location.getLat()).thenReturn(22.0);
+    when(location.getLng()).thenReturn(22.0);
+    when(geometry.getLocation()).thenReturn(location);
+
+    GeoLocationResponse mockGeoLocationResponse = mock(GeoLocationResponse.class);
+    GeoLocationResponseResult[] geoLocationResponseResults = new GeoLocationResponseResult[1];
+    GeoLocationResponseResult geoLocationResponseResult = mock(GeoLocationResponseResult.class);
+    when(geoLocationResponseResult.getGeometry()).thenReturn(geometry);
+    geoLocationResponseResults[0] = geoLocationResponseResult;
+    when(mockGeoLocationResponse.getGeoLocationResponseResults()).thenReturn(geoLocationResponseResults);
+
+    when(googleApiWebClient.get()).thenReturn(requestHeadersUriSpecMock);
+    when(requestHeadersUriSpecMock.uri(anyString())).thenReturn(requestHeadersSpecMock);
+
+    when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
+    when(responseSpecMock.bodyToMono(GeoLocationResponse.class)).thenReturn(Mono.just(mockGeoLocationResponse));
+
+    GeoLocationResponse geoLocationResponse =
+        webClientUtil.getGeoLocation("mk13 0LG","XXXXXXXXX","/api/goe/json");
+    GeoLocationResponseResult geoLocationResponseResult2 = geoLocationResponse.getGeoLocationResponseResults()[0];
+    assertEquals(geometry,geoLocationResponseResult2.getGeometry());
+  }
+
+
+
 
   private WebClient getMockedAuthWebClient(final AuthToken resp) {
     when(authWebClient.post()).thenReturn(requestBodyUriSpecMock);

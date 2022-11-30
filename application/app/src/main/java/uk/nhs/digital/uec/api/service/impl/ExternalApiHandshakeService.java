@@ -17,6 +17,7 @@ import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
+import uk.nhs.digital.uec.api.model.google.GeoLocationResponse;
 import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
 import uk.nhs.digital.uec.api.util.WebClientUtil;
 
@@ -41,6 +42,12 @@ public class ExternalApiHandshakeService implements ExternalApiHandshakeInterfac
 
   @Value("${profile.mock_auth}")
   private String profileMockAuth;
+
+  @Value("${google.api.uri}")
+  private String googleApiUri;
+
+  @Value("${google.api.key}")
+  private String googleApiKey;
 
   @Autowired private WebClientUtil webClientUtil;
 
@@ -86,5 +93,10 @@ public class ExternalApiHandshakeService implements ExternalApiHandshakeInterfac
     headers.add("Content-Type", "application/json");
     headers.add("Authorization", "Bearer " + token);
     return headers;
+  }
+
+  @Override
+  public GeoLocationResponse getGeoCoordinates(String address) throws InvalidParameterException {
+    return webClientUtil.getGeoLocation(address, googleApiKey, googleApiUri);
   }
 }

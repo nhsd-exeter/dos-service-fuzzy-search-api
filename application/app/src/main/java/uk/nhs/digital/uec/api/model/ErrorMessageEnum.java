@@ -13,7 +13,7 @@ public enum ErrorMessageEnum {
   MINIMUM_PARAMS_NOT_PASSED(
       "None of the search criteria given meets the minimum required search criteria length."),
   INVALID_LOCATION("Invalid search location"),
-  INVALID_LAT_LON_VALUES_OR_INVALID_POSTCODE("Valid location (lat and lon) or postcode values required");
+  INVALID_LAT_LON_VALUES("Valid location (lat and lon) values or postcode is  required");
 
   private String message;
 

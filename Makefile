@@ -3,6 +3,7 @@ include $(abspath $(PROJECT_DIR)/build/automation/init.mk)
 include $(abspath $(PROJECT_DIR)/test/jmeter/jMeter.mk)
 
 DOCKER_REGISTRY_LIVE = $(DOCKER_REGISTRY)/prod
+SF_AWS_SECRET_NAME := service-finder/deployment
 # ==============================================================================
 # Development workflow targets
 
@@ -170,6 +171,9 @@ debug:
 		--env  AUTH_LOGIN_URI='$(AUTH_LOGIN_URI)' \
 		--env  POSTCODE_MAPPING_USER='$(POSTCODE_MAPPING_USER)' \
 		--env  POSTCODE_MAPPING_PASSWORD='$(POSTCODE_MAPPING_PASSWORD)' \
+		--env  GOOGLE_API_URL='$(GOOGLE_API_URL)' \
+		--env  GOOGLE_API_ADDRESS_URI='$(GOOGLE_API_ADDRESS_URI)' \
+		--env  GOOGLE_MAPS_API_KEY='$(GOOGLE_MAPS_API_KEY)' \
 		--publish 9999:9999 \
 		--publish 8443:8443 \
 		"
@@ -216,6 +220,7 @@ project-populate-application-variables:
 	export COGNITO_JWT_VERIFICATION_URL=https://cognito-idp.eu-west-2.amazonaws.com/$${COGNITO_USER_POOL_ID}/.well-known/jwks.json
 	export COGNITO_ADMIN_AUTH_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .AUTHENTICATION_PASSWORD | tr -d '"')
 	export POSTCODE_MAPPING_PASSWORD=$$(make secret-fetch NAME=uec-dos-api-sfsa-$(PROFILE)-cognito-passwords | jq .POSTCODE_PASSWORD | tr -d '"' )
+	export GOOGLE_MAPS_API_KEY=$$(make secret-fetch NAME=$(SF_AWS_SECRET_NAME) | jq .GOOGLE_MAPS_API_KEY | tr -d '"' )
 	export FUZZY_API_COGNIGTO_USER_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .POSTCODE_PASSWORD | tr -d '"')
 	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
 	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}

@@ -43,3 +43,7 @@ AUTH_LOGIN_URL := https://fuzzysearch.sfs.local:8443
 AUTH_LOGIN_URI := /authentication/login
 POSTCODE_MAPPING_USER := admin@nhs.net
 POSTCODE_MAPPING_PASSWORD := password
+
+GOOGLE_API_URL := https://maps.google.com/maps/api
+GOOGLE_API_ADDRESS_URI := /geocode/json
+GOOGLE_MAPS_API_KEY		   := gibarish
