@@ -58,7 +58,8 @@ postcode:
 
 logging:
   pattern:
-    console: '[%thread][%d] %X{correlationId} %-5level %logger{0} - %msg %n'
+    console: "{\"time\": \"%d\", \"level\": \"%p\", \"correlation-id\": \"%X{correlationId}\", \"source\": \"%logger{63}:%L\", \"message\": \"%replace(%m%wEx{6}){'[\r\n]+', '\\n'}%nopex\"}%n"
+
 
 auth:
   login:

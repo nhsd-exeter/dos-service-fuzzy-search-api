@@ -29,27 +29,29 @@ public class MDCInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
             @Nullable Exception ex) throws Exception {
+              log.debug("Removing correlationId in fuzzy search {}", MDC.get(CORRELATION_ID_LOG_VAR_NAME));
               MDC.remove(CORRELATION_ID_LOG_VAR_NAME);
     }
 
 
     private String generateUniqueCorrelationId() {
-      return UUID.randomUUID().toString();
+      String correlationId = UUID.randomUUID().toString();
+      log.debug("Generated new correlationId in fuzzy search {}", correlationId);
+      return correlationId;
     }
 
     private String getCorrelationIdFromHeaderOrParams(final HttpServletRequest request) {
       String correlationId = request.getParameter(CORRELATION_ID_HEADER_NAME);
       if (!StringUtils.isBlank(correlationId)) {
-        log.info("received correlationId from service finder request params {}", correlationId);
+        log.debug("Received correlationId from service finder request params {}", correlationId);
         return correlationId;
       }
       correlationId = request.getHeader(CORRELATION_ID_HEADER_NAME);
       if (!StringUtils.isBlank(correlationId)) {
-        log.info("received correlationId from service finder request header {}", correlationId);
+        log.debug("Received correlationId from service finder request header {}", correlationId);
         return correlationId;
 
       }
-      log.info("generated new correlationId in fuzzy search {}", correlationId);
       return generateUniqueCorrelationId();
     }
 }
