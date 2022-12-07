@@ -55,11 +55,6 @@ postcode:
     uri: /search
     user: ${POSTCODE_MAPPING_USER}
     password: ${POSTCODE_MAPPING_PASSWORD}
-
-logging:
-  pattern:
-    console: '[%thread][%d] %X{correlationId} %-5level %logger{0} - %msg %n'
-
 auth:
   login:
     url: ${AUTH_LOGIN_URL}
@@ -74,3 +69,10 @@ google:
 profile:
   local: local
   mock_auth: mock_auth
+
+logging:
+  pattern:
+    console: "{\"date-time\": \"%d\", \"level\": \"%p\", \"correlation-id\": \"%X{correlationId}\", \"source-path\": \"%logger{63}:%L\", \"message\": \"%replace(%m%wEx{6}){'[\r\n]+', '\\n'}%nopex\"}%n"
+  level:
+    root: INFO
+
