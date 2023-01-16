@@ -25,6 +25,13 @@ pipeline {
   }
 
   stages {
+    stage('Populate Project variables') {
+      steps {
+        script {
+          sh 'make project-populate-application-variables'
+        }
+      }
+    }
     stage('Show Variables') {
       steps {
         script {
@@ -61,35 +68,6 @@ pipeline {
         }
       }
     }
-    // TODO: Backup elastic search
-    stage('Plan Base Infrastructure') {
-      steps {
-        script {
-          sh "make plan-base PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-    stage('Provision Base Infrastructure') {
-      steps {
-        script {
-          sh "make provision-base PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-    stage('Plan ETL Infrastructure') {
-      steps {
-        script {
-          sh "make plan-etl PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-    stage('Provision ETL Infrastructure') {
-      steps {
-        script {
-          sh "make provision-etl PROFILE=${env.PROFILE}"
-        }
-      }
-    }
     stage('Deploy API') {
       steps {
         script {
@@ -104,24 +82,10 @@ pipeline {
         }
       }
     }
-    // stage('Update Cloud Components') {
-    //   steps {
-    //     script {
-    //       sh "make update-cloud-components"
-    //     }
-    //   }
-    // }
     stage('Monitor Route53 Connection') {
       steps {
         script {
           sh 'make monitor-r53-connection'
-        }
-      }
-    }
-    stage('Run Service ETL') {
-      steps {
-        script {
-          sh 'make apply-data-changes'
         }
       }
     }
