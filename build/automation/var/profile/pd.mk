@@ -89,7 +89,8 @@ TF_VAR_service_etl_sns_email := service-etl-alerts-de-aaaafqkcxkkecdxfimtohq46zu
 TF_VAR_service_etl_alarm_period := 240
 
 # Connection to DoS Read Replica for extraction Lambdas. For the Demo env we point to the live read replica
-TF_VAR_dos_sf_replica_db := uec-core-dos-live-db-12-replica-sf.crvqtzolulpo.eu-west-2.rds.amazonaws.com #uec-core-dos-live-db-12-replica-sf.dos-db-rds
+TF_VAR_dos_sf_replica_db := uec-core-dos-live-db-replica-sf.dos-db-sync-rds
+# TF_VAR_dos_sf_replica_db := uec-core-dos-live-db-12-replica-sf.crvqtzolulpo.eu-west-2.rds.amazonaws.com #uec-core-dos-live-db-12-replica-sf.dos-db-rds
 TF_VAR_service_finder_replica_sg := uec-core-dos-live-db-12-replica-sf-sg
 TF_VAR_dos_read_replica_secret_name := core-dos/deployment
 TF_VAR_dos_read_replica_secret_key := DB_SF_READONLY_PASSWORD
@@ -118,4 +119,3 @@ AUTH_LOGIN_URI := /authentication/login
 
 GOOGLE_API_URL := https://maps.google.com/maps/api
 GOOGLE_API_ADDRESS_URI := /geocode/json
-
