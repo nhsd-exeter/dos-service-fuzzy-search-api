@@ -2,6 +2,8 @@ package uk.nhs.digital.uec.api.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import uk.nhs.digital.uec.api.util.Constants;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -122,7 +124,7 @@ public class ApiRequestParams {
 
   public String getFilterReferralRole() {
     if (this.filterReferralRole == null) {
-      return "Professional Referral";
+      return Constants.PROFESSIONAL_REFERRAL_FILTER;
     } else {
       return filterReferralRole;
     }

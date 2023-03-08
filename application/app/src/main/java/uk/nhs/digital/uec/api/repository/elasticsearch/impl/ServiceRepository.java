@@ -5,7 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.DistanceFeatureQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
+import org.elasticsearch.index.query.MatchPhrasePrefixQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder.Type;
@@ -24,10 +26,7 @@ import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.repository.elasticsearch.CustomServicesRepositoryInterface;
-import uk.nhs.digital.uec.api.util.Constants;
-
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +35,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
 
 @Repository
 @Slf4j
@@ -92,7 +92,9 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
           service.setDistance(Double.parseDouble(df.format(distance)));
           return service;
         }).collect(Collectors.toList());
-    return getFilteredServices(dosServices);
+        log.info("Number of services : {} ", dosServices.size());
+        log.info("Active Profiles : {}", String.join(",", environment.getActiveProfiles()));
+    return dosServices;
   }
 
   @Override
@@ -119,47 +121,41 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
           service.setDistance(Double.parseDouble(df.format(distance)));
           return service;
         }).collect(Collectors.toList());
-    return getFilteredServices(dosServices);
-  }
-
-  private List<DosService> getFilteredServices(List<DosService> services) {
-    List<DosService> dosServices = new ArrayList<>();
-    for (DosService serviceIterationItem : services) {
-      dosServices.add(serviceIterationItem);
-    }
-    log.info("Number of services : {} ", dosServices.size());
-    log.info("Active Profiles : {}", String.join(",", environment.getActiveProfiles()));
-    if (Arrays.stream(environment.getActiveProfiles())
-        .noneMatch(
-            env -> env.equalsIgnoreCase("local")
-                || env.equalsIgnoreCase("mock-auth")
-                || env.equalsIgnoreCase("dev"))) {
-      dosServices = dosServices.stream()
-          .filter(
-              ds -> Objects.nonNull(ds.getReferral_roles())
-                  && (ds.getReferral_roles().contains(Constants.PROFESSIONAL_REFERRAL_FILTER)))
-          .collect(Collectors.toList());
-      log.info("Number of filtered services by Professional Referral {}", dosServices.size());
-    }
+        log.info("Number of services : {} ", dosServices.size());
+        log.info("Active Profiles : {}", String.join(",", environment.getActiveProfiles()));
     return dosServices;
   }
 
   private Query buildElasticSearchQuery(Double searchLatitude, Double searchLongitude, Double distanceRange,
       String searchCriteria, int numberOfServicesToReturnFromElasticSearch) {
     GeoPoint location = new GeoPoint(searchLatitude, searchLongitude);
+
+    // sort
     Sort sort = Sort.by(
         new GeoDistanceOrder("location", location)
             .withUnit("mi")
             .withIgnoreUnmapped(true));
 
-    GeoDistanceQueryBuilder geoDistanceQueryBuilder = QueryBuilders
+    //filter
+    GeoDistanceQueryBuilder geoDistanceQueryFilter = QueryBuilders
         .geoDistanceQuery("location")
         .geoDistance(GeoDistance.ARC)
         .point(searchLatitude, searchLongitude)
         .ignoreUnmapped(true)
         .distance(distanceRange, DistanceUnit.MILES);
 
+
+
     NativeSearchQuery searchQuery = null;
+    BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+    if (Arrays.stream(environment.getActiveProfiles())
+    .noneMatch(
+        env -> env.equalsIgnoreCase("local")
+            || env.equalsIgnoreCase("mock-auth")
+            || env.equalsIgnoreCase("dev"))) {
+      boolQueryBuilder.must(termsQuery("referral_roles", new String[] {"professional"}));
+    }
+
     if ((!StringUtils.isBlank(searchCriteria)) && (!StringUtils.isEmpty(searchCriteria))) {
 
       Map<String, Float> fields = new HashMap<>();
@@ -167,30 +163,36 @@ public class ServiceRepository implements CustomServicesRepositoryInterface {
       fields.put("public_name", (float) apiRequestParams.getDefaultPublicNamePriority());
       fields.put("address", (float) apiRequestParams.getDefaultAddressPriority());
       fields.put("postcode", (float) apiRequestParams.getDefaultPostcodePriority());
-      BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-      boolQueryBuilder.must(multiMatchQuery(searchCriteria)
-          .operator(Operator.AND)
-          .type(Type.BEST_FIELDS)
-          .fields(fields)
-          .fuzziness(apiRequestParams.getFuzzLevel())
-          .prefixLength(3));
+      boolQueryBuilder
+      .should(
+        multiMatchQuery(searchCriteria)
+        .operator(Operator.AND)
+        .type(Type.BEST_FIELDS)
+        .fields(fields)
+        .fuzziness(apiRequestParams.getFuzzLevel()))
+        .should(
+          multiMatchQuery(searchCriteria)
+            .operator(Operator.AND)
+            .type(Type.PHRASE_PREFIX)
+            .fields(fields));
+
+      boolQueryBuilder.filter(geoDistanceQueryFilter);
       searchQuery = new NativeSearchQueryBuilder()
           .withQuery(boolQueryBuilder)
-          .withFilter(geoDistanceQueryBuilder)
           .build();
-      searchQuery.setPageable(PageRequest.of(
-          0, numberOfServicesToReturnFromElasticSearch));
-      searchQuery.addSort(sort);
+      searchQuery.setMinScore(2.0f);
+
+
+
     } else {
+      boolQueryBuilder.filter(geoDistanceQueryFilter);
       searchQuery = new NativeSearchQueryBuilder()
-          .withFilter(geoDistanceQueryBuilder)
+          .withQuery(boolQueryBuilder)
           .build();
-      searchQuery.setPageable(PageRequest.of(
-          0, numberOfServicesToReturnFromElasticSearch));
-      searchQuery.addSort(sort);
     }
-    log.debug("Query: {}, Filter: {}, Sort: {}, Paging:{} ", searchQuery.getQuery(), searchQuery.getFilter(),
-        searchQuery.getSort(), searchQuery.getPageable());
+    searchQuery.setPageable(PageRequest.of(
+        0, numberOfServicesToReturnFromElasticSearch));
+    searchQuery.addSort(sort);
     return searchQuery;
   }
 }

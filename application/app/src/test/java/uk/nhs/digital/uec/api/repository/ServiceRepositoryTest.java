@@ -122,7 +122,7 @@ public class ServiceRepositoryTest {
     List<DosService> findServiceBySearchTerms =
         serviceRepository.findAllServicesByGeoLocationWithSearchTerms(searchLatitude,searchLongitude,distanceRange,searchTerms);
 
-    assertEquals(findServiceBySearchTerms.size(), 1);
+    assertEquals(findServiceBySearchTerms.size(), 2);
 
   }
 

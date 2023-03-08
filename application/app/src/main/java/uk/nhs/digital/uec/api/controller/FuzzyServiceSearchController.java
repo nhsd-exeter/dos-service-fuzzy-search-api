@@ -81,7 +81,7 @@ public class FuzzyServiceSearchController {
             @ApiParam(SEARCH_LATITUDE_DESC) @RequestParam(name = "search_latitude", required = false) String searchLatitude,
             @ApiParam(SEARCH_LONGITUDE_DESC) @RequestParam(name = "search_longitude", required = false) String searchLongitude,
             @ApiParam(DISTANCE_RANGE_DESC) @RequestParam(name = "distance_range", required = false) Double distanceRange,
-            @ApiParam(REFERRAL_ROLE_DESC) @RequestParam(name = "referral_role", required = false, defaultValue = Constants.PROFESSIONAL_REFERRAL_FILTER) String referralRole,
+            @ApiParam(REFERRAL_ROLE_DESC) @RequestParam(name = "referral_role", required = false) String referralRole,
             @ApiParam(hidden = true) @RequestParam(name = "max_num_services_to_return_from_es", required = false) Integer maxNumServicesToReturnFromEs,
             @ApiParam(MAX_NUM_SERVICES_DESC) @RequestParam(name = "max_number_of_services_to_return", required = false) Integer maxNumServicesToReturn,
             @ApiParam(FUZZ_LEVEL_DESC) @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel,
