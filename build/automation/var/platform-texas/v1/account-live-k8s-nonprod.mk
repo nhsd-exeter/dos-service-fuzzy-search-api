@@ -14,9 +14,11 @@ TF_VAR_application_service_account_name = $(APPLICATION_SA_NAME)
 # ==============================================================================
 
 # Connection to DoS Read Replica for extraction Lambdas
-TF_VAR_dos_sf_replica_db := core-dos-regression-sf-replica.dos-db-rds
+TF_VAR_dos_sf_replica_db := uec-core-dos-performance-sf-replica
+# TF_VAR_dos_sf_replica_db := core-dos-regression-sf-replica.dos-db-rds
 #TF_VAR_dos_sf_replica_db := uec-core-dos-regression-db-replica-sf.dos-db-rds
 TF_VAR_service_finder_replica_sg := live-lk8s-nonprod-uec-sf-core-dos-sf-replica-sg
+# TF_VAR_service_finder_replica_sg := live-lk8s-nonprod-uec-sf-core-dos-sf-replica-sg
 TF_VAR_dos_read_replica_secret_name := core-dos-dev/deployment
 TF_VAR_dos_read_replica_secret_key := DB_SF_READONLY_PASSWORD
 TF_VAR_service_etl_db_user := dos_sf_readonly
