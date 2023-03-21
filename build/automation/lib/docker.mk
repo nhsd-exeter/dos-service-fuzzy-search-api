@@ -98,6 +98,7 @@ docker-build docker-image: ### Build Docker image - mandatory: NAME; optional: V
 	export VERSION=$$(make docker-image-get-version)
 	make -s file-replace-variables FILE=$$dir/Dockerfile.effective
 	docker build --rm \
+		--platform linux/amd64 \
 		--build-arg IMAGE=$$IMAGE \
 		--build-arg VERSION=$$VERSION \
 		--build-arg BUILD_ID=$(BUILD_ID) \
@@ -292,6 +293,7 @@ docker-image-keep-latest-only: ### Remove other images than latest - mandatory: 
 docker-image-start: ### Start container - mandatory: NAME; optional: CMD,DIR,ARGS=[Docker args],VARS_FILE=[Makefile vars file],EXAMPLE=true
 	reg=$$(make _docker-get-reg)
 	docker run --interactive $(_TTY) $$(echo $(ARGS) | grep -- "--attach" > /dev/null 2>&1 && : || echo "--detach") \
+		--platform linux/amd64 \
 		--name $(NAME)$(shell [ -n "$(EXAMPLE)" ] && echo -example)-$(BUILD_COMMIT_HASH)-$(BUILD_ID) \
 		--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
 		--env-file <(make _list-variables PATTERN="^(DB|DATABASE|SMTP|APP|APPLICATION|UI|API|SERVER|HOST|URL)") \
@@ -353,6 +355,7 @@ docker-run: ### Run specified image - mandatory: IMAGE; optional: CMD,SH=true,DI
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo $$(echo '$(IMAGE)' | md5sum | cut -c1-7)-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	if [[ ! "$(SH)" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]]; then
 		docker run --interactive $(_TTY) --rm \
+			--platform linux/amd64 \
 			--name $$container \
 			--user $$(id -u):$$(id -g) \
 			--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -367,6 +370,7 @@ docker-run: ### Run specified image - mandatory: IMAGE; optional: CMD,SH=true,DI
 				$(CMD)
 	else
 		docker run --interactive $(_TTY) --rm \
+			--platform linux/amd64 \
 			--name $$container \
 			--user $$(id -u):$$(id -g) \
 			--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -390,6 +394,7 @@ docker-run-composer: ### Run composer container - mandatory: CMD; optional: DIR,
 	image=$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo composer:$(DOCKER_COMPOSER_VERSION))
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo composer-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--user $$(id -u):$$(id -g) \
 		--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -414,6 +419,7 @@ docker-run-editorconfig: ### Run editorconfig container - optional: DIR=[working
 	image=$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo mstruebing/editorconfig-checker:$(DOCKER_EDITORCONFIG_CHECKER_VERSION))
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo editorconfig-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--user $$(id -u):$$(id -g) \
 		--volume $$([ -n "$(DIR)" ] && echo $(abspath $(DIR)) || echo $(PWD)):/check \
@@ -430,6 +436,7 @@ docker-run-gradle: ### Run gradle container - mandatory: CMD; optional: DIR,ARGS
 	image=$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo gradle:$(DOCKER_GRADLE_VERSION))
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo gradle-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--user $$(id -u):$$(id -g) \
 		--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -459,6 +466,7 @@ docker-run-mvn: ### Run maven container - mandatory: CMD; optional: DIR,ARGS=[Do
 		"
 	fi
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--user $$(id -u):$$(id -g) \
 		--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -485,6 +493,7 @@ docker-run-node: ### Run node container - mandatory: CMD; optional: DIR,ARGS=[Do
 	image=$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo node:$(DOCKER_NODE_VERSION))
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo node-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
 		--env-file <(make _list-variables PATTERN="^(DB|DATABASE|SMTP|APP|APPLICATION|UI|API|SERVER|HOST|URL)") \
@@ -520,6 +529,7 @@ docker-run-python: ### Run python container - mandatory: CMD; optional: SH=true,
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo python-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	if [[ ! "$(SH)" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]]; then
 		docker run --interactive $(_TTY) --rm \
+			--platform linux/amd64 \
 			--name $$container \
 			--user $$(id -u):$$(id -g) \
 			--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -538,6 +548,7 @@ docker-run-python: ### Run python container - mandatory: CMD; optional: SH=true,
 				$(CMD)
 	else
 		docker run --interactive $(_TTY) --rm \
+			--platform linux/amd64 \
 			--name $$container \
 			--user $$(id -u):$$(id -g) \
 			--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -564,6 +575,7 @@ docker-run-sonar-scanner-cli: ### Run sonar-scanner-cli container - mandatory: C
 	image=$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo sonarsource/sonar-scanner-cli:$(DOCKER_SONAR_SCANNER_CLI_VERSION))
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo node-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--user $$(id -u):$$(id -g) \
 		--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -583,6 +595,7 @@ docker-run-terraform: ### Run terraform container - mandatory: CMD; optional: DI
 	image=$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo hashicorp/terraform:$(DOCKER_TERRAFORM_VERSION))
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo terraform-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--user $$(id -u):$$(id -g) \
 		--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -602,6 +615,7 @@ docker-run-terraform-tfsec: ### Run terraform tfsec container - optional: DIR,AR
 	image=$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo tfsec/tfsec:$(DOCKER_TERRAFORM_TFSEC_VERSION))
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo tfsec-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--user $$(id -u):$$(id -g) \
 		--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -621,6 +635,7 @@ docker-run-terraform-checkov: ### Run terraform checkov container - optional: DI
 	image=$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo bridgecrew/checkov:$(DOCKER_TERRAFORM_CHECKOV_VERSION))
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo tfsec-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--user $$(id -u):$$(id -g) \
 		--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -640,6 +655,7 @@ docker-run-terraform-compliance: ### Run terraform compliance container - mandat
 	image=$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo eerkunt/terraform-compliance:$(DOCKER_TERRAFORM_COMPLIANCE_VERSION))
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo tfsec-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--user $$(id -u):$$(id -g) \
 		--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -659,6 +675,7 @@ docker-run-config-lint: ### Run config lint container - mandatory: CMD; optional
 	image=$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo stelligent/config-lint:$(DOCKER_CONFIG_LINT_VERSION))
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo tfsec-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--user $$(id -u):$$(id -g) \
 		--volume $(PROJECT_DIR):/project \
@@ -676,6 +693,7 @@ docker-run-postgres: ### Run postgres container - mandatory: CMD; optional: DIR,
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo postgres-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	make docker-image-pull-or-build NAME=postgres VERSION=$(DOCKER_LIBRARY_POSTGRES_VERSION) >&2
 	docker run --interactive $(_TTY) --rm \
+		--platform linux/amd64 \
 		--name $$container \
 		--user $$(id -u):$$(id -g) \
 		--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -704,6 +722,7 @@ docker-run-tools: ### Run tools (Python) container - mandatory: CMD; optional: S
 	make docker-image-pull-or-build NAME=tools VERSION=$(DOCKER_LIBRARY_TOOLS_VERSION) >&2
 	if [[ ! "$(SH)" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]]; then
 		docker run --interactive $(_TTY) --rm \
+		  --platform linux/amd64 \
 			--name $$container \
 			--user $$(id -u):$$(id -g) \
 			--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
@@ -728,6 +747,7 @@ docker-run-tools: ### Run tools (Python) container - mandatory: CMD; optional: S
 				$(CMD)
 	else
 		docker run --interactive $(_TTY) --rm \
+			--platform linux/amd64 \
 			--name $$container \
 			--user $$(id -u):$$(id -g) \
 			--env-file <(make _list-variables PATTERN="^(AWS|TX|TEXAS|NHSD|TERRAFORM)") \
