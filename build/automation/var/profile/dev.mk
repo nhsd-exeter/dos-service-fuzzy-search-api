@@ -21,7 +21,7 @@ SPLUNK_INDEX := eks_logs_service_finder_nonprod
 APP_URL_PREFIX := $(K8S_APP_NAMESPACE)-$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)
 
 # Elastic search datastore
-DOMAIN := $(TF_VAR_service_prefix)-service
+DOMAIN := sf1-nonprod
 # ELASTICSEARCH_URL configured in make project-populate-application-variables
 
 API_SERVICE_SEARCH_ENDPOINT := https://$(APP_URL_PREFIX)-service-search.$(TF_VAR_platform_zone)/dosapi/dosservices/v0.0.1/services/byfuzzysearch
@@ -56,7 +56,7 @@ CHECK_DEPLOYMENT_POLL_INTERVAL := 10
 
 DEPLOYMENT_STACKS = application
 INFRASTRUCTURE_STACKS = $(INFRASTRUCTURE_STACKS_BASE),$(INFRASTRUCTURE_STACKS_ETL)
-INFRASTRUCTURE_STACKS_DESTROY = $(INFRASTRUCTURE_STACKS_ETL),$(INFRASTRUCTURE_STACKS_BASE)
+INFRASTRUCTURE_STACKS_DESTROY = $(INFRASTRUCTURE_STACKS_BASE)
 INFRASTRUCTURE_STACKS_BASE = elasticsearch
 INFRASTRUCTURE_STACKS_ETL = service_etl
 INFRASTRUCTURE_STACKS_AUTH = authentication
@@ -109,5 +109,3 @@ AUTH_LOGIN_URI := /authentication/login
 
 GOOGLE_API_URL := https://maps.google.com/maps/api
 GOOGLE_API_ADDRESS_URI := /geocode/json
-
-

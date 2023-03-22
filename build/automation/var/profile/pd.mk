@@ -62,7 +62,8 @@ SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 
 TF_VAR_service_prefix := $(SERVICE_PREFIX)
 # Elastic search datastore
-DOMAIN := $(TF_VAR_service_prefix)-service
+DOMAIN := sf1-prod
+# DOMAIN := $(TF_VAR_service_prefix)-service
 
 TF_VAR_es_zone_awareness_enabled := true #false #Cross check reaosning with Jon P
 TF_VAR_es_availability_zone_count := 2 #null

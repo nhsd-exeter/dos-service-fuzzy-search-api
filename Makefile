@@ -202,16 +202,9 @@ deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	eval "$$(make project-populate-application-variables)"
 	make project-deploy PROFILE=$(PROFILE) STACK=$(DEPLOYMENT_STACKS)
 
-update-cloud-components: ### update opensearch image
-	eval "$$(make aws-assume-role-export-variables)"
-	eval "$$(make project-populate-application-variables)"
-	make docker-run-tools ARGS="$$(echo $(AWSCLI) | grep awslocal > /dev/null 2>&1 && echo '--env LOCALSTACK_HOST=$(LOCALSTACK_HOST)' ||:)" CMD=" \
-		$(AWSCLI) opensearch start-service-software-update \
-		--domain-name=$(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)-service \
-		--endpoint-url=https://$${ELASTICSEARCH_EP} \
-		"
 
 project-populate-application-variables:
+	eval "$$(make aws-assume-role-export-variables)"
 	export TTL=$$(make -s k8s-get-namespace-ttl)
 
 	export COGNITO_USER_POOL_CLIENT_SECRET=$$(make -s project-aws-get-cognito-client-secret NAME=$(COGNITO_USER_POOL))
@@ -279,6 +272,7 @@ create-lambda-deploy-dir:
 		touch $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy/test.txt
 	fi
 
+# Not in use as fuzzy is pointing to service finder
 plan: # Plan environment - mandatory: PROFILE=[name]
 	make plan-base
 	make plan-etl
@@ -287,6 +281,7 @@ plan: # Plan environment - mandatory: PROFILE=[name]
 provision: # Provision environment - mandatory: PROFILE=[name]
 	make provision-base
 	make provision-etl
+
 
 plan-base: # Plan environment - mandatory: PROFILE=[name]
 	eval "$$(make aws-assume-role-export-variables)"
@@ -308,6 +303,8 @@ provision-etl: # Provision environment - mandatory: PROFILE=[name]
 	make prepare-lambda-deployment
 	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS_ETL) PROFILE=$(PROFILE)
 
+# ===========================================================
+
 plan_auth: # Plan environment - mandatory: PROFILE=[name]
 	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE)
 	sleep $(SLEEP_AFTER_PLAN)
@@ -324,7 +321,7 @@ project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,A
 	fi
 
 destroy:
-	make delete-namespace PROFILE=$(PROFILE)
+	# make delete-namespace PROFILE=$(PROFILE)
 	make destroy-infrastructure PROFILE=$(PROFILE)
 
 delete-namespace: # Delete namespace - mandatory: PROFILE=[name]

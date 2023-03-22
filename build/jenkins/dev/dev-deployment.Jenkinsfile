@@ -9,7 +9,7 @@ pipeline {
     buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
-    timeout(time: 30, unit: 'MINUTES')
+    timeout(time: 60, unit: 'MINUTES')
   }
 
   environment {
@@ -25,6 +25,13 @@ pipeline {
   }
 
   stages {
+    stage('Populate Project variables') {
+      steps {
+        script {
+          sh 'make project-populate-application-variables'
+        }
+      }
+    }
     stage('Show Variables') {
       steps {
         script {
@@ -39,49 +46,20 @@ pipeline {
         }
       }
     }
-    stage('Check Py Lib Folder') {
+    stage('Plan Auth'){
       steps {
         script {
-          sh 'make create-lambda-deploy-dir'
+          sh 'make plan_auth'
         }
       }
     }
-    stage('Plan Base Infrastructure') {
+    stage('Provision Auth'){
       steps {
         script {
-          sh "make plan-base PROFILE=${env.PROFILE}"
+          sh 'make provision_auth'
         }
       }
     }
-    stage('Plan ETL Infrastructure') {
-      steps {
-        script {
-          sh "make plan-etl PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-    stage('Provision Base Infrastructure') {
-      steps {
-        script {
-          sh "make provision-base PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-
-    stage('Provision ETL Infrastructure') {
-      steps {
-        script {
-          sh "make provision-etl PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-    // stage('Update Cloud Components') {
-    //   steps {
-    //     script {
-    //       sh "make update-cloud-components"
-    //     }
-    //   }
-    // }
     stage('Deploy API') {
       steps {
         script {
@@ -96,17 +74,17 @@ pipeline {
         }
       }
     }
+    stage('Populate Cognito Store') {
+      steps {
+        script {
+          sh 'make project-populate-cognito'
+        }
+      }
+    }
     stage('Monitor Route53 Connection') {
       steps {
         script {
           sh 'make monitor-r53-connection'
-        }
-      }
-    }
-    stage('Run Service ETL') {
-      steps {
-        script {
-          sh 'make apply-data-changes'
         }
       }
     }
