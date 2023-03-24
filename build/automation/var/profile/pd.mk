@@ -88,6 +88,8 @@ TF_VAR_service_etl_sns_logging_level := INFO
 TF_VAR_service_etl_sns_email := service-etl-alerts-de-aaaafqkcxkkecdxfimtohq46zu@a2si.slack.com #service-etl-logs-aaaaepsnsym5hcy3wa6vxo4aya@a2si.slack.com
 #Every 4 minutes
 TF_VAR_service_etl_alarm_period := 240
+TF_VAR_texas_vpc_name = lk8s-$(AWS_ACCOUNT_NAME).texasplatform.uk
+
 
 # Connection to DoS Read Replica for extraction Lambdas. For the Demo env we point to the live read replica
 TF_VAR_dos_sf_replica_db := uec-core-dos-live-db-replica-sf.dos-db-sync-rds

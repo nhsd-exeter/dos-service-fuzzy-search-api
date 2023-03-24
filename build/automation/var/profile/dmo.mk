@@ -70,6 +70,7 @@ TF_VAR_es_instance_type := m5.large.elasticsearch
 TF_VAR_es_snapshot_bucket := $(TF_VAR_service_prefix)-elastic-search-snapshots
 TF_VAR_es_snapshot_role := $(TF_VAR_service_prefix)-elasticsearch-snapshot
 TF_VAR_es_domain_name := $(DOMAIN)
+TF_VAR_texas_vpc_name = lk8s-$(AWS_ACCOUNT_NAME).texasplatform.uk
 
 
 
