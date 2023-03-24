@@ -309,8 +309,10 @@ plan_auth: # Plan environment - mandatory: PROFILE=[name]
 	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE)
 	sleep $(SLEEP_AFTER_PLAN)
 
+#Remove exit 0 after move to MOMv2 Jenkins instance
 provision_auth: # Provision environment - mandatory: PROFILE=[name]
 	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE) || exit 0
+
 
 project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,AWS_ROLE=Developer
 	if $(ADD_DEFAULT_COGNITO_USERS); then \
