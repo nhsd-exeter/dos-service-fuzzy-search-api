@@ -310,7 +310,7 @@ plan_auth: # Plan environment - mandatory: PROFILE=[name]
 	sleep $(SLEEP_AFTER_PLAN)
 
 provision_auth: # Provision environment - mandatory: PROFILE=[name]
-	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE)
+	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS_AUTH) PROFILE=$(PROFILE) || exit 0
 
 project-populate-cognito: ## Populate cognito - optional: PROFILE=nonprod|prod,AWS_ROLE=Developer
 	if $(ADD_DEFAULT_COGNITO_USERS); then \
