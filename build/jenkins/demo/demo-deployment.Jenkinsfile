@@ -54,17 +54,17 @@ pipeline {
       }
     }
 
-    stage('Plan Auth Infrastructure') {
+    stage('Plan Infrastructure') {
       steps {
         script {
-          sh "make plan_auth PROFILE=${env.PROFILE}"
+          sh "make plan PROFILE=${env.PROFILE}"
         }
       }
     }
-    stage('Provision Auth Infrastructure') {
+    stage('Provision Infrastructure') {
       steps {
         script {
-          sh "make provision_auth PROFILE=${env.PROFILE}"
+          sh "make provision PROFILE=${env.PROFILE}"
         }
       }
     }

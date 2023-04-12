@@ -55,13 +55,15 @@ CHECK_DEPLOYMENT_POLL_INTERVAL := 10
 # Infrastructure variables
 
 DEPLOYMENT_STACKS = application
-INFRASTRUCTURE_STACKS =
+INFRASTRUCTURE_STACKS = $(INFRASTRUCTURE_STACKS_AUTH),$(INFRASTRUCTURE_STACKS_FIREWALL)
 INFRASTRUCTURE_STACKS_DESTROY = $(INFRASTRUCTURE_STACKS_BASE)
-INFRASTRUCTURE_STACKS_BASE = elasticsearch
-INFRASTRUCTURE_STACKS_ETL = service_etl
+# INFRASTRUCTURE_STACKS_BASE = elasticsearch
+# INFRASTRUCTURE_STACKS_ETL = service_etl
 INFRASTRUCTURE_STACKS_AUTH = authentication
+INFRASTRUCTURE_STACKS_FIREWALL = firewall
+
 SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
-TF_VAR_service_prefix := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
+TF_VAR_service_prefix := $(SERVICE_PREFIX)
 
 TF_VAR_es_zone_awareness_enabled := true
 TF_VAR_es_availability_zone_count := 2
@@ -112,3 +114,13 @@ GOOGLE_API_ADDRESS_URI := /geocode/json
 
 
 TF_VAR_texas_vpc_name = lk8s-$(AWS_ACCOUNT_NAME).texasplatform.uk
+
+# ===================== firewall
+TF_VAR_waf_dashboard_name = $(SERVICE_PREFIX)-wafv2-dashboard
+TF_VAR_waf_name = $(SERVICE_PREFIX)-waf-acl
+TF_VAR_waf_log_group_name = aws-waf-logs-$(SERVICE_PREFIX)
+TF_VAR_non_gb_rule_metric_name = $(SERVICE_PREFIX)-waf-non-GB-geo-match-metric
+TF_VAR_ip_reputation_list_metric_name = $(SERVICE_PREFIX)-waf-aws-ip-reputation-list-metric
+TF_VAR_common_rule_set_metric_name = $(SERVICE_PREFIX)-waf-aws-common-rule-set-metric
+TF_VAR_sql_injection_rules_metric = $(SERVICE_PREFIX)-waf-aws-bad-inputs-rule-set-metric
+TF_VAR_bad_input_metric_name = $(SERVICE_PREFIX)-waf-aws-bad-inputs-rule-set-metric

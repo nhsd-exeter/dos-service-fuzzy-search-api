@@ -46,17 +46,17 @@ pipeline {
         }
       }
     }
-    stage('Plan Auth'){
+    stage('Plan'){
       steps {
         script {
-          sh 'make plan_auth'
+          sh 'make plan'
         }
       }
     }
-    stage('Provision Auth'){
+    stage('Provision'){
       steps {
         script {
-          sh 'make provision_auth'
+          sh 'make provision'
         }
       }
     }

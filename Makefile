@@ -272,15 +272,16 @@ create-lambda-deploy-dir:
 		touch $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl/deploy/test.txt
 	fi
 
-# Not in use as fuzzy is pointing to service finder
 plan: # Plan environment - mandatory: PROFILE=[name]
-	make plan-base
-	make plan-etl
+	eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make project-populate-application-variables)"
+	make terraform-plan STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
 	sleep $(SLEEP_AFTER_PLAN)
 
 provision: # Provision environment - mandatory: PROFILE=[name]
-	make provision-base
-	make provision-etl
+	eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make project-populate-application-variables)"
+	make terraform-apply-auto-approve STACK=$(INFRASTRUCTURE_STACKS) PROFILE=$(PROFILE)
 
 
 plan-base: # Plan environment - mandatory: PROFILE=[name]
