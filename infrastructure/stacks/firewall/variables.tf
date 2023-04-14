@@ -35,5 +35,3 @@ variable "service_prefix" { description = "Used to identifier project resources"
 variable "profile" { description = "Indication of environment resource" }
 
 variable "aws_region" { description = "Texas AWS deployment region" }
-
-variable "waf_acl_metric" { description = "waf acl metric name"}
