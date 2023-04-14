@@ -50,13 +50,12 @@ CHECK_DEPLOYMENT_POLL_INTERVAL := 10
 # Infrastructure variables
 
 DEPLOYMENT_STACKS = application
-INFRASTRUCTURE_STACKS_BASE = elasticsearch
-INFRASTRUCTURE_STACKS_ETL = service_etl
+# INFRASTRUCTURE_STACKS_BASE = elasticsearch
+# INFRASTRUCTURE_STACKS_ETL = service_etl
 INFRASTRUCTURE_STACKS_AUTH = authentication
-
-INFRASTRUCTURE_STACKS = $(INFRASTRUCTURE_STACKS_BASE),$(INFRASTRUCTURE_STACKS_ETL)
-INFRASTRUCTURE_STACKS_DESTROY = $(INFRASTRUCTURE_STACKS_ETL),$(INFRASTRUCTURE_STACKS_BASE)
-
+INFRASTRUCTURE_STACKS_FIREWALL = firewall
+INFRASTRUCTURE_STACKS = $(INFRASTRUCTURE_STACKS_AUTH),$(INFRASTRUCTURE_STACKS_FIREWALL)
+INFRASTRUCTURE_STACKS_DESTROY = $(INFRASTRUCTURE_STACKS_BASE)
 
 SERVICE_PREFIX := $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)
 
@@ -89,6 +88,8 @@ TF_VAR_service_etl_sns_email := service-etl-alerts-de-aaaafqkcxkkecdxfimtohq46zu
 #Every 4 minutes
 TF_VAR_service_etl_alarm_period := 240
 TF_VAR_texas_vpc_name = lk8s-$(AWS_ACCOUNT_NAME).texasplatform.uk
+TF_VAR_PROJECT_GROUP_SHORT = $(PROJECT_GROUP_SHORT)
+
 
 
 # Connection to DoS Read Replica for extraction Lambdas. For the Demo env we point to the live read replica
@@ -122,3 +123,14 @@ AUTH_LOGIN_URI := /authentication/login
 
 GOOGLE_API_URL := https://maps.google.com/maps/api
 GOOGLE_API_ADDRESS_URI := /geocode/json
+
+
+# ===================== firewall
+TF_VAR_waf_dashboard_name = $(SERVICE_PREFIX)-wafv2-dashboard
+TF_VAR_waf_name = $(SERVICE_PREFIX)-waf-acl
+TF_VAR_waf_log_group_name = aws-waf-logs-$(SERVICE_PREFIX)
+TF_VAR_non_gb_rule_metric_name = $(SERVICE_PREFIX)-waf-non-GB-geo-match-metric
+TF_VAR_ip_reputation_list_metric_name = $(SERVICE_PREFIX)-waf-aws-ip-reputation-list-metric
+TF_VAR_common_rule_set_metric_name = $(SERVICE_PREFIX)-waf-aws-common-rule-set-metric
+TF_VAR_sql_injection_rules_metric = $(SERVICE_PREFIX)-waf-aws-bad-inputs-rule-set-metric
+TF_VAR_bad_input_metric_name = $(SERVICE_PREFIX)-waf-aws-bad-inputs-rule-set-metric
