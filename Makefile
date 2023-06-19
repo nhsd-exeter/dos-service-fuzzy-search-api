@@ -217,6 +217,7 @@ project-populate-application-variables:
 	export FUZZY_API_COGNIGTO_USER_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .POSTCODE_PASSWORD | tr -d '"')
 	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
 	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}
+	export TEXAS_WAF_ACL_ID=$$(make -s aws-waf-get WAF_NAME=$(WAF_NAME))
 
 project-aws-get-cognito-client-id: # Get AWS cognito client id - mandatory: NAME
 	aws cognito-idp list-user-pool-clients \

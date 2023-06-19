@@ -43,6 +43,12 @@ aws-assume-role-export-variables: ### Get assume role export for the pipeline us
 # 		echo "export AWS_SESSION_TOKEN=$${array[2]}"
 # 	fi
 
+aws-waf-get:
+	make -s docker-run-tools ARGS="$$(echo $(AWSCLI) | grep awslocal > /dev/null 2>&1 && echo '--env LOCALSTACK_HOST=$(LOCALSTACK_HOST)' ||:)" CMD=" \
+	$(AWSCLI) wafv2 list-web-acls --scope=REGIONAL --output=json \
+		| jq -r '.WebACLs[] |	select(.Name == \""$(WAF_NAME)"\") | .Id' \
+	" | tr -d '\r' | tr -d '\n'
+
 aws-user-get-role:
 	make -s docker-run-tools ARGS="$$(echo $(AWSCLI) | grep awslocal > /dev/null 2>&1 && echo '--env LOCALSTACK_HOST=$(LOCALSTACK_HOST)' ||:)" CMD=" \
 		$(AWSCLI) sts get-caller-identity \
