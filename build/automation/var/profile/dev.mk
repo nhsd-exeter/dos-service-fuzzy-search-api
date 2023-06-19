@@ -116,8 +116,9 @@ GOOGLE_API_ADDRESS_URI := /geocode/json
 TF_VAR_texas_vpc_name = lk8s-$(AWS_ACCOUNT_NAME).texasplatform.uk
 
 # ===================== firewall
+WAF_NAME = $(SERVICE_PREFIX)-waf-acl
 TF_VAR_waf_dashboard_name = $(SERVICE_PREFIX)-wafv2-dashboard
-TF_VAR_waf_name = $(SERVICE_PREFIX)-waf-acl
+TF_VAR_waf_name = $(WAF_NAME)
 TF_VAR_waf_log_group_name = aws-waf-logs-$(SERVICE_PREFIX)
 TF_VAR_non_gb_rule_metric_name = $(SERVICE_PREFIX)-waf-non-GB-geo-match-metric
 TF_VAR_ip_reputation_list_metric_name = $(SERVICE_PREFIX)-waf-aws-ip-reputation-list-metric
