@@ -1,0 +1,27 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/dosapi/dosservices/v0.0.1/byfuzzysearch/?search-term=woodbury"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "search_parameters": {
+        "search_criteria": ["woodbury"],
+        "fuzz_level": 1,
+        "address_priority": 0,
+        "name_priority": 2,
+        "postcode_priority": 0,
+        "public_name_priority": 0,
+        "max_num_services_to_return": 2
+      },
+      "search_results": {
+        "number_of_services_found": 1,
+        "services": []
+      }
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
