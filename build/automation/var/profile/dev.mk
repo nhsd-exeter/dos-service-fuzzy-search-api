@@ -102,16 +102,15 @@ GOOGLE_MAPS_API_KEY := $(or $(GOOGLE_MAPS_API_KEY), )
 
 
 #Once wiremock is deployed to dev environment calls to postcode api will be mocked
-POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-mock-postcode-ingress.k8s-nonprod.texasplatform.uk/api
+POSTCODE_MAPPING_SERVICE_URL := https://$(PROJECT_GROUP_SHORT)-sfsa-$(PROFILE)-$(PROJECT_GROUP_SHORT)-sfs-mock-postcode-ingress.k8s-nonprod.texasplatform.uk/api
 POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
-AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
+AUTH_LOGIN_URL := https://$(PROJECT_GROUP_SHORT)-sfsa-$(PROFILE)-$(PROJECT_GROUP_SHORT)-sfs-service.$(TEXAS_HOSTED_ZONE)
 AUTH_LOGIN_URI := /authentication/login
 
 GOOGLE_API_URL := https://maps.google.com/maps/api
 GOOGLE_API_ADDRESS_URI := /geocode/json
-
 
 TF_VAR_texas_vpc_name = lk8s-$(AWS_ACCOUNT_NAME).texasplatform.uk
 

@@ -19,8 +19,8 @@ spec:
       labels:
         app: service-search
     spec:
-      serviceAccountName: uec-dos-api-sfsa-service-account
-      serviceAccount: uec-dos-api-sfsa-service-account
+      serviceAccountName: uec-sf-sfsa-service-account
+      serviceAccount: uec-sf-sfsa-service-account
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:

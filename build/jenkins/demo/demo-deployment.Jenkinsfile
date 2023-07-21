@@ -1,15 +1,15 @@
 pipeline {
   /*
-    Description: Deployment pipeline to deploy the Service Search module into the Demo environment
+    Description: Deployment pipeline to deploy the Service Search module into the Development environment.
    */
 
-  agent { label 'jenkins-slave' }
+  agent any
 
   options {
     buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
     disableConcurrentBuilds()
     parallelsAlwaysFailFast()
-    timeout(time: 30, unit: 'MINUTES')
+    timeout(time: 60, unit: 'MINUTES')
   }
 
   environment {
@@ -46,32 +46,24 @@ pipeline {
         }
       }
     }
-    stage('Check Py Lib Folder') {
+    stage('Plan'){
       steps {
         script {
-          sh 'make create-lambda-deploy-dir'
+          sh 'make plan'
         }
       }
     }
-
-    stage('Plan Infrastructure') {
+    stage('Provision'){
       steps {
         script {
-          sh "make plan PROFILE=${env.PROFILE}"
-        }
-      }
-    }
-    stage('Provision Infrastructure') {
-      steps {
-        script {
-          sh "make provision PROFILE=${env.PROFILE}"
+          sh 'make provision'
         }
       }
     }
     stage('Deploy API') {
       steps {
         script {
-          sh "make deploy PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG}"
+          sh "make deploy PROFILE=${env.PROFILE} API_IMAGE_TAG=${IMAGE_TAG} MOCK_POSTCODE_IMAGE_TAG=${IMAGE_TAG}"
         }
       }
     }
@@ -82,17 +74,17 @@ pipeline {
         }
       }
     }
-    stage('Monitor Route53 Connection') {
-      steps {
-        script {
-          sh 'make monitor-r53-connection'
-        }
-      }
-    }
     stage('Populate Cognito Store') {
       steps {
         script {
           sh 'make project-populate-cognito'
+        }
+      }
+    }
+    stage('Monitor Route53 Connection') {
+      steps {
+        script {
+          sh 'make monitor-r53-connection'
         }
       }
     }

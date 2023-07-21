@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: uec-dos-api-sfs-service
-  namespace: uec-dos-api-sfs
+  name: uec-sf-sfs-service
+  namespace: uec-sf-sfs
   labels:
     app: service-search
 spec:

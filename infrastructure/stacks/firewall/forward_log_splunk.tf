@@ -1,10 +1,14 @@
 # Create IAM role necessary for cross-account log subscriptions
-resource "aws_iam_role" "cw_to_subscription_filter_role" {
-  name               = "${var.service_prefix}_CWLtoSubscriptionFilterRole"
-  assume_role_policy = data.aws_iam_policy_document.central_logs_assume_role.json
-  lifecycle {
-    create_before_destroy = true
-  }
+# resource "aws_iam_role" "cw_to_subscription_filter_role" {
+#   name               = "${var.service_prefix}_CWLtoSubscriptionFilterRole"
+#   assume_role_policy = data.aws_iam_policy_document.central_logs_assume_role.json
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
+
+data "aws_iam_role" "cw_to_subscription_filter_role" {
+  name = "${var.service_prefix}_CWLtoSubscriptionFilterRole"
 }
 
 data "aws_iam_policy_document" "central_logs_assume_role" {
@@ -21,12 +25,15 @@ data "aws_iam_policy_document" "central_logs_assume_role" {
 }
 
 # Permissions policy to define actions cloudwatch logs can perform
-resource "aws_iam_policy" "central_cw_subscription_iam_policy" {
-  name   = "${var.service_prefix}_central_cw_subscription"
-  policy = data.aws_iam_policy_document.central_cw_subscription_doc_policy.json
-  lifecycle {
-    create_before_destroy = true
-  }
+# resource "aws_iam_policy" "central_cw_subscription_iam_policy" {
+#   name   = "${var.service_prefix}_central_cw_subscription"
+#   policy = data.aws_iam_policy_document.central_cw_subscription_doc_policy.json
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
+data "aws_iam_policy" "central_cw_subscription_iam_policy" {
+  name = "${var.service_prefix}_central_cw_subscription"
 }
 
 data aws_iam_policy_document "central_cw_subscription_doc_policy" {
@@ -41,12 +48,12 @@ data aws_iam_policy_document "central_cw_subscription_doc_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "central_logging_att" {
-  policy_arn = aws_iam_policy.central_cw_subscription_iam_policy.arn
-  role       = aws_iam_role.cw_to_subscription_filter_role.id
+  policy_arn = data.aws_iam_policy.central_cw_subscription_iam_policy.arn
+  role       = data.aws_iam_role.cw_to_subscription_filter_role.id
 }
 
 data "aws_secretsmanager_secret" "cloudwatch-cross-accounts" {
-  name = "cloudwatch-cross-account-logging"
+  name = "texas_customer-cloudwatch-cross-account-logging"
 }
 
 data "aws_secretsmanager_secret_version" "cloudwatch-cross-accounts" {
@@ -58,9 +65,14 @@ locals {
 }
 
 resource "time_sleep" "wait_30_seconds" {
-  depends_on      = [aws_iam_role.cw_to_subscription_filter_role]
+  depends_on      = [data.aws_iam_role.cw_to_subscription_filter_role]
   create_duration = "30s"
 }
+
+data "aws_cloudwatch_log_group" "waf_logs" {
+  name = var.waf_log_group_name
+}
+
 # The subscription filter to send to the central logging
 resource "aws_cloudwatch_log_subscription_filter" "central_logging_subscr_filter" {
   name            = "${var.service_prefix}_central_logging_subscr_filter"
@@ -71,7 +83,7 @@ resource "aws_cloudwatch_log_subscription_filter" "central_logging_subscr_filter
   distribution    = "ByLogStream"
 
   depends_on = [
-    aws_cloudwatch_log_group.waf_logs,
+    data.aws_cloudwatch_log_group.waf_logs,
     time_sleep.wait_30_seconds
   ]
   lifecycle {

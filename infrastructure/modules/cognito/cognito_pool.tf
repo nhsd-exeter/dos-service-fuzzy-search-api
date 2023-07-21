@@ -24,6 +24,13 @@ resource "aws_cognito_user_pool" "pool" {
     case_sensitive = false
   }
 
+  account_recovery_setting {
+    recovery_mechanism {
+      name     = "admin_only"
+      priority = 1
+    }
+  }
+
   tags = var.tags
 }
 

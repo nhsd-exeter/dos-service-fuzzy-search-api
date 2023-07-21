@@ -15,7 +15,7 @@ where
 
 - `profile` is provides a set of environment configuration variables and its usage is described [here](https://github.com/nhsd-exeter/make-devops/blob/master/build/automation/lib/project/template/build/automation/var/profile/README.md).
 - `project-name` should match the `$(PROJECT_NAME)` make variable defined in the `build/automation/var/project.mk` file, e.g. `integration` or `service-fuzzy-search-api`
-- `project-id` should be used if more hierarchical naming convention needs to be in place, it is defined as `PROJECT_ID = $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)` in the `build/automation/var/project.mk` file, e.g. `uec-dos-int`, `uec-dos-api-sfsa`
+- `project-id` should be used if more hierarchical naming convention needs to be in place, it is defined as `PROJECT_ID = $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)` in the `build/automation/var/project.mk` file, e.g. `uec-dos-int`, `uec-sf-sfsa`
 - `team-name` should match the the name of the team currently responsible for the project, e.g. `service-finder` or `dos-integration`
 
 ## Template message

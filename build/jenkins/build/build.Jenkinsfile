@@ -2,7 +2,7 @@ pipeline {
   /*
     Description: Development pipeline to build test push and deploy to the development environment.
    */
-  agent { label 'jenkins-slave' }
+  agent any
 
   environment {
     PROFILE = 'dev'
@@ -39,10 +39,10 @@ pipeline {
         }
       }
     }
-  stage('Scan Dependencies'){
+    stage('Scan Dependencies') {
       steps {
         script {
-          sh "make scan"
+          sh 'make scan'
         }
         archiveArtifacts artifacts: 'reports/**'
       }
@@ -57,7 +57,7 @@ pipeline {
     stage('Unit Test') {
       steps {
         script {
-          sh "make unit-test"
+          sh 'make unit-test'
         }
       }
     }

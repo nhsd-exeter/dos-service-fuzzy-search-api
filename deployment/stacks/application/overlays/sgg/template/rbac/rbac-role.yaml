@@ -2,7 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   namespace: K8S_APP_NAMESPACE_TO_REPLACE
-  name: uec-dos-api-pc_readwrite
+  name: uec-sf-pc_readwrite
 rules:
 - apiGroups: [ "" ]
   resources: [ "configmaps", "events", "persistentvolumeclaims", "pods", "secrets", "serviceaccounts", "services",  "pods/log", "pods/exec" ]

@@ -370,7 +370,7 @@ The high level principles that the product /development team must adhere to are:
 
   In the event of ETL failure, an error log will be written to the fuzzy-etl-alerts slack channels. There will be a slack channel per environment.
 
-  Cloudwatch logs for the ETLs are also available under the log group of: /aws/lambda/uec-dos-api-sfsa-dev...
+  Cloudwatch logs for the ETLs are also available under the log group of: /aws/lambda/uec-sf-sfsa-dev...
 
 - Monitoring
 
@@ -396,13 +396,13 @@ No backups are required for this project since we do not change the underlying d
 
 - Development
   - Profile: `dev`
-  - URL address: [ https://uec-dos-api-sfsa-dev-uec-dos-api-sfs-service.k8s-nonprod.texasplatform.uk/]( https://uec-dos-api-sfsa-dev-uec-dos-api-sfs-service.k8s-nonprod.texasplatform.uk/)
+  - URL address: [ https://uec-sf-sfsa-dev-uec-sf-sfs-service.k8s-nonprod.texasplatform.uk/]( https://uec-sf-sfsa-dev-uec-sf-sfs-service.k8s-nonprod.texasplatform.uk/)
 - Demo
   - Profile `demo`
-  - URL address: [ https://uec-dos-api-sfsa-demo-uec-dos-api-sfs-service.k8s-prod.texasplatform.uk]( https://uec-dos-api-sfsa-demo-uec-dos-api-sfs-service.k8s-prod.texasplatform.uk/)
+  - URL address: [ https://uec-sf-sfsa-demo-uec-sf-sfs-service.k8s-prod.texasplatform.uk]( https://uec-sf-sfsa-demo-uec-sf-sfs-service.k8s-prod.texasplatform.uk/)
 - Live
   - Profile `live`
-  - URL address: [ https://uec-dos-api-sfsa-prod-uec-dos-api-sfs-service.k8s-prod.texasplatform.uk/]( https://uec-dos-api-sfsa-prod-uec-dos-api-sfs-service.k8s-prod.texasplatform.uk/)
+  - URL address: [ https://uec-sf-sfsa-prod-uec-sf-sfs-service.k8s-prod.texasplatform.uk/]( https://uec-sf-sfsa-prod-uec-sf-sfs-service.k8s-prod.texasplatform.uk/)
 
 
 ### Runbooks

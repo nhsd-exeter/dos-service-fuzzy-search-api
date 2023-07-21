@@ -3,7 +3,7 @@ pipeline {
     Description: Deployment pipeline to deploy the Service Search module into the Development environment.
    */
 
-  agent { label 'jenkins-slave' }
+  agent any
 
   options {
     buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))

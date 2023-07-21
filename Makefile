@@ -10,7 +10,11 @@ SF_AWS_SECRET_NAME := service-finder/deployment
 prepare: ## Prepare environment
 	make \
 		git-config \
-		docker-config
+		docker-config \
+		pipeline-prepare
+
+pipeline-prepare:
+	sh $(PROJECT_DIR)scripts/assume_role.sh $(JENKINS_ENV) $(JENKINS_SERVICE_TEAM)
 
 derive-build-tag:
 	dir=$$(make _docker-get-dir NAME=api)
@@ -207,39 +211,26 @@ project-populate-application-variables:
 	eval "$$(make aws-assume-role-export-variables)"
 	export TTL=$$(make -s k8s-get-namespace-ttl)
 
-	export COGNITO_USER_POOL_CLIENT_SECRET=$$(make -s project-aws-get-cognito-client-secret NAME=$(COGNITO_USER_POOL))
-	export COGNITO_USER_POOL_CLIENT_ID=$$(make -s project-aws-get-cognito-client-id NAME=$(COGNITO_USER_POOL))
+	export COGNITO_USER_POOL_CLIENT_SECRET=$$(make -s aws-cognito-get-client-secret NAME=$(COGNITO_USER_POOL))
+	export COGNITO_USER_POOL_CLIENT_ID=$$(make -s aws-cognito-get-client-id NAME=$(COGNITO_USER_POOL))
 	export COGNITO_USER_POOL_ID=$$(make -s aws-cognito-get-userpool-id NAME=$(COGNITO_USER_POOL))
 	export COGNITO_JWT_VERIFICATION_URL=https://cognito-idp.eu-west-2.amazonaws.com/$${COGNITO_USER_POOL_ID}/.well-known/jwks.json
 	export COGNITO_ADMIN_AUTH_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .AUTHENTICATION_PASSWORD | tr -d '"')
-	export POSTCODE_MAPPING_PASSWORD=$$(make secret-fetch NAME=uec-dos-api-sfsa-$(PROFILE)-cognito-passwords | jq .POSTCODE_PASSWORD | tr -d '"' )
+	export POSTCODE_MAPPING_PASSWORD=$$(make secret-fetch NAME=$(PROJECT_GROUP_SHORT)-sfsa-$(PROFILE)-cognito-password | jq .POSTCODE_PASSWORD | tr -d '"' )
 	export GOOGLE_MAPS_API_KEY=$$(make secret-fetch NAME=$(SF_AWS_SECRET_NAME) | jq .GOOGLE_MAPS_API_KEY | tr -d '"' )
 	export FUZZY_API_COGNIGTO_USER_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .POSTCODE_PASSWORD | tr -d '"')
 	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
 	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}
 	export TEXAS_WAF_ACL_ID=$$(make -s aws-waf-get WAF_NAME=$(WAF_NAME))
 
-project-aws-get-cognito-client-id: # Get AWS cognito client id - mandatory: NAME
-	aws cognito-idp list-user-pool-clients \
-		--user-pool-id $$(make -s aws-cognito-get-userpool-id NAME=$(NAME)) \
-		--region $(AWS_REGION) \
-		--query 'UserPoolClients[].ClientId' \
-		--output text
-
-project-aws-get-cognito-client-secret: # Get AWS secret - mandatory: NAME
-	aws cognito-idp describe-user-pool-client \
-		--user-pool-id $$(make -s aws-cognito-get-userpool-id NAME=$(NAME)) \
-		--client-id $$(make -s project-aws-get-cognito-client-id NAME=$(NAME)) \
-		--region $(AWS_REGION) \
-		--query 'UserPoolClient.ClientSecret' \
-		--output text
-
 project-aws-get-admin-secret: #Get AWS Pass
-	aws secretsmanager get-secret-value \
-		--secret-id $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)-cognito-passwords \
-		--region $(AWS_REGION) \
-		--query 'SecretString' \
-		--output text
+	make -s docker-run-tools ARGS="$$(echo $(AWSCLI) | grep awslocal > /dev/null 2>&1 && echo '--env LOCALSTACK_HOST=$(LOCALSTACK_HOST)' ||:)" CMD=" \
+		$(AWSCLI) secretsmanager get-secret-value \
+			--secret-id $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)-cognito-password \
+			--region $(AWS_REGION) \
+			--query 'SecretString' \
+			--output text \
+	" | tr -d '\r' | tr -d '\n'
 
 prepare-lambda-deployment: # Downloads the required libraries for the Lambda functions
 	cd $(PROJECT_DIR)infrastructure/stacks/service_etl/functions/service_etl
@@ -463,7 +454,7 @@ run-smoke-test:
 	make quick-start PROFILE=$(PROFILE) VERSION=$(API_IMAGE_TAG)
 	sleep 20
 	cd test/contract
-	make run-smoke COGNITO_USER_PASS=$$(make secret-fetch NAME=$(PROJECT_GROUP_SHORT)-sfsa-${PROFILE}-cognito-passwords | jq .AUTHENTICATION_PASSWORD | tr -d '"')
+	make run-smoke COGNITO_USER_PASS=$$(make secret-fetch NAME=$(PROJECT_GROUP_SHORT)-sfsa-${PROFILE}-cognito-password | jq .AUTHENTICATION_PASSWORD | tr -d '"')
 	cd ../../
 	make stop
 
