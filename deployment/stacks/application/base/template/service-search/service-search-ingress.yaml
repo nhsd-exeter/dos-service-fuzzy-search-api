@@ -10,7 +10,7 @@ metadata:
     alb.ingress.kubernetes.io/backend-protocol: HTTPS
     alb.ingress.kubernetes.io/listen-port: '[{"HTTPS":443}]'
     alb.ingress.kubernetes.io/ssl-policy: AWS_ALB_SSL_TLS_POLICY_TO_REPLACE
-    alb.ingress.kubernetes.io/waf-acl-id: TEXAS_WAF_ACL_ID_TO_REPLACE
+    alb.ingress.kubernetes.io/wafv2-acl-arn: arn:aws:wafv2:eu-west-2:AWS_ACCOUNT_ID_TO_REPLACE:regional/webacl/WAF_NAME_TO_REPLACE/TEXAS_WAF_ACL_ID_TO_REPLACE
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:AWS_REGION_TO_REPLACE:AWS_ACCOUNT_ID_TO_REPLACE:certificate/TEXAS_CERTIFICATE_ID_TO_REPLACE
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/tags: Service=service-finder
