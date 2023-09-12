@@ -48,13 +48,12 @@ locals {
   service_etl_alarm_name = "${var.service_prefix}-service-etl-alarm"
 
   standard_tags = {
-    "Programme"     = "uec"
-    "Service"       = "service-finder"
-    "Product"       = "service-finder"
-    "Environment"   = var.profile
-    "tag"           = "uec-sf"
-    "uc_name"       = "UECSF"
-    "SharedService" = "dos"
+    "Programme"   = "uec"
+    "Service"     = "service-finder"
+    "Product"     = "service-finder"
+    "Environment" = var.profile
+    "tag"         = "uec-sf"
+    "uc_name"     = "UECSF"
   }
 
 }

@@ -1,6 +1,5 @@
-# Uncomment if state is loss on AWS
 resource "aws_secretsmanager_secret" "cognito_admin_password" {
-  name                    = "${var.service_prefix}-cognito-password"
+  name                    = "${var.service_prefix}-cognito-passwords"
   description             = "Password for Cognito admin"
   recovery_window_in_days = 0
   tags                    = var.tags
@@ -20,16 +19,6 @@ EOF
     ignore_changes = [secret_string]
   }
 }
-
-
-# data "aws_secretsmanager_secret" "cognito_admin_password" {
-#   name = "${var.service_prefix}-cognito-password"
-# }
-
-# data "aws_secretsmanager_secret_version" "cognito_admin_password" {
-#   secret_id = data.aws_secretsmanager_secret.cognito_admin_password.id
-# }
-
 
 resource "random_password" "cognito_admin_auth_password" {
   length      = 16
