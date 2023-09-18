@@ -1,7 +1,7 @@
 ORG_NAME = nhsd-exeter
 PROGRAMME = uec
 PROJECT_GROUP = uec/dos-api
-PROJECT_GROUP_SHORT = uec-dos-api
+PROJECT_GROUP_SHORT = uec-sf
 PROJECT_NAME = service-fuzzy-search-api
 PROJECT_NAME_SHORT = sfsa
 PROJECT_DISPLAY_NAME = DoS Service Fuzzy Search API
@@ -17,6 +17,7 @@ SERVICE_TAG = $(PROJECT_GROUP_SHORT)
 SERVICE_TAG_COMMON = texas
 SERVICE_DEVELOPER_ROLE = texas:uecdosapi-service-developer
 
+JENKINS_MOM_URL = https://$(PROJECT_GROUP_SHORT)-jenkins-ddc-jenkins-master.mgmt.texasplatform.uk/
 PROJECT_TECH_STACK_LIST = java,terraform
 
 DOCKER_REPOSITORIES =

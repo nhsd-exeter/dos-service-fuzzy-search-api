@@ -9,6 +9,10 @@ TF_VAR_project_id = $(PROJECT_ID)
 TF_VAR_eks_terraform_state_key = eks/terraform.tfstate
 TF_VAR_aws_account_id = $(AWS_ACCOUNT_ID_PROD)
 TF_VAR_application_service_account_name = $(APPLICATION_SA_NAME)
+
+JENKINS_ENV = live-lk8s-prod
+JENKINS_SERVICE_TEAM = uec-sf
+
 # ==============================================================================
 
 

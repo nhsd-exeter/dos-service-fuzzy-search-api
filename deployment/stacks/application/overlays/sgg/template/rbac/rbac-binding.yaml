@@ -1,12 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: uec-dos-api-pc_readwrite_rolebinding
+  name: uec-sf-pc_readwrite_rolebinding
   namespace: K8S_APP_NAMESPACE_TO_REPLACE
 subjects:
 - kind: Group
   name: texas:uecdosapi-service-developer
 roleRef:
   kind: Role
-  name: uec-dos-api-pc_readwrite
+  name: uec-sf-pc_readwrite
   apiGroup: rbac.authorization.k8s.io

@@ -10,12 +10,11 @@ COGNITO_ADMIN_USER="service-finder-admin@nhs.net"
 COGNITO_AUTHENTICATION_ADMIN_USER="api-auth-admin@nhs.net"
 COGNITO_SERVICE_FINDER_USER="service-finder-api@nhs.net"
 COGNITO_FUZZY_SEARCH_USER="fuzzy-search-api@nhs.net"
-PEN_TEST_USER_FULL_ACCESS="pen-test-sf@nhs.net"
 
 
 COGNITO_ADMIN_PASSWORD=$(
     aws secretsmanager get-secret-value \
-        --secret-id $PROJECT_GROUP_SHORT-$PROJECT_NAME_SHORT-$ENVIRONMENT-cognito-passwords \
+        --secret-id $PROJECT_GROUP_SHORT-$PROJECT_NAME_SHORT-$ENVIRONMENT-cognito-password \
         --region $AWS_REGION \
         --query 'SecretString' \
         --output text)
@@ -153,8 +152,6 @@ function cognito_setup_users_and_groups {
     cognito_setup_user $COGNITO_FUZZY_SEARCH_USER "${COGNITO_POSTCODE_GROUP[@]}"
     cognito_setup_user $COGNITO_AUTHENTICATION_ADMIN_USER "${COGNITO_GROUPS[@]}"
     cognito_setup_user $COGNITO_ADMIN_USER "${COGNITO_GROUPS[@]}"
-    cognito_setup_user $PEN_TEST_USER_FULL_ACCESS "${COGNITO_GROUPS[@]}"
-
 }
 
 function main {

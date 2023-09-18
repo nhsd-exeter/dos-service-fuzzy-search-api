@@ -283,4 +283,4 @@ At branch merge stage, sonarqube is run against any code that has been modified 
 At the commit and branch merging stages, code formatting checks are performed. Again, all reported issues should be resolved unless there is a good reason not to make the changes. The formatting rules are encapsulated within the 'docker-edit' make target.
 
 ## Code Coverage:
-At the branch merge stage, a code coverage check is performed against all modified code. When the PR is created for the merge request this check will run and a report will be generated. The modified code must meet the minimum requirement of 80% unit test coverage. The overall project code coverage report can be found here: https://sonarcloud.io/summary/overall?id=uec-dos-api-sfsa
+At the branch merge stage, a code coverage check is performed against all modified code. When the PR is created for the merge request this check will run and a report will be generated. The modified code must meet the minimum requirement of 80% unit test coverage. The overall project code coverage report can be found here: https://sonarcloud.io/summary/overall?id=uec-sf-sfsa

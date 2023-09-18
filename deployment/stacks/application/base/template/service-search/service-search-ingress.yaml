@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: uec-dos-api-sfs-service
-  namespace: uec-dos-api-sfs
+  name: uec-sf-sfs-service
+  namespace: uec-sf-sfs
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
@@ -24,6 +24,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: uec-dos-api-sfs-service
+                name: uec-sf-sfs-service
                 port:
                   number: 443

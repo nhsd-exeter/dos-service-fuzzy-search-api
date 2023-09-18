@@ -114,11 +114,11 @@ ADD_DEFAULT_COGNITO_USERS := false
 # Google API Key
 GOOGLE_MAPS_API_KEY := $(or $(GOOGLE_MAPS_API_KEY), )
 
-POSTCODE_MAPPING_SERVICE_URL := https://uec-dos-api-pc-$(PROFILE)-uec-dos-api-pc-ingress.$(TEXAS_HOSTED_ZONE)/api
+POSTCODE_MAPPING_SERVICE_URL := https://$(PROJECT_GROUP_SHORT)-pc-$(PROFILE)-$(PROJECT_GROUP_SHORT)-pc-ingress.$(TEXAS_HOSTED_ZONE)/api
 POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
 
 ##Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
-AUTH_LOGIN_URL := https://uec-dos-api-sfsa-$(PROFILE)-uec-dos-api-sfs-service.$(TEXAS_HOSTED_ZONE)
+AUTH_LOGIN_URL := https://$(PROJECT_GROUP_SHORT)-sfsa-$(PROFILE)-$(PROJECT_GROUP_SHORT)-sfs-service.$(TEXAS_HOSTED_ZONE)
 AUTH_LOGIN_URI := /authentication/login
 
 GOOGLE_API_URL := https://maps.google.com/maps/api

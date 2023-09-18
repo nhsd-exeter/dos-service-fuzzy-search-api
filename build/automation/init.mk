@@ -306,7 +306,7 @@ _devops-project-update-variables: ### Set up project variables - mandatory: DIR=
 	pns=$$(cat $$file | grep "PROJECT_NAME_SHORT = " | sed "s/PROJECT_NAME_SHORT = //")
 	pdn=$$(cat $$file | grep "PROJECT_DISPLAY_NAME = " | sed "s/PROJECT_DISPLAY_NAME = //")
 	if [[ ! "$(ALWAYS_ASK)" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]]; then
-		if [ "$$pg" != '[uec/dos-api]' ] && [ "$$pgs" != '[uec-dos-api]' ] && [ "$$pn" != '[project-name]' ] && [ "$$pns" != '[pns]' ] && [ "$$pdn" != '[Project Name]' ]; then
+		if [ "$$pg" != '[uec/dos-api]' ] && [ "$$pgs" != '[uec-sf]' ] && [ "$$pn" != '[project-name]' ] && [ "$$pns" != '[pns]' ] && [ "$$pdn" != '[Project Name]' ]; then
 			exit 0
 		fi
 	fi
@@ -637,7 +637,8 @@ PATH_SYSTEM := /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 .ONESHELL:
 .PHONY: *
 MAKEFLAGS := --no-print-director
-PATH := $(PATH_DEVOPS):$(PATH_HOMEBREW):$(PATH_SYSTEM)
+PATH_PYENV = /.pyenv/versions/jenkins/bin
+PATH := $(PATH_PYENV):$(PATH_DEVOPS):$(PATH_HOMEBREW):$(PATH_SYSTEM)
 SHELL := /bin/bash
 ifeq (true, $(shell [[ "$(DEBUG)" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]] && echo true))
 	.SHELLFLAGS := -cex

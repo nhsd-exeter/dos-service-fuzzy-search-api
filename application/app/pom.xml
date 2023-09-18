@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -16,11 +17,10 @@
   <description>DoS Service Fuzzy Search API</description>
 
   <properties>
-    <dependency-check-maven.version>6.5.3</dependency-check-maven.version>
-    <sonar.organization>nhsd-exeter</sonar.organization>
-    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <dependency-check-maven.version>8.2.1</dependency-check-maven.version>
     <java.version>16</java.version>
-    <log4j2.version>2.16.0</log4j2.version>    <!-- Springboot does not use Log4J, this is here to force other dependencies to use the latest version -->
+    <log4j2.version>2.16.0</log4j2.version>    <!-- Springboot does not use Log4J, this is here to force
+    other dependencies to use the latest version -->
     <spring-boot-starter-data-elasticsearch.version>2.7.4</spring-boot-starter-data-elasticsearch.version>
     <aws-java-sdk-dynamodb.version>1.11.948</aws-java-sdk-dynamodb.version>
     <aws-java-sdk-sts.version>1.11.699</aws-java-sdk-sts.version>
