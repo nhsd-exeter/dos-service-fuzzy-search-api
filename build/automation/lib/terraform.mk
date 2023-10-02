@@ -34,6 +34,24 @@ terraform-create-stack-from-template: ### Create Terraform stack from template -
 terraform-create-state-store: ### Create an S3 bucket to store the Terraform state
 	make aws-s3-create NAME=$(TERRAFORM_STATE_STORE)
 
+# Only needs to be run once. Set the resource that needs to be imported in the RESOURCE varaible and specify the STACK the resources belongs to.
+terraform-import-stack:
+	# set up
+	eval "$$(make aws-assume-role-export-variables)"
+	eval "$$(make terraform-export-variables)"
+	if [ -f $(TERRAFORM_DIR)/$(STACK)/terraform.tf ]; then
+		if [ "$(TERRAFORM_USE_STATE_STORE)" == false ]; then
+				sed -i 's/  backend "s3"/  #backend "s3"/g' $(TERRAFORM_DIR)/$(STACK)/terraform.tf
+		else
+				sed -i 's/  #backend "s3"/  backend "s3"/g' $(TERRAFORM_DIR)/$(STACK)/terraform.tf
+		fi
+	fi
+	if [[ ! "$(TERRAFORM_REINIT)" =~ ^(false|no|n|off|0|FALSE|NO|N|OFF)$$ ]] || [ ! -f $(TERRAFORM_DIR)/$(STACK)/terraform.tfstate ]; then
+		make _terraform-reinitialise DIR="$(TERRAFORM_DIR)" STACK="$(STACK)"
+	fi
+	# make docker-run-terraform DIR="$(TERRAFORM_DIR)/$(STACK)" CMD="import $(RESOURCE)"
+
+
 # ==============================================================================
 
 terraform-apply-auto-approve: ### Set up infrastructure - mandatory: STACK|STACKS|INFRASTRUCTURE_STACKS=[comma-separated names]; optional: PROFILE=[name],OPTS=[Terraform options]
