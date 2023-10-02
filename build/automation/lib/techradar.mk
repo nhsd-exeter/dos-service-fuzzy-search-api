@@ -62,6 +62,7 @@ _techradar-image-dockerfile:
 _techradar-image-build:
 	cd $(TMP_DIR)
 	docker build --rm \
+		--platform linux/amd64 \
 		--file $(TMP_DIR)/Dockerfile.$(HASH) \
 		--tag $(IMAGE)-wrap-$(HASH) \
 		. > /dev/null 2>&1
