@@ -2,7 +2,6 @@ version: "3.7"
 
 services:
   fuzzysearch:
-    platform: linux/amd64
     image: $DOCKER_REGISTRY/api:$VERSION
     container_name: fuzzysearch
     environment:
@@ -53,7 +52,6 @@ services:
           - fuzzysearch.sfs.local
 
   elasticsearch:
-    platform: linux/amd64
     image: nhsd/elasticsearch:$DOCKER_LIBRARY_ELASTICSEARCH_VERSION
     container_name: elasticsearch
     hostname: elasticsearch
@@ -65,7 +63,6 @@ services:
         aliases:
           - elasticsearch.sfs.local
   mock_postcode_api:
-    platform: linux/amd64
     image: $DOCKER_REGISTRY/mock-postcode-api:$VERSION
     container_name: mock-postcode-api
     volumes:
@@ -78,7 +75,6 @@ services:
         aliases:
           - mock.postcodeapi.sfs
   kibana:
-    platform: linux/amd64
     image: docker.elastic.co/kibana/kibana:7.13.0
     container_name: kibana
     environment:
