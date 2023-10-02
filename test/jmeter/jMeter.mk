@@ -49,7 +49,7 @@ destroy-jmeter-namespace:
 # Supporting targets
 project-aws-get-authentication-secret: #Get AWS Pass
 	aws secretsmanager get-secret-value \
-		--secret-id $(PROJECT_GROUP_SHORT)-sfsa-$(ENVIRONMENT)-cognito-password \
+		--secret-id $(PROJECT_GROUP_SHORT)-sfsa-$(ENVIRONMENT)-cognito-passwords \
 		--region $(AWS_REGION) \
 		--query 'SecretString' \
 		--output text

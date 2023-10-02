@@ -216,7 +216,7 @@ project-populate-application-variables:
 	export COGNITO_USER_POOL_ID=$$(make -s aws-cognito-get-userpool-id NAME=$(COGNITO_USER_POOL))
 	export COGNITO_JWT_VERIFICATION_URL=https://cognito-idp.eu-west-2.amazonaws.com/$${COGNITO_USER_POOL_ID}/.well-known/jwks.json
 	export COGNITO_ADMIN_AUTH_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .AUTHENTICATION_PASSWORD | tr -d '"')
-	export POSTCODE_MAPPING_PASSWORD=$$(make secret-fetch NAME=$(PROJECT_GROUP_SHORT)-sfsa-$(PROFILE)-cognito-password | jq .POSTCODE_PASSWORD | tr -d '"' )
+	export POSTCODE_MAPPING_PASSWORD=$$(make secret-fetch NAME=$(PROJECT_GROUP_SHORT)-sfsa-$(PROFILE)-cognito-passwords | jq .POSTCODE_PASSWORD | tr -d '"' )
 	export GOOGLE_MAPS_API_KEY=$$(make secret-fetch NAME=$(SF_AWS_SECRET_NAME) | jq .GOOGLE_MAPS_API_KEY | tr -d '"' )
 	export FUZZY_API_COGNIGTO_USER_PASSWORD=$$(make -s project-aws-get-admin-secret | jq .POSTCODE_PASSWORD | tr -d '"')
 	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
@@ -226,7 +226,7 @@ project-populate-application-variables:
 project-aws-get-admin-secret: #Get AWS Pass
 	make -s docker-run-tools ARGS="$$(echo $(AWSCLI) | grep awslocal > /dev/null 2>&1 && echo '--env LOCALSTACK_HOST=$(LOCALSTACK_HOST)' ||:)" CMD=" \
 		$(AWSCLI) secretsmanager get-secret-value \
-			--secret-id $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)-cognito-password \
+			--secret-id $(PROJECT_GROUP_SHORT)-$(PROJECT_NAME_SHORT)-$(ENVIRONMENT)-cognito-passwords \
 			--region $(AWS_REGION) \
 			--query 'SecretString' \
 			--output text \
@@ -454,7 +454,7 @@ run-smoke-test:
 	make quick-start PROFILE=$(PROFILE) VERSION=$(API_IMAGE_TAG)
 	sleep 20
 	cd test/contract
-	make run-smoke COGNITO_USER_PASS=$$(make secret-fetch NAME=$(PROJECT_GROUP_SHORT)-sfsa-${PROFILE}-cognito-password | jq .AUTHENTICATION_PASSWORD | tr -d '"')
+	make run-smoke COGNITO_USER_PASS=$$(make secret-fetch NAME=$(PROJECT_GROUP_SHORT)-sfsa-${PROFILE}-cognito-passwords | jq .AUTHENTICATION_PASSWORD | tr -d '"')
 	cd ../../
 	make stop
 
