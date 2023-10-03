@@ -14,7 +14,7 @@ pipeline {
 
   environment {
     PROFILE = 'pd'
-    STACK = 'waf'
+    STACK = 'firewall'
   }
 
   parameters {
