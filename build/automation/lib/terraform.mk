@@ -49,7 +49,10 @@ terraform-import-stack:
 	if [[ ! "$(TERRAFORM_REINIT)" =~ ^(false|no|n|off|0|FALSE|NO|N|OFF)$$ ]] || [ ! -f $(TERRAFORM_DIR)/$(STACK)/terraform.tfstate ]; then
 		make _terraform-reinitialise DIR="$(TERRAFORM_DIR)" STACK="$(STACK)"
 	fi
-	# make docker-run-terraform DIR="$(TERRAFORM_DIR)/$(STACK)" CMD="import $(RESOURCE)"
+	make docker-run-terraform DIR="$(TERRAFORM_DIR)/$(STACK)" CMD="import aws_iam_role.cw_to_subscription_filter_role uec-sf-sfsa-pd_CWLtoSubscriptionFilterRole" || true
+	make docker-run-terraform DIR="$(TERRAFORM_DIR)/$(STACK)" CMD="import aws_iam_policy.central_cw_subscription_iam_policy uec-sf-sfsa-pd_central_cw_subscription" || true
+	make docker-run-terraform DIR="$(TERRAFORM_DIR)/$(STACK)" CMD="import aws_wafv2_web_acl.waf_acl uec-sf-sfsa-pd-waf-acl" || true
+	make docker-run-terraform DIR="$(TERRAFORM_DIR)/$(STACK)" CMD="import aws_cloudwatch_log_group.waf_logs aws-waf-logs-uec-sf-sfsa-pd" || true
 
 
 # ==============================================================================
