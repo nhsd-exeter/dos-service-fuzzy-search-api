@@ -24,12 +24,12 @@ resource "aws_cognito_user_pool" "pool" {
     case_sensitive = false
   }
 
-  # account_recovery_setting {
-  #   recovery_mechanism {
-  #     name = "verified_email"
-  #     priority = 1
-  #   }
-  # }
+  account_recovery_setting {
+    recovery_mechanism {
+      name = "verified_email"
+      priority = 1
+    }
+  }
 
   tags = var.tags
 }
