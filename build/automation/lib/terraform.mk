@@ -49,7 +49,7 @@ terraform-import-stack:
 	if [[ ! "$(TERRAFORM_REINIT)" =~ ^(false|no|n|off|0|FALSE|NO|N|OFF)$$ ]] || [ ! -f $(TERRAFORM_DIR)/$(STACK)/terraform.tfstate ]; then
 		make _terraform-reinitialise DIR="$(TERRAFORM_DIR)" STACK="$(STACK)"
 	fi
-	STACK=firewall
+	# STACK=firewall
 	echo $$STACK
 	# make docker-run-terraform DIR="$(TERRAFORM_DIR)/$$STACK" CMD="import aws_iam_policy.central_cw_subscription_iam_policy arn:aws:iam::$(AWS_ACCOUNT_ID):policy/uec-sf-sfsa-pd_central_cw_subscription"
 	# make docker-run-terraform DIR="$(TERRAFORM_DIR)/$$STACK" CMD="import aws_wafv2_web_acl.waf_acl 56aa1022-ec08-430d-936e-08266c7b92fb/uec-sf-sfsa-pd-waf-acl/REGIONAL"
