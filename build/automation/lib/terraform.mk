@@ -54,6 +54,29 @@ terraform-import-stack:
 	# make docker-run-terraform DIR="$(TERRAFORM_DIR)/$(STACK)" CMD="import aws_wafv2_web_acl.waf_acl uec-sf-sfsa-pd-waf-acl" || true
 	# make docker-run-terraform DIR="$(TERRAFORM_DIR)/$(STACK)" CMD="import aws_cloudwatch_log_group.waf_logs aws-waf-logs-uec-sf-sfsa-pd" || true
 
+terraform-remove-state-lock: ### Delete the Terraform state - mandatory: STACK|STACKS|INFRASTRUCTURE_STACKS=[comma-separated names]; optional: PROFILE=[name]
+	# set up
+	eval "$$(make aws-assume-role-export-variables)"
+	# delete state
+	for stack in $$(echo $(or $(STACK), $(or $(STACKS), $(INFRASTRUCTURE_STACKS))) | tr "," "\n"); do
+		key='{"LockID": {"S": "$(TERRAFORM_STATE_STORE)/$(TERRAFORM_STATE_KEY)/'$$stack'/terraform.state"}}'
+		echo "Key: $$key"
+		response=$$(make -s docker-run-tools ARGS="$$(echo $(AWSCLI) | grep awslocal > /dev/null 2>&1 && echo '--env LOCALSTACK_HOST=$(LOCALSTACK_HOST)' ||:)" CMD=" \
+			$(AWSCLI) dynamodb get-item \
+				--table-name $(TERRAFORM_STATE_LOCK) \
+				--key '$$key' \
+			" | jq -r '.Item.LockID.S')
+			# if the key and reponse values are equal, will delete the currently locked record in dynamodb
+		  if [[ $$response == $$(echo "$$key" | jq -r '.LockID.S') ]]; then
+					 make -s docker-run-tools ARGS="$$(echo $(AWSCLI) | grep awslocal > /dev/null 2>&1 && echo '--env LOCALSTACK_HOST=$(LOCALSTACK_HOST)' ||:)" CMD=" \
+					 $(AWSCLI) dynamodb delete-item \
+					 	--table-name $(TERRAFORM_STATE_LOCK) \
+					 	--key '$$key' \
+					 "
+		       @echo "Removed the lock successfully $$response"
+		   fi
+	done
+
 
 # ==============================================================================
 
