@@ -65,6 +65,9 @@ pipeline {
   post {
     always { sh 'make clean' }
     success { sh 'make pipeline-on-success' }
-    failure { sh 'make pipeline-on-failure' }
+    failure {
+      sh 'make terraform-remove-state-lock'
+      sh 'make pipeline-on-failure'
+    }
   }
 }
