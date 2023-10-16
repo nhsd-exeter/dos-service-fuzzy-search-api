@@ -5,7 +5,7 @@ metadata:
   namespace: K8S_APP_NAMESPACE_TO_REPLACE
 subjects:
 - kind: Group
-  name: texas:uecdosapi-service-developer
+  name: texas:uecsf-service-developer
 roleRef:
   kind: Role
   name: uec-sf-pc_readwrite

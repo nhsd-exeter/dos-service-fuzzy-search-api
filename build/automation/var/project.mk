@@ -15,7 +15,7 @@ ROLE_PREFIX = UECDoSAPI
 PROJECT_TAG = $(PROJECT_NAME)
 SERVICE_TAG = $(PROJECT_GROUP_SHORT)
 SERVICE_TAG_COMMON = texas
-SERVICE_DEVELOPER_ROLE = texas:uecdosapi-service-developer
+SERVICE_DEVELOPER_ROLE = texas:uecsf-service-developer
 
 JENKINS_MOM_URL = https://$(PROJECT_GROUP_SHORT)-jenkins-ddc-jenkins-master.mgmt.texasplatform.uk/
 PROJECT_TECH_STACK_LIST = java,terraform
