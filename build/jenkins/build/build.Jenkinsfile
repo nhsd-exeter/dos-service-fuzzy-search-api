@@ -18,17 +18,17 @@ pipeline {
   triggers { pollSCM('* * * * *') }
 
   stages {
-    stage('Show Variables') {
-      steps {
-        script {
-          sh 'make devops-print-variables'
-        }
-      }
-    }
     stage('Prepare') {
       steps {
         script {
           sh 'make prepare'
+        }
+      }
+    }
+    stage('Show Variables') {
+      steps {
+        script {
+          sh 'make devops-print-variables'
         }
       }
     }

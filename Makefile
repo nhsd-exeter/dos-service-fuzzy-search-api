@@ -10,6 +10,7 @@ SF_AWS_SECRET_NAME := service-finder/deployment
 prepare: ## Prepare environment
 	make \
 		git-config \
+		git-secrets-scan-repo-files \
 		docker-config \
 		pipeline-prepare
 
