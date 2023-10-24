@@ -21,11 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
@@ -35,7 +31,7 @@ import uk.nhs.digital.uec.api.model.ApiSearchResultsResponse;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
-import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
+import uk.nhs.digital.uec.api.service.DosServiceSearch;
 import uk.nhs.digital.uec.api.util.Constants;
 
 /** Controller for Fuzzy searching of services. */
@@ -45,7 +41,7 @@ import uk.nhs.digital.uec.api.util.Constants;
 public class FuzzyServiceSearchController {
 
     @Autowired
-    private FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
+    private DosServiceSearch fuzzyServiceSearchService;
 
     @Autowired
     private ApiUtilsServiceInterface utils;

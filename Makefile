@@ -183,10 +183,12 @@ debug:
 		--env  GOOGLE_API_URL='$(GOOGLE_API_URL)' \
 		--env  GOOGLE_API_ADDRESS_URI='$(GOOGLE_API_ADDRESS_URI)' \
 		--env  GOOGLE_MAPS_API_KEY='$(GOOGLE_MAPS_API_KEY)' \
+		--env  NHS_CHOICES_API_URL='$(NHS_CHOICES_API_URL)' \
+		--env  NHS_CHOICES_API_KEY='$(NHS_CHOICES_API_KEY)' \
 		--publish 9999:9999 \
 		--publish 8443:8443 \
 		"
-		make quick-start
+		make restart
 
 docker-run-mvn-lib-mount: ### Build Docker image mounting library volume - mandatory: DIR, CMD
 	make docker-run-mvn LIB_VOLUME_MOUNT=true \
@@ -227,6 +229,7 @@ project-populate-application-variables:
 	export ELASTICSEARCH_EP=$$(make aws-elasticsearch-get-endpoint DOMAIN=$(DOMAIN))
 	export ELASTICSEARCH_URL=https://$${ELASTICSEARCH_EP}
 	export TEXAS_WAF_ACL_ID=$$(make -s aws-waf-get WAF_NAME=$(WAF_NAME))
+	export NHS_CHOICES_API_KEY=$$(make secret-fetch NAME=service-finder/deployment | jq .NHS_UK_API_KEY_2 | tr -d '"' )
 
 project-aws-get-admin-secret: #Get AWS Pass
 	make -s docker-run-tools ARGS="$$(echo $(AWSCLI) | grep awslocal > /dev/null 2>&1 && echo '--env LOCALSTACK_HOST=$(LOCALSTACK_HOST)' ||:)" CMD=" \

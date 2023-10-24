@@ -37,17 +37,18 @@ import uk.nhs.digital.uec.api.model.google.Geometry;
 import uk.nhs.digital.uec.api.model.google.Location;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
 import uk.nhs.digital.uec.api.service.impl.ExternalApiHandshakeService;
-import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
+import uk.nhs.digital.uec.api.service.impl.DosServiceSearchImpl;
 import uk.nhs.digital.uec.api.service.impl.ValidationService;
 import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(OutputCaptureExtension.class)
-public class FuzzyServiceSearchServiceTest {
+public class DosServiceSearchTest {
 
   private int maxNumServicesToReturn = 10;
 
-  @InjectMocks private FuzzyServiceSearchService classUnderTest;
+  @InjectMocks
+  private DosServiceSearchImpl classUnderTest;
 
   @Mock private ServiceRepository serviceRepository;
 

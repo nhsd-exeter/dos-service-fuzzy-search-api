@@ -91,6 +91,8 @@ public class DosService {
 
   private GeoPoint location;
 
+  private String datasource = "DIRECTORY_OF_SERVICES";
+
   public Double getDistance() {
     if (this.distance == null) {
       return Double.valueOf(999.9);

@@ -12,7 +12,8 @@ public class ErrorMappingEnum {
     VAL002("VAL-002"),
     VAL003("VAL-003"),
     VAL004("VAL-004"),
-    VAL005("VAL-005");
+    VAL005("VAL-005"),
+    VAL006("VAL-006");
 
     private String validationCode;
 
@@ -33,6 +34,7 @@ public class ErrorMappingEnum {
         ValidationCodes.VAL003, ErrorMessageEnum.MINIMUM_PARAMS_NOT_PASSED.getMessage());
     codesMapping.put(ValidationCodes.VAL004, ErrorMessageEnum.INVALID_LOCATION.getMessage());
     codesMapping.put(ValidationCodes.VAL005, ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage());
+    codesMapping.put(ValidationCodes.VAL006, ErrorMessageEnum.NO_SERVICES_RETURNED.getMessage());
     return codesMapping;
   }
 

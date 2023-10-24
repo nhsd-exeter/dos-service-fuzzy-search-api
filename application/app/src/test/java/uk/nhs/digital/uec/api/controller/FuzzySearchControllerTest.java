@@ -26,7 +26,7 @@ import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
 import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.impl.ApiUtilsService;
-import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
+import uk.nhs.digital.uec.api.service.impl.DosServiceSearchImpl;
 import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 
 @ExtendWith(SpringExtension.class)
@@ -40,7 +40,8 @@ public class FuzzySearchControllerTest {
 
   @Mock ApiUtilsService mockUtilService;
 
-  @Mock FuzzyServiceSearchService mockFuzzyServiceSearchService;
+  @Mock
+  DosServiceSearchImpl mockFuzzyServiceSearchService;
 
   private static final Integer MAX_SERVICES_TO_RETURN_FROM_ES = 10;
   private static final Integer MAX_SERVICES_TO_RETURN = 5;

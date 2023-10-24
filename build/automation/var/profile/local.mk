@@ -47,3 +47,8 @@ POSTCODE_MAPPING_PASSWORD := password
 GOOGLE_API_URL := https://maps.google.com/maps/api
 GOOGLE_API_ADDRESS_URI := /geocode/json
 GOOGLE_MAPS_API_KEY		   := gibarish
+
+#NHS Choices
+NHS_CHOICES_API_URL := https://api.nhs.uk
+#Trial NHS_CHOICES_API_KEY
+NHS_CHOICES_API_KEY := MOCK_NHS_API_KEY

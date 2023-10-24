@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -84,6 +85,7 @@ public class WebClientUtilTest {
     headers = new LinkedMultiValueMap<>();
     headers.add("Content-Type", "application/json");
     headers.add("Authorization", "Bearer " + authToken.getAccessToken());
+    MockitoAnnotations.openMocks(this);
   }
 
   @Test

@@ -13,7 +13,6 @@ services:
       default:
         aliases:
           - mockservice.sf.test
-
 networks:
   default:
     external:

@@ -6,8 +6,7 @@ import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.DosService;
 
 /** Interface to encapsulate business logic for the searching of services */
-public interface FuzzyServiceSearchServiceInterface {
-
+public interface DosServiceSearch {
   /**
    * Returns a list of {@link DosService} for the search criteria provided.
    *
@@ -26,4 +25,12 @@ public interface FuzzyServiceSearchServiceInterface {
       final List<String> searchTerms,
       final String searchPostcode)
       throws NotFoundException, InvalidParameterException;
+
+  List<DosService> retrieveServices(
+      String searchLatitude,
+      String searchLongitude,
+      Double distanceRange,
+      List<String> searchTerms,
+      String searchPostcode)
+      throws InvalidParameterException, NotFoundException;
 }
