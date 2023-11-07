@@ -102,7 +102,7 @@ GOOGLE_MAPS_API_KEY := $(or $(GOOGLE_MAPS_API_KEY), )
 
 
 #Once wiremock is deployed to dev environment calls to postcode api will be mocked
-POSTCODE_MAPPING_SERVICE_URL := https://$(PROJECT_GROUP_SHORT)-sfsa-$(PROFILE)-$(PROJECT_GROUP_SHORT)-sfs-mock-postcode-ingress.k8s-nonprod.texasplatform.uk/api
+POSTCODE_MAPPING_SERVICE_URL := https://$(PROJECT_GROUP_SHORT)-pc-$(PROFILE)-$(PROJECT_GROUP_SHORT)-pc-ingress.$(TEXAS_HOSTED_ZONE)/api
 POSTCODE_MAPPING_USER := fuzzy-search-api@nhs.net
 
 #Authentication login endpoint is set for fuzzy search at the moment. This should be configured to point authentication service api
