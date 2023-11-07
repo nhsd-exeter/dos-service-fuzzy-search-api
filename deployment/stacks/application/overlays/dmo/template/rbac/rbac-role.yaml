@@ -21,8 +21,6 @@ rules:
   verbs: [ "create", "delete", "get", "list", "patch", "update", "watch" ]
 - apiGroups: [ "" ]
   resources: [ "namespaces" ]
-- apiGroups: [ "" ]
-  resources: [ "namespaces" ]
   verbs: [ "delete", "get", "patch" ]
 - apiGroups: [ "" ]
   resources: [ "resourcequotas" ]
