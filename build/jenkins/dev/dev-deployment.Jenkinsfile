@@ -25,6 +25,17 @@ pipeline {
   }
 
   stages {
+    stage('Check IMAGE_TAG parameter') {
+      steps {
+        script {
+          def pattern = /^[0-9]{12}-[a-f0-9]{7}$/
+
+          if (!params.IMAGE_TAG.matches(pattern)) {
+            error "Provided IMAGE_TAG '${params.IMAGE_TAG}' does not match the expected pattern. Aborting build."
+          }
+        }
+      }
+    }
     stage('Populate Project variables') {
       steps {
         script {
