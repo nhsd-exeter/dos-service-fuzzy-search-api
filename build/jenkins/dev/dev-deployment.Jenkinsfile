@@ -3,7 +3,9 @@ pipeline {
     Description: Deployment pipeline to deploy the Service Search module into the Development environment.
    */
 
-  agent any
+  agent {
+    label 'jenkins-slave'
+  }
 
   options {
     buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '13'))
@@ -33,6 +35,13 @@ pipeline {
           if (!params.IMAGE_TAG.matches(pattern)) {
             error "Provided IMAGE_TAG '${params.IMAGE_TAG}' does not match the expected pattern. Aborting build."
           }
+        }
+      }
+    }
+    stage('Prepare for jenkins-slave run') {
+      steps {
+        script {
+          sh "make pipeline-slave-prepare"
         }
       }
     }

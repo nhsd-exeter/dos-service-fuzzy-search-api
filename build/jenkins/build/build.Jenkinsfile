@@ -2,7 +2,9 @@ pipeline {
   /*
     Description: Development pipeline to build test push and deploy to the development environment.
    */
-  agent any
+  agent {
+    label 'jenkins-slave'
+  }
 
   environment {
     PROFILE = 'dev'
