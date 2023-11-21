@@ -456,6 +456,7 @@ run-unit-test:
 
 run-smoke-test:
 	make stop
+	make docker-login
 	make quick-start PROFILE=$(PROFILE) VERSION=$(API_IMAGE_TAG)
 	sleep 20
 	cd test/contract
