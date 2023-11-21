@@ -456,7 +456,7 @@ docker-run-mvn: ### Run maven container - mandatory: CMD; optional: DIR,ARGS=[Do
 	make docker-config > /dev/null 2>&1
 	mkdir -p $(TMP_DIR)/.m2
 	lib_volume_mount=$$(([ $(BUILD_ID) -eq 0 ] || [ "$(LIB_VOLUME_MOUNT)" == true ]) && echo "--volume $(TMP_DIR)/.m2:/tmp/.m2" ||:)
-	image=$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo maven:$(DOCKER_MAVEN_VERSION))
+	image=$$([ -n "$(DOCKER_HUB_PROXY)" -a "$$GITHUB_ACTIONS" != "true" ] && echo $(DOCKER_HUB_PROXY)/ || echo "")$$([ -n "$(IMAGE)" ] && echo $(IMAGE) || echo maven:$(DOCKER_MAVEN_VERSION))
 	container=$$([ -n "$(CONTAINER)" ] && echo $(CONTAINER) || echo mvn-$(BUILD_COMMIT_HASH)-$(BUILD_ID)-$$(date --date=$$(date -u +"%Y-%m-%dT%H:%M:%S%z") -u +"%Y%m%d%H%M%S" 2> /dev/null)-$$(make secret-random LENGTH=8))
 	keystore=
 	if [ -f $(ETC_DIR)/keystore.jks ]; then
