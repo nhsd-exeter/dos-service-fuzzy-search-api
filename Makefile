@@ -17,6 +17,10 @@ prepare: ## Prepare environment
 pipeline-prepare:
 	sh $(PROJECT_DIR)scripts/assume_role.sh $(JENKINS_ENV) $(JENKINS_SERVICE_TEAM)
 
+pipeline-slave-prepare:
+	# the jenkins-slave build agents don't have the docker daemon immediately available, let us wait for it
+	timeout 60 bash -c 'while ! docker info &>/dev/null; do sleep 1; done' || exit 1
+
 derive-build-tag:
 	dir=$$(make _docker-get-dir NAME=api)
 	echo $$(cat $$dir/VERSION) | \
@@ -452,6 +456,7 @@ run-unit-test:
 
 run-smoke-test:
 	make stop
+	make docker-login
 	make quick-start PROFILE=$(PROFILE) VERSION=$(API_IMAGE_TAG)
 	sleep 20
 	cd test/contract
