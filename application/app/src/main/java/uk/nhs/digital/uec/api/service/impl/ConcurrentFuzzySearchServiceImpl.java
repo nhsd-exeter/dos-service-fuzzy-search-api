@@ -11,7 +11,6 @@ import uk.nhs.digital.uec.api.service.ConcurrentFuzzySearchService;
 import uk.nhs.digital.uec.api.service.DosServiceSearch;
 import uk.nhs.digital.uec.api.service.NHSChoicesSearchService;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -22,22 +21,24 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchService {
-  private final DosServiceSearch dosSearchService;
-  private final NHSChoicesSearchService nhsChoicesSearchService;
-
   @Autowired
-  public ConcurrentFuzzySearchServiceImpl(DosServiceSearch dosSearchService, NHSChoicesSearchService nhsChoicesSearchService){
-    this.dosSearchService = dosSearchService;
-    this.nhsChoicesSearchService = nhsChoicesSearchService;
-  }
+  private DosServiceSearch dosSearchService;
+  @Autowired
+  private NHSChoicesSearchService nhsChoicesSearchService;
 
   @Override
   @Async("fuzzyTaskExecutor")
   public CompletableFuture<List<DosService>> fuzzySearch(String searchLatitude, String searchLongitude, Double distanceRange, List<String> searchTerms, String searchPostcode) throws NotFoundException {
+
+    CompletableFuture<List<DosService>> nhsChoicesModelMappedToDosServicesList = nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(
+      searchLatitude, searchLongitude, searchTerms, searchPostcode
+    );
+
     CompletableFuture<List<DosService>> dosServicesList = CompletableFuture.supplyAsync(() -> {
       try {
         return dosSearchService.retrieveServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange, searchTerms, searchPostcode);
       } catch (NotFoundException | InvalidParameterException e) {
+        log.error("An error occurred whilst retrieving DOS services from datastore");
         throw new RuntimeException(e);
       }
     }).exceptionally(ex -> {
@@ -45,36 +46,19 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
       return Collections.emptyList();
     });
 
-    CompletableFuture<List<DosService>> nhsChoicesModelMappedToDosServicesList = nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(searchLatitude, searchLongitude, distanceRange, searchTerms, searchPostcode)
-      .thenApply(nhsChoicesList -> {
-        List<DosService> dosServices;
-        if (nhsChoicesList.isEmpty()) {
-          dosServices = new ArrayList<>();
-        } else {
-          dosServices = nhsChoicesList.stream()
-            .map(nhsChoicesSearchService::convertNHSChoicesToDosService)
-            .collect(Collectors.toList());
-        }
-
-        log.info("NHS Choices services search successful. Found {} DosService(s).", dosServices.size());
-
-        return dosServices;
-      })
-      .exceptionally(ex -> {
-        log.error("Error in NHS Choices services search", ex);
-        return Collections.emptyList();
-      });
-
     return dosServicesList.thenCombine(nhsChoicesModelMappedToDosServicesList, (dosServices, nhsChoicesServices) -> {
-      if (dosServicesList.isCompletedExceptionally() || nhsChoicesModelMappedToDosServicesList.isCompletedExceptionally()) {
-
-        log.error("Error in CompletableFuture operation");
-        return Collections.emptyList();
+      final boolean didDOSFail = dosServicesList.isCompletedExceptionally();
+      final boolean didNHSFail = nhsChoicesModelMappedToDosServicesList.isCompletedExceptionally();
+      if (didNHSFail || didDOSFail) {
+        log.error("Could not retrieve all Services");
       }
 
-      List<DosService> combinedList = Stream.concat(dosServices.stream(), nhsChoicesServices.stream())
-        .sorted(Comparator.comparingDouble(service ->
-          sortByDistanceFromSearch(Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), service.getLocation().getLat(), service.getLocation().getLon())))
+      List<DosService> combinedList = Stream.concat(
+          didDOSFail ? Stream.empty() : dosServices.stream(),
+          didNHSFail ? Stream.empty() : nhsChoicesServices.stream())
+        .sorted(Comparator.comparingDouble(service -> sortByDistanceFromSearch(Double.parseDouble(searchLatitude),
+          Double.parseDouble(searchLongitude),
+          service.getLocation().getLat(), service.getLocation().getLon())))
         .collect(Collectors.toList());
 
       log.info("Services sorted successfully based on distance.");

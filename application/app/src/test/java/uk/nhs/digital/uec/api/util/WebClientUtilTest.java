@@ -1,21 +1,25 @@
 package uk.nhs.digital.uec.api.util;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import javax.net.ssl.SSLException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +34,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
@@ -41,14 +44,26 @@ import uk.nhs.digital.uec.api.model.google.GeoLocationResponse;
 import uk.nhs.digital.uec.api.model.google.GeoLocationResponseResult;
 import uk.nhs.digital.uec.api.model.google.Geometry;
 import uk.nhs.digital.uec.api.model.google.Location;
+import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesResponse;
+import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 
 @ExtendWith(SpringExtension.class)
 public class WebClientUtilTest {
 
-  @InjectMocks private WebClientUtil webClientUtil;
-  @Mock private WebClient authWebClient;
-  @Mock private WebClient postCodeMappingWebClient;
-  @Mock private WebClient googleApiWebClient;
+  @InjectMocks
+  private WebClientUtil webClientUtil;
+  @Mock
+  private WebClient authWebClient;
+  @Mock
+  private WebClient postCodeMappingWebClient;
+  @Mock
+  private WebClient googleApiWebClient;
+
+  @Mock
+  private ObjectMapper mapper;
+
+  @Mock
+  private WebClient nhsChoicesApiWebClient;
 
   @SuppressWarnings("rawtypes")
   @Mock
@@ -66,7 +81,8 @@ public class WebClientUtilTest {
   @Mock
   private WebClient.RequestHeadersUriSpec requestHeadersUriSpecMock;
 
-  @Mock private WebClient.ResponseSpec responseSpecMock;
+  @Mock
+  private WebClient.ResponseSpec responseSpecMock;
 
   private AuthToken authToken;
   private String user;
@@ -74,6 +90,7 @@ public class WebClientUtilTest {
   private MultiValueMap<String, String> headers;
   private static final String URI = "api/search";
   private static final String AUTH_URI = "/authentication/login";
+  private NHSChoicesResponse nhsChoicesResponse;
 
   @BeforeEach
   public void setUp() {
@@ -85,7 +102,28 @@ public class WebClientUtilTest {
     headers = new LinkedMultiValueMap<>();
     headers.add("Content-Type", "application/json");
     headers.add("Authorization", "Bearer " + authToken.getAccessToken());
+    nhsChoicesResponse = new NHSChoicesResponse();
     MockitoAnnotations.openMocks(this);
+  }
+
+  @Test
+  public void getNHSChoicesServices() throws ExecutionException, InterruptedException, JsonProcessingException {
+    //Given
+    String searchTerms = "Search";
+    String searchLatitude = "0.0";
+    String searchLongitude = "0.0";
+
+    nhsChoicesApiWebClient = getMockedNHSChoicesClient(nhsChoicesResponse);
+
+    // Act
+    CompletableFuture<List<NHSChoicesV2DataModel>> result = webClientUtil.retrieveNHSChoicesServices(searchLatitude, searchLongitude, searchTerms);
+
+    // Assert
+    assertNotNull(result);
+    assertTrue(result.isDone());
+    List<NHSChoicesV2DataModel> resultList = result.get();
+    assertNotNull(resultList);
+
   }
 
   @Test
@@ -109,7 +147,7 @@ public class WebClientUtilTest {
     postCodeMappingWebClient = getPostCodeWebClient(postcodeLocation);
 
     List<PostcodeLocation> postcodeMappings =
-        webClientUtil.getPostcodeMappings(postCodes, headers, URI);
+      webClientUtil.getPostcodeMappings(postCodes, headers, URI);
     PostcodeLocation returnedLocation = postcodeMappings.get(0);
     assertEquals(655343, returnedLocation.getNorthing());
     assertEquals(123677, returnedLocation.getEasting());
@@ -140,12 +178,10 @@ public class WebClientUtilTest {
     when(responseSpecMock.bodyToMono(GeoLocationResponse.class)).thenReturn(Mono.just(mockGeoLocationResponse));
 
     GeoLocationResponse geoLocationResponse =
-        webClientUtil.getGeoLocation("mk13 0LG","XXXXXXXXX","/api/goe/json");
+      webClientUtil.getGeoLocation("mk13 0LG", "XXXXXXXXX", "/api/goe/json");
     GeoLocationResponseResult geoLocationResponseResult2 = geoLocationResponse.getGeoLocationResponseResults()[0];
-    assertEquals(geometry,geoLocationResponseResult2.getGeometry());
+    assertEquals(geometry, geoLocationResponseResult2.getGeometry());
   }
-
-
 
 
   private WebClient getMockedAuthWebClient(final AuthToken resp) {
@@ -169,6 +205,27 @@ public class WebClientUtilTest {
     return postCodeMappingWebClient;
   }
 
+  private WebClient getMockedNHSChoicesClient(final NHSChoicesResponse response) throws JsonProcessingException {
+    when(nhsChoicesApiWebClient.get()).thenReturn(requestHeadersUriSpecMock);
+    when(requestHeadersUriSpecMock.uri(any(Function.class))).thenReturn(requestHeadersSpecMock);
+    when(requestHeadersSpecMock.headers(any(Consumer.class))).thenReturn(requestHeadersSpecMock);
+    when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
+    when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just(response.toString()));
+    when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenReturn(responseSpecMock);
+    when(mapper.readValue(anyString(), any(TypeReference.class)))
+      .thenReturn(new HashMap<String, Object>() {{
+        List<Map<String, Object>> modelMaps = new ArrayList<>();
+        Map<String, Object> modelMap = new HashMap<>();
+        //TODO- Build out the NHSChoices response
+        modelMap.put("organisationName", "exampleName");
+
+        modelMaps.add(modelMap);
+        put("value", modelMaps);
+        put("@data.nextLink", "nextLink");
+      }});
+    return nhsChoicesApiWebClient;
+  }
+
   @Test
   public void getMockedAuthWebClientExceptionTest() {
     when(authWebClient.post()).thenThrow(RuntimeException.class);
@@ -180,37 +237,37 @@ public class WebClientUtilTest {
   @Test
   public void getPostCodeMappingsStatus400ExceptionTest() throws InvalidParameterException {
     String body =
-        "{\r\n"
-            + "    \"validationCode\": \"VAL-002\",\r\n"
-            + "    \"message\": \"Postcode is provided but it is invalid\"\r\n"
-            + "}";
+      "{\r\n"
+        + "    \"validationCode\": \"VAL-002\",\r\n"
+        + "    \"message\": \"Postcode is provided but it is invalid\"\r\n"
+        + "}";
     byte[] b = body.getBytes(StandardCharsets.UTF_8);
     WebClientResponseException clientResponseException =
-        new WebClientResponseException(400, null, null, b, null, null);
+      new WebClientResponseException(400, null, null, b, null, null);
     when(postCodeMappingWebClient.get()).thenThrow(clientResponseException);
     List<String> postCodes = new ArrayList<>();
     postCodes.add("EX1 3SR");
     assertThrows(
-        InvalidParameterException.class,
-        () -> webClientUtil.getPostcodeMappings(postCodes, headers, URI));
+      InvalidParameterException.class,
+      () -> webClientUtil.getPostcodeMappings(postCodes, headers, URI));
   }
 
   @Test
   public void getPostCodeMappingsNon400ExceptionTest() throws InvalidParameterException {
     String body =
-        "{\r\n"
-            + "    \"validationCode\": \"VAL-001\",\r\n"
-            + "    \"message\": \"No services found for the given name or postcode\"\r\n"
-            + "}";
+      "{\r\n"
+        + "    \"validationCode\": \"VAL-001\",\r\n"
+        + "    \"message\": \"No services found for the given name or postcode\"\r\n"
+        + "}";
     byte[] b = body.getBytes(StandardCharsets.UTF_8);
     WebClientResponseException clientResponseException =
-        new WebClientResponseException(404, null, null, b, null, null);
+      new WebClientResponseException(404, null, null, b, null, null);
     when(postCodeMappingWebClient.get()).thenThrow(clientResponseException);
     List<String> postCodes = new ArrayList<>();
     postCodes.add("EX1 3SR");
 
     List<PostcodeLocation> postcodeMappings =
-        webClientUtil.getPostcodeMappings(postCodes, headers, URI);
+      webClientUtil.getPostcodeMappings(postCodes, headers, URI);
     assertTrue(postcodeMappings.isEmpty());
   }
 }

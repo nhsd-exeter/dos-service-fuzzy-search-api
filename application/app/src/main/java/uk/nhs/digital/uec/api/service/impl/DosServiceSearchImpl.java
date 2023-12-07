@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j(topic = "Fuzzy_Search_Service")
 public class DosServiceSearchImpl implements DosServiceSearch {
 
+  private static final String DOS_DATA_SOURCE = "DIRECTORY_OF_SERVICES";
   private final LocationServiceInterface locationService;
   private final CustomServicesRepositoryInterface elasticsearch;
   private final ApiRequestParams apiRequestParams;
@@ -116,6 +117,7 @@ public class DosServiceSearchImpl implements DosServiceSearch {
         || ((dosService.getLocation().getLon() == 0D && dosService.getLocation().getLat() == 0D))) {
         nonPopulatedLatLongServices.add(dosService);
       }
+      dosService.setDatasource(DOS_DATA_SOURCE);
     }
     this.populateServiceDistancesWithLatAndLng(nonPopulatedLatLongServices, searchLatitude, searchLongitude);
     // Clean up any duplicated values
@@ -157,11 +159,6 @@ public class DosServiceSearchImpl implements DosServiceSearch {
     GeoLocationResponseResult geoLocationResponseResult = geoLocationResponse.getGeoLocationResponseResults()[0];
     Geometry geometry = geoLocationResponseResult.getGeometry();
     return new GeoPoint(geometry.getLocation().getLat(), geoLocationResponseResult.getGeometry().getLocation().getLng());
-  }
-
-  @Override
-  public List<DosService>retrieveServices(String searchLatitude, String searchLongitude, Double distanceRange, List<String> searchTerms, String searchPostcode) throws InvalidParameterException, NotFoundException {
-    return retrieveServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange, searchTerms, searchPostcode);
   }
 
 }

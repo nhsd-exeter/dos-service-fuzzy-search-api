@@ -245,7 +245,7 @@
                     <limit>
                       <counter>METHOD</counter>
                       <value>COVEREDRATIO</value>
-                      <minimum>60%</minimum>
+                      <minimum>80%</minimum>
                     </limit>
                   </limits>
                 </rule>
@@ -268,7 +268,7 @@
         <configuration>
           <!-- .Disable Net content-->
           <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
-          <cveStartYear>2022</cveStartYear>
+          <cveStartYear>2023</cveStartYear>
           <failBuildOnCVSS>10</failBuildOnCVSS>
         </configuration>
       </plugin>

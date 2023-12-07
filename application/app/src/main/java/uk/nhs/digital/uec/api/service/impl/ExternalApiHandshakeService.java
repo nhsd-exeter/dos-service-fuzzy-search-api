@@ -5,19 +5,24 @@ import static uk.nhs.digital.uec.api.authentication.constants.MockAuthentication
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import reactor.core.publisher.Mono;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.model.google.GeoLocationResponse;
+import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
 import uk.nhs.digital.uec.api.util.WebClientUtil;
 

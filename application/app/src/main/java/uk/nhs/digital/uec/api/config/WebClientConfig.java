@@ -1,10 +1,11 @@
 package uk.nhs.digital.uec.api.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,35 +31,41 @@ public class WebClientConfig {
   private String googleApiUrl;
 
   @Value("${nhs.choices.url}")
-  private String nhsChoices;
+  private String nhsChoicesUrl;
 
+  @Bean
+  public ObjectMapper objectMapper() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
+//    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    return objectMapper;
+  }
 
   @Bean
   public WebClient authWebClient() {
     return WebClient.builder()
-        .baseUrl(loginUrl)
-        .clientConnector(new ReactorClientHttpConnector(getSecureHttpClient()))
-        .build();
+      .baseUrl(loginUrl)
+      .clientConnector(new ReactorClientHttpConnector(getSecureHttpClient()))
+      .build();
   }
 
   @Bean
   public WebClient postCodeMappingWebClient() {
     return WebClient.builder()
-        .baseUrl(psmUrl)
-        .clientConnector(new ReactorClientHttpConnector(getSecureHttpClient()))
-        .build();
+      .baseUrl(psmUrl)
+      .clientConnector(new ReactorClientHttpConnector(getSecureHttpClient()))
+      .build();
   }
 
   @Bean
   public WebClient googleApiWebClient() {
     return WebClient.builder()
-        .baseUrl(googleApiUrl)
-        .clientConnector(new ReactorClientHttpConnector(getSecureHttpClient()))
-        .build();
+      .baseUrl(googleApiUrl)
+      .clientConnector(new ReactorClientHttpConnector(getSecureHttpClient()))
+      .build();
   }
 
   @Bean
-  @Qualifier("nhsChoicesApiWebClient")
   public WebClient nhsChoicesApiWebClient() {
     return WebClient.builder()
       .codecs(configure -> configure
@@ -67,7 +74,7 @@ public class WebClientConfig {
       .defaultHeader("subscription-key", SUBSCRIPTION_KEY)
       .defaultHeader("Accept-Charset", "application/json")
       .defaultHeader("Content-Type", "application/json")
-      .baseUrl(nhsChoices)
+      .baseUrl(nhsChoicesUrl)
       .clientConnector(new ReactorClientHttpConnector(getSecureHttpClient()))
       .build();
   }
@@ -76,7 +83,7 @@ public class WebClientConfig {
     SslContext context;
     try {
       context =
-          SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
     } catch (SSLException e) {
       log.info("SSL Error while handshake between Fuzzy and external service: " + e.getMessage());
       return HttpClient.create().wiretap(true);

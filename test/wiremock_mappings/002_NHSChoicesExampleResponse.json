@@ -3,7 +3,7 @@
     "method": "GET",
     "queryParameters": {
       "search": {
-        "matches": "^(.*[A-Za-z]+)$",
+        "matches": "^(.*[A-Za-z0-9]+)$",
         "caseInsensitive": true
       },
       "longitude": {

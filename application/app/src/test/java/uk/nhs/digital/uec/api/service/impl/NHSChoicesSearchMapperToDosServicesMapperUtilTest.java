@@ -5,6 +5,7 @@ import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import uk.nhs.digital.uec.api.model.nhschoices.Contact;
 import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 import uk.nhs.digital.uec.api.model.nhschoices.OpeningTime;
+import uk.nhs.digital.uec.api.util.NHSChoicesSearchMapperToDosServicesMapperUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,67 +16,69 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
 
+  NHSChoicesSearchMapperToDosServicesMapperUtil classUnderTest = new NHSChoicesSearchMapperToDosServicesMapperUtil();
+
   @Test
   void getTelephoneContact_shouldReturnEmptyStringWhenNoTelephoneContact() {
     List<Contact> contacts = Collections.emptyList();
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.getTelephoneContact(contacts);
+    String result = classUnderTest.getTelephoneContact(contacts);
     assertEquals("", result);
   }
 
   @Test
   void getTelephoneContact_shouldReturnTelephoneContactValue() {
     List<Contact> contacts = Collections.singletonList(new Contact("Primary", "Office hours", "Telephone", "01516399877"));
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.getTelephoneContact(contacts);
+    String result = classUnderTest.getTelephoneContact(contacts);
     assertEquals("01516399877", result);
   }
 
   @Test
   void getWebsite_shouldReturnEmptyStringWhenNoWebsiteContact() {
     List<Contact> contacts = Collections.emptyList();
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.getWebsite(contacts);
+    String result = classUnderTest.getWebsite(contacts);
     assertEquals("", result);
   }
 
   @Test
   void getWebsite_shouldReturnWebsiteContactValue() {
     List<Contact> contacts = Collections.singletonList(new Contact("Primary", "Office hours", "Website", "https://wehgroup.co.uk"));
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.getWebsite(contacts);
+    String result = classUnderTest.getWebsite(contacts);
     assertEquals("https://wehgroup.co.uk", result);
   }
 
   @Test
   void getEmail_shouldReturnEmptyStringWhenNoEmailContact() {
     List<Contact> contacts = Collections.emptyList();
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.getEmail(contacts);
+    String result = classUnderTest.getEmail(contacts);
     assertEquals("", result);
   }
 
   @Test
   void getEmail_shouldReturnEmailContactValue() {
     List<Contact> contacts = Collections.singletonList(new Contact("Primary", "Office hours", "Email", "pharmacy.fpg71@nhs.net"));
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.getEmail(contacts);
+    String result = classUnderTest.getEmail(contacts);
     assertEquals("pharmacy.fpg71@nhs.net", result);
   }
 
   @Test
   void getOpeningTimeDays_shouldReturnEmptyStringWhenNoOpeningTimes() {
     List<OpeningTime> openingTimes = Collections.emptyList();
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.getOpeningTimeDays(openingTimes);
+    String result = classUnderTest.getOpeningTimeDays(openingTimes);
     assertEquals("", result);
   }
 
   @Test
   void getOpeningTimeDays() {
     List<OpeningTime> openingTimes = new ArrayList<>();
-    openingTimes.add(new OpeningTime("Monday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Tuesday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Wednesday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Thursday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Friday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Saturday", null, null, null, 0, 0, "General", "", false));
-    openingTimes.add(new OpeningTime("Sunday", null, null, null, 0, 0, "General", "", false));
+    openingTimes.add(new OpeningTime("Monday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Tuesday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Wednesday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Thursday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Friday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Saturday", null, null, null, 0, 0, "General", "", false,null,null));
+    openingTimes.add(new OpeningTime("Sunday", null, null, null, 0, 0, "General", "", false,null,null));
 
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.getOpeningTimeDays(openingTimes);
+    String result = classUnderTest.getOpeningTimeDays(openingTimes);
 
     assertEquals("Monday, Tuesday, Wednesday, Thursday, Friday", result);
   }
@@ -83,15 +86,16 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
   @Test
   void getOpeningTime() {
     List<OpeningTime> openingTimes = new ArrayList<>();
-    openingTimes.add(new OpeningTime("Monday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Tuesday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Wednesday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Thursday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Friday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Saturday", null, null, null, 0, 0, "General", "", false));
-    openingTimes.add(new OpeningTime("Sunday", null, null, null, 0, 0, "General", "", false));
+    openingTimes.add(new OpeningTime("Monday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Tuesday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Wednesday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Thursday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Friday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Saturday", null, null, null, 0, 0, "General", "", false,null,null));
+    openingTimes.add(new OpeningTime("Sunday", null, null, null, 0, 0, "General", "", false,null,null));
+    ;
 
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.getOpeningTime(openingTimes);
+    String result = classUnderTest.getOpeningTime(openingTimes);
 
     assertEquals("08:30, 08:30, 08:30, 08:30, 08:30", result);
   }
@@ -99,15 +103,15 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
   @Test
   void getClosingTime() {
     List<OpeningTime> openingTimes = new ArrayList<>();
-    openingTimes.add(new OpeningTime("Monday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Tuesday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Wednesday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Thursday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Friday", "08:30", "18:30", null, 510, 1110, "General", "", true));
-    openingTimes.add(new OpeningTime("Saturday", null, null, null, 0, 0, "General", "", false));
-    openingTimes.add(new OpeningTime("Sunday", null, null, null, 0, 0, "General", "", false));
+    openingTimes.add(new OpeningTime("Monday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Tuesday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Wednesday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Thursday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Friday", "08:30", "18:30", null, 510, 1110, "General", "", true,null,null));
+    openingTimes.add(new OpeningTime("Saturday", null, null, null, 0, 0, "General", "", false,null,null));
+    openingTimes.add(new OpeningTime("Sunday", null, null, null, 0, 0, "General", "", false,null,null));
 
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.getClosingTime(openingTimes);
+    String result = classUnderTest.getClosingTime(openingTimes);
 
     assertEquals("18:30, 18:30, 18:30, 18:30, 18:30", result);
   }
@@ -118,7 +122,7 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
     dataModel.setLatitude(40.7128);
     dataModel.setLongitude(-74.0060);
 
-    GeoPoint result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.getGeoLocation(dataModel);
+    GeoPoint result = classUnderTest.getGeoLocation(dataModel);
 
     assertEquals(40.7128, result.getLat(), 0.0001);
     assertEquals(-74.0060, result.getLon(), 0.0001);
@@ -131,7 +135,7 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
     dataModel.setAddress2("Apt 456");
     dataModel.setCity("City");
 
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.concatenateAddress(dataModel);
+    String result = classUnderTest.concatenateAddress(dataModel);
 
     assertEquals("123 Main St, Apt 456, City", result);
   }
@@ -143,7 +147,7 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
     dataModel.setAddress2(null);
     dataModel.setCity("City");
 
-    String result = NHSChoicesSearchServiceImpl.NHSChoicesSearchMapperToDosServicesMapperUtil.concatenateAddress(dataModel);
+    String result = classUnderTest.concatenateAddress(dataModel);
 
     assertEquals("123 Main St, City", result);
   }

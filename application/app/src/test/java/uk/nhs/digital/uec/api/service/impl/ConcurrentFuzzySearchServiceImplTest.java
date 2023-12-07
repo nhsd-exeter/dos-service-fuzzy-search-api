@@ -50,7 +50,7 @@ class ConcurrentFuzzySearchServiceImplTest {
     when(dosSearchService.retrieveServicesByGeoLocation(anyString(), anyString(), anyDouble(), anyList(), anyString()))
       .thenAnswer(invocation -> CompletableFuture.completedFuture(dosServiceList));
 
-    when(nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(anyString(), anyString(), anyDouble(), anyList(), anyString()))
+    when(nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(anyString(), anyString(), anyList(), anyString()))
       .thenAnswer(invocation -> CompletableFuture.completedFuture(nhsChoicesList));
 
     CompletableFuture<List<DosService>> result = fuzzySearchService.fuzzySearch(searchLatitude, searchLongitude, distanceRange, searchTerms, searchPostcode);

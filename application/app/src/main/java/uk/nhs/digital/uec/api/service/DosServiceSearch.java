@@ -25,12 +25,4 @@ public interface DosServiceSearch {
       final List<String> searchTerms,
       final String searchPostcode)
       throws NotFoundException, InvalidParameterException;
-
-  List<DosService> retrieveServices(
-      String searchLatitude,
-      String searchLongitude,
-      Double distanceRange,
-      List<String> searchTerms,
-      String searchPostcode)
-      throws InvalidParameterException, NotFoundException;
 }

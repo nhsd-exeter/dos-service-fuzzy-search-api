@@ -26,16 +26,9 @@ import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.*
 @Slf4j
 @RequestMapping("/dosapi/dosservices/v2")
 public class FuzzySearchConcurrentSearchController {
-  private final ConcurrentFuzzySearchService concurrentFuzzySearchService;
-  private final ApiUtilsServiceInterface utils;
-  private final ApiRequestParams requestParams;
-
-  @Autowired
-  public FuzzySearchConcurrentSearchController(ConcurrentFuzzySearchService concurrentFuzzySearchService, ApiUtilsServiceInterface utils, ApiRequestParams requestParams){
-    this.concurrentFuzzySearchService = concurrentFuzzySearchService;
-    this.utils = utils;
-    this.requestParams = requestParams;
-  }
+  @Autowired private ConcurrentFuzzySearchService concurrentFuzzySearchService;
+  @Autowired private ApiUtilsServiceInterface utils;
+  @Autowired private ApiRequestParams requestParams;
 
   @Value("${configuration.search_parameters.max_num_services_to_return}")
   private String defaultMaxNumServicesToReturn;
@@ -59,7 +52,6 @@ public class FuzzySearchConcurrentSearchController {
   @GetMapping("/services/byfuzzysearch")
   @CrossOrigin(origins = "*")
   @PreAuthorize("hasAnyRole('FUZZY_API_ACCESS')")
-  @Async("fuzzyTaskExecutor")
   public CompletableFuture<ResponseEntity<ApiResponse>> getServicesByFuzzySearch(
     @ApiParam(SEARCH_CRITERIA_DESC) @RequestParam(name = "search_term", required = false) List<String> searchCriteria,
     @ApiParam(SEARCH_POSTCODE_DESC) @RequestParam(name = "search_location") String searchPostcode,
@@ -105,16 +97,18 @@ public class FuzzySearchConcurrentSearchController {
       searchCriteria,
       searchPostcode);
 
+    log.info("Staring concurrent data fetch");
     CompletableFuture<ResponseEntity<ApiResponse>> result = concurrentFuzzySearchService.fuzzySearch(
         searchLatitude, searchLongitude, distanceRange, searchCriteria, searchPostcode)
       .thenApply(dosServicesList -> {
+        log.info("Completing async data fetch now combining results");
         searchResultsResponse.setServices(dosServicesList);
         response.setSearchParameters(searchParamsResponse);
         response.setSearchResults(searchResultsResponse);
         return ResponseEntity.ok(response);
       });
 
-    log.info("Elapsed time: " + (System.currentTimeMillis() - start));
+    log.info("Elapsed time: {}ms", (System.currentTimeMillis() - start));
 
     return result;
   }

@@ -35,5 +35,11 @@ public class OpeningTime {
 
   @JsonProperty("IsOpen")
   private boolean isOpen;
+
+  @JsonProperty("FromAgeDays")
+  private String FromAgeDays;
+
+  @JsonProperty("ToAgeDays")
+  private String ToAgeDays;
 }
 
