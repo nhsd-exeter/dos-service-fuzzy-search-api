@@ -78,7 +78,7 @@ class NHSChoicesSearchServiceImplTest {
     }
   }
 
-
+//
 //  @Test
 //  @DisplayName("assert that parseNHSChoicesDataModel method can parse json response from NhsChoices api to NHSChoicesV2DataModel data class")
 //  void parseNHSChoicesDataModel() throws IOException {
@@ -88,7 +88,7 @@ class NHSChoicesSearchServiceImplTest {
 //    assertThat(nhsChoicesV2DataModelList, not(IsEmptyCollection.empty()));
 //    assertThat(nhsChoicesV2DataModelList, hasSize(50));
 //  }
-
+//
 //  @Test
 //  @DisplayName("assert that convertNHSChoicesToDosService method can parse NHSChoicesV2DataModel data class to DosService data class")
 //  void convertNHSChoicesToDosService() throws IOException {
@@ -148,7 +148,7 @@ class NHSChoicesSearchServiceImplTest {
 //      .setResponseCode(200));
 //
 //    List<NHSChoicesV2DataModel> response = nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(
-//      expectedSearchLatitude, expectedSearchLongitude, expectedDistanceRange,
+//      expectedSearchLatitude, expectedSearchLongitude,
 //      expectedSearchTerms, expectedSearchPostcode
 //    ).get();
 //
@@ -160,7 +160,7 @@ class NHSChoicesSearchServiceImplTest {
 //    assertTrue(response.isEmpty());
 //
 //  }
-//
+
 
   private static String readJsonNHSChoicesApi2(String fileName) throws IOException {
     File jsonFile = ResourceUtils.getFile("classpath:json/".concat(fileName));
