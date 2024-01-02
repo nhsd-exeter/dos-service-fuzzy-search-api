@@ -1,12 +1,12 @@
 package uk.nhs.digital.uec.api.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
-
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,19 +45,22 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
   /** {@inheritDoc} */
   @Override
   public List<String> sanitiseSearchTerms(final List<String> searchCriteria) {
-
-    log.info("Sanitising search terms {}",searchCriteria);
-    List<String> listFromString = searchCriteria.stream().map(String::trim).toList();
+    log.info("Sanitising search terms {}", searchCriteria);
+    List<String> listFromString =
+        searchCriteria.stream().map(String::trim).collect(Collectors.toList());
 
     List<String> sanitisedSearchTerms = new ArrayList<>();
 
     for (String searchTerm : listFromString) {
       if (searchTerm.length() >= minSearchTermLength) {
-
         String searchTermToAdd = searchTerm.replaceAll("\\s+", " ");
 
-        //Remove URL encoding
-        searchTermToAdd = URLDecoder.decode(searchTermToAdd, StandardCharsets.UTF_8);
+        // Remove URL encoding
+        try {
+          searchTermToAdd = URLDecoder.decode(searchTermToAdd, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+          log.error(e.getMessage());
+        }
 
         // Remove weird characters
         searchTermToAdd = searchTermToAdd.replaceAll("[^a-zA-Z0-9:;.?! ]", "");
@@ -67,14 +70,14 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
         addAdditionalSearchTerms(sanitisedSearchTerms, searchTerm);
       }
     }
-    log.info("Sanitised search terms {}",sanitisedSearchTerms);
+    log.info("Sanitised search terms {}", sanitisedSearchTerms);
     return sanitisedSearchTerms;
   }
 
   /** {@inheritDoc} */
   @Override
   public String removeBlankSpaces(final String field) {
-    log.info("Formatting {}",field);
+    log.info("Formatting {}", field);
     if (field != null) {
       return field.replaceAll("\\s", "");
     }
@@ -83,12 +86,13 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
 
   @Override
   public List<String> removeBlankSpacesIn(final List<String> fields) {
-    final String POSTCODE_REGEX = "^([A-Za-z][A-Ha-hJ-Yj-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$";
+    final String POSTCODE_REGEX =
+        "^([A-Za-z][A-Ha-hJ-Yj-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$";
     Pattern pattern = Pattern.compile(POSTCODE_REGEX);
     return fields.stream()
-      .filter(field -> pattern.matcher(field).matches())
-      .map(this::removeBlankSpaces)
-      .toList();
+        .filter(field -> pattern.matcher(field).matches())
+        .map(this::removeBlankSpaces)
+        .collect(Collectors.toList());
   }
 
   /**
@@ -103,7 +107,6 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
     List<String> subSearchTerms = Arrays.asList(searchTerm.split("\\s+"));
     String previousSubSearchTerm = null;
     for (String subSearchTerm : subSearchTerms) {
-
       if (previousSubSearchTerm != null) {
         sanitisedSearchTerms.add(previousSubSearchTerm + subSearchTerm);
       }
