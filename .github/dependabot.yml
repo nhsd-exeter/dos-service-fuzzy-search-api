@@ -86,7 +86,7 @@ updates:
     target-branch: "master"
     open-pull-requests-limit: 0
     commit-message:
-      prefix: "terraform "
+      prefix: "[Dependabot]"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
