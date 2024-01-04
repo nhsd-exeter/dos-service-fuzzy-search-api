@@ -17,7 +17,7 @@
   <description>DoS Service Fuzzy Search API</description>
 
   <properties>
-    <dependency-check-maven.version>8.2.1</dependency-check-maven.version>
+    <dependency-check-maven.version>8.4.3</dependency-check-maven.version>
     <log4j2.version>2.16.0</log4j2.version>    <!-- Springboot does not use Log4J, this is here to force
     other dependencies to use the latest version -->
     <spring-boot-starter-data-elasticsearch.version>2.7.4</spring-boot-starter-data-elasticsearch.version>
