@@ -25,7 +25,7 @@
     <aws-java-sdk-sts.version>1.11.699</aws-java-sdk-sts.version>
     <sts.version>2.10.40</sts.version>
     <spring-data-dynamodb.version>5.2.1</spring-data-dynamodb.version>
-    <commons-lang3.version>3.5</commons-lang3.version>
+    <commons-lang3.version>3.14.0</commons-lang3.version>
     <decimal4j.version>1.0.3</decimal4j.version>
     <aws-java-sdk-cognitoidp.version>1.12.15</aws-java-sdk-cognitoidp.version>
     <spring-security-oauth2.version>2.5.1.RELEASE</spring-security-oauth2.version>
@@ -37,7 +37,7 @@
     <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
     <springfox-swagger2.version>3.0.0</springfox-swagger2.version>
     <springfox-swagger-ui.version>3.0.0</springfox-swagger-ui.version>
-    <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
   </properties>
 
