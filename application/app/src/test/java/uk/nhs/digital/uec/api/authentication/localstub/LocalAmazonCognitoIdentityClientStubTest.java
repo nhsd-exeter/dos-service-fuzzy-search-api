@@ -7,6 +7,7 @@ import static uk.nhs.digital.uec.api.util.Utils.calculateSecretHash;
 
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
+import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,16 +22,15 @@ public class LocalAmazonCognitoIdentityClientStubTest {
   }
 
   @Test
-  public void initiateAuthRequestTest() {
-    Map<String, String> authenticationParameters =
-        Map.of(
-            USERNAME,
-            "admin@nhs.net",
-            PASSWORD,
-            "password",
-            "SECRET_HASH",
-            calculateSecretHash(
-                "admin@nhs.net", "testUserPoolClientId", "testUserPoolClientSecret"));
+  void initiateAuthRequestTest() {
+    // ...
+
+    Map<String, String> authenticationParameters = new HashMap<>();
+    authenticationParameters.put(USERNAME, "admin@nhs.net");
+    authenticationParameters.put(PASSWORD, "password");
+    authenticationParameters.put(
+        "SECRET_HASH",
+        calculateSecretHash("admin@nhs.net", "testUserPoolClientId", "testUserPoolClientSecret"));
 
     InitiateAuthRequest authenticationRequest =
         new InitiateAuthRequest()
@@ -46,24 +46,22 @@ public class LocalAmazonCognitoIdentityClientStubTest {
 
   @Test
   public void initiateMockAuthRequestTest() {
-    Map<String, String> authenticationParameters =
-      Map.of(
-        USERNAME,
-        "service-finder-admin@nhs.net",
-        PASSWORD,
-        "mock-auth-pass",
+    Map<String, String> authenticationParameters = new HashMap<>();
+    authenticationParameters.put(USERNAME, "service-finder-admin@nhs.net");
+    authenticationParameters.put(PASSWORD, "mock-auth-pass");
+    authenticationParameters.put(
         "SECRET_HASH",
         calculateSecretHash(
-          "service-finder-admin@nhs.net", "testUserPoolClientId", "testUserPoolClientSecret"));
+            "service-finder-admin@nhs.net", "testUserPoolClientId", "testUserPoolClientSecret"));
 
     InitiateAuthRequest authenticationRequest =
-      new InitiateAuthRequest()
-        .withAuthFlow("authFlowType")
-        .withClientId("testUserPoolClientId")
-        .withAuthParameters(authenticationParameters);
+        new InitiateAuthRequest()
+            .withAuthFlow("authFlowType")
+            .withClientId("testUserPoolClientId")
+            .withAuthParameters(authenticationParameters);
 
     InitiateAuthResult initiateAuth =
-      amazonCognitoIdentityClientStub.initiateAuth(authenticationRequest);
+        amazonCognitoIdentityClientStub.initiateAuth(authenticationRequest);
     assertNotNull(initiateAuth.getAuthenticationResult().getAccessToken());
     assertNotNull(initiateAuth.getAuthenticationResult().getRefreshToken());
   }

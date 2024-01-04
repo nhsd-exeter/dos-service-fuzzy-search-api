@@ -8,8 +8,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,8 +27,7 @@ import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.ErrorMessageEnum;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
-import uk.nhs.digital.uec.api.util.Constants;;
-
+import uk.nhs.digital.uec.api.util.Constants;
 
 @ExtendWith(SpringExtension.class)
 public class ServiceRepositoryTest {
@@ -39,11 +38,9 @@ public class ServiceRepositoryTest {
 
   @Mock private Environment environment;
 
-  @Mock
-  private ElasticsearchOperations operations;
+  @Mock private ElasticsearchOperations operations;
 
   List<DosService> dosServicesList = new ArrayList<>();
-
 
   private static final String DOS_NAME = "Exeter NHS Service";
   private static final Integer EASTING = 23453;
@@ -56,7 +53,7 @@ public class ServiceRepositoryTest {
     dosService.setEasting(EASTING);
     dosService.setNorthing(NORTHING);
     dosService.setPostcode("EX1 1SR");
-    dosService.setReferral_roles(List.of("Referral", Constants.PROFESSIONAL_REFERRAL_FILTER));
+    dosService.setReferral_roles(Arrays.asList("Referral", Constants.PROFESSIONAL_REFERRAL_FILTER));
     dosService.setLocation(new GeoPoint(0D, 0D));
     dosServicesList.add(dosService);
 
@@ -74,7 +71,7 @@ public class ServiceRepositoryTest {
     dosService3.setEasting(EASTING);
     dosService3.setNorthing(NORTHING);
     dosService3.setPostcode("EX1 1SR");
-    dosService3.setReferral_roles(List.of(Constants.PROFESSIONAL_REFERRAL_FILTER));
+    dosService3.setReferral_roles(Arrays.asList(Constants.PROFESSIONAL_REFERRAL_FILTER));
     dosServicesList.add(dosService3);
 
     DosService dosService4 = new DosService();
@@ -83,12 +80,11 @@ public class ServiceRepositoryTest {
     dosService4.setNorthing(NORTHING);
     dosService4.setPostcode("EX1 1SR");
     dosServicesList.add(dosService4);
-
-
   }
 
   @Test
-  public void  shouldReturnOnlyProfessionalReferralWhenProfileIsDemoOrProdTest() throws  NotFoundException {
+  public void shouldReturnOnlyProfessionalReferralWhenProfileIsDemoOrProdTest()
+      throws NotFoundException {
     final List<String> searchTerms = asList("Search1, Search3");
     final Double searchLatitude = 24.34;
     final Double searchLongitude = -0.2345;
@@ -97,15 +93,14 @@ public class ServiceRepositoryTest {
     SearchHits<DosService> searchHits = mock(SearchHits.class);
 
     SearchHit<DosService> dosServiceSearchHit1 = mock(SearchHit.class);
-    when(dosServiceSearchHit1.getSortValues()).thenReturn(List.of(10.345));
+    when(dosServiceSearchHit1.getSortValues()).thenReturn(Arrays.asList(10.345));
     when(dosServiceSearchHit1.getContent()).thenReturn(dosServicesList.get(0));
     when(searchHits.isEmpty()).thenReturn(false);
 
     SearchHit<DosService> dosServiceSearchHit2 = mock(SearchHit.class);
-    when(dosServiceSearchHit2.getSortValues()).thenReturn(List.of(13.345));
+    when(dosServiceSearchHit2.getSortValues()).thenReturn(Arrays.asList(13.345));
     when(dosServiceSearchHit2.getContent()).thenReturn(dosServicesList.get(1));
     when(searchHits.isEmpty()).thenReturn(false);
-
 
     List<SearchHit<DosService>> hits = new ArrayList<>();
     hits.add(dosServiceSearchHit1);
@@ -116,26 +111,26 @@ public class ServiceRepositoryTest {
 
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(2);
-    when(apiRequestParams.getFilterReferralRole()).thenReturn(Constants.PROFESSIONAL_REFERRAL_FILTER);
+    when(apiRequestParams.getFilterReferralRole())
+        .thenReturn(Constants.PROFESSIONAL_REFERRAL_FILTER);
     when(environment.getActiveProfiles()).thenReturn(new String[] {"prod"});
 
     List<DosService> findServiceBySearchTerms =
-        serviceRepository.findAllServicesByGeoLocationWithSearchTerms(searchLatitude,searchLongitude,distanceRange,searchTerms);
+        serviceRepository.findAllServicesByGeoLocationWithSearchTerms(
+            searchLatitude, searchLongitude, distanceRange, searchTerms);
 
     assertEquals(findServiceBySearchTerms.size(), 2);
-
   }
-
 
   @Test
   public void findAllServiceByGeoLocationWithAllParametersTest() throws NotFoundException {
     final Double searchLatitude = 24.34;
     final Double searchLongitude = -0.2345;
     final Double distanceRange = 25D;
-    final List<String> searchTerms = List.of("term1");
+    final List<String> searchTerms = Arrays.asList("term1");
 
     SearchHit<DosService> dosServiceSearchHit1 = mock(SearchHit.class);
-    when(dosServiceSearchHit1.getSortValues()).thenReturn(List.of(10.345));
+    when(dosServiceSearchHit1.getSortValues()).thenReturn(Arrays.asList(10.345));
     when(dosServiceSearchHit1.getContent()).thenReturn(dosServicesList.get(0));
     SearchHits<DosService> searchHits = mock(SearchHits.class);
     when(searchHits.isEmpty()).thenReturn(false);
@@ -144,21 +139,20 @@ public class ServiceRepositoryTest {
     when(searchHits.getSearchHits()).thenReturn(hits);
     when(operations.search(any(Query.class), any(Class.class))).thenReturn(searchHits);
 
-
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
-    when(apiRequestParams.getFilterReferralRole()).thenReturn(Constants.PROFESSIONAL_REFERRAL_FILTER);
+    when(apiRequestParams.getFilterReferralRole())
+        .thenReturn(Constants.PROFESSIONAL_REFERRAL_FILTER);
     when(apiRequestParams.getNamePriority()).thenReturn(2);
     when(apiRequestParams.getAddressPriority()).thenReturn(2);
     when(apiRequestParams.getPostcodePriority()).thenReturn(2);
     when(apiRequestParams.getPublicNamePriority()).thenReturn(2);
     when(environment.getActiveProfiles()).thenReturn(new String[] {"DEV"});
 
-
     List<DosService> findAllServiceByGeoLocation =
         serviceRepository.findAllServicesByGeoLocationWithSearchTerms(
-            searchLatitude, searchLongitude, distanceRange,searchTerms);
+            searchLatitude, searchLongitude, distanceRange, searchTerms);
 
     DosService dosServiceResponse = findAllServiceByGeoLocation.get(0);
 
@@ -167,7 +161,6 @@ public class ServiceRepositoryTest {
     assertEquals(NORTHING, dosServiceResponse.getNorthing());
   }
 
-
   @Test
   public void findAllServiceByGeoLocationWithOutSearchTermsTest() throws NotFoundException {
     final Double searchLatitude = 24.34;
@@ -175,7 +168,7 @@ public class ServiceRepositoryTest {
     final Double distanceRange = 25D;
 
     SearchHit<DosService> dosServiceSearchHit1 = mock(SearchHit.class);
-    when(dosServiceSearchHit1.getSortValues()).thenReturn(List.of(10.345));
+    when(dosServiceSearchHit1.getSortValues()).thenReturn(Arrays.asList(10.345));
     when(dosServiceSearchHit1.getContent()).thenReturn(dosServicesList.get(0));
     SearchHits<DosService> searchHits = mock(SearchHits.class);
     when(searchHits.isEmpty()).thenReturn(false);
@@ -186,7 +179,8 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch3SearchTerms()).thenReturn(3);
-    when(apiRequestParams.getFilterReferralRole()).thenReturn(Constants.PROFESSIONAL_REFERRAL_FILTER);
+    when(apiRequestParams.getFilterReferralRole())
+        .thenReturn(Constants.PROFESSIONAL_REFERRAL_FILTER);
     when(apiRequestParams.getNamePriority()).thenReturn(2);
     when(apiRequestParams.getAddressPriority()).thenReturn(2);
     when(apiRequestParams.getPostcodePriority()).thenReturn(2);
@@ -196,8 +190,8 @@ public class ServiceRepositoryTest {
     when(operations.search(any(Query.class), any(Class.class))).thenReturn(searchHits);
 
     List<DosService> findAllServiceByGeoLocation =
-      serviceRepository.findAllServicesByGeoLocation(
-        searchLatitude, searchLongitude, distanceRange);
+        serviceRepository.findAllServicesByGeoLocation(
+            searchLatitude, searchLongitude, distanceRange);
 
     DosService dosServiceResponse = findAllServiceByGeoLocation.get(0);
 
@@ -215,10 +209,13 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
 
-    NotFoundException exception =  assertThrows(NotFoundException.class, () -> {
-      serviceRepository.findAllServicesByGeoLocationWithSearchTerms(
-        searchLatitude, searchLongitude, distanceRange,searchTerms);
-    });
+    NotFoundException exception =
+        assertThrows(
+            NotFoundException.class,
+            () -> {
+              serviceRepository.findAllServicesByGeoLocationWithSearchTerms(
+                  searchLatitude, searchLongitude, distanceRange, searchTerms);
+            });
     assertEquals(exception.getMessage(), ErrorMessageEnum.INVALID_LOCATION.getMessage());
   }
 
@@ -231,13 +228,14 @@ public class ServiceRepositoryTest {
     when(apiRequestParams.getMaxNumServicesToReturnFromElasticsearch()).thenReturn(2);
     when(apiRequestParams.getFuzzLevel()).thenReturn(2);
 
-    NotFoundException exception =  assertThrows(NotFoundException.class, () -> {
-      serviceRepository.findAllServicesByGeoLocation(
-        searchLatitude, searchLongitude, distanceRange);
-    });
+    NotFoundException exception =
+        assertThrows(
+            NotFoundException.class,
+            () -> {
+              serviceRepository.findAllServicesByGeoLocation(
+                  searchLatitude, searchLongitude, distanceRange);
+            });
 
     assertEquals(exception.getMessage(), ErrorMessageEnum.INVALID_LOCATION.getMessage());
-
   }
-
 }

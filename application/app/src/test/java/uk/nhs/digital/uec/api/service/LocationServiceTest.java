@@ -8,10 +8,11 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -94,8 +95,6 @@ public class LocationServiceTest {
     assertNull(distanceReturned);
   }
 
-
-
   @Test
   public void distanceWithSourceEastingAndNorthingNull() {
     PostcodeLocation source = new PostcodeLocation();
@@ -126,7 +125,6 @@ public class LocationServiceTest {
 
   @Test
   public void distanceWithNullSource() {
-
     PostcodeLocation destinationLocation = new PostcodeLocation();
     destinationLocation.setPostcode("EX26PR");
     destinationLocation.setEasting(43212);
@@ -138,14 +136,12 @@ public class LocationServiceTest {
 
   @Test
   public void distanceWithNullDestination() {
-
     Double distanceReturned = locationService.distanceBetween(postcodeLocation, null);
     assertNull(distanceReturned);
   }
 
   @Test
   public void distanceWithSourceAndDestination() {
-
     PostcodeLocation sourceLocation = new PostcodeLocation();
     sourceLocation.setPostcode("EX1QPR");
     sourceLocation.setEasting(12345);
@@ -162,11 +158,15 @@ public class LocationServiceTest {
   }
 
   @Test
-  public void InvalidResponseReturnedFromPostcodeService() throws InvalidParameterException, NotFoundException {
-    when(apiUtilsService.removeBlankSpacesIn(Stream.of(postCode).toList())).thenReturn(List.of(postCode));
-    when(apiHandshakeService.getPostcodeMappings(Stream.of(postCode).toList(),null)).thenThrow(InvalidParameterException.class);
+  public void InvalidResponseReturnedFromPostcodeService()
+      throws InvalidParameterException, NotFoundException {
+    when(apiUtilsService.removeBlankSpacesIn(Stream.of(postCode).collect(Collectors.toList())))
+        .thenReturn(Arrays.asList(postCode));
+    when(apiHandshakeService.getPostcodeMappings(
+            Stream.of(postCode).collect(Collectors.toList()), null))
+        .thenThrow(InvalidParameterException.class);
 
-    PostcodeLocation result = locationService.getLocationForPostcode(postCode,null);
+    PostcodeLocation result = locationService.getLocationForPostcode(postCode, null);
 
     assertTrue(Objects.isNull(result.getEasting()));
     assertTrue(Objects.isNull(result.getNorthing()));
@@ -174,40 +174,30 @@ public class LocationServiceTest {
 
   @Test
   public void shouldReturnNullWhenPassingNullValues() {
-
-
     GeoPoint source = null;
     GeoPoint destination = null;
 
-
     Double distanceReturned = locationService.distanceBetween(source, destination);
-    assertEquals(null, distanceReturned);;
+    assertEquals(null, distanceReturned);
   }
 
   @Test
   public void shouldReturnZeroWhenBothLatAndLonAreSame() {
-
     double expected = 0.0;
     GeoPoint source = new GeoPoint(23.45, -2.34);
     GeoPoint destination = new GeoPoint(23.45, -2.34);
 
-
     Double distanceReturned = locationService.distanceBetween(source, destination);
-    assertEquals(expected, distanceReturned);;
+    assertEquals(expected, distanceReturned);
   }
-
 
   @Test
   public void shouldReturn4MilesWhenPassSourceAndDestinationValuesByGeoPoint() {
-
     double expected = 1.2;
-    GeoPoint source = new GeoPoint( 0.111, 4.621);
+    GeoPoint source = new GeoPoint(0.111, 4.621);
     GeoPoint destination = new GeoPoint(0.112, 4.639);
-
 
     Double distanceReturned = locationService.distanceBetween(source, destination);
     assertEquals(expected, distanceReturned);
-
   }
-
 }
