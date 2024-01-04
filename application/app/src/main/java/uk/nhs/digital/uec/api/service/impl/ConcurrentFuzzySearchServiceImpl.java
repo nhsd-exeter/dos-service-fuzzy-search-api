@@ -1,5 +1,6 @@
 package uk.nhs.digital.uec.api.service.impl;
 
+import lombok.extern.flogger.Flogger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -29,11 +30,12 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
   @Override
   @Async("fuzzyTaskExecutor")
   public CompletableFuture<List<DosService>> fuzzySearch(String searchLatitude, String searchLongitude, Double distanceRange, List<String> searchTerms, String searchPostcode) throws NotFoundException {
-
+    log.info("Init NHS choices async call");
     CompletableFuture<List<DosService>> nhsChoicesModelMappedToDosServicesList = nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(
       searchLatitude, searchLongitude, searchTerms, searchPostcode
     );
 
+    log.info("Init DOS services async call");
     CompletableFuture<List<DosService>> dosServicesList = CompletableFuture.supplyAsync(() -> {
       try {
         return dosSearchService.retrieveServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange, searchTerms, searchPostcode);
@@ -49,9 +51,14 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
     return dosServicesList.thenCombine(nhsChoicesModelMappedToDosServicesList, (dosServices, nhsChoicesServices) -> {
       final boolean didDOSFail = dosServicesList.isCompletedExceptionally();
       final boolean didNHSFail = nhsChoicesModelMappedToDosServicesList.isCompletedExceptionally();
-      if (didNHSFail || didDOSFail) {
-        log.error("Could not retrieve all Services");
+      if (didNHSFail) {
+        log.error("Could not retrieve NHS choices Services");
       }
+
+      if (didDOSFail) {
+        log.error("Could not retrieve DOS Services");
+      }
+
 
       List<DosService> combinedList = Stream.concat(
           didDOSFail ? Stream.empty() : dosServices.stream(),

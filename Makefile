@@ -211,6 +211,7 @@ tag-release: # Create the release tag - mandatory DEV_TAG RELEASE_TAG
 deploy: # Deploy artefacts - mandatory: PROFILE=[name]
 	eval "$$(make aws-assume-role-export-variables)"
 	eval "$$(make project-populate-application-variables)"
+	echo $$NHS_CHOICES_API_KEY
 	make project-deploy PROFILE=$(PROFILE) STACK=$(DEPLOYMENT_STACKS)
 
 

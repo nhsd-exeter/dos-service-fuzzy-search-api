@@ -2,6 +2,7 @@ package uk.nhs.digital.uec.api.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.netty.channel.ChannelOption;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
 import javax.net.ssl.SSLException;
+import java.time.Duration;
 
 @Configuration
 @Slf4j
@@ -88,6 +90,9 @@ public class WebClientConfig {
       log.info("SSL Error while handshake between Fuzzy and external service: " + e.getMessage());
       return HttpClient.create().wiretap(true);
     }
-    return HttpClient.create().secure(t -> t.sslContext(context));
+    return HttpClient.create()
+      .responseTimeout(Duration.ofSeconds(10)) // Set the response timeout
+      .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000) // Set the connection timeout
+      .secure(t -> t.sslContext(context));
   }
 }

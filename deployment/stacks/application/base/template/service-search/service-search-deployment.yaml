@@ -64,6 +64,6 @@ spec:
             memory: "0Mi"
             cpu: "0m"
           limits:
-            memory: "1024Mi"
-            cpu: "500m"
+            memory: "2048Mi"
+            cpu: "1000m"
         imagePullPolicy: Always
