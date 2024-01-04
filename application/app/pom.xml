@@ -31,7 +31,7 @@
     <spring-security-oauth2.version>2.5.1.RELEASE</spring-security-oauth2.version>
     <commons-io.version>2.10.0</commons-io.version>
     <jjwt.version>0.9.1</jjwt.version>
-    <jackson-annotations.version>2.12.3</jackson-annotations.version>
+    <jackson-annotations.version>2.16.1</jackson-annotations.version>
     <mockito-junit-jupiter.version>3.11.2</mockito-junit-jupiter.version>
     <java-jwt.version>3.18.1</java-jwt.version>
     <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
