@@ -10,6 +10,8 @@ import uk.nhs.digital.uec.api.service.NHSChoicesSearchService;
 import uk.nhs.digital.uec.api.util.NHSChoicesSearchMapperToDosServicesMapperUtil;
 import uk.nhs.digital.uec.api.util.WebClientUtil;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +29,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
   @Autowired
   public NHSChoicesSearchServiceImpl(
     WebClientUtil webClientUtil,
-    NHSChoicesSearchMapperToDosServicesMapperUtil servicesMapperUtil){
+    NHSChoicesSearchMapperToDosServicesMapperUtil servicesMapperUtil) {
     this.webClientUtil = webClientUtil;
     this.servicesMapperUtil = servicesMapperUtil;
   }
@@ -36,7 +38,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
   public CompletableFuture<List<DosService>> retrieveParsedNhsChoicesV2Model(String searchLatitude, String searchLongitude, List<String> searchTerms, String searchPostcode) throws NotFoundException {
     //Validate search terms
     log.info("Validating search terms");
-    String terms = this.validateSearchTerms(searchTerms,searchPostcode);
+    String terms = this.validateSearchTerms(searchTerms, searchPostcode);
 
     return webClientUtil.retrieveNHSChoicesServices(searchLatitude, searchLongitude, terms)
       .thenApply(nhscs -> {
@@ -59,9 +61,14 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
       });
   }
 
-  private String validateSearchTerms(List<String> searchTerms,String searchPostcode) {
-    if(searchTerms.isEmpty()){
-      searchTerms.add(searchPostcode);
+  private String validateSearchTerms(List<String> searchTerms, String searchPostcode) {
+
+    if (Objects.isNull(searchTerms)) {
+      searchTerms = new ArrayList<>();
+      searchTerms.add(URLDecoder.decode(searchPostcode, StandardCharsets.UTF_8));
+    }
+    if (searchTerms.isEmpty()) {
+      searchTerms.add(URLDecoder.decode(searchPostcode, StandardCharsets.UTF_8));
     }
     StringBuilder stringBuilder = new StringBuilder();
     searchTerms.forEach(stringBuilder::append);
