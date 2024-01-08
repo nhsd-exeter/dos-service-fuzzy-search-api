@@ -66,8 +66,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
     if (Objects.isNull(searchTerms)) {
       searchTerms = new ArrayList<>();
       searchTerms.add(URLDecoder.decode(searchPostcode, StandardCharsets.UTF_8));
-    }
-    if (searchTerms.isEmpty()) {
+    } else if (searchTerms.isEmpty()) {
       searchTerms.add(URLDecoder.decode(searchPostcode, StandardCharsets.UTF_8));
     }
     StringBuilder stringBuilder = new StringBuilder();
