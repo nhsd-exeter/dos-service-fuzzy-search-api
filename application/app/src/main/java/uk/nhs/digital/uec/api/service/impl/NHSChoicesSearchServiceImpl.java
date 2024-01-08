@@ -36,7 +36,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
   public CompletableFuture<List<DosService>> retrieveParsedNhsChoicesV2Model(String searchLatitude, String searchLongitude, List<String> searchTerms, String searchPostcode) throws NotFoundException {
     //Validate search terms
     log.info("Validating search terms");
-    String terms = this.validateSearchTerms(searchTerms);
+    String terms = this.validateSearchTerms(searchTerms,searchPostcode);
 
     return webClientUtil.retrieveNHSChoicesServices(searchLatitude, searchLongitude, terms)
       .thenApply(nhscs -> {
@@ -59,7 +59,10 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
       });
   }
 
-  private String validateSearchTerms(List<String> searchTerms) {
+  private String validateSearchTerms(List<String> searchTerms,String searchPostcode) {
+    if(searchTerms.isEmpty()){
+      searchTerms.add(searchPostcode);
+    }
     StringBuilder stringBuilder = new StringBuilder();
     searchTerms.forEach(stringBuilder::append);
     return stringBuilder.toString();
