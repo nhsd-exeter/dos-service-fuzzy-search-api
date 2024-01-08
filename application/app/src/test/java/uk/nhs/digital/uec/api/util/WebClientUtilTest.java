@@ -1,39 +1,21 @@
 package uk.nhs.digital.uec.api.util;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import javax.net.ssl.SSLException;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
@@ -47,7 +29,24 @@ import uk.nhs.digital.uec.api.model.google.Location;
 import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesResponse;
 import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 
-@ExtendWith(SpringExtension.class)
+import javax.net.ssl.SSLException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+
 public class WebClientUtilTest {
 
   @InjectMocks
@@ -58,12 +57,11 @@ public class WebClientUtilTest {
   private WebClient postCodeMappingWebClient;
   @Mock
   private WebClient googleApiWebClient;
-
   @Mock
   private ObjectMapper mapper;
-
   @Mock
   private WebClient nhsChoicesApiWebClient;
+
 
   @SuppressWarnings("rawtypes")
   @Mock
@@ -113,7 +111,7 @@ public class WebClientUtilTest {
     String searchLatitude = "0.0";
     String searchLongitude = "0.0";
 
-    nhsChoicesApiWebClient = getMockedNHSChoicesClient(nhsChoicesResponse);
+    webClientUtil.setNhsChoicesApiWebClient(getMockedNHSChoicesClient(nhsChoicesResponse));
 
     // Act
     CompletableFuture<List<NHSChoicesV2DataModel>> result = webClientUtil.retrieveNHSChoicesServices(searchLatitude, searchLongitude, searchTerms);
@@ -123,13 +121,12 @@ public class WebClientUtilTest {
     assertTrue(result.isDone());
     List<NHSChoicesV2DataModel> resultList = result.get();
     assertNotNull(resultList);
-
   }
 
   @Test
   public void getHeaderTest() throws SSLException {
     Credential credential = Credential.builder().emailAddress(user).password(userPass).build();
-    authWebClient = getMockedAuthWebClient(authToken);
+    webClientUtil.setAuthWebClient(getMockedAuthWebClient(authToken));
     AuthToken responseAuthToken = webClientUtil.getAuthenticationToken(credential, AUTH_URI);
     assertEquals(authToken.getAccessToken(), responseAuthToken.getAccessToken());
   }
@@ -144,7 +141,7 @@ public class WebClientUtilTest {
     postcodeLocation.setNorthing(655343);
     postcodeLocation.setPostcode("EX1 2PR");
 
-    postCodeMappingWebClient = getPostCodeWebClient(postcodeLocation);
+    webClientUtil.setPostCodeMappingWebClient(getPostCodeWebClient(postcodeLocation));
 
     List<PostcodeLocation> postcodeMappings =
       webClientUtil.getPostcodeMappings(postCodes, headers, URI);
@@ -153,7 +150,6 @@ public class WebClientUtilTest {
     assertEquals(123677, returnedLocation.getEasting());
     assertEquals("EX1 2PR", returnedLocation.getPostcode());
   }
-
 
   @Test
   public void getGoogleAPIMappingsTest() throws SSLException, InvalidParameterException {
@@ -177,8 +173,11 @@ public class WebClientUtilTest {
     when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
     when(responseSpecMock.bodyToMono(GeoLocationResponse.class)).thenReturn(Mono.just(mockGeoLocationResponse));
 
+    webClientUtil.setGoogleApiWebClient(googleApiWebClient);
+
     GeoLocationResponse geoLocationResponse =
       webClientUtil.getGeoLocation("mk13 0LG", "XXXXXXXXX", "/api/goe/json");
+
     GeoLocationResponseResult geoLocationResponseResult2 = geoLocationResponse.getGeoLocationResponseResults()[0];
     assertEquals(geometry, geoLocationResponseResult2.getGeometry());
   }
@@ -244,6 +243,7 @@ public class WebClientUtilTest {
     byte[] b = body.getBytes(StandardCharsets.UTF_8);
     WebClientResponseException clientResponseException =
       new WebClientResponseException(400, null, null, b, null, null);
+    webClientUtil.setPostCodeMappingWebClient(getPostCodeWebClient(mock(PostcodeLocation.class)));
     when(postCodeMappingWebClient.get()).thenThrow(clientResponseException);
     List<String> postCodes = new ArrayList<>();
     postCodes.add("EX1 3SR");

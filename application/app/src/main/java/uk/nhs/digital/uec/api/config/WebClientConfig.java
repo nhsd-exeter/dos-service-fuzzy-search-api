@@ -7,6 +7,7 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,15 +36,15 @@ public class WebClientConfig {
   @Value("${nhs.choices.url}")
   private String nhsChoicesUrl;
 
-  @Bean
+  @Bean("customObjectMapper")
   public ObjectMapper objectMapper() {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
-//    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     return objectMapper;
   }
 
-  @Bean
+  @Bean("authWebClient")
   public WebClient authWebClient() {
     return WebClient.builder()
       .baseUrl(loginUrl)
@@ -51,7 +52,7 @@ public class WebClientConfig {
       .build();
   }
 
-  @Bean
+  @Bean("postCodeMappingWebClient")
   public WebClient postCodeMappingWebClient() {
     return WebClient.builder()
       .baseUrl(psmUrl)
@@ -59,7 +60,7 @@ public class WebClientConfig {
       .build();
   }
 
-  @Bean
+  @Bean("googleApiWebClient")
   public WebClient googleApiWebClient() {
     return WebClient.builder()
       .baseUrl(googleApiUrl)
@@ -67,7 +68,7 @@ public class WebClientConfig {
       .build();
   }
 
-  @Bean
+  @Bean("nhsChoicesApiWebClient")
   public WebClient nhsChoicesApiWebClient() {
     return WebClient.builder()
       .codecs(configure -> configure

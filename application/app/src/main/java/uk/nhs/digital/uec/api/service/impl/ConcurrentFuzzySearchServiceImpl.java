@@ -1,6 +1,5 @@
 package uk.nhs.digital.uec.api.service.impl;
 
-import lombok.extern.flogger.Flogger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -22,13 +21,20 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchService {
+
+  private final DosServiceSearch dosSearchService;
+  private final NHSChoicesSearchService nhsChoicesSearchService;
+
   @Autowired
-  private DosServiceSearch dosSearchService;
-  @Autowired
-  private NHSChoicesSearchService nhsChoicesSearchService;
+  public ConcurrentFuzzySearchServiceImpl(
+    DosServiceSearch dosSearchService,
+    NHSChoicesSearchService nhsChoicesSearchService){
+    this.dosSearchService = dosSearchService;
+    this.nhsChoicesSearchService = nhsChoicesSearchService;
+  }
 
   @Override
-//  @Async("fuzzyTaskExecutor")
+  @Async("fuzzyTaskExecutor")
   public CompletableFuture<List<DosService>> fuzzySearch(String searchLatitude, String searchLongitude, Double distanceRange, List<String> searchTerms, String searchPostcode) throws NotFoundException {
     log.info("Init NHS choices async call");
     CompletableFuture<List<DosService>> nhsChoicesModelMappedToDosServicesList = nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(

@@ -40,20 +40,25 @@ import uk.nhs.digital.uec.api.util.Constants;
 @RequestMapping("/dosapi/dosservices/v0.0.1")
 public class FuzzyServiceSearchController {
 
-    @Autowired
-    private DosServiceSearch fuzzyServiceSearchService;
+  private final DosServiceSearch fuzzyServiceSearchService;
+  private final ApiUtilsServiceInterface utils;
+  private final ApiRequestParams requestParams;
+  private final String defaultMaxNumServicesToReturn;
+  private final String defaultFuzzLevel;
 
-    @Autowired
-    private ApiUtilsServiceInterface utils;
-
-    @Autowired
-    private ApiRequestParams requestParams;
-
-    @Value("${configuration.search_parameters.max_num_services_to_return}")
-    private String defaultMaxNumServicesToReturn;
-
-    @Value("${configuration.search_parameters.fuzz_level}")
-    private String defaultFuzzLevel;
+  @Autowired
+  public FuzzyServiceSearchController(
+    DosServiceSearch fuzzyServiceSearchService,
+    ApiUtilsServiceInterface utils,
+    ApiRequestParams requestParams,
+    @Value("${configuration.search_parameters.max_num_services_to_return}") String defaultMaxNumServicesToReturn,
+    @Value("${configuration.search_parameters.fuzz_level}") String defaultFuzzLevel) {
+    this.fuzzyServiceSearchService = fuzzyServiceSearchService;
+    this.utils = utils;
+    this.requestParams = requestParams;
+    this.defaultMaxNumServicesToReturn = defaultMaxNumServicesToReturn;
+    this.defaultFuzzLevel = defaultFuzzLevel;
+  }
 
     /**
      * Endpoint for retrieving services with attributes that match the search

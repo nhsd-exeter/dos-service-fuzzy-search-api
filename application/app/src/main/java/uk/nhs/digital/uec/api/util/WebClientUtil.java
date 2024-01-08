@@ -3,9 +3,12 @@ package uk.nhs.digital.uec.api.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,17 +34,29 @@ import java.util.concurrent.CompletableFuture;
 
 @Component
 @Slf4j
+@Getter
+@Setter
 public class WebClientUtil {
-  @Autowired
   private WebClient authWebClient;
-  @Autowired
   private WebClient postCodeMappingWebClient;
-  @Autowired
   private WebClient googleApiWebClient;
-  @Autowired
   private WebClient nhsChoicesApiWebClient;
-  @Autowired
   private ObjectMapper objectMapper;
+
+  @Autowired
+  public WebClientUtil(
+    @Qualifier("authWebClient") WebClient authWebClient,
+    @Qualifier(" postCodeMappingWebClient") WebClient postCodeMappingWebClient,
+    @Qualifier("googleApiWebClient") WebClient googleApiWebClient,
+    @Qualifier("nhsChoicesApiWebClient") WebClient nhsChoicesApiWebClient,
+    @Qualifier("customObjectMapper") ObjectMapper objectMapper
+  ){
+    this.authWebClient = authWebClient;
+    this.postCodeMappingWebClient = postCodeMappingWebClient;
+    this.googleApiWebClient = googleApiWebClient;
+    this.nhsChoicesApiWebClient = nhsChoicesApiWebClient;
+    this.objectMapper = objectMapper;
+  }
 
   @Async("fuzzyTaskExecutor")
   public CompletableFuture<List<NHSChoicesV2DataModel>> retrieveNHSChoicesServices(String searchLatitude, String searchLongitude, String searchTerms) {
@@ -109,28 +124,36 @@ public class WebClientUtil {
     return postcodeMappingLocationList;
   }
 
-  public GeoLocationResponse getGeoLocation(String address, String googleApikey, String googleApiUri)
-    throws InvalidParameterException {
-    GeoLocationResponse geoLocationResponse = null;
+  public GeoLocationResponse getGeoLocation(String address, String googleApikey, String googleApiUri) {
     String uri = String.format("%s?address=%s+UK&sensor=false&key=%s", googleApiUri, address, googleApikey);
     log.info(uri);
-    try {
-      geoLocationResponse = googleApiWebClient
-        .get()
-        .uri(uri)
-        .retrieve()
-        .bodyToMono(GeoLocationResponse.class)
-        .block();
 
-    } catch (WebClientResponseException e) {
-      handleWebClientResponseException(e);
-      log.error(
-        "Error while connecting google api location service from Fuzzy search service: "
-          + e.getMessage());
-    } catch (Exception e) {
-      log.error("Error from google Api: " + e);
+    return googleApiWebClient
+      .get()
+      .uri(uri)
+      .retrieve()
+      .bodyToMono(GeoLocationResponse.class)
+      .onErrorResume(throwable -> {
+        try {
+          return handleException(throwable);
+        } catch (InvalidParameterException e) {
+          throw new RuntimeException(e);
+        }
+      })
+      .block();
+  }
+
+  private Mono<GeoLocationResponse> handleException(Throwable throwable) throws InvalidParameterException {
+    if (throwable instanceof WebClientResponseException webClientResponseException) {
+      handleWebClientResponseException(webClientResponseException);
+      log.error("Error while connecting to Google API location service from Fuzzy search service: {}",
+        webClientResponseException.getMessage());
+    } else {
+      log.error("Error from Google API: {}", throwable.getMessage());
     }
-    return geoLocationResponse;
+
+    // Return null in case of an error
+    return Mono.justOrEmpty(null);
   }
 
   private void handleWebClientResponseException(WebClientResponseException e)

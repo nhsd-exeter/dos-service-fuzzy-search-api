@@ -21,12 +21,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
   private static final String NHS_CHOICES_DATASOURCE = "NHS_CHOICES";
+  private final WebClientUtil webClientUtil;
+  private final NHSChoicesSearchMapperToDosServicesMapperUtil servicesMapperUtil;
 
   @Autowired
-  private WebClientUtil webClientUtil;
-
-  @Autowired
-  private NHSChoicesSearchMapperToDosServicesMapperUtil servicesMapperUtil;
+  public NHSChoicesSearchServiceImpl(
+    WebClientUtil webClientUtil,
+    NHSChoicesSearchMapperToDosServicesMapperUtil servicesMapperUtil){
+    this.webClientUtil = webClientUtil;
+    this.servicesMapperUtil = servicesMapperUtil;
+  }
 
   @Override
   public CompletableFuture<List<DosService>> retrieveParsedNhsChoicesV2Model(String searchLatitude, String searchLongitude, List<String> searchTerms, String searchPostcode) throws NotFoundException {
