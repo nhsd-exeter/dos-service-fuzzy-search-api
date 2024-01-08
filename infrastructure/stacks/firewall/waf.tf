@@ -169,19 +169,3 @@ data "aws_caller_identity" "current" {}
 locals {
   current_account_id = data.aws_caller_identity.current.account_id
 }
-
-
-# This subscription filter forwards WAF cloudwatch logs -> firehose -> service teams splunk index.
-# The firehose will be set up by Texas by adding the service team's hec token to its secrets.
-resource "aws_cloudwatch_log_subscription_filter" "subscr_filter" {
-  name            = "${var.service_prefix}_subscr_filter"
-  role_arn        = "arn:aws:iam::${local.current_account_id}:role/service-finder_cw_firehose_access_role"
-  log_group_name  = "aws-waf-logs-${var.service_prefix}"
-  filter_pattern  = ""
-  destination_arn = "arn:aws:firehose:${var.aws_region}:${local.current_account_id}:deliverystream/service-finder-cw-logs-firehose"
-  distribution    = "ByLogStream"
-
-  depends_on = [
-    aws_cloudwatch_log_group.waf_logs
-  ]
-}
