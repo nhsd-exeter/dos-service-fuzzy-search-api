@@ -45,11 +45,11 @@ public class WebClientUtil {
 
   @Autowired
   public WebClientUtil(
-    @Qualifier("authWebClient") WebClient authWebClient,
-    @Qualifier(" postCodeMappingWebClient") WebClient postCodeMappingWebClient,
-    @Qualifier("googleApiWebClient") WebClient googleApiWebClient,
-    @Qualifier("nhsChoicesApiWebClient") WebClient nhsChoicesApiWebClient,
-    @Qualifier("customObjectMapper") ObjectMapper objectMapper
+    WebClient authWebClient,
+    WebClient postCodeMappingWebClient,
+    WebClient googleApiWebClient,
+     WebClient nhsChoicesApiWebClient,
+     ObjectMapper objectMapper
   ){
     this.authWebClient = authWebClient;
     this.postCodeMappingWebClient = postCodeMappingWebClient;
