@@ -66,20 +66,13 @@ pipeline {
         }
       }
     }
-    stage('Check Py Lib Folder') {
-      steps {
-        script {
-          sh 'make create-lambda-deploy-dir'
-        }
-      }
-    }
-    stage('Import Infrastructure') {
-      steps {
-        script {
-          sh "make terraform-import-stack PROFILE=${env.PROFILE}"
-        }
-      }
-    }
+    // stage('Import Infrastructure') {
+    //   steps {
+    //     script {
+    //       sh "make terraform-import-stack PROFILE=${env.PROFILE}"
+    //     }
+    //   }
+    // }
     stage('Plan Infrastructure') {
       steps {
         script {
