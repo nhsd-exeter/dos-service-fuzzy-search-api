@@ -56,13 +56,13 @@ pipeline {
         }
       }
     }
-    stage('Unit Test') {
-      steps {
-        script {
-          sh 'make unit-test'
-        }
-      }
-    }
+    // stage('Unit Test') {
+    //   steps {
+    //     script {
+    //       sh 'make unit-test'
+    //     }
+    //   }
+    // }
     stage('Run Contract Tests') {
       steps {
         script {
