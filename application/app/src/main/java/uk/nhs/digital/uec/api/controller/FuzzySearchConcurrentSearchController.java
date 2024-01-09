@@ -60,7 +60,7 @@ public class FuzzySearchConcurrentSearchController {
     @ApiParam(DISTANCE_RANGE_DESC) @RequestParam(name = "distance_range", required = false) Double distanceRange,
     @ApiParam(REFERRAL_ROLE_DESC) @RequestParam(name = "referral_role", required = false) String referralRole,
     @ApiParam(hidden = true) @RequestParam(name = "max_num_services_to_return_from_es", required = false) Integer maxNumServicesToReturnFromEs,
-    @ApiParam(MAX_NUM_SERVICES_DESC) @RequestParam(name = "max_number_of_services_to_return", required = false) Integer maxNumServicesToReturn,
+    @ApiParam(MAX_NUM_SERVICES_DESC) @RequestParam(name = "max_number_of_services_to_return", required = false, defaultValue = "50") Integer maxNumServicesToReturn,
     @ApiParam(FUZZ_LEVEL_DESC) @RequestParam(name = "fuzz_level", required = false) Integer fuzzLevel,
     @ApiParam(NAME_PRIORITY_DESC) @RequestParam(name = "name_priority", required = false) Integer namePriority,
     @ApiParam(ADDRESS_PRIORITY_DESC) @RequestParam(name = "address_priority", required = false) Integer addressPriority,
