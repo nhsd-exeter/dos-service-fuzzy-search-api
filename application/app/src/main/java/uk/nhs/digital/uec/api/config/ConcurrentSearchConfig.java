@@ -11,7 +11,7 @@ import java.util.concurrent.*;
 public class ConcurrentSearchConfig {
 
   @Bean
-  public ExecutorService executorService() {
+  public ExecutorService taskExecutor() {
     return Executors.newFixedThreadPool(15);
   }
 }

@@ -49,11 +49,11 @@ public class NHSChoicesV2DataModel {
   @JsonProperty("Geocode")
   private Geocode Geocode;
   @JsonProperty("OrganisationSubType")
-  private Object organisationSubType;
+  private String organisationSubType;
   @JsonProperty("OrganisationAliases")
-  private List<Object> organisationAliases;
+  private List<String> organisationAliases;
   @JsonProperty("ParentOrganisation")
-  private Object parentOrganisation;
+  private String parentOrganisation;
   @JsonProperty("Services")
   private List<Service> services;
   @JsonProperty("OpeningTimes")

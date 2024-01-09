@@ -60,6 +60,7 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
         log.info("Combining results");
         final boolean didDOSFail = dosServicesList.isCompletedExceptionally();
         final boolean didNHSFail = nhsChoicesModelMappedToDosServicesList.isCompletedExceptionally();
+
         if (didNHSFail) {
           log.error("Could not retrieve NHS choices Services");
         }
@@ -73,7 +74,8 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
             didNHSFail ? Stream.empty() : nhsChoicesServices.stream())
           .sorted(Comparator.comparingDouble(service -> sortByDistanceFromSearch(Double.parseDouble(searchLatitude),
             Double.parseDouble(searchLongitude),
-            service.getLocation().getLat(), service.getLocation().getLon())))
+            service.getLocation().getLat(),
+            service.getLocation().getLon())))
           .collect(Collectors.toList());
 
         log.info("Number of DOS Services {}", dosServices.size());
