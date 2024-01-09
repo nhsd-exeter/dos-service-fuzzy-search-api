@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
+@Slf4j(topic = "NHS_CHOICES_IMPL")
 public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
   private static final String NHS_CHOICES_DATASOURCE = "NHS_CHOICES";
   private final WebClientUtil webClientUtil;
@@ -49,10 +49,10 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
       .thenApply(nhscs -> {
         List<DosService> dosServices;
         if (nhscs.isEmpty()) {
-          log.debug("No services found");
+          log.info("No services found");
           dosServices = new ArrayList<>();
         } else {
-          log.debug("Converting NHS choices services for service finder");
+          log.info("Converting NHS choices services for service finder");
           dosServices = nhscs.stream()
             .map(this::convertNHSChoicesToDosService)
             .limit(maxNumServicesToReturn / 2)

@@ -28,13 +28,13 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
   @Autowired
   public ConcurrentFuzzySearchServiceImpl(
     DosServiceSearch dosSearchService,
-    NHSChoicesSearchService nhsChoicesSearchService){
+    NHSChoicesSearchService nhsChoicesSearchService) {
     this.dosSearchService = dosSearchService;
     this.nhsChoicesSearchService = nhsChoicesSearchService;
   }
 
   @Override
-  @Async("fuzzyTaskExecutor")
+  @Async
   public CompletableFuture<List<DosService>> fuzzySearch(String searchLatitude, String searchLongitude, Double distanceRange, List<String> searchTerms, String searchPostcode, Integer maxNumServicesToReturn) throws NotFoundException {
 
     log.info("Init NHS choices async call");
@@ -55,30 +55,35 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
       return Collections.emptyList();
     });
 
-    return dosServicesList.thenCombine(nhsChoicesModelMappedToDosServicesList, (dosServices, nhsChoicesServices) -> {
-      final boolean didDOSFail = dosServicesList.isCompletedExceptionally();
-      final boolean didNHSFail = nhsChoicesModelMappedToDosServicesList.isCompletedExceptionally();
-      if (didNHSFail) {
-        log.error("Could not retrieve NHS choices Services");
-      }
+    return dosServicesList.thenCombine(nhsChoicesModelMappedToDosServicesList,
+      (dosServices, nhsChoicesServices) -> {
+        log.info("Combining results");
+        final boolean didDOSFail = dosServicesList.isCompletedExceptionally();
+        final boolean didNHSFail = nhsChoicesModelMappedToDosServicesList.isCompletedExceptionally();
+        if (didNHSFail) {
+          log.error("Could not retrieve NHS choices Services");
+        }
 
-      if (didDOSFail) {
-        log.error("Could not retrieve DOS Services");
-      }
+        if (didDOSFail) {
+          log.error("Could not retrieve DOS Services");
+        }
 
+        List<DosService> combinedList = Stream.concat(
+            didDOSFail ? Stream.empty() : dosServices.stream(),
+            didNHSFail ? Stream.empty() : nhsChoicesServices.stream())
+          .sorted(Comparator.comparingDouble(service -> sortByDistanceFromSearch(Double.parseDouble(searchLatitude),
+            Double.parseDouble(searchLongitude),
+            service.getLocation().getLat(), service.getLocation().getLon())))
+          .collect(Collectors.toList());
 
-      List<DosService> combinedList = Stream.concat(
-          didDOSFail ? Stream.empty() : dosServices.stream(),
-          didNHSFail ? Stream.empty() : nhsChoicesServices.stream())
-        .sorted(Comparator.comparingDouble(service -> sortByDistanceFromSearch(Double.parseDouble(searchLatitude),
-          Double.parseDouble(searchLongitude),
-          service.getLocation().getLat(), service.getLocation().getLon())))
-        .collect(Collectors.toList());
+        log.info("Number of DOS Services {}", dosServices.size());
 
-      log.info("Services sorted successfully based on distance.");
+        log.info("Number of NHS Choices Services {}", nhsChoicesServices.size());
 
-      return combinedList;
-    });
+        log.info("Services sorted successfully based on distance.");
+
+        return combinedList;
+      });
 
   }
 

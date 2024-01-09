@@ -48,9 +48,9 @@ public class WebClientUtil {
     WebClient authWebClient,
     WebClient postCodeMappingWebClient,
     WebClient googleApiWebClient,
-     WebClient nhsChoicesApiWebClient,
-     ObjectMapper objectMapper
-  ){
+    WebClient nhsChoicesApiWebClient,
+    ObjectMapper objectMapper
+  ) {
     this.authWebClient = authWebClient;
     this.postCodeMappingWebClient = postCodeMappingWebClient;
     this.googleApiWebClient = googleApiWebClient;
@@ -58,7 +58,7 @@ public class WebClientUtil {
     this.objectMapper = objectMapper;
   }
 
-  @Async("fuzzyTaskExecutor")
+
   public CompletableFuture<List<NHSChoicesV2DataModel>> retrieveNHSChoicesServices(String searchLatitude, String searchLongitude, String searchTerms) {
     return nhsChoicesApiWebClient.get()
       .uri(uriBuilder -> uriBuilder
