@@ -41,12 +41,12 @@ public class DosServiceSearchImpl implements DosServiceSearch {
     CustomServicesRepositoryInterface elasticsearch,
     ApiRequestParams apiRequestParams,
     ValidationServiceInterface validationService,
-    ExternalApiHandshakeInterface externalApiHandshakeInterface){
+    ExternalApiHandshakeInterface externalApiHandshakeInterface) {
     this.locationService = locationService;
     this.elasticsearch = elasticsearch;
     this.apiRequestParams = apiRequestParams;
     this.validationService = validationService;
-    this. externalApiHandshakeInterface = externalApiHandshakeInterface;
+    this.externalApiHandshakeInterface = externalApiHandshakeInterface;
   }
 
 
@@ -126,7 +126,7 @@ public class DosServiceSearchImpl implements DosServiceSearch {
 
     // return max number of services, or the number of services returned. Which ever
     // is the least.
-    int serviceResultLimit = apiRequestParams.getMaxNumServicesToReturn();
+    int serviceResultLimit = apiRequestParams.getMaxNumServicesToReturn() / 2;
     if (apiRequestParams.getMaxNumServicesToReturn() > dosServices.size()) {
       serviceResultLimit = dosServices.size();
     }

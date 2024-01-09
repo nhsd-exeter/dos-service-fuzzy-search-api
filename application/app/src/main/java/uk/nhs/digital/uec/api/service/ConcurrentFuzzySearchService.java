@@ -13,5 +13,6 @@ public interface ConcurrentFuzzySearchService {
                                                   String searchLongitude,
                                                   Double distanceRange,
                                                   List<String> searchTerms,
-                                                  String searchPostcode) throws InterruptedException, ExecutionException, NotFoundException, InvalidParameterException;
+                                                  String searchPostcode,
+                                                  Integer maxNumServicesToReturn) throws InterruptedException, ExecutionException, NotFoundException, InvalidParameterException;
 }

@@ -35,10 +35,15 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
   }
 
   @Override
-  public CompletableFuture<List<DosService>> retrieveParsedNhsChoicesV2Model(String searchLatitude, String searchLongitude, List<String> searchTerms, String searchPostcode) throws NotFoundException {
+  public CompletableFuture<List<DosService>> retrieveParsedNhsChoicesV2Model(String searchLatitude,
+                                                                             String searchLongitude,
+                                                                             List<String> searchTerms,
+                                                                             String searchPostcode,
+                                                                             Integer maxNumServicesToReturn) throws NotFoundException {
     //Validate search terms
     log.info("Validating search terms");
     String terms = this.validateSearchTerms(searchTerms, searchPostcode);
+    log.info("Max number of services to return {}", maxNumServicesToReturn / 2);
 
     return webClientUtil.retrieveNHSChoicesServices(searchLatitude, searchLongitude, terms)
       .thenApply(nhscs -> {
@@ -50,6 +55,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
           log.debug("Converting NHS choices services for service finder");
           dosServices = nhscs.stream()
             .map(this::convertNHSChoicesToDosService)
+            .limit(maxNumServicesToReturn / 2)
             .collect(Collectors.toList());
         }
         log.info("NHS Choices services search successful. Found {} NHS Services(s).", dosServices.size());

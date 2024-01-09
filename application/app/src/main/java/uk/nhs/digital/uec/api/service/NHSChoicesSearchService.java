@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface NHSChoicesSearchService {
-  CompletableFuture<List<DosService>> retrieveParsedNhsChoicesV2Model(String searchLatitude, String searchLongitude, List<String> searchTerms, String searchPostcode) throws NotFoundException;
+  CompletableFuture<List<DosService>> retrieveParsedNhsChoicesV2Model(String searchLatitude,
+                                                                      String searchLongitude,
+                                                                      List<String> searchTerms,
+                                                                      String searchPostcode,
+                                                                      Integer maxNumServicesToReturn) throws NotFoundException;
 
 }

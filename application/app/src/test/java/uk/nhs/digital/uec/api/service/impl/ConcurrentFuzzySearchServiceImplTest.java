@@ -43,6 +43,7 @@ class ConcurrentFuzzySearchServiceImplTest {
     Double distanceRange = 10.0;
     List<String> searchTerms = List.of("term1", "term2");
     String searchPostcode = "M1 1EZ";
+    Integer maxNumberOfServicesTOReturn = 50;
 
     List<DosService> dosServiceList = new ArrayList<>();
     List<NHSChoicesV2DataModel> nhsChoicesList = new ArrayList<>();
@@ -50,16 +51,14 @@ class ConcurrentFuzzySearchServiceImplTest {
     when(dosSearchService.retrieveServicesByGeoLocation(anyString(), anyString(), anyDouble(), anyList(), anyString()))
       .thenAnswer(invocation -> CompletableFuture.completedFuture(dosServiceList));
 
-    when(nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(anyString(), anyString(), anyList(), anyString()))
+    when(nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(anyString(), anyString(), anyList(), anyString(), anyInt()))
       .thenAnswer(invocation -> CompletableFuture.completedFuture(nhsChoicesList));
 
-    CompletableFuture<List<DosService>> result = fuzzySearchService.fuzzySearch(searchLatitude, searchLongitude, distanceRange, searchTerms, searchPostcode);
+    CompletableFuture<List<DosService>> result = fuzzySearchService.fuzzySearch(searchLatitude, searchLongitude, distanceRange, searchTerms, searchPostcode, maxNumberOfServicesTOReturn);
 
     List<DosService> combinedList = result.get();
 
     assertEquals(0, combinedList.size());
   }
-
-
 
 }

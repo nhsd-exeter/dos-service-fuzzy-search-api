@@ -55,7 +55,7 @@ class FuzzySearchConcurrentSearchControllerTest {
     List<NHSChoicesV2DataModel> nhsChoicesList = new ArrayList<>();
     NHSChoicesV2DataModel nhsChoicesDataModel = new NHSChoicesV2DataModel();
 
-    when(concurrentFuzzySearchService.fuzzySearch(anyString(), anyString(), anyDouble(), anyList(), anyString()))
+    when(concurrentFuzzySearchService.fuzzySearch(anyString(), anyString(), anyDouble(), anyList(), anyString(),anyInt()))
       .thenReturn(CompletableFuture.completedFuture(dosServiceList));
 
     CompletableFuture<ResponseEntity<ApiResponse>> resultFuture = fuzzySearchController.getServicesByFuzzySearch(
@@ -67,7 +67,7 @@ class FuzzySearchConcurrentSearchControllerTest {
 
     //assert that fuzzySearch method is invoked with the expected parameters
     Mockito.verify(concurrentFuzzySearchService).fuzzySearch(
-      eq(searchLatitude), eq(searchLongitude), eq(distanceRange), eq(searchCriteria), eq(searchPostcode));
+      eq(searchLatitude), eq(searchLongitude), eq(distanceRange), eq(searchCriteria), eq(searchPostcode), anyInt());
 
     //assert that the result is completed asynchronously without an exception
     assertEquals(200, result.getStatusCodeValue());

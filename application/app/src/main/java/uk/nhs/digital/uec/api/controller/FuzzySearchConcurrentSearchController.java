@@ -99,7 +99,7 @@ public class FuzzySearchConcurrentSearchController {
 
     log.info("Staring concurrent data fetch");
     CompletableFuture<ResponseEntity<ApiResponse>> result = concurrentFuzzySearchService.fuzzySearch(
-        searchLatitude, searchLongitude, distanceRange, searchCriteria, searchPostcode)
+        searchLatitude, searchLongitude, distanceRange, searchCriteria, searchPostcode,maxNumServicesToReturn)
       .thenApply(dosServicesList -> {
         log.info("Completing async data fetch now combining results");
         searchResultsResponse.setServices(dosServicesList);

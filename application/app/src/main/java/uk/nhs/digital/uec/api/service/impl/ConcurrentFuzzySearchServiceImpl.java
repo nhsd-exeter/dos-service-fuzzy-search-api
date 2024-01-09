@@ -35,10 +35,11 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
 
   @Override
   @Async("fuzzyTaskExecutor")
-  public CompletableFuture<List<DosService>> fuzzySearch(String searchLatitude, String searchLongitude, Double distanceRange, List<String> searchTerms, String searchPostcode) throws NotFoundException {
+  public CompletableFuture<List<DosService>> fuzzySearch(String searchLatitude, String searchLongitude, Double distanceRange, List<String> searchTerms, String searchPostcode, Integer maxNumServicesToReturn) throws NotFoundException {
+
     log.info("Init NHS choices async call");
     CompletableFuture<List<DosService>> nhsChoicesModelMappedToDosServicesList = nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(
-      searchLatitude, searchLongitude, searchTerms, searchPostcode
+      searchLatitude, searchLongitude, searchTerms, searchPostcode, maxNumServicesToReturn
     );
 
     log.info("Init DOS services async call");
