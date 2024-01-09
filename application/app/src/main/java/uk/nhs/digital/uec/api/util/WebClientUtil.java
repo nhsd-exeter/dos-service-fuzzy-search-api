@@ -75,7 +75,7 @@ public class WebClientUtil {
       })
       .bodyToMono(String.class)
       .doOnNext((responseBody) -> {
-        log.info("Response received");
+        log.info("Response received {}",responseBody);
       })
       .map(this::parseNHSChoicesDataModel)
       .toFuture();
@@ -168,14 +168,17 @@ public class WebClientUtil {
   }
 
   private List<NHSChoicesV2DataModel> parseNHSChoicesDataModel(String json) {
+    log.info("parsing json from data model");
     List<NHSChoicesV2DataModel> nhsChoicesDataModels = new ArrayList<>();
     if (StringUtils.isBlank(json)) {
+      log.info("Returning empty data model");
       return nhsChoicesDataModels;
     }
     try {
       Map<String, Object> dataMap = objectMapper.readValue(json, new TypeReference<>() {
       });
       List<Map<String, Object>> values = (List<Map<String, Object>>) dataMap.get("value");
+      log.info("Found results returning value");
       if (values != null && !values.isEmpty()) {
         for (Map<String, Object> value : values) {
           NHSChoicesV2DataModel nhsChoicesDataModel = objectMapper.convertValue(value, NHSChoicesV2DataModel.class);
