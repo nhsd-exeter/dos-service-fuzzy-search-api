@@ -75,7 +75,7 @@ public class WebClientUtil {
       })
       .bodyToMono(String.class)
       .doOnNext((responseBody) -> {
-        log.info("Response received {}",responseBody);
+        log.info("Response received");
       })
       .map(this::parseNHSChoicesDataModel)
       .toFuture();
@@ -178,13 +178,13 @@ public class WebClientUtil {
       Map<String, Object> dataMap = objectMapper.readValue(json, new TypeReference<>() {
       });
       List<Map<String, Object>> values = (List<Map<String, Object>>) dataMap.get("value");
-      log.info("Found results returning value");
       if (values != null && !values.isEmpty()) {
         for (Map<String, Object> value : values) {
           NHSChoicesV2DataModel nhsChoicesDataModel = objectMapper.convertValue(value, NHSChoicesV2DataModel.class);
           nhsChoicesDataModels.add(nhsChoicesDataModel);
         }
       } else {
+        log.info("This search did not contain any NHS results");
         return nhsChoicesDataModels;
       }
     } catch (JsonProcessingException e) {
