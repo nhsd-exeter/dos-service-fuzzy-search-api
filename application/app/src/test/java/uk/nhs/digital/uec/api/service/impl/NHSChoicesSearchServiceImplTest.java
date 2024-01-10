@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
@@ -20,6 +21,8 @@ import java.util.concurrent.CompletableFuture;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,7 +37,7 @@ public class NHSChoicesSearchServiceImplTest {
   @InjectMocks private NHSChoicesSearchServiceImpl service;
 
 
-//  @Test
+  @Test
   public void testRetrieveParsedNhsChoicesV2ModelWithEmptyResults() throws NotFoundException {
     // Mocking the web client to return an empty list
     when(webClientUtil.retrieveNHSChoicesServices(any(), any(), any()))
@@ -48,10 +51,18 @@ public class NHSChoicesSearchServiceImplTest {
   @Test
   public void testRetrieveParsedNhsChoicesV2ModelWithNonEmptyResults() throws NotFoundException {
     // Mocking a non-empty response from the web client
+    NHSChoicesV2DataModel webclientResponse = new NHSChoicesV2DataModel();
+    webclientResponse.setLatitude(0D);
+    webclientResponse.setLongitude(0D);
+    DosService dosService = mock(DosService.class);
     List<NHSChoicesV2DataModel> mockResponse = new ArrayList<>();
-    mockResponse.add(new NHSChoicesV2DataModel());
+    mockResponse.add(webclientResponse);
 
-    when(webClientUtil.retrieveNHSChoicesServices(any(), any(), any())).thenReturn(CompletableFuture.completedFuture(mockResponse));
+    when(servicesMapperUtil.concatenateAddress(webclientResponse)).thenReturn("anyString()");
+    when(webClientUtil.retrieveNHSChoicesServices(any(), any(), any()))
+      .thenReturn(CompletableFuture.completedFuture(mockResponse));
+    when(servicesMapperUtil.getGeoLocation(webclientResponse)).thenReturn(any());
+
 
     CompletableFuture<List<DosService>> futureResult = service.retrieveParsedNhsChoicesV2Model("lat", "long", new ArrayList<>(), "postcode", 10);
 
