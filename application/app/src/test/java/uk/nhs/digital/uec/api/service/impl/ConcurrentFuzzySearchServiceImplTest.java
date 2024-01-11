@@ -14,6 +14,7 @@ import uk.nhs.digital.uec.api.service.DosServiceSearch;
 import uk.nhs.digital.uec.api.service.NHSChoicesSearchService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -61,4 +62,27 @@ class ConcurrentFuzzySearchServiceImplTest {
     assertEquals(0, combinedList.size());
   }
 
+  @Test
+  @DisplayName("Assert that when one of the services fails, the fuzzySearch method handles the exception and returns an empty list")
+  void fuzzySearchExceptionHandling() throws ExecutionException, InterruptedException, InvalidParameterException, NotFoundException {
+    // Arrange
+    String searchLatitude = "53.4817";
+    String searchLongitude = "2.2346";
+    Double distanceRange = 10.0;
+    List<String> searchTerms = List.of("term1", "term2");
+    String searchPostcode = "M1 1EZ";
+    Integer maxNumberOfServicesTOReturn = 50;
+
+    when(dosSearchService.retrieveServicesByGeoLocation(anyString(), anyString(), anyDouble(), anyList(), anyString()))
+      .thenAnswer(invocation -> CompletableFuture.supplyAsync(() -> {
+        throw new RuntimeException("DOS service not found");
+      }));
+
+    when(nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(anyString(), anyString(), anyList(), anyString(), anyInt()))
+      .thenAnswer(invocation -> CompletableFuture.completedFuture(new ArrayList<>()));
+
+    CompletableFuture<List<DosService>> result = fuzzySearchService.fuzzySearch(searchLatitude, searchLongitude, distanceRange, searchTerms, searchPostcode, maxNumberOfServicesTOReturn);
+
+    assertEquals(0, result.get().size());
+  }
 }

@@ -30,7 +30,7 @@ import uk.nhs.digital.uec.api.service.impl.DosServiceSearchImpl;
 import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 
 @ExtendWith(SpringExtension.class)
-public class FuzzySearchControllerTest {
+public class FuzzyServiceSearchControllerTest {
 
   @InjectMocks FuzzyServiceSearchController fuzzyServiceSearchController;
 

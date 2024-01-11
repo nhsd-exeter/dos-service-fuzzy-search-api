@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
@@ -26,9 +25,20 @@ import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.*
 @Slf4j
 @RequestMapping("/dosapi/dosservices/v2")
 public class FuzzySearchConcurrentSearchController {
-  @Autowired private ConcurrentFuzzySearchService concurrentFuzzySearchService;
-  @Autowired private ApiUtilsServiceInterface utils;
-  @Autowired private ApiRequestParams requestParams;
+  private final ConcurrentFuzzySearchService concurrentFuzzySearchService;
+  private final ApiUtilsServiceInterface utils;
+  private final ApiRequestParams requestParams;
+
+  @Autowired
+  public FuzzySearchConcurrentSearchController(
+    ConcurrentFuzzySearchService concurrentFuzzySearchService,
+    ApiUtilsServiceInterface utils,
+    ApiRequestParams requestParams
+  ){
+    this.concurrentFuzzySearchService = concurrentFuzzySearchService;
+    this.utils = utils;
+    this.requestParams = requestParams;
+  }
 
   @Value("${configuration.search_parameters.max_num_services_to_return}")
   private String defaultMaxNumServicesToReturn;

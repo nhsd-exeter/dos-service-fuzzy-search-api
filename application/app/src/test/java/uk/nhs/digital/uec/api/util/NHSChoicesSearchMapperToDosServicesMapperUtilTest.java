@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.service.impl;
+package uk.nhs.digital.uec.api.util;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;

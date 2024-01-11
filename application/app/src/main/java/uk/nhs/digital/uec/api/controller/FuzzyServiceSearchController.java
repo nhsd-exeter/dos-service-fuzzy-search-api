@@ -43,8 +43,6 @@ public class FuzzyServiceSearchController {
   private final DosServiceSearch fuzzyServiceSearchService;
   private final ApiUtilsServiceInterface utils;
   private final ApiRequestParams requestParams;
-  private final String defaultMaxNumServicesToReturn;
-  private final String defaultFuzzLevel;
 
   @Autowired
   public FuzzyServiceSearchController(
@@ -56,8 +54,6 @@ public class FuzzyServiceSearchController {
     this.fuzzyServiceSearchService = fuzzyServiceSearchService;
     this.utils = utils;
     this.requestParams = requestParams;
-    this.defaultMaxNumServicesToReturn = defaultMaxNumServicesToReturn;
-    this.defaultFuzzLevel = defaultFuzzLevel;
   }
 
     /**

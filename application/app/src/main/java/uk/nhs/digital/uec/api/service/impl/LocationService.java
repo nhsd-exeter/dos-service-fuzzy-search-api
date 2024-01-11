@@ -21,9 +21,17 @@ import uk.nhs.digital.uec.api.service.LocationServiceInterface;
 @Slf4j
 public class LocationService implements LocationServiceInterface {
 
-  @Autowired private ApiUtilsServiceInterface apiUtilsService;
+  private final ApiUtilsServiceInterface apiUtilsService;
+  private final ExternalApiHandshakeInterface apiHandshakeService;
 
-  @Autowired private ExternalApiHandshakeInterface apiHandshakeService;
+  @Autowired
+  public LocationService(
+    ApiUtilsServiceInterface apiUtilsService,
+    ExternalApiHandshakeInterface apiHandshakeService
+  ){
+    this.apiUtilsService = apiUtilsService;
+    this.apiHandshakeService = apiHandshakeService;
+  }
 
   /**
    * {@inheritDoc}
@@ -73,9 +81,9 @@ public class LocationService implements LocationServiceInterface {
     Double eastingDiff = Math.pow((source.getEasting() - destination.getEasting()), 2);
     Double northingDiff = Math.pow((source.getNorthing() - destination.getNorthing()), 2);
 
-    Double distanceInMetres = Math.sqrt(eastingDiff + northingDiff);
+    double distanceInMetres = Math.sqrt(eastingDiff + northingDiff);
 
-    Double distanceInMiles = distanceInMetres / 1609;
+    double distanceInMiles = distanceInMetres / 1609;
 
     return DoubleRounder.round(distanceInMiles, 1);
   }

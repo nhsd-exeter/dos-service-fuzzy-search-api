@@ -1,18 +1,5 @@
-package uk.nhs.digital.uec.api.service;
+package uk.nhs.digital.uec.api.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +10,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
-import uk.nhs.digital.uec.api.service.impl.LocationService;
+import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
+import uk.nhs.digital.uec.api.service.ExternalApiHandshakeInterface;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 public class LocationServiceTest {
@@ -161,7 +158,7 @@ public class LocationServiceTest {
   public void InvalidResponseReturnedFromPostcodeService()
       throws InvalidParameterException, NotFoundException {
     when(apiUtilsService.removeBlankSpacesIn(Stream.of(postCode).collect(Collectors.toList())))
-        .thenReturn(Arrays.asList(postCode));
+        .thenReturn(Collections.singletonList(postCode));
     when(apiHandshakeService.getPostcodeMappings(
             Stream.of(postCode).collect(Collectors.toList()), null))
         .thenThrow(InvalidParameterException.class);
@@ -174,11 +171,8 @@ public class LocationServiceTest {
 
   @Test
   public void shouldReturnNullWhenPassingNullValues() {
-    GeoPoint source = null;
-    GeoPoint destination = null;
-
-    Double distanceReturned = locationService.distanceBetween(source, destination);
-    assertEquals(null, distanceReturned);
+    Double distanceReturned = locationService.distanceBetween(null, (GeoPoint) null);
+      assertNull(distanceReturned);
   }
 
   @Test

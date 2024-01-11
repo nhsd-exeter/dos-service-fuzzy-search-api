@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
@@ -62,7 +61,7 @@ public class DosServiceSearchImpl implements DosServiceSearch {
 
     boolean isSearchTermNullOrEmpty = (searchTerms == null || searchTerms.isEmpty());
     boolean isValidGeoSearch = NumberUtils.isCreatable(searchLatitude) && NumberUtils.isCreatable(searchLongitude);
-    boolean isValidPostcode = searchPostcode == null ? false : validationService.isPostcodeValid(searchPostcode);
+    boolean isValidPostcode = searchPostcode != null && validationService.isPostcodeValid(searchPostcode);
 
     List<DosService> dosServices;
 
@@ -107,7 +106,7 @@ public class DosServiceSearchImpl implements DosServiceSearch {
 
     List<DosService> notValidPostCodeList = dosServices.stream()
       .filter(element -> !filteredDosServices.contains(element))
-      .collect(Collectors.toList());
+      .toList();
 
     notValidPostCodeList.forEach(e -> log.info("not valid postcode {} odscode: {}", e.getName(), e.getOdsCode()));
 
@@ -115,12 +114,12 @@ public class DosServiceSearchImpl implements DosServiceSearch {
 
     for (DosService dosService : filteredDosServices) {
       if ((Objects.isNull(dosService.getLocation()))
-        || ((dosService.getLocation().getLon() == 0D && dosService.getLocation().getLat() == 0D))) {
+        || (dosService.getLocation().getLon() == 0D && dosService.getLocation().getLat() == 0D)) {
         nonPopulatedLatLongServices.add(dosService);
       }
       dosService.setDatasource(DOS_DATA_SOURCE);
     }
-    this.populateServiceDistancesWithLatAndLng(nonPopulatedLatLongServices, searchLatitude, searchLongitude);
+    this.populateServiceDistancesWithLatAndLng(nonPopulatedLatLongServices, searchLongitude);
     // Clean up any duplicated values
     filteredDosServices.removeIf(f -> nonPopulatedLatLongServices.stream().anyMatch(n -> n.getId() == f.getId()));
     filteredDosServices.addAll(nonPopulatedLatLongServices);
@@ -135,7 +134,7 @@ public class DosServiceSearchImpl implements DosServiceSearch {
   }
 
 
-  private List<DosService> populateServiceDistancesWithLatAndLng(List<DosService> nonPopulatedLatLongServices, String searchLatitude, String searchLongitude) throws InvalidParameterException, NotFoundException {
+  private List<DosService> populateServiceDistancesWithLatAndLng(List<DosService> nonPopulatedLatLongServices, String searchLongitude) throws InvalidParameterException, NotFoundException {
     log.info("nonPopulatedLatLong {}", nonPopulatedLatLongServices.size());
     /**
      * if dos services returns empty locations populate location based on postcodes from postcode

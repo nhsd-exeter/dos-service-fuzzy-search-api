@@ -21,6 +21,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
+import uk.nhs.digital.uec.api.exception.GoogleApiException;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.model.google.GeoLocationResponse;
@@ -45,11 +46,11 @@ public class WebClientUtil {
 
   @Autowired
   public WebClientUtil(
-    WebClient authWebClient,
-    WebClient postCodeMappingWebClient,
-    WebClient googleApiWebClient,
-    WebClient nhsChoicesApiWebClient,
-    ObjectMapper objectMapper
+    @Qualifier("authWebClient") WebClient authWebClient,
+    @Qualifier("postCodeMappingWebClient") WebClient postCodeMappingWebClient,
+    @Qualifier("googleApiWebClient") WebClient googleApiWebClient,
+    @Qualifier("nhsChoicesApiWebClient") WebClient nhsChoicesApiWebClient,
+    @Qualifier("customerObjectMapper") ObjectMapper objectMapper
   ) {
     this.authWebClient = authWebClient;
     this.postCodeMappingWebClient = postCodeMappingWebClient;
@@ -74,9 +75,7 @@ public class WebClientUtil {
         return Mono.empty();
       })
       .bodyToMono(String.class)
-      .doOnNext((responseBody) -> {
-        log.info("Response received");
-      })
+      .doOnNext((responseBody) -> log.info("Response received"))
       .map(this::parseNHSChoicesDataModel)
       .toFuture();
   }
@@ -137,7 +136,7 @@ public class WebClientUtil {
         try {
           return handleException(throwable);
         } catch (InvalidParameterException e) {
-          throw new RuntimeException(e);
+          throw new GoogleApiException("Error handling Google API response", e);
         }
       })
       .block();

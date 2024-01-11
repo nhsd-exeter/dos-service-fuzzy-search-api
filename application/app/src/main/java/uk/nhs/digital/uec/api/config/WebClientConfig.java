@@ -36,7 +36,7 @@ public class WebClientConfig {
   @Value("${nhs.choices.url}")
   private String nhsChoicesUrl;
 
-  @Bean
+  @Bean("customerObjectMapper")
   public ObjectMapper objectMapper() {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
@@ -44,7 +44,7 @@ public class WebClientConfig {
     return objectMapper;
   }
 
-  @Bean
+  @Bean("authWebClient")
   public WebClient authWebClient() {
     return WebClient.builder()
       .baseUrl(loginUrl)
@@ -52,7 +52,7 @@ public class WebClientConfig {
       .build();
   }
 
-  @Bean
+  @Bean("postCodeMappingWebClient")
   public WebClient postCodeMappingWebClient() {
     return WebClient.builder()
       .baseUrl(psmUrl)
@@ -60,7 +60,7 @@ public class WebClientConfig {
       .build();
   }
 
-  @Bean
+  @Bean("googleApiWebClient")
   public WebClient googleApiWebClient() {
     return WebClient.builder()
       .baseUrl(googleApiUrl)
@@ -68,7 +68,7 @@ public class WebClientConfig {
       .build();
   }
 
-  @Bean
+  @Bean("nhsChoicesApiWebClient")
   public WebClient nhsChoicesApiWebClient() {
     return WebClient.builder()
       .codecs(configure -> configure

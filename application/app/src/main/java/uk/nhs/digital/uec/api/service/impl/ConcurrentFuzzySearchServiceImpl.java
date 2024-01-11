@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import uk.nhs.digital.uec.api.exception.DosServiceSearchException;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.DosService;
@@ -48,7 +49,7 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
         return dosSearchService.retrieveServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange, searchTerms, searchPostcode);
       } catch (NotFoundException | InvalidParameterException e) {
         log.error("An error occurred whilst retrieving DOS services from datastore");
-        throw new RuntimeException(e);
+        throw new DosServiceSearchException("Error retrieving DOS services", e);
       }
     }).exceptionally(ex -> {
       log.error("Error in DOS services search", ex);
