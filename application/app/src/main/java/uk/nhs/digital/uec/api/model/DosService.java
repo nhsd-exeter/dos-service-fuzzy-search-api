@@ -1,8 +1,6 @@
 package uk.nhs.digital.uec.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,12 +10,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
-import java.util.List;
-
-
-/**
- * Defines the structure and attributes that are returned for each service.
- */
+/** Defines the structure and attributes that are returned for each service. */
 @Document(indexName = "service")
 @AllArgsConstructor
 @Builder
@@ -27,26 +20,25 @@ public class DosService {
 
   private int _score; // NOSONAR
 
-  @Id
-  private int id;
+  @Id private int id;
 
   @Field(name = "u_id")
-  private int u_id; // NOSONAR
+  private int uid;
 
   private String name;
 
   @Field(name = "public_name")
-  private String public_name; // NOSONAR
+  private String publicName;
 
   @Field(name = "capacity_status")
-  private String capacity_status; // NOSONAR
+  private String capacityStatus;
 
   @Field(name = "type_id")
-  private int type_id; // NOSONAR
+  private int typeId;
 
   private String type;
 
-  private String ods_code; // NOSONAR
+  private String odsCode;
 
   private List<String> address;
 
@@ -57,28 +49,28 @@ public class DosService {
   private Integer northing;
 
   @Field(name = "referral_roles")
-  private List<String> referral_roles; // NOSONAR
+  private List<String> referralRoles;
 
   private Double distance;
 
   @Field(name = "public_phone_number")
-  private String public_phone_number;
+  private String publicPhoneNumber;
 
   @Field(name = "non_public_phone_number")
-  private String non_public_phone_number; // NOSONAR
+  private String nonPublicPhoneNumber;
 
   private String email;
 
   private String web;
 
   @Field(name = "public_referral_instructions")
-  private String public_referral_instructions;
+  private String publicReferralInstructions;
 
   @Field(name = "referral_instructions")
-  private String referral_instructions;
+  private String referralInstructions;
 
   @Field(name = "is_national")
-  private String is_national;
+  private String isNational;
 
   private String updated;
 
@@ -93,6 +85,9 @@ public class DosService {
   private String specificopentimes;
 
   private String specificendtimes;
+
+  @Field(name = "professional_referral_info")
+  private String professionalReferralInfo;
 
   private GeoPoint location;
 
