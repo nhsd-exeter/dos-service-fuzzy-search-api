@@ -35,11 +35,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
   }
 
   @Override
-  public CompletableFuture<List<DosService>> retrieveParsedNhsChoicesV2Model(String searchLatitude,
-                                                                             String searchLongitude,
-                                                                             List<String> searchTerms,
-                                                                             String searchPostcode,
-                                                                             Integer maxNumServicesToReturn) throws NotFoundException {
+  public CompletableFuture<List<DosService>> retrieveParsedNhsChoicesV2Model(String searchLatitude, String searchLongitude, List<String> searchTerms, String searchPostcode, Integer maxNumServicesToReturn) {
     //Validate search terms
     log.info("Validating search terms");
     String terms = this.validateSearchTerms(searchTerms, searchPostcode);

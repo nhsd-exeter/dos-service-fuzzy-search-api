@@ -27,24 +27,15 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
     this.apiRequestParams = apiRequestParams;
   }
 
-  public void configureApiRequestParams(
-    Integer fuzzLevel,
-    String referralRole,
-    Integer maxNumServicesToReturnFromEs,
-    Integer maxNumServicesToReturn,
-    Integer namePriority,
-    Integer addressPriority,
-    Integer postcodePriority,
-    Integer publicNamePriority)
-  {
-      apiRequestParams.setFuzzLevel(fuzzLevel);
-      apiRequestParams.setFilterReferralRole(referralRole);
-      apiRequestParams.setMaxNumServicesToReturnFromElasticsearch(maxNumServicesToReturnFromEs);
-      apiRequestParams.setMaxNumServicesToReturn(maxNumServicesToReturn);
-      apiRequestParams.setNamePriority(namePriority);
-      apiRequestParams.setAddressPriority(addressPriority);
-      apiRequestParams.setPostcodePriority(postcodePriority);
-      apiRequestParams.setPublicNamePriority(publicNamePriority);
+  public void configureApiRequestParams(Integer fuzzLevel, String referralRole, Integer maxNumServicesToReturnFromEs, Integer maxNumServicesToReturn, Integer namePriority, Integer addressPriority, Integer postcodePriority, Integer publicNamePriority) {
+    apiRequestParams.setFuzzLevel(fuzzLevel);
+    apiRequestParams.setFilterReferralRole(referralRole);
+    apiRequestParams.setMaxNumServicesToReturnFromElasticsearch(maxNumServicesToReturnFromEs);
+    apiRequestParams.setMaxNumServicesToReturn(maxNumServicesToReturn);
+    apiRequestParams.setNamePriority(namePriority);
+    apiRequestParams.setAddressPriority(addressPriority);
+    apiRequestParams.setPostcodePriority(postcodePriority);
+    apiRequestParams.setPublicNamePriority(publicNamePriority);
   }
 
   /** {@inheritDoc} */
