@@ -5,18 +5,23 @@ import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import uk.nhs.digital.uec.api.model.nhschoices.Contact;
 import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 import uk.nhs.digital.uec.api.model.nhschoices.OpeningTime;
-import uk.nhs.digital.uec.api.util.NHSChoicesSearchMapperToDosServicesMapperUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
 
   NHSChoicesSearchMapperToDosServicesMapperUtil classUnderTest = new NHSChoicesSearchMapperToDosServicesMapperUtil();
+
+  @Test
+  void getTelephoneContact() {
+    List<Contact> contacts = Collections.singletonList(new Contact("Primary", "Office hours", "Telephone", "01516399877"));
+    String result = classUnderTest.getTelephoneContact(contacts);
+    assertEquals("01516399877", result);
+  }
 
   @Test
   void getTelephoneContact_shouldReturnEmptyStringWhenNoTelephoneContact() {
@@ -26,10 +31,10 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
   }
 
   @Test
-  void getTelephoneContact_shouldReturnTelephoneContactValue() {
-    List<Contact> contacts = Collections.singletonList(new Contact("Primary", "Office hours", "Telephone", "01516399877"));
-    String result = classUnderTest.getTelephoneContact(contacts);
-    assertEquals("01516399877", result);
+  void getWebsite() {
+    List<Contact> contacts = Collections.singletonList(new Contact("Primary", "Office hours", "Website", "https://wehgroup.co.uk"));
+    String result = classUnderTest.getWebsite(contacts);
+    assertEquals("https://wehgroup.co.uk", result);
   }
 
   @Test
@@ -40,30 +45,16 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
   }
 
   @Test
-  void getWebsite_shouldReturnWebsiteContactValue() {
-    List<Contact> contacts = Collections.singletonList(new Contact("Primary", "Office hours", "Website", "https://wehgroup.co.uk"));
-    String result = classUnderTest.getWebsite(contacts);
-    assertEquals("https://wehgroup.co.uk", result);
-  }
-
-  @Test
-  void getEmail_shouldReturnEmptyStringWhenNoEmailContact() {
-    List<Contact> contacts = Collections.emptyList();
-    String result = classUnderTest.getEmail(contacts);
-    assertEquals("", result);
-  }
-
-  @Test
-  void getEmail_shouldReturnEmailContactValue() {
+  void getEmail() {
     List<Contact> contacts = Collections.singletonList(new Contact("Primary", "Office hours", "Email", "pharmacy.fpg71@nhs.net"));
     String result = classUnderTest.getEmail(contacts);
     assertEquals("pharmacy.fpg71@nhs.net", result);
   }
 
   @Test
-  void getOpeningTimeDays_shouldReturnEmptyStringWhenNoOpeningTimes() {
-    List<OpeningTime> openingTimes = Collections.emptyList();
-    String result = classUnderTest.getOpeningTimeDays(openingTimes);
+  void getEmail_shouldReturnEmptyStringWhenNoEmailContact() {
+    List<Contact> contacts = Collections.emptyList();
+    String result = classUnderTest.getEmail(contacts);
     assertEquals("", result);
   }
 
@@ -81,6 +72,13 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
     String result = classUnderTest.getOpeningTimeDays(openingTimes);
 
     assertEquals("Monday, Tuesday, Wednesday, Thursday, Friday", result);
+  }
+
+  @Test
+  void getOpeningTimeDays_shouldReturnEmptyStringWhenNoOpeningTimes() {
+    List<OpeningTime> openingTimes = Collections.emptyList();
+    String result = classUnderTest.getOpeningTimeDays(openingTimes);
+    assertEquals("", result);
   }
 
   @Test
@@ -117,7 +115,7 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
   }
 
   @Test
-  public void testGetGeoLocation() {
+  public void getGeoLocation() {
     NHSChoicesV2DataModel dataModel = new NHSChoicesV2DataModel();
     dataModel.setLatitude(40.7128);
     dataModel.setLongitude(-74.0060);
@@ -129,7 +127,7 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
   }
 
   @Test
-  public void testConcatenateAddress() {
+  public void concatenateAddress() {
     NHSChoicesV2DataModel dataModel = new NHSChoicesV2DataModel();
     dataModel.setAddress1("123 Main St");
     dataModel.setAddress2("Apt 456");
@@ -141,7 +139,7 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
   }
 
   @Test
-  public void testReturnAddressListWithoutNullValues() {
+  public void returnAddressListWithoutNullValues() {
     NHSChoicesV2DataModel dataModel = new NHSChoicesV2DataModel();
     dataModel.setAddress1("123 Main St");
     dataModel.setAddress2(null);
@@ -150,6 +148,15 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
     String result = classUnderTest.concatenateAddress(dataModel);
 
     assertEquals("123 Main St, City", result);
+  }
+
+  @Test
+  void returnAddressListWithoutNullValues_allAddressesNull() {
+    NHSChoicesV2DataModel dataModel = new NHSChoicesV2DataModel();
+
+    String result = classUnderTest.concatenateAddress(dataModel);
+
+    assertEquals("", result);
   }
 
 }

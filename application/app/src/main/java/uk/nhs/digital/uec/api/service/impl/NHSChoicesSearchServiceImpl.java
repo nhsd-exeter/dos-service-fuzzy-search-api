@@ -3,7 +3,6 @@ package uk.nhs.digital.uec.api.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 import uk.nhs.digital.uec.api.service.NHSChoicesSearchService;
@@ -62,6 +61,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
         return Collections.emptyList();
       });
   }
+
 
   private String validateSearchTerms(List<String> searchTerms, String searchPostcode) {
 

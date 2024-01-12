@@ -27,7 +27,6 @@ import uk.nhs.digital.uec.api.model.ApiValidationErrorResponse;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.impl.ApiUtilsService;
 import uk.nhs.digital.uec.api.service.impl.DosServiceSearchImpl;
-import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 
 @ExtendWith(SpringExtension.class)
 public class FuzzyServiceSearchControllerTest {

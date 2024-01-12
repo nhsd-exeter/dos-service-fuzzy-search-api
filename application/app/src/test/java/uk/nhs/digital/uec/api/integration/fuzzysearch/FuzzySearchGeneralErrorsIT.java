@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import uk.nhs.digital.uec.api.util.PropertySourceResolver;
 
 /**
  * Test class which passes request import org.springframework.util.MultiValueMap;

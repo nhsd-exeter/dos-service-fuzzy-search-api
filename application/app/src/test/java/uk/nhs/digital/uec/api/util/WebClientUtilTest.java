@@ -27,10 +27,7 @@ import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 
 import javax.net.ssl.SSLException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -102,7 +99,17 @@ public class WebClientUtilTest {
   }
 
   @Test
-  public void getNHSChoicesServices() throws ExecutionException, InterruptedException, JsonProcessingException {
+  public void testConstructor() {
+    assertNotNull(webClientUtil.getAuthWebClient());
+    assertNotNull(webClientUtil.getPostCodeMappingWebClient());
+    assertNotNull(webClientUtil.getGoogleApiWebClient());
+    assertNotNull(webClientUtil.getNhsChoicesApiWebClient());
+    assertNotNull(webClientUtil.getObjectMapper());
+  }
+
+
+  @Test
+  public void retrieveNHSChoicesServices() throws ExecutionException, InterruptedException, JsonProcessingException {
     //Given
     String searchTerms = "Search";
     String searchLatitude = "0.0";
