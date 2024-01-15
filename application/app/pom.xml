@@ -241,6 +241,7 @@
                     <exclude>*config</exclude>
                     <exclude>*model</exclude>
                     <exclude>*filter</exclude>
+                    <exclude>*util</exclude>
                   </excludes>
                   <limits>
                     <limit>

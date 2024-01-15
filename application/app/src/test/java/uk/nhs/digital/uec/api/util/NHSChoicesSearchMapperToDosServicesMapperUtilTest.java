@@ -7,6 +7,7 @@ import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 import uk.nhs.digital.uec.api.model.nhschoices.OpeningTime;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,10 +32,34 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
   }
 
   @Test
+  public void getTelephoneContactMultipleContacts() {
+    List<Contact> contacts = Arrays.asList(
+      new Contact("Primary", "Office hours", "Telephone", "044516399877"),
+      new Contact("Secondary", "After hours", "Telephone", "07071234567")
+    );
+
+    String result = classUnderTest.getTelephoneContact(contacts);
+
+    assertEquals("044516399877", result);
+  }
+
+  @Test
   void getWebsite() {
     List<Contact> contacts = Collections.singletonList(new Contact("Primary", "Office hours", "Website", "https://wehgroup.co.uk"));
     String result = classUnderTest.getWebsite(contacts);
     assertEquals("https://wehgroup.co.uk", result);
+  }
+
+  @Test
+  public void getWebsiteMultipleContacts() {
+    List<Contact> contacts = Arrays.asList(
+      new Contact("Primary", "Office hours", "Website", "https://dental-provider.co.uk"),
+      new Contact("Secondary", "After hours", "Website", "https://example.com")
+    );
+
+    String result = classUnderTest.getWebsite(contacts);
+
+    assertEquals("https://dental-provider.co.uk", result);
   }
 
   @Test
@@ -48,6 +73,18 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
   void getEmail() {
     List<Contact> contacts = Collections.singletonList(new Contact("Primary", "Office hours", "Email", "pharmacy.fpg71@nhs.net"));
     String result = classUnderTest.getEmail(contacts);
+    assertEquals("pharmacy.fpg71@nhs.net", result);
+  }
+
+  @Test
+  public void getEmailMultipleContacts() {
+    List<Contact> contacts = Arrays.asList(
+      new Contact("Primary", "Office hours", "Email", "pharmacy.fpg71@nhs.net"),
+      new Contact("Secondary", "After hours", "Email", "info@example.com")
+    );
+
+    String result = classUnderTest.getEmail(contacts);
+
     assertEquals("pharmacy.fpg71@nhs.net", result);
   }
 

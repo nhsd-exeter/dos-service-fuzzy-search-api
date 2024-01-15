@@ -3,11 +3,14 @@ package uk.nhs.digital.uec.api.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -27,7 +30,10 @@ import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 
 import javax.net.ssl.SSLException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -40,7 +46,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
+@Slf4j
 public class WebClientUtilTest {
 
   @InjectMocks
@@ -273,5 +279,88 @@ public class WebClientUtilTest {
     List<PostcodeLocation> postcodeMappings =
       webClientUtil.getPostcodeMappings(postCodes, headers, URI);
     assertTrue(postcodeMappings.isEmpty());
+  }
+
+  @Test
+  public void getGeoLocationExceptionHandlingTest() throws SSLException {
+    when(googleApiWebClient.get()).thenReturn(requestHeadersUriSpecMock);
+    when(requestHeadersUriSpecMock.uri(anyString())).thenReturn(requestHeadersSpecMock);
+    when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
+    when(responseSpecMock.bodyToMono(GeoLocationResponse.class)).thenThrow(WebClientResponseException.class);
+
+    webClientUtil.setGoogleApiWebClient(googleApiWebClient);
+
+    assertThrows(WebClientResponseException.class, () -> {
+      webClientUtil.getGeoLocation("mk13 0LG", "XXXXXXXXX", "/api/goe/json");
+    });
+  }
+
+  @Test
+  public void getAuthenticationToken_NullOrException() throws SSLException {
+    when(authWebClient.post()).thenReturn(requestBodyUriSpecMock);
+    when(requestBodyUriSpecMock.uri(any(Function.class))).thenReturn(requestBodySpecMock);
+    when(requestBodySpecMock.header(any(), any())).thenReturn(requestBodySpecMock);
+    when(requestHeadersSpecMock.header(any(), any())).thenReturn(requestHeadersSpecMock);
+    when(requestBodySpecMock.accept(any())).thenReturn(requestBodySpecMock);
+    when(requestBodySpecMock.body(any())).thenReturn(requestHeadersSpecMock);
+    when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
+    when(responseSpecMock.bodyToMono(AuthToken.class)).thenReturn(Mono.empty()); // Simulate null response
+
+    webClientUtil.setAuthWebClient(authWebClient);
+
+    AuthToken responseAuthToken = webClientUtil.getAuthenticationToken(new Credential(), "/authentication/login");
+
+    assertNull(responseAuthToken);
+  }
+
+  @Test
+  public void retrieveNHSChoicesServices_HttpErrorStatus() throws ExecutionException, InterruptedException {
+    String searchTerms = "Search";
+    String searchLatitude = "0.0";
+    String searchLongitude = "0.0";
+    webClientUtil.setNhsChoicesApiWebClient(getMockedNHSChoicesClientWithError(HttpStatus.INTERNAL_SERVER_ERROR));
+
+    CompletableFuture<List<NHSChoicesV2DataModel>> result = webClientUtil.retrieveNHSChoicesServices(searchLatitude, searchLongitude, searchTerms);
+
+    assertNotNull(result);
+    assertTrue(result.isDone());
+    assertThrows(ExecutionException.class, result::get);
+  }
+
+  @Test
+  public void getGeoLocation_OnErrorResume() throws SSLException {
+    when(googleApiWebClient.get()).thenReturn(requestHeadersUriSpecMock);
+    when(requestHeadersUriSpecMock.uri(anyString())).thenReturn(requestHeadersSpecMock);
+    when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
+    when(responseSpecMock.bodyToMono(GeoLocationResponse.class)).thenThrow(WebClientResponseException.class);
+
+    webClientUtil.setGoogleApiWebClient(googleApiWebClient);
+
+    assertThrows(WebClientResponseException.class, () -> webClientUtil.getGeoLocation("mk13 0LG", "XXXXXXXXX", "/api/goe/json"));
+  }
+
+  @Test
+  public void handleWebClientResponseException_Status400() throws InvalidParameterException {
+    WebClientResponseException exception = new WebClientResponseException(HttpStatus.BAD_REQUEST.value(), "Bad Request", null, null, null, null);
+
+    assertThrows(InvalidParameterException.class, () -> webClientUtil.handleWebClientResponseException(exception));
+  }
+
+  @Test
+  public void handleWebClientResponseException_Status404() throws InvalidParameterException {
+    WebClientResponseException exception = new WebClientResponseException(HttpStatus.NOT_FOUND.value(), "Not Found", null, null, null, null);
+
+    webClientUtil.handleWebClientResponseException(exception);
+  }
+
+  private WebClient getMockedNHSChoicesClientWithError(HttpStatus status) {
+    when(nhsChoicesApiWebClient.get()).thenReturn(requestHeadersUriSpecMock);
+    when(requestHeadersUriSpecMock.uri(any(Function.class))).thenReturn(requestHeadersSpecMock);
+    when(requestHeadersSpecMock.headers(any(Consumer.class))).thenReturn(requestHeadersSpecMock);
+    when(requestHeadersSpecMock.retrieve()).thenReturn(responseSpecMock);
+    when(responseSpecMock.onStatus(any(Predicate.class), any(Function.class))).thenReturn(responseSpecMock);
+    when(responseSpecMock.bodyToMono(String.class)).thenReturn(Mono.just("Mocked Response"));
+    when(responseSpecMock.toEntity(String.class)).thenReturn(Mono.just(ResponseEntity.status(status).body("Mocked Response"))); // Added line
+    return nhsChoicesApiWebClient;
   }
 }

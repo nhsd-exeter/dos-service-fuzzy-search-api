@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -155,7 +154,7 @@ public class WebClientUtil {
     return Mono.justOrEmpty(null);
   }
 
-  private void handleWebClientResponseException(WebClientResponseException e)
+  void handleWebClientResponseException(WebClientResponseException e)
     throws InvalidParameterException {
     HttpStatus statusCode = e.getStatusCode();
     String errorResponse = e.getResponseBodyAsString();
@@ -169,28 +168,35 @@ public class WebClientUtil {
   private List<NHSChoicesV2DataModel> parseNHSChoicesDataModel(String json) {
     log.info("parsing json from data model");
     List<NHSChoicesV2DataModel> nhsChoicesDataModels = new ArrayList<>();
+
     if (StringUtils.isBlank(json)) {
       log.info("Returning empty data model");
       return nhsChoicesDataModels;
     }
+
     try {
-      Map<String, Object> dataMap = objectMapper.readValue(json, new TypeReference<>() {
-      });
-      List<Map<String, Object>> values = (List<Map<String, Object>>) dataMap.get("value");
-      if (values != null && !values.isEmpty()) {
-        for (Map<String, Object> value : values) {
-          NHSChoicesV2DataModel nhsChoicesDataModel = objectMapper.convertValue(value, NHSChoicesV2DataModel.class);
-          nhsChoicesDataModels.add(nhsChoicesDataModel);
+      // Check if the response is not null before converting it to a string
+      if (json != null) {
+        Map<String, Object> dataMap = objectMapper.readValue(json, new TypeReference<>() {});
+        List<Map<String, Object>> values = (List<Map<String, Object>>) dataMap.get("value");
+        if (values != null && !values.isEmpty()) {
+          for (Map<String, Object> value : values) {
+            NHSChoicesV2DataModel nhsChoicesDataModel = objectMapper.convertValue(value, NHSChoicesV2DataModel.class);
+            nhsChoicesDataModels.add(nhsChoicesDataModel);
+          }
+        } else {
+          log.info("This search did not contain any NHS results");
+          return nhsChoicesDataModels;
         }
       } else {
-        log.info("This search did not contain any NHS results");
-        return nhsChoicesDataModels;
+        log.error("Received null response in parseNHSChoicesDataModel");
       }
     } catch (JsonProcessingException e) {
       log.error("An unexpected error occurred whilst reading the response {}", e.getMessage());
-      return nhsChoicesDataModels;
     }
+
     return nhsChoicesDataModels;
   }
+
 
 }
