@@ -66,6 +66,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
               Double.parseDouble(searchLongitude),
               distanceRange,
               searchTerms);
+
       log.info("Found {} services", dosServices.size());
     } else if (isValidGeoSearch) {
       log.info("Searching using location {} lat {} lng", searchLatitude, searchLongitude);
@@ -114,6 +115,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
       if ((Objects.isNull(dosService.getLocation()))
           || ((dosService.getLocation().getLon() == 0D
               && dosService.getLocation().getLat() == 0D))) {
+
         nonPopulatedLatLongServices.add(dosService);
       }
     }
@@ -152,6 +154,7 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
                 new GeoPoint(
                     Double.parseDouble(searchLongitude), Double.parseDouble(searchLongitude)),
                 destinationGeoPoint));
+
       }
     }
     return nonPopulatedLatLongServices;
@@ -170,5 +173,6 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
     return new GeoPoint(
         geometry.getLocation().getLat(),
         geoLocationResponseResult.getGeometry().getLocation().getLng());
+
   }
 }
