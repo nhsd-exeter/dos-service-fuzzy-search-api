@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
-
 import uk.nhs.digital.uec.api.model.DosService;
 
 /** Class to encapsulate testing service data. */
@@ -40,19 +38,19 @@ public class MockDosServicesUtil {
     referralRoles.add("Professional Referral");
 
     return DosService.builder()
-      .id(Integer.valueOf(identifier))
-      .uid(Integer.valueOf(identifier))
-      .name("service" + identifier)
-      .publicName("Public Service Name " + identifier)
-      .type("Type 1")
-      .typeId(Integer.parseInt(identifier))
-      .odsCode("odscode" + identifier)
-      .capacityStatus("GREEN")
-      .address(address)
-      .postcode("EX7 8PR")
-      .location(new GeoPoint(24.35, -2.56789))
-      .referralRoles(referralRoles)
-      .build();
+        .id(Integer.valueOf(identifier))
+        .uid(Integer.valueOf(identifier))
+        .name("service" + identifier)
+        .publicName("Public Service Name " + identifier)
+        .type("Type 1")
+        .typeId(Integer.parseInt(identifier))
+        .odsCode("odscode" + identifier)
+        .capacityStatus("GREEN")
+        .address(address)
+        .postcode("EX7 8PR")
+        .location(new GeoPoint(24.35, -2.56789))
+        .referralRoles(referralRoles)
+        .build();
   }
 
   private static DosService buildMockSerivcesWithNoLocation(String identifer) {

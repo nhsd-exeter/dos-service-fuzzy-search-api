@@ -39,54 +39,54 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
 
   @Override
   public List<DosService> retrieveServicesByGeoLocation(
-    String searchLatitude,
-    String searchLongitude,
-    Double distanceRange,
-    List<String> searchTerms,
-    String searchPostcode)
-    throws NotFoundException, InvalidParameterException {
+      String searchLatitude,
+      String searchLongitude,
+      Double distanceRange,
+      List<String> searchTerms,
+      String searchPostcode)
+      throws NotFoundException, InvalidParameterException {
     boolean isSearchTermNullOrEmpty = (searchTerms == null || searchTerms.isEmpty());
     boolean isValidGeoSearch =
-      NumberUtils.isCreatable(searchLatitude) && NumberUtils.isCreatable(searchLongitude);
+        NumberUtils.isCreatable(searchLatitude) && NumberUtils.isCreatable(searchLongitude);
     boolean isValidPostcode =
-      searchPostcode == null ? false : validationService.isPostcodeValid(searchPostcode);
+        searchPostcode == null ? false : validationService.isPostcodeValid(searchPostcode);
 
     List<DosService> dosServices;
 
     if ((!isSearchTermNullOrEmpty) && (isValidGeoSearch)) {
       validationService.validateSearchCriteria(searchTerms);
       log.info(
-        "Searching using location & search terms: {}, lat: {} lng: {}",
-        String.join(" ", searchTerms),
-        searchLatitude,
-        searchLongitude);
+          "Searching using location & search terms: {}, lat: {} lng: {}",
+          String.join(" ", searchTerms),
+          searchLatitude,
+          searchLongitude);
       dosServices =
-        elasticsearch.findAllServicesByGeoLocationWithSearchTerms(
-          Double.parseDouble(searchLatitude),
-          Double.parseDouble(searchLongitude),
-          distanceRange,
-          searchTerms);
+          elasticsearch.findAllServicesByGeoLocationWithSearchTerms(
+              Double.parseDouble(searchLatitude),
+              Double.parseDouble(searchLongitude),
+              distanceRange,
+              searchTerms);
       log.info("Found {} services", dosServices.size());
     } else if (isValidGeoSearch) {
       log.info("Searching using location {} lat {} lng", searchLatitude, searchLongitude);
       dosServices =
-        elasticsearch.findAllServicesByGeoLocation(
-          Double.parseDouble(searchLatitude),
-          Double.parseDouble(searchLongitude),
-          distanceRange);
+          elasticsearch.findAllServicesByGeoLocation(
+              Double.parseDouble(searchLatitude),
+              Double.parseDouble(searchLongitude),
+              distanceRange);
       log.info("Found {} services", dosServices.size());
     } else if (isValidPostcode) {
       GeoPoint geoPoint = getGeoLocation(searchPostcode);
       log.info(
-        "Used Google API to get the GeoPoint: {} values for a given postcode: {}",
-        geoPoint,
-        searchPostcode);
+          "Used Google API to get the GeoPoint: {} values for a given postcode: {}",
+          geoPoint,
+          searchPostcode);
       dosServices =
-        isSearchTermNullOrEmpty
-          ? elasticsearch.findAllServicesByGeoLocation(
-          geoPoint.getLat(), geoPoint.getLon(), distanceRange)
-          : elasticsearch.findAllServicesByGeoLocationWithSearchTerms(
-          geoPoint.getLat(), geoPoint.getLon(), distanceRange, searchTerms);
+          isSearchTermNullOrEmpty
+              ? elasticsearch.findAllServicesByGeoLocation(
+                  geoPoint.getLat(), geoPoint.getLon(), distanceRange)
+              : elasticsearch.findAllServicesByGeoLocationWithSearchTerms(
+                  geoPoint.getLat(), geoPoint.getLon(), distanceRange, searchTerms);
     } else {
       throw new InvalidParameterException(ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage());
     }
@@ -96,32 +96,32 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
      * available"
      */
     List<DosService> filteredDosServices =
-      dosServices.stream()
-        .filter(f -> validationService.isPostcodeValid(f.getPostcode()))
-        .collect(Collectors.toList());
+        dosServices.stream()
+            .filter(f -> validationService.isPostcodeValid(f.getPostcode()))
+            .collect(Collectors.toList());
 
     List<DosService> notValidPostCodeList =
-      dosServices.stream()
-        .filter(element -> !filteredDosServices.contains(element))
-        .collect(Collectors.toList());
+        dosServices.stream()
+            .filter(element -> !filteredDosServices.contains(element))
+            .collect(Collectors.toList());
 
     notValidPostCodeList.forEach(
-      e -> log.info("not valid postcode {} odscode: {}", e.getName(), e.getOdsCode()));
+        e -> log.info("not valid postcode {} odscode: {}", e.getName(), e.getOdsCode()));
 
     List<DosService> nonPopulatedLatLongServices = new ArrayList<>();
 
     for (DosService dosService : filteredDosServices) {
       if ((Objects.isNull(dosService.getLocation()))
-        || ((dosService.getLocation().getLon() == 0D
-        && dosService.getLocation().getLat() == 0D))) {
+          || ((dosService.getLocation().getLon() == 0D
+              && dosService.getLocation().getLat() == 0D))) {
         nonPopulatedLatLongServices.add(dosService);
       }
     }
     this.populateServiceDistancesWithLatAndLng(
-      nonPopulatedLatLongServices, searchLatitude, searchLongitude);
+        nonPopulatedLatLongServices, searchLatitude, searchLongitude);
     // Clean up any duplicated values
     filteredDosServices.removeIf(
-      f -> nonPopulatedLatLongServices.stream().anyMatch(n -> n.getId() == f.getId()));
+        f -> nonPopulatedLatLongServices.stream().anyMatch(n -> n.getId() == f.getId()));
     filteredDosServices.addAll(nonPopulatedLatLongServices);
 
     // return max number of services, or the number of services returned. Which ever
@@ -131,13 +131,13 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
       serviceResultLimit = dosServices.size();
     }
     return filteredDosServices.isEmpty()
-      ? filteredDosServices
-      : filteredDosServices.subList(0, serviceResultLimit);
+        ? filteredDosServices
+        : filteredDosServices.subList(0, serviceResultLimit);
   }
 
   private List<DosService> populateServiceDistancesWithLatAndLng(
-    List<DosService> nonPopulatedLatLongServices, String searchLatitude, String searchLongitude)
-    throws InvalidParameterException, NotFoundException {
+      List<DosService> nonPopulatedLatLongServices, String searchLatitude, String searchLongitude)
+      throws InvalidParameterException, NotFoundException {
     log.info("nonPopulatedLatLong {}", nonPopulatedLatLongServices.size());
     /**
      * if dos services returns empty locations populate location based on postcodes from postcode
@@ -148,10 +148,10 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
       for (DosService dosService : nonPopulatedLatLongServices) {
         GeoPoint destinationGeoPoint = getGeoLocation(dosService.getPostcode());
         dosService.setDistance(
-          locationService.distanceBetween(
-            new GeoPoint(
-              Double.parseDouble(searchLongitude), Double.parseDouble(searchLongitude)),
-            destinationGeoPoint));
+            locationService.distanceBetween(
+                new GeoPoint(
+                    Double.parseDouble(searchLongitude), Double.parseDouble(searchLongitude)),
+                destinationGeoPoint));
       }
     }
     return nonPopulatedLatLongServices;
@@ -159,16 +159,16 @@ public class FuzzyServiceSearchService implements FuzzyServiceSearchServiceInter
 
   private GeoPoint getGeoLocation(String postcode) throws InvalidParameterException {
     GeoLocationResponse geoLocationResponse =
-      externalApiHandshakeInterface.getGeoCoordinates(postcode);
+        externalApiHandshakeInterface.getGeoCoordinates(postcode);
     if (geoLocationResponse == null
-      || geoLocationResponse.getGeoLocationResponseResults().length <= 0) {
+        || geoLocationResponse.getGeoLocationResponseResults().length <= 0) {
       throw new InvalidParameterException(ErrorMessageEnum.INVALID_POSTCODE.getMessage());
     }
     GeoLocationResponseResult geoLocationResponseResult =
-      geoLocationResponse.getGeoLocationResponseResults()[0];
+        geoLocationResponse.getGeoLocationResponseResults()[0];
     Geometry geometry = geoLocationResponseResult.getGeometry();
     return new GeoPoint(
-      geometry.getLocation().getLat(),
-      geoLocationResponseResult.getGeometry().getLocation().getLng());
+        geometry.getLocation().getLat(),
+        geoLocationResponseResult.getGeometry().getLocation().getLng());
   }
 }
