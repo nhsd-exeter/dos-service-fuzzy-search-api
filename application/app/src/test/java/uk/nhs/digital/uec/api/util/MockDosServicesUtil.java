@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.controller;
+package uk.nhs.digital.uec.api.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;

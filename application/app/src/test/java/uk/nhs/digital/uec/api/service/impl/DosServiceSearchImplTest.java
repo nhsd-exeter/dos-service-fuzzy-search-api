@@ -38,7 +38,7 @@ import uk.nhs.digital.uec.api.model.google.Location;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.LocationServiceInterface;
-import uk.nhs.digital.uec.api.controller.MockDosServicesUtil;
+import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(OutputCaptureExtension.class)
