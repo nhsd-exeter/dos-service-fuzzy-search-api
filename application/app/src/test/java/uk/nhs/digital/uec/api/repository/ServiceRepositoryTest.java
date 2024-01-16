@@ -53,8 +53,10 @@ public class ServiceRepositoryTest {
     dosService.setEasting(EASTING);
     dosService.setNorthing(NORTHING);
     dosService.setPostcode("EX1 1SR");
-    dosService.setReferral_roles(Arrays.asList("Referral", Constants.PROFESSIONAL_REFERRAL_FILTER));
+    dosService.setReferralRoles(Arrays.asList("Referral", Constants.PROFESSIONAL_REFERRAL_FILTER));
     dosService.setLocation(new GeoPoint(0D, 0D));
+    dosService.setPublicName("Exeter NHS Service");
+    dosService.setProfessionalReferralInfo("ProfessionalReferralInfo");
     dosServicesList.add(dosService);
 
     DosService dosService2 = new DosService();
@@ -63,7 +65,10 @@ public class ServiceRepositoryTest {
     dosService2.setNorthing(NORTHING);
     dosService2.setPostcode("EX1 1SR");
     dosService.setLocation(new GeoPoint(23.456, -0.2345));
-    dosService2.setReferral_roles(new ArrayList<>());
+    dosService2.setReferralRoles(new ArrayList<>());
+    dosService.setPublicName("Exeter NHS Service");
+    dosService.setProfessionalReferralInfo("ProfessionalReferralInfo");
+
     dosServicesList.add(dosService2);
 
     DosService dosService3 = new DosService();
@@ -71,7 +76,9 @@ public class ServiceRepositoryTest {
     dosService3.setEasting(EASTING);
     dosService3.setNorthing(NORTHING);
     dosService3.setPostcode("EX1 1SR");
-    dosService3.setReferral_roles(Arrays.asList(Constants.PROFESSIONAL_REFERRAL_FILTER));
+    dosService3.setReferralRoles(Arrays.asList(Constants.PROFESSIONAL_REFERRAL_FILTER));
+    dosService.setPublicName(null);
+    dosService.setProfessionalReferralInfo(null);
     dosServicesList.add(dosService3);
 
     DosService dosService4 = new DosService();
@@ -79,6 +86,8 @@ public class ServiceRepositoryTest {
     dosService4.setEasting(EASTING);
     dosService4.setNorthing(NORTHING);
     dosService4.setPostcode("EX1 1SR");
+    dosService.setPublicName(null);
+    dosService.setProfessionalReferralInfo(null);
     dosServicesList.add(dosService4);
   }
 
