@@ -1,7 +1,9 @@
 package uk.nhs.digital.uec.api.util;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +28,7 @@ import uk.nhs.digital.uec.api.model.PostcodeLocation;
 import uk.nhs.digital.uec.api.model.google.GeoLocationResponse;
 import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -175,21 +178,20 @@ public class WebClientUtil {
     }
 
     try {
-      // Check if the response is not null before converting it to a string
-      if (json != null) {
-        Map<String, Object> dataMap = objectMapper.readValue(json, new TypeReference<>() {});
-        List<Map<String, Object>> values = (List<Map<String, Object>>) dataMap.get("value");
-        if (values != null && !values.isEmpty()) {
-          for (Map<String, Object> value : values) {
+      Map<String, Object> dataMap = objectMapper.readValue(json, new TypeReference<>() {
+      });
+      List<Map<String, Object>> values = (List<Map<String, Object>>) dataMap.get("value");
+      if (values != null && !values.isEmpty()) {
+        for (Map<String, Object> value : values) {
+          try {
             NHSChoicesV2DataModel nhsChoicesDataModel = objectMapper.convertValue(value, NHSChoicesV2DataModel.class);
             nhsChoicesDataModels.add(nhsChoicesDataModel);
+          } catch (IllegalArgumentException e) {
+            log.warn("Skipping record due to unexpected property formats and null values: {}", value);
           }
-        } else {
-          log.info("This search did not contain any NHS results");
-          return nhsChoicesDataModels;
         }
       } else {
-        log.error("Received null response in parseNHSChoicesDataModel");
+        log.info("This search did not contain any NHS results");
       }
     } catch (JsonProcessingException e) {
       log.error("An unexpected error occurred whilst reading the response {}", e.getMessage());
@@ -198,5 +200,10 @@ public class WebClientUtil {
     return nhsChoicesDataModels;
   }
 
+  @PostConstruct
+  public void fortifyObjectMapper() {
+    this.objectMapper.setDefaultPropertyInclusion(JsonInclude.Include.ALWAYS);
+    this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  }
 
 }

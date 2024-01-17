@@ -5,16 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Geocode {
-  @JsonProperty("type")
-  private String type;
-  @JsonProperty("coordinates")
-  private ArrayList<Double> coordinates;
-  @JsonProperty("crs")
-  private Crs crs;
+public class Facility{
+  @JsonProperty("Id")
+  public int id;
+  @JsonProperty("Name")
+  public String name;
+  @JsonProperty("Value")
+  public String value;
+  @JsonProperty("FacilityGroupName")
+  public String facilityGroupName;
 }

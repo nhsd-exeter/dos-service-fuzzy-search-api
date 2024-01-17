@@ -27,7 +27,7 @@ public class NHSChoicesV2DataModel {
   @JsonProperty("OrganisationStatus")
   private String organisationStatus;
   @JsonProperty("SummaryText")
-  private Object summaryText;
+  private String summaryText;
   @JsonProperty("URL")
   private String url;
   @JsonProperty("Address1")
@@ -51,9 +51,9 @@ public class NHSChoicesV2DataModel {
   @JsonProperty("OrganisationSubType")
   private String organisationSubType;
   @JsonProperty("OrganisationAliases")
-  private List<String> organisationAliases;
+  private List<Object> organisationAliases;
   @JsonProperty("ParentOrganisation")
-  private String parentOrganisation;
+  public ParentOrganisation parentOrganisation;
   @JsonProperty("Services")
   private List<Service> services;
   @JsonProperty("OpeningTimes")
@@ -61,7 +61,7 @@ public class NHSChoicesV2DataModel {
   @JsonProperty("Contacts")
   private List<Contact> contacts;
   @JsonProperty("Facilities")
-  private List<Object> facilities;
+  private List<Facility> facilities;
   @JsonProperty("Staff")
   private List<Object> staff;
   @JsonProperty("GSD")

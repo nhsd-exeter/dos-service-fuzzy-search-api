@@ -62,7 +62,6 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
       });
   }
 
-
   private String validateSearchTerms(List<String> searchTerms, String searchPostcode) {
 
     if (Objects.isNull(searchTerms)) {
