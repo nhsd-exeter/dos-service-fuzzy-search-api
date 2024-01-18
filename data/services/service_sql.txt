@@ -5,17 +5,35 @@ select
 '{"index":{"_index":"service","_type":"_doc","_id":'||s.id||'}}' ||E'\r\n'||
 '{' ||
 '"id":'||s.id||','||
-'"uIdentifier":"'||s.uid||'",'||
+'"u_id":"'||s.uid||'",'||
 '"name":"'||s.name||'",'||
-'"publicName":"'||coalesce(s.publicname,'')||'",'||
-'"capacityStatus":"'||cs.color||'",'||
-'"typeId":'||s.typeid||','||
+'"public_name":"'||coalesce(s.publicname,'')||'",'||
+'"capacity_status":"'||cs.color||'",'||
+'"type_id":'||s.typeid||','||
 '"type":"'||t.name||'",'||
 '"address":["'||replace(replace(s.address,'$',' '),'''','''''')||'"],'||
 '"postcode":"'||s.postcode||'",'||
-'"easting":"'||s.easting||'",'||
-'"northing":"'||s.northing||'",'||
-'"referralRoles":["Test Role"]}'
+'"easting":'||s.easting||','||
+'"northing":'||s.northing||','||
+'"public_phone_number":"1234567890",'||
+'"non_public_phone_number":"0123456789",'||
+'"email":"testemail@test.com",'||
+'"web":"www.testweb.com",'||
+'"public_referral_instructions":"",'||
+'"referral_instructions":"",'||
+'"ods_code":"ODS123",'||
+'"is_national":null,'||
+'"updated":"2021-11-15T11:00:34+00:00",'||
+'"openingtimedays":["Monday","Tuesday", "Wednesday","Thursday","Friday","Saturday"],'||
+'"openingtime":["09:30:00","09:30:00","09:30:00","09:30:00","09:30:00","09:30:00"],'||
+'"closingtime":["17:30:00","17:30:00","17:30:00","17:30:00","17:30:00","12:30:00"],'||
+'"specifieddates":"",'||
+'"specificopentimes":"",'||
+'"specificendtimes":"",'||
+'"timestamp_version":"1.7054914790361385E9",'||
+'"professional_referral_info":"Proffessional Referral Information",'||
+'"location":{ "lat": '||s.latitude||',"lon": '||s.longitude||' },'||
+'"referral_roles":["Test Role"]}'
 from pathwaysdos.services s,
 pathwaysdos.servicecapacities sc,
 pathwaysdos.capacitystatuses cs,
@@ -26,3 +44,4 @@ and cs.capacitystatusid = sc.capacitystatusid
 and s.typeid != -1
 and s.typeid != -2
 and s.statusid = 1
+limit 50000

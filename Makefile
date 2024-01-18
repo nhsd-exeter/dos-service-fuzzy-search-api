@@ -95,7 +95,6 @@ start: # Start project and load data in to elastic search
 	echo "Waiting for elastic search to be fully initialised"
 	sleep 30
 	make load-all-services
-	make load-test-services
 
 stop: project-stop # Stop project
 
@@ -115,9 +114,6 @@ coverage-report: # Generate jacoco test coverage reports
 	make docker-run-mvn \
 		DIR="application/app" \
 		CMD="jacoco:report"
-
-load-test-services: # Load test services into elasticsearch
-	sh ./data/services/create_test_services.sh
 
 load-all-services: # Load bulk service data into elasticsearch
 	sh ./data/services/create_all_services_local.sh

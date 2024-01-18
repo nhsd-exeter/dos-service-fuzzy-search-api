@@ -39,17 +39,17 @@ public class MockDosServicesUtil {
 
     return DosService.builder()
         .id(Integer.valueOf(identifier))
-        .uid(Integer.valueOf(identifier))
+        .u_id(Integer.valueOf(identifier))
         .name("service" + identifier)
-        .publicName("Public Service Name " + identifier)
+        .public_name("Public Service Name " + identifier)
         .type("Type 1")
-        .typeId(Integer.parseInt(identifier))
-        .odsCode("odscode" + identifier)
-        .capacityStatus("GREEN")
+        .type_id(Integer.parseInt(identifier))
+        .ods_code("odscode" + identifier)
+        .capacity_status("GREEN")
         .address(address)
         .postcode("EX7 8PR")
         .location(new GeoPoint(24.35, -2.56789))
-        .referralRoles(referralRoles)
+        .referral_roles(referralRoles)
         .build();
   }
 

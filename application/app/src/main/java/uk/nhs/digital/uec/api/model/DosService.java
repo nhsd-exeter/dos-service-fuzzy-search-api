@@ -23,22 +23,22 @@ public class DosService {
   @Id private int id;
 
   @Field(name = "u_id")
-  private int uid;
+  private int u_id; // NOSONAR
 
   private String name;
 
   @Field(name = "public_name")
-  private String publicName;
+  private String public_name; // NOSONAR
 
   @Field(name = "capacity_status")
-  private String capacityStatus;
+  private String capacity_status; // NOSONAR
 
   @Field(name = "type_id")
-  private int typeId;
+  private int type_id; // NOSONAR
 
   private String type;
 
-  private String odsCode;
+  private String ods_code; // NOSONAR
 
   private List<String> address;
 
@@ -49,28 +49,28 @@ public class DosService {
   private Integer northing;
 
   @Field(name = "referral_roles")
-  private List<String> referralRoles;
+  private List<String> referral_roles; // NOSONAR
 
   private Double distance;
 
   @Field(name = "public_phone_number")
-  private String publicPhoneNumber;
+  private String public_phone_number;
 
   @Field(name = "non_public_phone_number")
-  private String nonPublicPhoneNumber;
+  private String non_public_phone_number; // NOSONAR
 
   private String email;
 
   private String web;
 
   @Field(name = "public_referral_instructions")
-  private String publicReferralInstructions;
+  private String public_referral_instructions;
 
   @Field(name = "referral_instructions")
-  private String referralInstructions;
+  private String referral_instructions;
 
   @Field(name = "is_national")
-  private String isNational;
+  private String is_national;
 
   private String updated;
 
@@ -87,7 +87,7 @@ public class DosService {
   private String specificendtimes;
 
   @Field(name = "professional_referral_info")
-  private String professionalReferralInfo;
+  private String professional_referral_info;
 
   private GeoPoint location;
 

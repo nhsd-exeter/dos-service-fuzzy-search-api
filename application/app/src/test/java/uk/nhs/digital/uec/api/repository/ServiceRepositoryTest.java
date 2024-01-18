@@ -53,10 +53,10 @@ public class ServiceRepositoryTest {
     dosService.setEasting(EASTING);
     dosService.setNorthing(NORTHING);
     dosService.setPostcode("EX1 1SR");
-    dosService.setReferralRoles(Arrays.asList("Referral", Constants.PROFESSIONAL_REFERRAL_FILTER));
+    dosService.setReferral_roles(Arrays.asList("Referral", Constants.PROFESSIONAL_REFERRAL_FILTER));
     dosService.setLocation(new GeoPoint(0D, 0D));
-    dosService.setPublicName("Exeter NHS Service");
-    dosService.setProfessionalReferralInfo("ProfessionalReferralInfo");
+    dosService.setPublic_name("Exeter NHS Service");
+    dosService.setProfessional_referral_info("ProfessionalReferralInfo");
     dosServicesList.add(dosService);
 
     DosService dosService2 = new DosService();
@@ -65,10 +65,9 @@ public class ServiceRepositoryTest {
     dosService2.setNorthing(NORTHING);
     dosService2.setPostcode("EX1 1SR");
     dosService.setLocation(new GeoPoint(23.456, -0.2345));
-    dosService2.setReferralRoles(new ArrayList<>());
-
-    dosService.setPublicName("Exeter NHS Service");
-    dosService.setProfessionalReferralInfo("ProfessionalReferralInfo");
+    dosService2.setReferral_roles(new ArrayList<>());
+    dosService.setPublic_name("Exeter NHS Service");
+    dosService.setProfessional_referral_info("ProfessionalReferralInfo");
 
     dosServicesList.add(dosService2);
 
@@ -77,10 +76,9 @@ public class ServiceRepositoryTest {
     dosService3.setEasting(EASTING);
     dosService3.setNorthing(NORTHING);
     dosService3.setPostcode("EX1 1SR");
-    dosService3.setReferralRoles(Arrays.asList(Constants.PROFESSIONAL_REFERRAL_FILTER));
-
-    dosService.setPublicName(null);
-    dosService.setProfessionalReferralInfo(null);
+    dosService3.setReferral_roles(Arrays.asList(Constants.PROFESSIONAL_REFERRAL_FILTER));
+    dosService.setPublic_name(null);
+    dosService.setProfessional_referral_info(null);
     dosServicesList.add(dosService3);
 
     DosService dosService4 = new DosService();
@@ -88,8 +86,8 @@ public class ServiceRepositoryTest {
     dosService4.setEasting(EASTING);
     dosService4.setNorthing(NORTHING);
     dosService4.setPostcode("EX1 1SR");
-    dosService.setPublicName(null);
-    dosService.setProfessionalReferralInfo(null);
+    dosService.setPublic_name(null);
+    dosService.setProfessional_referral_info(null);
     dosServicesList.add(dosService4);
   }
 
