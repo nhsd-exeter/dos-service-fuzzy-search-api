@@ -73,7 +73,7 @@ public class WebClientUtil {
         .build())
       .retrieve()
       .onStatus(HttpStatus::isError, response -> {
-        log.error("HTTP error status code: {}", response.statusCode().value());
+        log.error("HTTP error status code: {} {}", response.statusCode().value(),response.statusCode().getReasonPhrase());
         return Mono.empty();
       })
       .bodyToMono(String.class)
@@ -127,7 +127,7 @@ public class WebClientUtil {
 
   public GeoLocationResponse getGeoLocation(String address, String googleApikey, String googleApiUri) {
     String uri = String.format("%s?address=%s+UK&sensor=false&key=%s", googleApiUri, address, googleApikey);
-    log.info(uri);
+    log.info("Geo location URI: {}",uri);
 
     return googleApiWebClient
       .get()
