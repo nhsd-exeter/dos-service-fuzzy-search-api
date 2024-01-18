@@ -153,5 +153,7 @@ TF_VAR_bad_input_metric_name = $(SERVICE_PREFIX)-waf-aws-bad-inputs-rule-set-met
 
 
 #NHS Choices
+NHS_CHOICES_API_KEY := MOCK_NHS_API_KEY
+
 NHS_CHOICES_API_URL := https://api.nhs.uk
 

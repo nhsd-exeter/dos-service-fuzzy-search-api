@@ -50,10 +50,7 @@ GOOGLE_API_ADDRESS_URI := /geocode/json
 GOOGLE_MAPS_API_KEY		   := gibarish
 
 #NHS Choices
-#NHS_CHOICES_API_URL := http://mock.postcodeapi.sfs:8080
-
-#NHS_CHOICES_API_KEY := MOCK_NHS_API_KEY
-NHS_CHOICES_API_KEY := 7cc220dc7d134f8c906c2f7a1782a61f
+NHS_CHOICES_API_KEY := MOCK_NHS_API_KEY
 
 NHS_CHOICES_API_URL := https://api.nhs.uk
 

@@ -1,5 +1,6 @@
 package uk.nhs.digital.uec.api.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.stereotype.Component;
 import uk.nhs.digital.uec.api.model.nhschoices.Contact;
@@ -13,7 +14,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
+@Slf4j
 public class NHSChoicesSearchMapperToDosServicesMapperUtil {
+
+  public int getSearchScore(double searchScore){
+    try {
+        return Math.toIntExact((long) searchScore);
+    }catch (ArithmeticException exception){
+      log.error("Error parsing searchSource: {}", exception);
+    }
+    return 0;
+  }
 
   public String getTelephoneContact(List<Contact> contacts) {
     for (Contact contact : contacts) {

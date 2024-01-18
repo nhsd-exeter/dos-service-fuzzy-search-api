@@ -126,5 +126,7 @@ TF_VAR_sql_injection_rules_metric = $(SERVICE_PREFIX)-waf-aws-bad-inputs-rule-se
 TF_VAR_bad_input_metric_name = $(SERVICE_PREFIX)-waf-aws-bad-inputs-rule-set-metric
 
 
-#NHS Choices
+#NHS
+NHS_CHOICES_API_KEY := MOCK_NHS_API_KEY
+
 NHS_CHOICES_API_URL := https://api.nhs.uk

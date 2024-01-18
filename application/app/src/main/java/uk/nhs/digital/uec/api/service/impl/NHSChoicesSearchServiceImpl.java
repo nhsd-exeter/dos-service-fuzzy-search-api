@@ -77,7 +77,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
 
   private DosService convertNHSChoicesToDosService(NHSChoicesV2DataModel nhsChoicesV2DataModel) {
     return DosService.builder()
-      ._score(Double.valueOf(nhsChoicesV2DataModel.getSearchScore()).intValue())
+      ._score(servicesMapperUtil.getSearchScore(nhsChoicesV2DataModel.getSearchScore()))
       .name(nhsChoicesV2DataModel.getOrganisationName())
       .publicName(nhsChoicesV2DataModel.getOrganisationName())
       .odsCode(Objects.toString(nhsChoicesV2DataModel.getOdsCode(), ""))
