@@ -9,7 +9,8 @@ ALLOWED_ORIGINS := *
 
 # Datastore URLs
 ELASTICSEARCH_URL := http://elasticsearch.sfs.local:9200
-API_SERVICE_SEARCH_ENDPOINT := https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch
+API_SERVICE_SEARCH_ENDPOINT := https://localhost:8443/dosapi/dosservices/v2/services/byfuzzysearch
+# API_SERVICE_SEARCH_ENDPOINT := https://localhost:8443/dosapi/dosservices/v0.0.1/services/byfuzzysearch
 
 SERVER_PORT := 8443
 VERSION := v0.0.3
@@ -47,3 +48,9 @@ POSTCODE_MAPPING_PASSWORD := password
 GOOGLE_API_URL := https://maps.google.com/maps/api
 GOOGLE_API_ADDRESS_URI := /geocode/json
 GOOGLE_MAPS_API_KEY		   := gibarish
+
+#NHS Choices
+NHS_CHOICES_API_KEY := MOCK_NHS_API_KEY
+
+NHS_CHOICES_API_URL := https://api.nhs.uk
+

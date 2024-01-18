@@ -1,4 +1,4 @@
-package uk.nhs.digital.uec.api.service;
+package uk.nhs.digital.uec.api.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -36,18 +36,18 @@ import uk.nhs.digital.uec.api.model.google.GeoLocationResponseResult;
 import uk.nhs.digital.uec.api.model.google.Geometry;
 import uk.nhs.digital.uec.api.model.google.Location;
 import uk.nhs.digital.uec.api.repository.elasticsearch.impl.ServiceRepository;
-import uk.nhs.digital.uec.api.service.impl.ExternalApiHandshakeService;
-import uk.nhs.digital.uec.api.service.impl.FuzzyServiceSearchService;
-import uk.nhs.digital.uec.api.service.impl.ValidationService;
+import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
+import uk.nhs.digital.uec.api.service.LocationServiceInterface;
 import uk.nhs.digital.uec.api.util.MockDosServicesUtil;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(OutputCaptureExtension.class)
-public class FuzzyServiceSearchServiceTest {
+public class DosServiceSearchImplTest {
 
   private int maxNumServicesToReturn = 10;
 
-  @InjectMocks private FuzzyServiceSearchService classUnderTest;
+  @InjectMocks
+  private DosServiceSearchImpl classUnderTest;
 
   @Mock private ServiceRepository serviceRepository;
 
@@ -80,7 +80,8 @@ public class FuzzyServiceSearchServiceTest {
   }
 
   @Test
-  public void retrieveServicesByGeoLocationSearchSuccess(CapturedOutput log)
+  @DisplayName("retrieveServicesByGeoLocationSearchSuccess")
+  public void retrieveServicesByGeoLocation(CapturedOutput log)
       throws NotFoundException, InvalidParameterException {
     String searchLatitude = "0.0";
     String searchLongitude = "0.0";

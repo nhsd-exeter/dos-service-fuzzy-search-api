@@ -1,4 +1,5 @@
-FROM wiremock/wiremock:2.32.0-alpine
+FROM wiremock/wiremock:3.0.0-1-alpine
+# FROM wiremock/wiremock:2.32.0-alpine
 
 COPY assets/wiremock_mappings/ /home/wiremock/mappings/
 

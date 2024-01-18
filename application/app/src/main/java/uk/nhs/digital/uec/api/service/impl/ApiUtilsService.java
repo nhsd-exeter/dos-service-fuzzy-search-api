@@ -18,20 +18,16 @@ import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 @Slf4j
 public class ApiUtilsService implements ApiUtilsServiceInterface {
 
-  @Autowired private ApiRequestParams apiRequestParams;
-
   @Value("${configuration.validation.min_search_term_length}")
   private int minSearchTermLength;
 
-  public void configureApiRequestParams(
-      Integer fuzzLevel,
-      String referralRole,
-      Integer maxNumServicesToReturnFromEs,
-      Integer maxNumServicesToReturn,
-      Integer namePriority,
-      Integer addressPriority,
-      Integer postcodePriority,
-      Integer publicNamePriority) {
+  private final ApiRequestParams apiRequestParams;
+  @Autowired
+  public ApiUtilsService(ApiRequestParams apiRequestParams){
+    this.apiRequestParams = apiRequestParams;
+  }
+
+  public void configureApiRequestParams(Integer fuzzLevel, String referralRole, Integer maxNumServicesToReturnFromEs, Integer maxNumServicesToReturn, Integer namePriority, Integer addressPriority, Integer postcodePriority, Integer publicNamePriority) {
     apiRequestParams.setFuzzLevel(fuzzLevel);
     apiRequestParams.setFilterReferralRole(referralRole);
     apiRequestParams.setMaxNumServicesToReturnFromElasticsearch(maxNumServicesToReturnFromEs);
@@ -47,7 +43,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
   public List<String> sanitiseSearchTerms(final List<String> searchCriteria) {
     log.info("Sanitising search terms {}", searchCriteria);
     List<String> listFromString =
-        searchCriteria.stream().map(String::trim).collect(Collectors.toList());
+        searchCriteria.stream().map(String::trim).toList();
 
     List<String> sanitisedSearchTerms = new ArrayList<>();
 
@@ -86,8 +82,7 @@ public class ApiUtilsService implements ApiUtilsServiceInterface {
 
   @Override
   public List<String> removeBlankSpacesIn(final List<String> fields) {
-    final String POSTCODE_REGEX =
-        "^([A-Za-z][A-Ha-hJ-Yj-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$";
+    final String POSTCODE_REGEX = "^[A-Za-z][A-HJ-Ya-hj-y]?\\d[A-Za-z0-9]? ?\\d[A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2}$";
     Pattern pattern = Pattern.compile(POSTCODE_REGEX);
     return fields.stream()
         .filter(field -> pattern.matcher(field).matches())

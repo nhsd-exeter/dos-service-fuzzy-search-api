@@ -35,17 +35,14 @@ services:
       GOOGLE_API_URL: $GOOGLE_API_URL
       GOOGLE_API_ADDRESS_URI: $GOOGLE_API_ADDRESS_URI
       GOOGLE_MAPS_API_KEY: $GOOGLE_MAPS_API_KEY
+      NHS_CHOICES_API_URL: $NHS_CHOICES_API_URL
+      NHS_CHOICES_API_KEY: $NHS_CHOICES_API_KEY
     restart: on-failure
     ports:
       - 8443:8443
     depends_on:
       - elasticsearch
-    command:
-      [
-        "java",
-        "-jar",
-        "/application/dos-service-fuzzy-search-api.jar"
-      ]
+    command: ["java", "-jar", "/application/dos-service-fuzzy-search-api.jar"]
     networks:
       default:
         aliases:
@@ -57,11 +54,12 @@ services:
     hostname: elasticsearch
     ports:
       - "9200:9200"
-    command: [ "elasticsearch" ]
+    command: ["elasticsearch"]
     networks:
       default:
         aliases:
           - elasticsearch.sfs.local
+
   mock_postcode_api:
     image: $DOCKER_REGISTRY/mock-postcode-api:$VERSION
     container_name: mock-postcode-api
@@ -69,7 +67,7 @@ services:
       - $PROJECT_DIR/test/wiremock_mappings:/home/wiremock/mappings/
     ports:
       - "8090:8080"
-    command: [ "--verbose" ]
+    command: ["--verbose"]
     networks:
       default:
         aliases:

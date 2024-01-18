@@ -1,20 +1,9 @@
 package uk.nhs.digital.uec.api.authentication.cognito;
 
-import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.PASSWORD;
-import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.REFRESH_TOKEN;
-import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.REFRESH_TOKEN_AUTH;
-import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.USERNAME;
-import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.USER_PASSWORD_AUTH;
-import static uk.nhs.digital.uec.api.util.Utils.calculateSecretHash;
-
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.AWSCognitoIdentityProviderException;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
-import com.amazonaws.services.cognitoidp.model.InvalidPasswordException;
-import com.amazonaws.services.cognitoidp.model.NotAuthorizedException;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,19 +13,33 @@ import uk.nhs.digital.uec.api.authentication.exception.UnauthorisedException;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static uk.nhs.digital.uec.api.authentication.constants.AuthenticationConstants.*;
+import static uk.nhs.digital.uec.api.util.Utils.calculateSecretHash;
+
 @Service
 @Slf4j
 public class CognitoIdpServiceImpl implements CognitoIdpService {
 
-  @Autowired private AWSCognitoIdentityProvider cognitoClient;
-
-  @Autowired private Environment environment;
+  private final AWSCognitoIdentityProvider cognitoClient;
+  private final Environment environment;
 
   @Value("${cognito.userPool.clientId}")
   private String userPoolClientId;
 
   @Value(value = "${cognito.userPool.clientSecret}")
   private String userPoolClientSecret;
+
+  @Autowired
+  public CognitoIdpServiceImpl(
+    AWSCognitoIdentityProvider cognitoClient,
+    Environment environment
+  ){
+    this.cognitoClient = cognitoClient;
+    this.environment = environment;
+  }
 
   @Override
   public AuthToken authenticate(Credential credential) throws UnauthorisedException {
@@ -49,9 +52,6 @@ public class CognitoIdpServiceImpl implements CognitoIdpService {
 
     try {
       return getAuthenticationTokens(USER_PASSWORD_AUTH, authenticationParameters);
-    } catch (InvalidPasswordException | NotAuthorizedException e) {
-      log.error(e.getErrorMessage());
-      throw new UnauthorisedException(e.getErrorMessage());
     } catch (AWSCognitoIdentityProviderException e) {
       log.error(e.getErrorMessage());
       throw new UnauthorisedException(e.getErrorMessage());

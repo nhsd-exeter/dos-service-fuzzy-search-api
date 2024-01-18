@@ -26,7 +26,7 @@ import uk.nhs.digital.uec.api.authentication.model.Credential;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles({"local"})
-public class CognitoIdpServiceTest {
+public class CognitoIdpServiceImplTest {
 
   @InjectMocks CognitoIdpServiceImpl cognitoService;
   @Mock AWSCognitoIdentityProvider cognitoClient;

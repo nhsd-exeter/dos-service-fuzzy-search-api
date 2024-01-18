@@ -22,14 +22,14 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{host}}/dosapi/dosservices/v0.0.1/services/byfuzzysearch?search_term=dental&search_location=EX88PR&fuzz_level=2",
+          "raw": "{{host}}/dosapi/dosservices/v2/services/byfuzzysearch?search_term=dental&search_location=EX88PR&fuzz_level=2",
           "host": [
             "{{host}}"
           ],
           "path": [
             "dosapi",
             "dosservices",
-            "v0.0.1",
+            "v2",
             "services",
             "byfuzzysearch"
           ],

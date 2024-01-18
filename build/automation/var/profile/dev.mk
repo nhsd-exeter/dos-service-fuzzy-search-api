@@ -124,3 +124,9 @@ TF_VAR_ip_reputation_list_metric_name = $(SERVICE_PREFIX)-waf-aws-ip-reputation-
 TF_VAR_common_rule_set_metric_name = $(SERVICE_PREFIX)-waf-aws-common-rule-set-metric
 TF_VAR_sql_injection_rules_metric = $(SERVICE_PREFIX)-waf-aws-bad-inputs-rule-set-metric
 TF_VAR_bad_input_metric_name = $(SERVICE_PREFIX)-waf-aws-bad-inputs-rule-set-metric
+
+
+#NHS
+NHS_CHOICES_API_KEY := MOCK_NHS_API_KEY
+
+NHS_CHOICES_API_URL := https://api.nhs.uk

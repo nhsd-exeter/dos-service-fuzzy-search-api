@@ -66,6 +66,7 @@ public class ServiceRepositoryTest {
     dosService2.setPostcode("EX1 1SR");
     dosService.setLocation(new GeoPoint(23.456, -0.2345));
     dosService2.setReferralRoles(new ArrayList<>());
+
     dosService.setPublicName("Exeter NHS Service");
     dosService.setProfessionalReferralInfo("ProfessionalReferralInfo");
 
@@ -77,6 +78,7 @@ public class ServiceRepositoryTest {
     dosService3.setNorthing(NORTHING);
     dosService3.setPostcode("EX1 1SR");
     dosService3.setReferralRoles(Arrays.asList(Constants.PROFESSIONAL_REFERRAL_FILTER));
+
     dosService.setPublicName(null);
     dosService.setProfessionalReferralInfo(null);
     dosServicesList.add(dosService3);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -12,12 +12,14 @@
   </parent>
   <groupId>uk.nhs.digital.uec.api</groupId>
   <artifactId>dos-service-fuzzy-search-api</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>2.0.0</version>
   <name>DoS Service Fuzzy Search API</name>
   <description>DoS Service Fuzzy Search API</description>
 
   <properties>
+    <java.version>17</java.version>
     <dependency-check-maven.version>8.4.3</dependency-check-maven.version>
+    <java.version>17</java.version>
     <log4j2.version>2.16.0</log4j2.version>    <!-- Springboot does not use Log4J, this is here to force
     other dependencies to use the latest version -->
     <spring-boot-starter-data-elasticsearch.version>2.7.4</spring-boot-starter-data-elasticsearch.version>
@@ -27,9 +29,9 @@
     <spring-data-dynamodb.version>5.2.1</spring-data-dynamodb.version>
     <commons-lang3.version>3.14.0</commons-lang3.version>
     <decimal4j.version>1.0.3</decimal4j.version>
-    <aws-java-sdk-cognitoidp.version>1.12.630</aws-java-sdk-cognitoidp.version>
-    <spring-security-oauth2.version>2.5.1.RELEASE</spring-security-oauth2.version>
-    <commons-io.version>2.15.1</commons-io.version>
+    <aws-java-sdk-cognitoidp.version>1.12.15</aws-java-sdk-cognitoidp.version>
+    <spring-security-oauth2.version>2.5.2.RELEASE</spring-security-oauth2.version>
+    <commons-io.version>2.10.0</commons-io.version>
     <jjwt.version>0.9.1</jjwt.version>
     <jackson-annotations.version>2.16.1</jackson-annotations.version>
     <mockito-junit-jupiter.version>3.12.4</mockito-junit-jupiter.version>
@@ -37,8 +39,10 @@
     <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
     <springfox-swagger2.version>3.0.0</springfox-swagger2.version>
     <springfox-swagger-ui.version>3.0.0</springfox-swagger-ui.version>
-    <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
     <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
+    <mockwebserver.version>4.9.1</mockwebserver.version>
+    <okhttp3.version>4.11.0</okhttp3.version>
   </properties>
 
 
@@ -169,6 +173,18 @@
       <artifactId>springfox-swagger-ui</artifactId>
       <version>${springfox-swagger-ui.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>${okhttp3.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>mockwebserver</artifactId>
+      <version>${okhttp3.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -200,16 +216,18 @@
         </configuration>
         <executions>
           <execution>
+            <id>prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
+            <phase>test-compile</phase>
           </execution>
           <execution>
             <id>report</id>
-            <phase>prepare-package</phase>
             <goals>
               <goal>report</goal>
             </goals>
+            <phase>test</phase>
           </execution>
           <execution>
             <id>jacoco-check</id>
@@ -225,12 +243,13 @@
                     <exclude>*config</exclude>
                     <exclude>*model</exclude>
                     <exclude>*filter</exclude>
+                    <exclude>*util</exclude>
                   </excludes>
                   <limits>
                     <limit>
                       <counter>METHOD</counter>
                       <value>COVEREDRATIO</value>
-                      <minimum>70%</minimum>
+                      <minimum>80%</minimum>
                     </limit>
                   </limits>
                 </rule>
@@ -253,7 +272,7 @@
         <configuration>
           <!-- .Disable Net content-->
           <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
-          <cveStartYear>2022</cveStartYear>
+          <cveStartYear>2023</cveStartYear>
           <failBuildOnCVSS>10</failBuildOnCVSS>
         </configuration>
       </plugin>
