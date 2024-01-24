@@ -113,6 +113,37 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtil {
     return String.join(", ", addressList);
   }
 
+  public double distanceCalculator(Double searchLatitude, Double searchLongitude, Double serviceLatitude, Double serviceLongitude) {
+    final double EARTH_RADIUS_KM = 6371.0;
+    final double MILES_RATION_TO_KILOMETERS = 0.621371;
+
+    if(serviceLatitude == null || serviceLongitude == null){
+      return 999.9;
+    }
+
+    try {
+      // Convert degrees to radians
+      double lat1 = Math.toRadians(searchLatitude);
+      double lon1 = Math.toRadians(searchLongitude);
+      double lat2 = Math.toRadians(serviceLatitude);
+      double lon2 = Math.toRadians(serviceLongitude);
+
+      // Haversine formula
+      double dLat = lat2 - lat1;
+      double dLon = lon2 - lon1;
+      double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+        + Math.cos(lat1) * Math.cos(lat2)
+        * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      double toKilometers = EARTH_RADIUS_KM * c;
+        return toKilometers * MILES_RATION_TO_KILOMETERS;
+    } catch (Exception e) {
+      log.error("Error occurred while sorting by distance.", e);
+
+      return 999.9;
+    }
+  }
+
   private List<String> returnAddressListWithoutNullValues(NHSChoicesV2DataModel nhsChoicesV2DataModel) {
     return Stream.of(
         nhsChoicesV2DataModel.getAddress1(),

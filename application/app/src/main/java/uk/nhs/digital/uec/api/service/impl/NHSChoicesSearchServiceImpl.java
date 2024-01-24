@@ -58,7 +58,10 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
                 log.info("Converting NHS choices services for service finder");
                 dosServices =
                     nhscs.stream()
-                        .map(this::convertNHSChoicesToDosService)
+                        .map(nhsChoicesV2DataModel -> convertNHSChoicesToDosService(
+                          Double.parseDouble(searchLatitude),
+                          Double.parseDouble(searchLongitude),
+                          nhsChoicesV2DataModel))
                         .limit(maxNumServicesToReturn / 2)
                         .collect(Collectors.toList());
               }
@@ -94,7 +97,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
     return stringBuilder.toString();
   }
 
-  private DosService convertNHSChoicesToDosService(NHSChoicesV2DataModel nhsChoicesV2DataModel) {
+  private DosService convertNHSChoicesToDosService(double searchLatitude, double searchLongitude,NHSChoicesV2DataModel nhsChoicesV2DataModel) {
     return DosService.builder()
         ._score(servicesMapperUtil.getSearchScore(nhsChoicesV2DataModel.getSearchScore()))
         .name(nhsChoicesV2DataModel.getOrganisationName())
@@ -102,6 +105,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
         .ods_code(Objects.toString(nhsChoicesV2DataModel.getOdsCode(), ""))
         .address(Arrays.asList(servicesMapperUtil.concatenateAddress(nhsChoicesV2DataModel)))
         .postcode(nhsChoicesV2DataModel.getPostcode())
+      .distance(servicesMapperUtil.distanceCalculator(searchLatitude, searchLongitude,nhsChoicesV2DataModel.getLatitude(), nhsChoicesV2DataModel.getLongitude()))
         .public_phone_number(
             servicesMapperUtil.getTelephoneContact(nhsChoicesV2DataModel.getContacts()))
         .email(servicesMapperUtil.getEmail(nhsChoicesV2DataModel.getContacts()))
