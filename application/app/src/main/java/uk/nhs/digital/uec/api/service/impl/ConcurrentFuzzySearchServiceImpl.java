@@ -73,10 +73,7 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
         List<DosService> combinedList = Stream.concat(
             didDOSFail ? Stream.empty() : dosServices.stream(),
             didNHSFail ? Stream.empty() : nhsChoicesServices.stream())
-          .sorted(Comparator.comparingDouble(service -> sortByDistanceFromSearch(Double.parseDouble(searchLatitude),
-            Double.parseDouble(searchLongitude),
-            service.getLocation().getLat(),
-            service.getLocation().getLon())))
+          .sorted(Comparator.comparingDouble(DosService::getDistance))
           .collect(Collectors.toList());
 
         log.info("Number of DOS Services {}", dosServices.size());

@@ -58,7 +58,6 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
                           Double.parseDouble(searchLatitude),
                           Double.parseDouble(searchLongitude),
                           nhsChoicesV2DataModel))
-                        .sorted(Comparator.comparingDouble(DosService::getDistance))
                         .limit(maxNumServicesToReturn / 2)
                         .collect(Collectors.toList());
               }
