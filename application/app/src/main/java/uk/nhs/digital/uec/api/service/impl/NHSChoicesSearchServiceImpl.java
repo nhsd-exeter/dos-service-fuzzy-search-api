@@ -2,11 +2,7 @@ package uk.nhs.digital.uec.api.service.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +58,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
                           Double.parseDouble(searchLatitude),
                           Double.parseDouble(searchLongitude),
                           nhsChoicesV2DataModel))
+                        .sorted(Comparator.comparingDouble(DosService::getDistance))
                         .limit(maxNumServicesToReturn / 2)
                         .collect(Collectors.toList());
               }
