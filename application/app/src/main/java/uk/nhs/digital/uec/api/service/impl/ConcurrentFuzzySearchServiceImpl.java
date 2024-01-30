@@ -37,18 +37,18 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
   @Override
   @Async
   public CompletableFuture<List<DosService>> fuzzySearch(String searchLatitude, String searchLongitude, Double distanceRange, List<String> searchTerms, String searchPostcode, Integer maxNumServicesToReturn) throws NotFoundException {
-
     log.info("Init NHS choices async call");
-    CompletableFuture<List<DosService>> nhsChoicesModelMappedToDosServicesList = nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(
+
+    CompletableFuture<List<DosService>> nhsChoicesServicesFuture = nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(
       searchLatitude, searchLongitude, searchTerms, searchPostcode, maxNumServicesToReturn
     );
 
     log.info("Init DOS services async call");
-    CompletableFuture<List<DosService>> dosServicesList = CompletableFuture.supplyAsync(() -> {
+    CompletableFuture<List<DosService>> dosServicesFuture = CompletableFuture.supplyAsync(() -> {
       try {
         return dosSearchService.retrieveServicesByGeoLocation(searchLatitude, searchLongitude, distanceRange, searchTerms, searchPostcode);
       } catch (NotFoundException | InvalidParameterException e) {
-        log.error("An error occurred whilst retrieving DOS services from datastore");
+        log.error("Error retrieving DOS services", e);
         throw new DosServiceSearchException("Error retrieving DOS services", e);
       }
     }).exceptionally(ex -> {
@@ -56,36 +56,24 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
       return Collections.emptyList();
     });
 
-    return dosServicesList.thenCombine(nhsChoicesModelMappedToDosServicesList,
-      (dosServices, nhsChoicesServices) -> {
-        log.info("Combining results");
-        final boolean didDOSFail = dosServicesList.isCompletedExceptionally();
-        final boolean didNHSFail = nhsChoicesModelMappedToDosServicesList.isCompletedExceptionally();
+    return dosServicesFuture.thenCombine(nhsChoicesServicesFuture, (dosServices, nhsChoicesServices) -> {
+      log.info("Combining results");
 
-        if (didNHSFail) {
-          log.error("Could not retrieve NHS choices Services");
-        }
+      List<DosService> combinedList = Stream.concat(
+          dosServices.stream(),
+          nhsChoicesServices.stream())
+        .sorted(Comparator.comparingDouble(DosService::getDistance))
+        .limit(maxNumServicesToReturn)
+        .collect(Collectors.toList());
 
-        if (didDOSFail) {
-          log.error("Could not retrieve DOS Services");
-        }
+      log.info("Number of DOS Services: {}", dosServices.size());
+      log.info("Number of NHS Choices Services: {}", nhsChoicesServices.size());
+      log.info("Services sorted successfully based on distance.");
 
-        List<DosService> combinedList = Stream.concat(
-            didDOSFail ? Stream.empty() : dosServices.stream(),
-            didNHSFail ? Stream.empty() : nhsChoicesServices.stream())
-          .sorted(Comparator.comparingDouble(DosService::getDistance))
-          .collect(Collectors.toList());
-
-        log.info("Number of DOS Services {}", dosServices.size());
-
-        log.info("Number of NHS Choices Services {}", nhsChoicesServices.size());
-
-        log.info("Services sorted successfully based on distance.");
-
-        return combinedList;
-      });
-
+      return combinedList;
+    });
   }
+
 
   private double sortByDistanceFromSearch(Double searchLatitude, Double searchLongitude, Double serviceLatitude, Double serviceLongitude) {
     final double EARTH_RADIUS_KM = 6371;
