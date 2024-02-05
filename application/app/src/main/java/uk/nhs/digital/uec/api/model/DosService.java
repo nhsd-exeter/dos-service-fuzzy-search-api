@@ -1,6 +1,6 @@
 package uk.nhs.digital.uec.api.model;
 
-import java.util.List;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +9,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
+import uk.nhs.digital.uec.api.util.DoubleSerializerUtil;
+
+import java.util.List;
 
 /** Defines the structure and attributes that are returned for each service. */
 @Document(indexName = "service")
@@ -51,6 +54,7 @@ public class DosService {
   @Field(name = "referral_roles")
   private List<String> referral_roles; // NOSONAR
 
+  @JsonSerialize(using = DoubleSerializerUtil.class)
   private Double distance;
 
   @Field(name = "public_phone_number")
@@ -99,4 +103,5 @@ public class DosService {
     }
     return this.distance;
   }
+
 }

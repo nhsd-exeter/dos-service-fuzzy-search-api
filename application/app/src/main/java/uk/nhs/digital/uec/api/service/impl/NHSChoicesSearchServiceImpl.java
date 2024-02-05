@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 import uk.nhs.digital.uec.api.service.NHSChoicesSearchService;
+import uk.nhs.digital.uec.api.util.Constants;
 import uk.nhs.digital.uec.api.util.NHSChoicesSearchMapperToDosServicesMapperUtil;
 import uk.nhs.digital.uec.api.util.WebClientUtil;
 
@@ -58,9 +59,10 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
                           Double.parseDouble(searchLatitude),
                           Double.parseDouble(searchLongitude),
                           nhsChoicesV2DataModel))
-                        .limit(maxNumServicesToReturn / 2)
+                        .filter(dosService -> dosService.getDistance() <= Constants.DEFAULT_DISTANCE_RANGE)
                         .collect(Collectors.toList());
               }
+
               log.info(
                   "NHS Choices services search successful. Found {} NHS Services(s).",
                   dosServices.size());
@@ -99,7 +101,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
         .name(nhsChoicesV2DataModel.getOrganisationName())
         .public_name(nhsChoicesV2DataModel.getOrganisationName())
         .ods_code(Objects.toString(nhsChoicesV2DataModel.getOdsCode(), ""))
-        .address(Arrays.asList(servicesMapperUtil.concatenateAddress(nhsChoicesV2DataModel)))
+        .address(Collections.singletonList(servicesMapperUtil.concatenateAddress(nhsChoicesV2DataModel)))
         .postcode(nhsChoicesV2DataModel.getPostcode())
       .distance(servicesMapperUtil.distanceCalculator(searchLatitude, searchLongitude,nhsChoicesV2DataModel.getLatitude(), nhsChoicesV2DataModel.getLongitude()))
         .public_phone_number(
