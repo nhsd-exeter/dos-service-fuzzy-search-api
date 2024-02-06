@@ -518,7 +518,7 @@ docker-run-node: ### Run node container - mandatory: CMD; optional: DIR,ARGS=[Do
 
 docker-run-postman: ### Run postman (newman) container - mandatory: DIR,CMD
 	make docker-config > /dev/null 2>&1
-	make docker-run IMAGE=postman/newman:$(DOCKER_POSTMAN_NEWMAN_VERSION) \
+	make docker-run IMAGE=dannydainton/htmlextra \
 		ARGS="--volume $(DIR):/etc/newman" \
 		DIR="$(DIR)" \
 		CMD="$(CMD)"

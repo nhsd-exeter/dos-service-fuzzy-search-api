@@ -18,7 +18,7 @@ run-contract:
 	make docker-run-postman \
 		DIR="$(APPLICATION_TEST_DIR)/contract" \
 		CMD=" \
-			run collections/FuzzySearchApiContractTests_collection.json -e environments/Fuzzy_Contract_Tests_Env.postman_environment.json --insecure \
+			run collections/FuzzySearchApiContractTests_collection.json -e environments/Fuzzy_Contract_Tests_Env.postman_environment.json --insecure -r htmlextra,cli --reporter-htmlextra-export ./reports/report.html \
 		"
 
 run-smoke: ### Run Postman test suite against deployed application ###
