@@ -93,7 +93,7 @@ public class FuzzySearchConcurrentSearchController {
 
     utils.configureApiRequestParams(
       fuzzLevel,
-      referralRole, // filterReferralRole will be implemented in future
+      referralRole,
       maxNumServicesToReturnFromEs,
       maxNumServicesToReturn,
       namePriority,

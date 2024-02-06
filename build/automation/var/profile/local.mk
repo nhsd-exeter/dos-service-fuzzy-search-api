@@ -51,6 +51,5 @@ GOOGLE_MAPS_API_KEY		   := gibarish
 
 #NHS Choices
 NHS_CHOICES_API_KEY := MOCK_NHS_API_KEY
-
 NHS_CHOICES_API_URL := https://api.nhs.uk
 

@@ -93,7 +93,7 @@ quick-start: project-start # Start project
 start: # Start project and load data in to elastic search
 	make project-start
 	echo "Waiting for elastic search to be fully initialised"
-	sleep 30
+	sleep 60
 	make load-all-services
 
 stop: project-stop # Stop project

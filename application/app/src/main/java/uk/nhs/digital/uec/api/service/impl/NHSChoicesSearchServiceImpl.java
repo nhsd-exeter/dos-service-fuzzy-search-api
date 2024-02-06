@@ -2,11 +2,7 @@ package uk.nhs.digital.uec.api.service.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +11,7 @@ import org.springframework.stereotype.Service;
 import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.model.nhschoices.NHSChoicesV2DataModel;
 import uk.nhs.digital.uec.api.service.NHSChoicesSearchService;
+import uk.nhs.digital.uec.api.util.Constants;
 import uk.nhs.digital.uec.api.util.NHSChoicesSearchMapperToDosServicesMapperUtil;
 import uk.nhs.digital.uec.api.util.WebClientUtil;
 
@@ -58,10 +55,14 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
                 log.info("Converting NHS choices services for service finder");
                 dosServices =
                     nhscs.stream()
-                        .map(this::convertNHSChoicesToDosService)
-                        .limit(maxNumServicesToReturn / 2)
+                        .map(nhsChoicesV2DataModel -> convertNHSChoicesToDosService(
+                          Double.parseDouble(searchLatitude),
+                          Double.parseDouble(searchLongitude),
+                          nhsChoicesV2DataModel))
+                        .filter(dosService -> dosService.getDistance() <= Constants.DEFAULT_DISTANCE_RANGE)
                         .collect(Collectors.toList());
               }
+
               log.info(
                   "NHS Choices services search successful. Found {} NHS Services(s).",
                   dosServices.size());
@@ -94,14 +95,15 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
     return stringBuilder.toString();
   }
 
-  private DosService convertNHSChoicesToDosService(NHSChoicesV2DataModel nhsChoicesV2DataModel) {
+  private DosService convertNHSChoicesToDosService(double searchLatitude, double searchLongitude,NHSChoicesV2DataModel nhsChoicesV2DataModel) {
     return DosService.builder()
         ._score(servicesMapperUtil.getSearchScore(nhsChoicesV2DataModel.getSearchScore()))
         .name(nhsChoicesV2DataModel.getOrganisationName())
         .public_name(nhsChoicesV2DataModel.getOrganisationName())
         .ods_code(Objects.toString(nhsChoicesV2DataModel.getOdsCode(), ""))
-        .address(Arrays.asList(servicesMapperUtil.concatenateAddress(nhsChoicesV2DataModel)))
+        .address(Collections.singletonList(servicesMapperUtil.concatenateAddress(nhsChoicesV2DataModel)))
         .postcode(nhsChoicesV2DataModel.getPostcode())
+      .distance(servicesMapperUtil.distanceCalculator(searchLatitude, searchLongitude,nhsChoicesV2DataModel.getLatitude(), nhsChoicesV2DataModel.getLongitude()))
         .public_phone_number(
             servicesMapperUtil.getTelephoneContact(nhsChoicesV2DataModel.getContacts()))
         .email(servicesMapperUtil.getEmail(nhsChoicesV2DataModel.getContacts()))
