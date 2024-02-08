@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "a3c99dcb-aa2f-47cd-b5e6-44f2352944cb",
+    "_postman_id": "4a61e1d6-6b26-4057-85b8-d195f4a3fa81",
     "name": "FuzzySearchApiContractTests",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -34,7 +34,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}:8443/dosapi/dosservices/v2/services/byfuzzysearch?search_term=test%201&search_latitude=23.45&search_longitude=-2.345&fuzz_level=2&search_location=EX88PR",
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v2/services/byfuzzysearch?search_term=test 1&search_location=EX88PR&search_latitude=23.45&search_longitude=-2.345&fuzz_level=2",
           "protocol": "https",
           "host": [
             "{{host}}"
@@ -75,6 +75,19 @@
     },
     {
       "name": "No-query-parameter-passed-test",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Bad request no param\", function() {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
       "request": {
         "auth": {
           "type": "bearer",
@@ -89,7 +102,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}:8443/dosapi/dosservices/v2/services/byfuzzysearch?search_latitude=23.45&search_longitude=-2.345",
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v2/services/byfuzzysearch",
           "protocol": "https",
           "host": [
             "{{host}}"
@@ -101,16 +114,6 @@
             "v2",
             "services",
             "byfuzzysearch"
-          ],
-          "query": [
-            {
-              "key": "search_latitude",
-              "value": "23.45"
-            },
-            {
-              "key": "search_longitude",
-              "value": "-2.345"
-            }
           ]
         }
       },
@@ -118,6 +121,19 @@
     },
     {
       "name": "Maximum-search-terms-test",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Maximum param returns status code 200\", function() {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
       "request": {
         "auth": {
           "type": "bearer",
@@ -132,7 +148,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}:8443/dosapi/dosservices/v2/services/byfuzzysearch?search_term=test1,test2,test3,test4,test5,test6&search_latitude=23.45&search_longitude=-2.345",
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v2/services/byfuzzysearch?search_term=Lympstone Medical Centre (Exmouth)&search_location=EX51NZ&search_latitude=50.674000&search_longitude=-3.400157",
           "protocol": "https",
           "host": [
             "{{host}}"
@@ -148,15 +164,19 @@
           "query": [
             {
               "key": "search_term",
-              "value": "test1,test2,test3,test4, test5, test6"
+              "value": "Lympstone Medical Centre (Exmouth)"
+            },
+            {
+              "key": "search_location",
+              "value": "EX51NZ"
             },
             {
               "key": "search_latitude",
-              "value": "23.45"
+              "value": "50.674000"
             },
             {
               "key": "search_longitude",
-              "value": "-2.345"
+              "value": "-3.400157"
             }
           ]
         }
@@ -165,6 +185,19 @@
     },
     {
       "name": "Minimum-search-terms-length-test",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Minimum param returns status code 200\", function() {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
       "request": {
         "auth": {
           "type": "bearer",
@@ -179,7 +212,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}:8443/dosapi/dosservices/v2/services/byfuzzysearch?search_term=z&search_latitude=23.45&search_longitude=-2.345",
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v2/services/byfuzzysearch?search_term=z&search_location=EX51NZ&search_latitude=50.674000&search_longitude=-3.400157",
           "protocol": "https",
           "host": [
             "{{host}}"
@@ -198,17 +231,100 @@
               "value": "z"
             },
             {
+              "key": "search_location",
+              "value": "EX51NZ"
+            },
+            {
               "key": "search_latitude",
-              "value": "23.45"
+              "value": "50.674000"
             },
             {
               "key": "search_longitude",
-              "value": "-2.345"
+              "value": "-3.400157"
             }
           ]
         }
       },
       "response": []
-    }
-  ]
+    },
+    {
+      "name": "Search to include datasources",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = JSON.parse(responseBody);",
+              "var jsonText = pm.response.text();",
+              "",
+              "pm.test(\"Status OK\", function() {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response body should contain professional_referral_info\", function() {",
+              "  pm.expect(jsonData.search_results.services[0]).to.have.property('datasource');",
+              "});",
+              "",
+              "pm.test(\"Results to contain DIRECTORY_OF_SERVICES\", function() {",
+              "    pm.expect(jsonText).to.include(\"DIRECTORY_OF_SERVICES\");",
+              "});",
+              "",
+              "",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}",
+            "type": "text"
+          },
+          {
+            "key": "X-Correlation-Id",
+            "value": "test12",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v2/services/byfuzzysearch?search_term=Woodbury&search_location=EX51NZ&search_latitude=50.674000&search_longitude=-3.400157",
+          "protocol": "https",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "8443",
+          "path": [
+            "dosapi",
+            "dosservices",
+            "v2",
+            "services",
+            "byfuzzysearch"
+          ],
+          "query": [
+              {
+                "key": "search_term",
+                "value": "Woodbury"
+              },
+              {
+                "key": "search_location",
+                "value": "EX51NZ"
+              },
+              {
+                "key": "search_latitude",
+                "value": "50.674000"
+              },
+              {
+                "key": "search_longitude",
+                "value": "-3.400157"
+              }
+            ]
+          }
+        },
+        "response": []
+      }
+    ]
 }

@@ -87,7 +87,17 @@ pipeline {
   }
 
   post {
-    always { sh 'make clean' }
+    always  {
+      sh 'make clean'
+      publishHTML([allowMissing: false,
+            alwaysLinkToLastBuild: false,
+            keepAll: true,
+            reportDir: 'test/contract/reports/',
+            reportFiles: 'report.html',
+            reportName: 'Fuzzy Test Report',
+            reportTitles: 'Fuzzy Test Report'
+        ])
+      }
     success { sh 'make pipeline-on-success' }
     failure { sh 'make pipeline-on-failure' }
   }
