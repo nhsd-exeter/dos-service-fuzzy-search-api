@@ -39,7 +39,7 @@
     <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
     <springfox-swagger2.version>3.0.0</springfox-swagger2.version>
     <springfox-swagger-ui.version>3.0.0</springfox-swagger-ui.version>
-    <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
     <mockwebserver.version>4.9.1</mockwebserver.version>
     <okhttp3.version>4.11.0</okhttp3.version>
