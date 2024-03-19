@@ -42,7 +42,7 @@
     <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
     <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
     <mockwebserver.version>4.9.1</mockwebserver.version>
-    <okhttp3.version>4.11.0</okhttp3.version>
+    <okhttp3.version>4.12.0</okhttp3.version>
   </properties>
 
 
