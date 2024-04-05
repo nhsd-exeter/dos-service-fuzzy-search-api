@@ -8,8 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GeoLocationResponseTest {
 
-  private ObjectMapper mapper = new ObjectMapper();
-
+  private final ObjectMapper mapper = new ObjectMapper();
 
   @Test
   public void testDeserialization() throws JsonProcessingException {

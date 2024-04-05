@@ -12,22 +12,22 @@ public class ApiSearchParamsResponseTest {
 
   @Test
   public void testDeserializesFromJson() throws JsonProcessingException {
-    String json = "{\n" +
-      "  \"search_criteria\": [\n" +
-      "    \"testcriteria1\"" +
-      "  ],\n" +
-      "  \"search_location\": \"location\",\n" +
-      "  \"search_latitude\": \"123\",\n" +
-      "  \"search_longitude\": \"321\",\n" +
-      "  \"distance_range\": \"60\",\n" +
-      "  \"referral_role\": \"testreferralrole\",\n" +
-      "  \"fuzz_level\": \"testfuzzlevel\",\n" +
-      "  \"address_priority\": 1,\n" +
-      "  \"name_priority\": 2,\n" +
-      "  \"postcode_priority\": 3,\n" +
-      "  \"public_name_priority\": 4,\n" +
-      "  \"max_number_of_services_to_return\": 5\n" +
-      "}";
+    String json = """
+      {
+        "search_criteria": [
+          "testcriteria1"  ],
+        "search_location": "location",
+        "search_latitude": "123",
+        "search_longitude": "321",
+        "distance_range": "60",
+        "referral_role": "testreferralrole",
+        "fuzz_level": "testfuzzlevel",
+        "address_priority": 1,
+        "name_priority": 2,
+        "postcode_priority": 3,
+        "public_name_priority": 4,
+        "max_number_of_services_to_return": 5
+      }""";
     ApiSearchParamsResponse response = objectMapper.readValue(json, ApiSearchParamsResponse.class);
     assertEquals("testcriteria1", response.getSearchCriteria().get(0));
     assertEquals("location", response.getSearchPostcode());

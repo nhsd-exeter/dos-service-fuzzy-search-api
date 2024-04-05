@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ApiRequestParamsTest {
 
-  private ApiRequestParams apiRequestParams = new ApiRequestParams();
+  private final ApiRequestParams apiRequestParams = new ApiRequestParams();
 
   @Test
   public void testMaxNumServicesToReturnFromElasticSearchDefaultsCorrectly() {

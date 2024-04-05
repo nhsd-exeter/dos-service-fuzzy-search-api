@@ -103,9 +103,9 @@ public class FuzzySearchControllerAdviceTest {
   }
 
   @Test
-  /**
-   * I can't find a way that a normal checked exception would be thrown and dealt with by the ControllerAdvice,
-   * so this will be tested directly
+  /*
+    I can't find a way that a normal checked exception would be thrown and dealt with by the ControllerAdvice,
+    so this will be tested directly
    */
   public void testNormalException() throws Exception {
     FuzzySearchControllerAdvice advice = new FuzzySearchControllerAdvice();
