@@ -25,10 +25,6 @@ public class PostcodeFormatterUtil {
     outCode = str.substring(0, outEnd);
     inCode = str.substring(outEnd);
 
-    System.out.println("Outcode length: "+outCode.length());
-    System.out.println("Is this numeric: "+StringUtils.mid(outCode, 4, 1));
-    System.out.println("Is this equal to 0: "+StringUtils.mid(outCode, 2, 1));
-
     if (outCode.length() == 3 && StringUtils.isNumeric(outCode.substring(1)) && StringUtils.mid(outCode, 1, 1).equals("0")) {
       outCode = StringUtils.mid(outCode, 0, 1) + StringUtils.mid(outCode, 2, 1);
     }
