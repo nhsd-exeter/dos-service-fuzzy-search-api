@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class ServiceProvider {
+public class ServiceProvider {
   @JsonProperty("ODSCode")
   private String odsCode;
 

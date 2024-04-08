@@ -19,7 +19,7 @@ import uk.nhs.digital.uec.api.controller.FuzzyServiceSearchController;
 import uk.nhs.digital.uec.api.model.ApiRequestParams;
 import uk.nhs.digital.uec.api.model.ErrorMessage;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
-import uk.nhs.digital.uec.api.service.FuzzyServiceSearchServiceInterface;
+import uk.nhs.digital.uec.api.service.DosServiceSearch;
 
 import javax.ws.rs.core.MediaType;
 
@@ -44,7 +44,7 @@ public class FuzzySearchControllerAdviceTest {
   FuzzyServiceSearchController controller;
 
   @MockBean
-  FuzzyServiceSearchServiceInterface fuzzyServiceSearchService;
+  DosServiceSearch fuzzyServiceSearchService;
 
   @MockBean
   ApiUtilsServiceInterface utils;

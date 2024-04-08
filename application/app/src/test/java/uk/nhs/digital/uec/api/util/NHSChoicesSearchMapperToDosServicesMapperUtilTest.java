@@ -196,4 +196,18 @@ public class NHSChoicesSearchMapperToDosServicesMapperUtilTest {
     assertEquals("", result);
   }
 
+  @Test
+  public void correctlyCalculateDistance() {
+    double distance = classUnderTest.distanceCalculator(51.5074, 0.1278, 51.486108, -0.159814);
+    assertEquals(12.4, distance, 0.1);
+  }
+
+  @Test
+  public void assumeDistanceIs999IfAnythingHasNoLocation() {
+    double distance = classUnderTest.distanceCalculator(null, null, 51.486108, -0.159814);
+    assertEquals(999.9, distance, 0.1);
+    distance = classUnderTest.distanceCalculator(51.5074, 0.1278, null, null);
+    assertEquals(999.9, distance, 0.1);
+  }
+
 }
