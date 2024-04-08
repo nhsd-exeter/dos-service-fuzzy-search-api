@@ -103,7 +103,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
         .ods_code(Objects.toString(nhsChoicesV2DataModel.getOdsCode(), ""))
         .address(Collections.singletonList(servicesMapperUtil.concatenateAddress(nhsChoicesV2DataModel)))
         .postcode(nhsChoicesV2DataModel.getPostcode())
-      .distance(servicesMapperUtil.distanceCalculator(searchLatitude, searchLongitude,nhsChoicesV2DataModel.getLatitude(), nhsChoicesV2DataModel.getLongitude()))
+        .distance(servicesMapperUtil.distanceCalculator(searchLatitude, searchLongitude,nhsChoicesV2DataModel.getLatitude(), nhsChoicesV2DataModel.getLongitude()))
         .public_phone_number(
             servicesMapperUtil.getTelephoneContact(nhsChoicesV2DataModel.getContacts()))
         .email(servicesMapperUtil.getEmail(nhsChoicesV2DataModel.getContacts()))
