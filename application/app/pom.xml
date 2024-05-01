@@ -29,7 +29,7 @@
     <spring-data-dynamodb.version>5.2.1</spring-data-dynamodb.version>
     <commons-lang3.version>3.14.0</commons-lang3.version>
     <decimal4j.version>1.0.3</decimal4j.version>
-    <aws-java-sdk-cognitoidp.version>1.12.15</aws-java-sdk-cognitoidp.version>
+    <aws-java-sdk-cognitoidp.version>1.12.712</aws-java-sdk-cognitoidp.version>
     <spring-security-oauth2.version>2.5.2.RELEASE</spring-security-oauth2.version>
     <commons-io.version>2.10.0</commons-io.version>
     <jjwt.version>0.9.1</jjwt.version>
