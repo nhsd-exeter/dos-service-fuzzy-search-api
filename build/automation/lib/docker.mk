@@ -777,20 +777,20 @@ docker-run-tools: ### Run tools (Python) container - mandatory: CMD; optional: S
 docker-compose-start: ### Start Docker Compose - optional: YML=[docker-compose.yml, defaults to $(DOCKER_COMPOSE_YML)]
 	make docker-config
 	yml=$$(make _docker-get-docker-compose-yml YML=$(YML))
-	docker-compose --file $$yml \
+	docker compose --file $$yml \
 		up --no-build --detach
 
 docker-compose-start-single-service: ### Start Docker Compose - mandatory: NAME=[service name]; optional: YML=[docker-compose.yml, defaults to $(DOCKER_COMPOSE_YML)]
 	make docker-config
 	yml=$$(make _docker-get-docker-compose-yml YML=$(YML))
 	name=$$([ "$(BUILD_ID)" != 0 ] && echo $(NAME)-$(BUILD_ID) || echo $(NAME))
-	docker-compose --file $$yml \
+	docker compose --file $$yml \
 		up --no-build --detach $$name
 
 docker-compose-stop: ### Stop Docker Compose - optional: YML=[docker-compose.yml, defaults to $(DOCKER_COMPOSE_YML)],ALL=true
 	make docker-config
 	yml=$$(make _docker-get-docker-compose-yml YML=$(YML))
-	docker-compose --file $$yml \
+	docker compose --file $$yml \
 		rm \
 		--stop \
 		--force
@@ -799,12 +799,12 @@ docker-compose-stop: ### Stop Docker Compose - optional: YML=[docker-compose.yml
 
 docker-compose-log: ### Log Docker Compose output - optional: DO_NOT_FOLLOW=true,YML=[docker-compose.yml, defaults to $(DOCKER_COMPOSE_YML)]
 	yml=$$(make _docker-get-docker-compose-yml YML=$(YML))
-	docker-compose --file $$yml \
+	docker compose --file $$yml \
 		logs $$(echo $(DO_NOT_FOLLOW) | grep -E 'true|yes|y|on|1|TRUE|YES|Y|ON' > /dev/null 2>&1 && : || echo "--follow")
 
 docker-compose-exec: ### Run Docker Compose exec command - mandatory: CMD; optional: YML=[docker-compose.yml, defaults to $(DOCKER_COMPOSE_YML)]
 	yml=$$(make _docker-get-docker-compose-yml YML=$(YML))
-	docker-compose --file $$yml \
+	docker compose --file $$yml \
 		exec $(CMD)
 
 # ==============================================================================
