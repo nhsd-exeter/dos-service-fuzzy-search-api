@@ -88,8 +88,6 @@ quick-start: project-start # Start project
 start: # Start project and load data in to elastic search
 	make project-start
 	echo "Waiting for elastic search to be fully initialised"
-	sleep 60
-	make load-all-services
 
 stop: project-stop # Stop project
 
@@ -110,8 +108,6 @@ coverage-report: # Generate jacoco test coverage reports
 		DIR="application/app" \
 		CMD="jacoco:report"
 
-load-all-services: # Load bulk service data into elasticsearch
-	sh ./data/services/create_all_services_local.sh
 
 load-test-postcode-locations:
 	sh ./data/locations/$(LOCATIONS_DATA_FILE)

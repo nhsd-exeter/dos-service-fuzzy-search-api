@@ -41,24 +41,24 @@ services:
     ports:
       - 8443:8443
     depends_on:
-      - elasticsearch
+      - opensearch
     command: ["java", "-jar", "/application/dos-service-fuzzy-search-api.jar"]
     networks:
       default:
         aliases:
           - fuzzysearch.sfs.local
 
-  elasticsearch:
-    image: nhsd/elasticsearch:$DOCKER_LIBRARY_ELASTICSEARCH_VERSION
-    container_name: elasticsearch
-    hostname: elasticsearch
-    ports:
-      - "9200:9200"
-    command: ["elasticsearch"]
-    networks:
-      default:
-        aliases:
-          - elasticsearch.sfs.local
+  # elasticsearch:
+  #   image: nhsd/elasticsearch:$DOCKER_LIBRARY_ELASTICSEARCH_VERSION
+  #   container_name: elasticsearch
+  #   hostname: elasticsearch
+  #   ports:
+  #     - "9200:9200"
+  #   command: ["elasticsearch"]
+  #   networks:
+  #     default:
+  #       aliases:
+  #         - elasticsearch.sfs.local
   mockservice:
     image: ddc-nexus-mgmt-nexus-docker.mgmt.texasplatform.uk/wiremock/wiremock:2.32.0
     container_name: mockservice
@@ -71,22 +71,82 @@ services:
       default:
         aliases:
           - mockservice.sf.test
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.13.0
-    container_name: kibana
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:7.13.0
+  #   container_name: kibana
+  #   environment:
+  #     SERVER_HOST: "0.0.0.0"
+  #     SERVER_PORT: 5601
+  #     SERVER_NAME: kibana
+  #     ELASTICSEARCH_HOSTS: http://elasticsearch.sfs.local:9200
+  #   ports:
+  #     - "5601:5601"
+  #   depends_on:
+  #     - elasticsearch
+  #   networks:
+  #     default:
+  #       aliases:
+  #         - kibana.sfs.local
+  opensearch:
+    image: opensearchproject/opensearch:1.3.0
+    container_name: opensearch
+    hostname: opensearch
+    user: opensearch
     environment:
-      SERVER_HOST: "0.0.0.0"
-      SERVER_PORT: 5601
-      SERVER_NAME: kibana
-      ELASTICSEARCH_HOSTS: http://elasticsearch.sfs.local:9200
+      discovery.type: single-node
+      http.port: 9200
+      node.name: opensearch
+      DISABLE_SECURITY_PLUGIN: true
+      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
     ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
+      - "9200:9200"
+      - "9600:9600"
+    labels:
+      - "app=elastic-search"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'curl -s $ELASTICSEARCH_URL/_cluster/health | grep -q ''"status":"green"''',
+        ]
+      interval: 20s
+      timeout: 10s
+      retries: 5
     networks:
       default:
         aliases:
-          - kibana.sfs.local
+          - opensearch.sf.test
+  opensearch-dashboard:
+    platform: linux/x86_64
+    image: opensearchproject/opensearch-dashboards:1.3.0
+    container_name: opensearch-dashboard
+    environment:
+      SERVER_HOST: "0.0.0.0"
+      SERVER_PORT: 5601
+      SERVER_NAME: opensearch-dashboard
+      OPENSEARCH_HOSTS: $ELASTICSEARCH_URL
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: true
+
+    ports:
+      - "5601:5601"
+    expose:
+      - "5601"
+    depends_on:
+      - opensearch
+    networks:
+      default:
+        aliases:
+          - opensearch-dashboard.sf.test
+  init:
+    image: curlimages/curl:latest
+    container_name: init
+    depends_on:
+      opensearch:
+        condition: service_healthy
+    volumes:
+      - $PROJECT_DIR/data/services/:/services
+    entrypoint:
+      ["/services/wait-for-it.sh", $ELASTICSEARCH_URL, "/services/create_all_services_local.sh"]
 
     # db-dos:
     #   image: $AWS_ECR/uec-tools/dtdb/database:latest
