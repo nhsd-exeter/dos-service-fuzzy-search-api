@@ -59,10 +59,9 @@ services:
       default:
         aliases:
           - elasticsearch.sfs.local
-
-  mock_postcode_api:
-    image: $DOCKER_REGISTRY/mock-postcode-api:$VERSION
-    container_name: mock-postcode-api
+  mockservice:
+    image: ddc-nexus-mgmt-nexus-docker.mgmt.texasplatform.uk/wiremock/wiremock:2.32.0
+    container_name: mockservice
     volumes:
       - $PROJECT_DIR/test/wiremock_mappings:/home/wiremock/mappings/
     ports:
@@ -71,7 +70,7 @@ services:
     networks:
       default:
         aliases:
-          - mock.postcodeapi.sfs
+          - mockservice.sf.test
   kibana:
     image: docker.elastic.co/kibana/kibana:7.13.0
     container_name: kibana

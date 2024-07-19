@@ -1,6 +1,7 @@
 {
   "request": {
     "method": "GET",
+    "urlPathPattern": "/api/service-search",
     "queryParameters": {
       "search": {
         "matches": "^(.*[A-Za-z0-9]+)$",
@@ -17,8 +18,7 @@
       "subscription-key": {
         "equalTo": "MOCK_NHS_API_KEY"
       }
-    },
-    "urlPathTemplate": "/service-search"
+    }
   },
   "response": {
     "status": 200,
