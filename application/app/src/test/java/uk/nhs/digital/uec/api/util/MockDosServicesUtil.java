@@ -38,8 +38,8 @@ public class MockDosServicesUtil {
     referralRoles.add("Professional Referral");
 
     return DosService.builder()
-        .id(Integer.valueOf(identifier))
-        .u_id(Integer.valueOf(identifier))
+        .id(String.valueOf(identifier))
+        .u_id(String.valueOf(identifier))
         .name("service" + identifier)
         .public_name("Public Service Name " + identifier)
         .type("Type 1")

@@ -1,10 +1,9 @@
 package uk.nhs.digital.uec.api.model;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class ApiSearchResultsResponseTest {
 
@@ -15,7 +14,7 @@ public class ApiSearchResultsResponseTest {
     apiSearchResultsResponse.setServices(getDosServices());
 
     assertEquals(1, apiSearchResultsResponse.getNumberOfServicesFound());
-    assertEquals(123, apiSearchResultsResponse.getServices().get(0).getId());
+    assertEquals("123", apiSearchResultsResponse.getServices().get(0).getId());
   }
 
   @Test
@@ -28,8 +27,7 @@ public class ApiSearchResultsResponseTest {
 
   private List<DosService> getDosServices() {
     DosService dosService = new DosService();
-    dosService.setId(123);
+    dosService.setId("123");
     return List.of(dosService);
   }
-
 }

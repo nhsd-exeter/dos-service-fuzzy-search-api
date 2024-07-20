@@ -119,7 +119,7 @@ run-contract-tests:
 	cd ../../
 	make stop
 
-test: load-test-services # Test project
+test:  # Test project
 	make docker-run-mvn \
 		DIR="application/app" \
 		CMD="clean test" \
