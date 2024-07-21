@@ -1,0 +1,620 @@
+{
+  "name": "All regex services Successful Postcode Response",
+  "request": {
+    "urlPathPattern": "/api/search",
+    "method": "GET",
+    "queryParameters": {
+      "postcodes": {
+        "matches": "([a-z]*)"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": [
+      {
+        "postCode": "WR5 1DD",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TW1 4EA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "NG1 6GN",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "CT1 3RA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN9 1RE",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "ME17 4BG",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "RH19 3DZ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "RH1 4PB",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SE18 4LP",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "UB10 8SA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "ME19 6NE",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "CM1 7WS",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "PE30 5NU",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "ME16 9QQ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "ME19 6NE",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN2 4QJ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "CV109EB",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN240TT",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "LS211AG",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SW100LR",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "DA12EF",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "ME196NA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN133PG",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "ME159FL",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN91LA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "ME169QQ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN12JN",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN173JN",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "HP198HL",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SP103AJ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SW100LR",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "ME196NA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "HP198HL",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN12JN",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SE136LH",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "KT66EN",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "CR77YE",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "BR68ND",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "NW107NS",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SM51AA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SE12TZ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "HP144LG",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SW193DA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SE184LP",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SW129DL",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "UB77HJ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SE228PT",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TW14EA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SE154QL",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN91RE",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "RG88AY",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "YO310PR",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN156HD",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "DA110LL",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "YO164RB",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "CM201EP",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "ME194AU",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "WF32EY",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "HP201UA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN240TT",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "LE38AR",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "MK65NG",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "DA146LT",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "DA12HA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "DA12EU",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "WF105LT",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "RH194QF",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "LS99JG",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "L111EL",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "ME194AU",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN156EJ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "YO164RB",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "EX24NU",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "LS99JD",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "WF134HS",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "LS99EF",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "EX25DW",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "CT170HD",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "CT91XY",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "CT65DQ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN240GP",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN288LQ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "RH117DH",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN225AW",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "NG72GW",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "BA12AU",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "GL530LA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "RH201FJ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "GL560DS",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "BS397SB",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN402DZ",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "TN377RD",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "SN36BB",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "PO229PP",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "PO180AA",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "BN112DH",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "BN176BF",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "GL143HX",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "GL13NN",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      },
+      {
+        "postCode": "GL537AN",
+        "name": "wiremock result",
+        "easting": 654321,
+        "northing": 123456
+      }
+    ]
+  }
+}

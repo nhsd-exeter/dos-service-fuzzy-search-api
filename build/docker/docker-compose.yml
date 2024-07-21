@@ -47,21 +47,9 @@ services:
       default:
         aliases:
           - fuzzysearch.sfs.local
-
-  # elasticsearch:
-  #   image: nhsd/elasticsearch:$DOCKER_LIBRARY_ELASTICSEARCH_VERSION
-  #   container_name: elasticsearch
-  #   hostname: elasticsearch
-  #   ports:
-  #     - "9200:9200"
-  #   command: ["elasticsearch"]
-  #   networks:
-  #     default:
-  #       aliases:
-  #         - elasticsearch.sfs.local
-  mockservice:
-    image: ddc-nexus-mgmt-nexus-docker.mgmt.texasplatform.uk/wiremock/wiremock:2.32.0
-    container_name: mockservice
+  mock_postcode_api:
+    image: $DOCKER_REGISTRY/mock-postcode-api:$VERSION
+    container_name: mock-postcode-api
     volumes:
       - $PROJECT_DIR/test/wiremock_mappings:/home/wiremock/mappings/
     ports:
@@ -70,23 +58,7 @@ services:
     networks:
       default:
         aliases:
-          - mockservice.sf.test
-  # kibana:
-  #   image: docker.elastic.co/kibana/kibana:7.13.0
-  #   container_name: kibana
-  #   environment:
-  #     SERVER_HOST: "0.0.0.0"
-  #     SERVER_PORT: 5601
-  #     SERVER_NAME: kibana
-  #     ELASTICSEARCH_HOSTS: http://elasticsearch.sfs.local:9200
-  #   ports:
-  #     - "5601:5601"
-  #   depends_on:
-  #     - elasticsearch
-  #   networks:
-  #     default:
-  #       aliases:
-  #         - kibana.sfs.local
+          - mock.postcodeapi.sfs
   opensearch:
     image: opensearchproject/opensearch:1.3.0
     container_name: opensearch

@@ -71,6 +71,11 @@ build: project-config # Build project
 		$(PROJECT_DIR)/application/app/target/dos-service-fuzzy-search-api-*.jar \
 		$(PROJECT_DIR)/build/docker/api/assets/application/dos-service-fuzzy-search-api.jar
 	make docker-build NAME=api
+
+	cp $(PROJECT_DIR)/test/wiremock_mappings/*.json \
+	$(PROJECT_DIR)build/docker/mock-postcode-api/assets/wiremock_mappings/
+	make docker-build NAME=mock-postcode-api
+
 scan:
 	if [ ! -d $(PROJECT_DIR)/reports ]; then
 		mkdir $(PROJECT_DIR)/reports

@@ -38,7 +38,7 @@ COGNITO_USER_POOL_CLIENT_ID := testUserPoolClientId
 COGNITO_USER_POOL_CLIENT_SECRET := testUserPoolClientSecret
 COGNITO_USER_POOL_ID := testUserPoolId
 
-POSTCODE_MAPPING_SERVICE_URL := http://mockservice.sf.test:8080/api
+POSTCODE_MAPPING_SERVICE_URL := http://mock.postcodeapi.sfs:8080/api
 
 AUTH_LOGIN_URL := https://fuzzysearch.sfs.local:8443
 AUTH_LOGIN_URI := /authentication/login
@@ -51,4 +51,4 @@ GOOGLE_MAPS_API_KEY		   := gibarish
 
 #NHS Choices
 NHS_CHOICES_API_KEY := MOCK_NHS_API_KEY
-NHS_CHOICES_API_URL := http://mockservice.sf.test:8080/api
+NHS_CHOICES_API_URL := http://mock.postcodeapi.sfs:8080/api
