@@ -114,6 +114,7 @@ load-test-postcode-locations:
 
 run-contract-tests:
 	make start PROFILE=local VERSION=$(VERSION)
+	sleep 60
 	cd test/contract
 	make run-contract
 	cd ../../
