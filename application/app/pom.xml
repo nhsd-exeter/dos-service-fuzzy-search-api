@@ -25,7 +25,7 @@
     <spring-boot-starter-data-elasticsearch.version>2.7.4</spring-boot-starter-data-elasticsearch.version>
     <aws-java-sdk-dynamodb.version>1.11.948</aws-java-sdk-dynamodb.version>
     <aws-java-sdk-sts.version>1.12.630</aws-java-sdk-sts.version>
-    <sts.version>2.10.40</sts.version>
+    <sts.version>2.26.27</sts.version>
     <spring-data-dynamodb.version>5.2.1</spring-data-dynamodb.version>
     <commons-lang3.version>3.14.0</commons-lang3.version>
     <decimal4j.version>1.0.3</decimal4j.version>
