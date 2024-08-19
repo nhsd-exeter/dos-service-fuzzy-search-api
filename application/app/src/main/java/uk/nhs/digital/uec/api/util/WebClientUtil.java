@@ -169,7 +169,7 @@ public class WebClientUtil {
   }
 
   private List<NHSChoicesV2DataModel> parseNHSChoicesDataModel(String json) {
-    log.info("parsing json from data model");
+    log.info("parsing json from data model {}",json);
     List<NHSChoicesV2DataModel> nhsChoicesDataModels = new ArrayList<>();
 
     if (StringUtils.isBlank(json)) {
