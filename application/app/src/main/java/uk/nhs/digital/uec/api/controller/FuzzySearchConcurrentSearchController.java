@@ -112,6 +112,7 @@ public class FuzzySearchConcurrentSearchController {
         searchLatitude, searchLongitude, distanceRange, searchCriteria, searchPostcode,maxNumServicesToReturn)
       .thenApply(dosServicesList -> {
         log.info("Completing async data fetch now combining results");
+        log.info("Services found: {}", dosServicesList);
         searchResultsResponse.setServices(dosServicesList);
         response.setSearchParameters(searchParamsResponse);
         response.setSearchResults(searchResultsResponse);
