@@ -124,6 +124,7 @@ public class FuzzyServiceSearchController {
     final ApiSearchResultsResponse searchResultsResponse = new ApiSearchResultsResponse();
     final List<DosService> dosServices = fuzzyServiceSearchService.retrieveServicesByGeoLocation(
       searchLatitude, searchLongitude, distanceRange, searchCriteria, searchPostcode);
+    log.info("Services found: {}", dosServices);
     searchResultsResponse.setServices(dosServices);
     response.setSearchParameters(searchParamsResponse);
     response.setSearchResults(searchResultsResponse);
