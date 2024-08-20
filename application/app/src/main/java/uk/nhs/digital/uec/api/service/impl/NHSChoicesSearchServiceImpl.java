@@ -101,7 +101,8 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
 
   private DosService convertNHSChoicesToDosService(
       double searchLatitude, double searchLongitude, NHSChoicesV2DataModel nhsChoicesV2DataModel) {
-    return DosService.builder()
+    log.info("Location of service {} is lat={}, long={}", nhsChoicesV2DataModel.getSearchKey(), nhsChoicesV2DataModel.getLatitude(), nhsChoicesV2DataModel.getLongitude());
+    DosService service = DosService.builder()
         ._score(servicesMapperUtil.getSearchScore(nhsChoicesV2DataModel.getSearchScore()))
         .id(nhsChoicesV2DataModel.getSearchKey())
         .u_id(nhsChoicesV2DataModel.getSearchKey())
@@ -128,5 +129,7 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
         .location(servicesMapperUtil.getGeoLocation(nhsChoicesV2DataModel))
         .datasource(NHS_CHOICES_DATASOURCE)
         .build();
+    log.info("Service {} has location", service.getLocation());
+    return service;
   }
 }
