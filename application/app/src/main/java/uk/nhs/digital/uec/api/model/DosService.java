@@ -1,6 +1,7 @@
 package uk.nhs.digital.uec.api.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +11,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import uk.nhs.digital.uec.api.util.DoubleSerializerUtil;
-
-import java.util.List;
 
 /** Defines the structure and attributes that are returned for each service. */
 @Document(indexName = "service")
@@ -23,10 +22,10 @@ public class DosService {
 
   private int _score; // NOSONAR
 
-  @Id private int id;
+  @Id private String id;
 
   @Field(name = "u_id")
-  private int u_id; // NOSONAR
+  private String u_id; // NOSONAR
 
   private String name;
 
@@ -103,5 +102,4 @@ public class DosService {
     }
     return this.distance;
   }
-
 }

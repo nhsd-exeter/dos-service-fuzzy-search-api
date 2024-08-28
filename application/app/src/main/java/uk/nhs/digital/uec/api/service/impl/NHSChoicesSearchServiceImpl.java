@@ -55,11 +55,15 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
                 log.info("Converting NHS choices services for service finder");
                 dosServices =
                     nhscs.stream()
-                        .map(nhsChoicesV2DataModel -> convertNHSChoicesToDosService(
-                          Double.parseDouble(searchLatitude),
-                          Double.parseDouble(searchLongitude),
-                          nhsChoicesV2DataModel))
-                        .filter(dosService -> dosService.getDistance() <= Constants.DEFAULT_DISTANCE_RANGE)
+                        .map(
+                            nhsChoicesV2DataModel ->
+                                convertNHSChoicesToDosService(
+                                    Double.parseDouble(searchLatitude),
+                                    Double.parseDouble(searchLongitude),
+                                    nhsChoicesV2DataModel))
+                        .filter(
+                            dosService ->
+                                dosService.getDistance() <= Constants.DEFAULT_DISTANCE_RANGE)
                         .collect(Collectors.toList());
               }
 
@@ -95,15 +99,24 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
     return stringBuilder.toString();
   }
 
-  private DosService convertNHSChoicesToDosService(double searchLatitude, double searchLongitude,NHSChoicesV2DataModel nhsChoicesV2DataModel) {
-    return DosService.builder()
+  private DosService convertNHSChoicesToDosService(
+      double searchLatitude, double searchLongitude, NHSChoicesV2DataModel nhsChoicesV2DataModel) {
+    DosService service = DosService.builder()
         ._score(servicesMapperUtil.getSearchScore(nhsChoicesV2DataModel.getSearchScore()))
+        .id(nhsChoicesV2DataModel.getSearchKey())
+        .u_id(nhsChoicesV2DataModel.getSearchKey())
         .name(nhsChoicesV2DataModel.getOrganisationName())
         .public_name(nhsChoicesV2DataModel.getOrganisationName())
         .ods_code(Objects.toString(nhsChoicesV2DataModel.getOdsCode(), ""))
-        .address(Collections.singletonList(servicesMapperUtil.concatenateAddress(nhsChoicesV2DataModel)))
+        .address(
+            Collections.singletonList(servicesMapperUtil.concatenateAddress(nhsChoicesV2DataModel)))
         .postcode(nhsChoicesV2DataModel.getPostcode())
-        .distance(servicesMapperUtil.distanceCalculator(searchLatitude, searchLongitude,nhsChoicesV2DataModel.getLatitude(), nhsChoicesV2DataModel.getLongitude()))
+        .distance(
+            servicesMapperUtil.distanceCalculator(
+                searchLatitude,
+                searchLongitude,
+                nhsChoicesV2DataModel.getLatitude(),
+                nhsChoicesV2DataModel.getLongitude()))
         .public_phone_number(
             servicesMapperUtil.getTelephoneContact(nhsChoicesV2DataModel.getContacts()))
         .email(servicesMapperUtil.getEmail(nhsChoicesV2DataModel.getContacts()))
@@ -115,5 +128,6 @@ public class NHSChoicesSearchServiceImpl implements NHSChoicesSearchService {
         .location(servicesMapperUtil.getGeoLocation(nhsChoicesV2DataModel))
         .datasource(NHS_CHOICES_DATASOURCE)
         .build();
+    return service;
   }
 }
