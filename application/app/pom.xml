@@ -32,7 +32,7 @@
     <aws-java-sdk-cognitoidp.version>1.12.734</aws-java-sdk-cognitoidp.version>
     <spring-security-oauth2.version>2.5.2.RELEASE</spring-security-oauth2.version>
     <commons-io.version>2.16.1</commons-io.version>
-    <jjwt.version>0.12.5</jjwt.version>
+    <jjwt.version>0.12.6</jjwt.version>
     <jackson-annotations.version>2.17.1</jackson-annotations.version>
     <mockito-junit-jupiter.version>3.12.4</mockito-junit-jupiter.version>
     <java-jwt.version>3.19.4</java-jwt.version>
