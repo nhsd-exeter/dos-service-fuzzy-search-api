@@ -27,7 +27,7 @@
     <aws-java-sdk-sts.version>1.12.734</aws-java-sdk-sts.version>
     <sts.version>2.25.64</sts.version>
     <spring-data-dynamodb.version>5.2.5</spring-data-dynamodb.version>
-    <commons-lang3.version>3.14.0</commons-lang3.version>
+    <commons-lang3.version>3.16.0</commons-lang3.version>
     <decimal4j.version>1.0.3</decimal4j.version>
     <aws-java-sdk-cognitoidp.version>1.12.734</aws-java-sdk-cognitoidp.version>
     <spring-security-oauth2.version>2.5.2.RELEASE</spring-security-oauth2.version>
