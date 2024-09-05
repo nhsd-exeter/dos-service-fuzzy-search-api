@@ -95,7 +95,8 @@
     },
     "[java]": {
       "editor.tabSize": 2,
-      "editor.insertSpaces": true
+      "editor.insertSpaces": true,
+      "editor.indentSize": "tabSize"
     },
     "[javascript]": {
       "editor.insertSpaces": true,

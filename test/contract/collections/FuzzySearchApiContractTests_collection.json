@@ -212,7 +212,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{host}}:8443/dosapi/dosservices/v2/services/byfuzzysearch?search_term=z&search_location=EX51NZ&search_latitude=50.674000&search_longitude=-3.400157",
+          "raw": "https://{{host}}:8443/dosapi/dosservices/v2/services/byfuzzysearch?search_term=zzz&search_location=EX51NZ&search_latitude=50.674000&search_longitude=-3.400157",
           "protocol": "https",
           "host": [
             "{{host}}"
@@ -228,7 +228,7 @@
           "query": [
             {
               "key": "search_term",
-              "value": "z"
+              "value": "zzz"
             },
             {
               "key": "search_location",

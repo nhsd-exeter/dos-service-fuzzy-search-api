@@ -16,6 +16,7 @@ import static uk.nhs.digital.uec.api.authentication.constants.SwaggerConstants.S
 import io.swagger.annotations.ApiParam;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +30,6 @@ import uk.nhs.digital.uec.api.model.ApiResponse;
 import uk.nhs.digital.uec.api.model.ApiSearchParamsResponse;
 import uk.nhs.digital.uec.api.model.ApiSearchResultsResponse;
 import uk.nhs.digital.uec.api.model.ApiSuccessResponse;
-import uk.nhs.digital.uec.api.model.DosService;
 import uk.nhs.digital.uec.api.service.ApiUtilsServiceInterface;
 import uk.nhs.digital.uec.api.service.DosServiceSearch;
 import uk.nhs.digital.uec.api.util.Constants;
@@ -70,7 +70,7 @@ public class FuzzyServiceSearchController {
   @GetMapping("/services/byfuzzysearch")
   @CrossOrigin(origins = "*")
   @PreAuthorize("hasAnyRole('FUZZY_API_ACCESS')")
-  public ResponseEntity<ApiResponse> getServicesByFuzzySearch(
+  public CompletableFuture<ResponseEntity<ApiResponse>> getServicesByFuzzySearch(
       @ApiParam(SEARCH_CRITERIA_DESC) @RequestParam(name = "search_term", required = false)
           List<String> searchCriteria,
       @ApiParam(SEARCH_POSTCODE_DESC) @RequestParam(name = "search_location", required = false)
@@ -101,6 +101,7 @@ public class FuzzyServiceSearchController {
           @RequestParam(name = "public_name_priority", required = false)
           Integer publicNamePriority)
       throws NotFoundException, InvalidParameterException {
+    long start = System.currentTimeMillis();
     distanceRange =
         Objects.isNull(distanceRange) ? Constants.DEFAULT_DISTANCE_RANGE : distanceRange;
     log.info(
@@ -139,15 +140,21 @@ public class FuzzyServiceSearchController {
 
     final ApiSuccessResponse response = new ApiSuccessResponse();
     final ApiSearchResultsResponse searchResultsResponse = new ApiSearchResultsResponse();
-    final List<DosService> dosServices =
+
+    CompletableFuture<ResponseEntity<ApiResponse>> result =
         fuzzyServiceSearchService
             .retrieveServicesByGeoLocation(
                 searchLatitude, searchLongitude, distanceRange, searchCriteria, searchPostcode)
-            .join();
+            .thenApply(
+                dosServicesList -> {
+                  log.info("Completing async data fetch now combining results");
+                  searchResultsResponse.setServices(dosServicesList);
+                  response.setSearchParameters(searchParamsResponse);
+                  response.setSearchResults(searchResultsResponse);
+                  return ResponseEntity.ok(response);
+                });
 
-    searchResultsResponse.setServices(dosServices);
-    response.setSearchParameters(searchParamsResponse);
-    response.setSearchResults(searchResultsResponse);
-    return ResponseEntity.ok(response);
+    log.info("Elapsed time: {}ms", (System.currentTimeMillis() - start));
+    return result;
   }
 }

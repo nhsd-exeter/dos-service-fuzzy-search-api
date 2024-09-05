@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,7 +68,8 @@ public class FuzzyServiceSearchControllerTest {
 
   @Test
   public void getServicesByFuzzySearchTestSucc()
-      throws NotFoundException, InvalidParameterException {
+      throws NotFoundException, InvalidParameterException, InterruptedException,
+          ExecutionException {
     when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
     when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);
     when(mockRequestParams.getPostcodePriority()).thenReturn(POSTCODE_PRIORITY);
@@ -84,7 +86,7 @@ public class FuzzyServiceSearchControllerTest {
         .thenReturn(CompletableFuture.completedFuture(getDosServices()));
 
     // Act
-    ResponseEntity<ApiResponse> responseEntity =
+    CompletableFuture<ResponseEntity<ApiResponse>> responseEntity =
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
             SEARCH_POSTCODE,
@@ -101,7 +103,7 @@ public class FuzzyServiceSearchControllerTest {
             PUBLIC_NAME_PRIORITY);
 
     // Assert
-    final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.getBody();
+    final ApiSuccessResponse response = (ApiSuccessResponse) responseEntity.get().getBody();
     final List<DosService> returnedServices = response.getSearchResults().getServices();
 
     verify(mockFuzzyServiceSearchService, times(1))
@@ -112,7 +114,7 @@ public class FuzzyServiceSearchControllerTest {
             searchCriteria,
             SEARCH_POSTCODE);
 
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.OK, responseEntity.get().getStatusCode());
 
     assertEquals(2, response.getSearchResults().getNumberOfServicesFound());
     assertTrue(isExpectedServiceReturned("service1", returnedServices));
@@ -120,7 +122,8 @@ public class FuzzyServiceSearchControllerTest {
   }
 
   public void whenCordinatesNotValidShouldGetBadResponse()
-      throws NotFoundException, InvalidParameterException {
+      throws NotFoundException, InvalidParameterException, InterruptedException,
+          ExecutionException {
     when(mockRequestParams.getAddressPriority()).thenReturn(ADDRESS_PRIORITY);
     when(mockRequestParams.getNamePriority()).thenReturn(NAME_PRIORITY);
     when(mockRequestParams.getPostcodePriority()).thenReturn(POSTCODE_PRIORITY);
@@ -137,7 +140,7 @@ public class FuzzyServiceSearchControllerTest {
         .thenReturn(CompletableFuture.completedFuture(getDosServices()));
 
     // Act
-    ResponseEntity<ApiResponse> responseEntity =
+    CompletableFuture<ResponseEntity<ApiResponse>> responseEntity =
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
             null,
@@ -155,7 +158,7 @@ public class FuzzyServiceSearchControllerTest {
 
     // Assert
     final ApiValidationErrorResponse response =
-        (ApiValidationErrorResponse) responseEntity.getBody();
+        (ApiValidationErrorResponse) responseEntity.get().getBody();
     final String errorMessage = response.getValidationError();
 
     verify(mockFuzzyServiceSearchService, times(0))
@@ -166,7 +169,7 @@ public class FuzzyServiceSearchControllerTest {
             searchCriteria,
             SEARCH_POSTCODE);
 
-    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.get().getStatusCode());
     assertEquals(ErrorMessageEnum.INVALID_LAT_LON_VALUES.getMessage(), errorMessage);
   }
 
@@ -190,7 +193,7 @@ public class FuzzyServiceSearchControllerTest {
         .thenReturn(CompletableFuture.completedFuture(getDosServices()));
 
     // Act
-    ResponseEntity<ApiResponse> responseEntity =
+    CompletableFuture<ResponseEntity<ApiResponse>> responseEntity =
         fuzzyServiceSearchController.getServicesByFuzzySearch(
             searchCriteria,
             null,
