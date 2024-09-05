@@ -1,6 +1,7 @@
 package uk.nhs.digital.uec.api.service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.DosService;
@@ -18,7 +19,7 @@ public interface DosServiceSearch {
    * @throws NotFoundException
    * @throws InvalidParameterException
    */
-  List<DosService> retrieveServicesByGeoLocation(
+  CompletableFuture<List<DosService>> retrieveServicesByGeoLocation(
       final String searchLatitude,
       final String searchLongitude,
       final Double distanceRange,

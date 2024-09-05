@@ -1,6 +1,5 @@
 package uk.nhs.digital.uec.api.service.impl;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -10,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import uk.nhs.digital.uec.api.exception.DosServiceSearchException;
 import uk.nhs.digital.uec.api.exception.InvalidParameterException;
 import uk.nhs.digital.uec.api.exception.NotFoundException;
 import uk.nhs.digital.uec.api.model.DosService;
@@ -25,13 +23,13 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
 
   private final DosServiceSearch dosSearchService;
 
-  // private final NHSChoicesSearchService nhsChoicesSearchService;
+  private final NHSChoicesSearchService nhsChoicesSearchService;
 
   @Autowired
   public ConcurrentFuzzySearchServiceImpl(
       DosServiceSearch dosSearchService, NHSChoicesSearchService nhsChoicesSearchService) {
     this.dosSearchService = dosSearchService;
-    // this.nhsChoicesSearchService = nhsChoicesSearchService;
+    this.nhsChoicesSearchService = nhsChoicesSearchService;
   }
 
   @Override
@@ -43,7 +41,7 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
       List<String> searchTerms,
       String searchPostcode,
       Integer maxNumServicesToReturn)
-      throws NotFoundException {
+      throws NotFoundException, InvalidParameterException {
     log.info("Init NHS choices async call");
 
     // Format the searchPostcode using the PostcodeFormatterUtil
@@ -51,32 +49,18 @@ public class ConcurrentFuzzySearchServiceImpl implements ConcurrentFuzzySearchSe
 
     // Commented out NHS Choices search until API issue is resolved
     CompletableFuture<List<DosService>> nhsChoicesServicesFuture =
-        CompletableFuture.completedFuture(Collections.emptyList());
-    // nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(
-    //   searchLatitude, searchLongitude, searchTerms, formattedPostcode, maxNumServicesToReturn
-    // );
+        nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(
+            searchLatitude,
+            searchLongitude,
+            searchTerms,
+            formattedPostcode,
+            maxNumServicesToReturn);
+
+    CompletableFuture<List<DosService>> dosServicesFuture =
+        dosSearchService.retrieveServicesByGeoLocation(
+            searchLatitude, searchLongitude, distanceRange, searchTerms, formattedPostcode);
 
     log.info("Init DOS services async call");
-    CompletableFuture<List<DosService>> dosServicesFuture =
-        CompletableFuture.supplyAsync(
-                () -> {
-                  try {
-                    return dosSearchService.retrieveServicesByGeoLocation(
-                        searchLatitude,
-                        searchLongitude,
-                        distanceRange,
-                        searchTerms,
-                        formattedPostcode);
-                  } catch (NotFoundException | InvalidParameterException e) {
-                    log.error("Error retrieving DOS services", e);
-                    throw new DosServiceSearchException("Error retrieving DOS services", e);
-                  }
-                })
-            .exceptionally(
-                ex -> {
-                  log.error("Error in DOS services search", ex);
-                  return Collections.emptyList();
-                });
 
     return CompletableFuture.allOf(dosServicesFuture, nhsChoicesServicesFuture)
         .thenApply(
