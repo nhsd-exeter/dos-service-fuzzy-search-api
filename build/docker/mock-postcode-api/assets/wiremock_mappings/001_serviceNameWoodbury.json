@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/dosapi/dosservices/v0.0.1/byfuzzysearch/?search_term=Woodbury&search_location=EX51NZ"
+    "url": "/dosapi/dosservices/v2/byfuzzysearch/?search_term=Woodbury&search_location=EX51NZ"
   },
   "response": {
     "status": 200,

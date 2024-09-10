@@ -14,6 +14,8 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,8 +48,7 @@ public class DosServiceSearchImplTest {
 
   private int maxNumServicesToReturn = 10;
 
-  @InjectMocks
-  private DosServiceSearchImpl classUnderTest;
+  @InjectMocks private DosServiceSearchImpl classUnderTest;
 
   @Mock private ServiceRepository serviceRepository;
 
@@ -82,7 +83,8 @@ public class DosServiceSearchImplTest {
   @Test
   @DisplayName("retrieveServicesByGeoLocationSearchSuccess")
   public void retrieveServicesByGeoLocation(CapturedOutput log)
-      throws NotFoundException, InvalidParameterException {
+      throws NotFoundException, InvalidParameterException, InterruptedException,
+          ExecutionException {
     String searchLatitude = "0.0";
     String searchLongitude = "0.0";
     Double distanceRange = 0.0;
@@ -99,17 +101,18 @@ public class DosServiceSearchImplTest {
     when(mockValidationService.isPostcodeValid(anyString())).thenReturn(true);
 
     // Act
-    List<DosService> services =
+    CompletableFuture<List<DosService>> services =
         classUnderTest.retrieveServicesByGeoLocation(
             searchLatitude, searchLongitude, distanceRange, searchTerms, "");
 
     // Assert
-    assertEquals(2, services.size());
+    assertEquals(2, services.get().size());
   }
 
   @Test
   public void shouldCallfindAllServicesByGeoLocationMethodWhenSearchTermIsEmptyOrNull()
-      throws NotFoundException, InvalidParameterException {
+      throws NotFoundException, InvalidParameterException, InterruptedException,
+          ExecutionException {
     // Arrange
     String searchLatitude = "0.0";
     String searchLongitude = "0.0";
@@ -126,7 +129,7 @@ public class DosServiceSearchImplTest {
     when(mockValidationService.isPostcodeValid(anyString())).thenReturn(false);
 
     // Act
-    List<DosService> services =
+    CompletableFuture<List<DosService>> services =
         classUnderTest.retrieveServicesByGeoLocation(
             searchLatitude, searchLongitude, distanceRange, searchTerms, "");
 
@@ -134,12 +137,13 @@ public class DosServiceSearchImplTest {
     verify(serviceRepository, only())
         .findAllServicesByGeoLocation(
             Double.parseDouble(searchLatitude), Double.parseDouble(searchLongitude), distanceRange);
-    assertEquals(0, services.size()); // because no valid postcode in dos services
+    assertEquals(0, services.get().size()); // because no valid postcode in dos services
   }
 
   @Test
   public void shouldCallfindAllServicesByGeoLocationMethodWhenOnlyPostCodePassed()
-      throws NotFoundException, InvalidParameterException {
+      throws NotFoundException, InvalidParameterException, InterruptedException,
+          ExecutionException {
     // Arrange
     String searchPostCode = "XX1 1XX";
 
@@ -166,11 +170,11 @@ public class DosServiceSearchImplTest {
     when(mockValidationService.isPostcodeValid(anyString())).thenReturn(true);
 
     // Act
-    List<DosService> services =
+    CompletableFuture<List<DosService>> services =
         classUnderTest.retrieveServicesByGeoLocation(null, null, 24.5, null, searchPostCode);
-
+    List<DosService> dosServices1 = services.get();
     // Assert
-    assertEquals(0, services.size()); // because no valid postcode in dos services
+    assertEquals(0, dosServices1.size()); // because no valid postcode in dos services
   }
 
   @Test
@@ -221,7 +225,8 @@ public class DosServiceSearchImplTest {
 
   @Test
   public void dosReturnsEmptyLocationsTest(CapturedOutput log)
-      throws NotFoundException, InvalidParameterException {
+      throws NotFoundException, InvalidParameterException, InterruptedException,
+          ExecutionException {
     // Arrange
     String searchLatitude = "23.45";
     String searchLongitude = "-0.3456";
@@ -261,18 +266,19 @@ public class DosServiceSearchImplTest {
             searchTerms))
         .thenReturn(dosServices);
     // Act
-    List<DosService> services =
+    CompletableFuture<List<DosService>> services =
         classUnderTest.retrieveServicesByGeoLocation(
             searchLatitude, searchLongitude, distanceRange, searchTerms, postcode);
     assertTrue(log.getOut().contains("Searching using location & search terms:"));
     verify(mockValidationService, times(1)).validateSearchCriteria(searchTerms);
     // Assert
-    assertEquals(2, services.size());
+    assertEquals(2, services.get().size());
   }
 
   @Test
   public void googleAPIUsedToPopulateServicesWithoutLatLongValues()
-      throws NotFoundException, InvalidParameterException {
+      throws NotFoundException, InvalidParameterException, InterruptedException,
+          ExecutionException {
     // Given
     final String searchLatitude = "0";
     final String searchLongitude = "0";
@@ -314,10 +320,10 @@ public class DosServiceSearchImplTest {
     // when(apiHandshakeService.getAccessTokenHeader()).thenReturn(mockHeaders);
     // when(locationService.getLocationForPostcode(postcode,mockHeaders)).thenReturn(searchLocation);
     // When
-    List<DosService> fuzzyResults =
+    CompletableFuture<List<DosService>> fuzzyResults =
         classUnderTest.retrieveServicesByGeoLocation(
             searchLatitude, searchLongitude, distanceRange, searchTerms, postcode);
     // Then
-    assertEquals(3, fuzzyResults.size());
+    assertEquals(3, fuzzyResults.get().size());
   }
 }

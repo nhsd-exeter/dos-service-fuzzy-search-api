@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 import uk.nhs.digital.uec.api.authentication.model.AuthToken;
 import uk.nhs.digital.uec.api.authentication.model.Credential;
 import uk.nhs.digital.uec.api.exception.GoogleApiException;
@@ -84,6 +86,7 @@ public class WebClientUtil {
               return Mono.empty();
             })
         .bodyToMono(String.class)
+        .retryWhen(Retry.backoff(3, Duration.ofSeconds(1)))
         .doOnNext(responseBody -> log.info("Response received"))
         .map(this::parseNHSChoicesDataModel)
         .toFuture();

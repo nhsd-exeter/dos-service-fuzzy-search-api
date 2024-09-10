@@ -3,6 +3,7 @@ package uk.nhs.digital.uec.api.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -49,7 +50,7 @@ public class DosServiceSearchImpl implements DosServiceSearch {
   }
 
   @Override
-  public List<DosService> retrieveServicesByGeoLocation(
+  public CompletableFuture<List<DosService>> retrieveServicesByGeoLocation(
       String searchLatitude,
       String searchLongitude,
       Double distanceRange,
@@ -140,9 +141,10 @@ public class DosServiceSearchImpl implements DosServiceSearch {
     if (apiRequestParams.getMaxNumServicesToReturn() > dosServices.size()) {
       serviceResultLimit = dosServices.size();
     }
-    return filteredDosServices.isEmpty()
-        ? filteredDosServices
-        : filteredDosServices.subList(0, serviceResultLimit);
+    return CompletableFuture.completedFuture(
+        filteredDosServices.isEmpty()
+            ? filteredDosServices
+            : filteredDosServices.subList(0, serviceResultLimit));
   }
 
   private List<DosService> populateServiceDistancesWithLatAndLng(

@@ -91,12 +91,7 @@ class ConcurrentFuzzySearchServiceImplTest {
 
     when(dosSearchService.retrieveServicesByGeoLocation(
             anyString(), anyString(), anyDouble(), anyList(), anyString()))
-        .thenAnswer(
-            invocation ->
-                CompletableFuture.supplyAsync(
-                    () -> {
-                      throw new RuntimeException("DOS service not found");
-                    }));
+        .thenAnswer(invocation -> CompletableFuture.completedFuture(new ArrayList<>()));
 
     when(nhsChoicesSearchService.retrieveParsedNhsChoicesV2Model(
             anyString(), anyString(), anyList(), anyString(), anyInt()))
@@ -111,6 +106,8 @@ class ConcurrentFuzzySearchServiceImplTest {
             searchPostcode,
             maxNumberOfServicesTOReturn);
 
-    assertEquals(0, result.get().size());
+    List<DosService> combinedList = result.get();
+
+    assertEquals(0, combinedList.size());
   }
 }
