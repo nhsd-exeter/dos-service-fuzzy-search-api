@@ -64,6 +64,10 @@ public class WebClientUtil {
 
   public CompletableFuture<List<NHSChoicesV2DataModel>> retrieveNHSChoicesServices(
       String searchLatitude, String searchLongitude, String searchTerms) {
+    String filter =
+        "OrganisationTypeId  eq 'OPT' or OrganisationTypeId  eq 'HOS' or OrganisationTypeId  eq"
+            + " 'DEN' or OrganisationTypeId  eq 'CLI' or OrganisationTypeId  eq 'PHA' or"
+            + " OrganisationTypeId  eq 'GPB'";
     return nhsChoicesApiWebClient
         .get()
         .uri(
@@ -74,6 +78,7 @@ public class WebClientUtil {
                     .queryParam("search", searchTerms)
                     .queryParam("longitude", searchLongitude)
                     .queryParam("latitude", searchLatitude)
+                    .queryParam("$filter", filter)
                     .build())
         .retrieve()
         .onStatus(
